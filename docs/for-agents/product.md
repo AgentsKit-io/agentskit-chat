@@ -3,6 +3,7 @@
 ## Read first
 
 - Human source: [`../product/PRD.md`](../product/PRD.md)
+- Delivery graph: [`../product/roadmap.md`](../product/roadmap.md)
 - Architecture: [`../architecture/overview.md`](../architecture/overview.md)
 
 ## Change route
@@ -15,4 +16,3 @@ Use this ownership area for user stories, scope, release outcomes, positioning, 
 pnpm docs:bridge:index
 pnpm docs:bridge:gate
 ```
-

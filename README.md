@@ -23,6 +23,7 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 ## Documentation
 
 - [Product requirements](./docs/product/PRD.md)
+- [Implementation roadmap](./docs/product/roadmap.md)
 - [Architecture overview](./docs/architecture/overview.md)
 - [ADR-0001: cross-framework core and native renderers](./docs/architecture/adrs/0001-cross-framework-core.md)
 - [Agent documentation index](./docs/for-agents/index.md)
@@ -41,4 +42,3 @@ The generated index, `llms.txt`, capabilities manifest, CLI queries, and MCP too
 ## License
 
 [MIT](./LICENSE)
-

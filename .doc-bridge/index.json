@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "85032dc70ee69930151b792a937869dbb2b57b7bdbdbabc8dc175304c6af8d29",
+  "contentHash": "6622c92144f1a4dadd57fb0da461d1cba19d4538ccae58a5f110065149035051",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-10T22:00:17.860Z",
+  "generatedAt": "2026-07-10T22:07:41.455Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -37,8 +37,8 @@
       "type": "agent-doc",
       "title": "Product handoff",
       "path": "docs/for-agents/product.md",
-      "description": "- Human source: [`../product/PRD.md`](../product/PRD.md) - Architecture: [`../architecture/overview.md`](../architecture/overview.md)",
-      "body": "Product handoff Read first - Human source: - Architecture: Change route Use this ownership area for user stories, scope, release outcomes, positioning, and success criteria. Product changes that alter a public boundary require a corresponding architecture review and, after acceptance, a new ADR. Checks"
+      "description": "- Human source: [`../product/PRD.md`](../product/PRD.md) - Delivery graph: [`../product/roadmap.md`](../product/roadmap.md) - Architecture: [`../architecture/overview.md`](../architecture/overview.md)",
+      "body": "Product handoff Read first - Human source: - Delivery graph: - Architecture: Change route Use this ownership area for user stories, scope, release outcomes, positioning, and success criteria. Product changes that alter a public boundary require a corresponding architecture review and, after acceptance, a new ADR. Checks"
     }
   ],
   "handoffs": {
