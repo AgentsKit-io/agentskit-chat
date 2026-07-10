@@ -26,6 +26,8 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 - [Implementation roadmap](./docs/product/roadmap.md)
 - [Architecture overview](./docs/architecture/overview.md)
 - [ADR-0001: cross-framework core and native renderers](./docs/architecture/adrs/0001-cross-framework-core.md)
+- [AgentsKit upstream adoption matrix](./docs/architecture/upstream-adoption.md)
+- [ADR-0002: upstream-first and no reimplementation](./docs/architecture/adrs/0002-upstream-first-no-reimplementation.md)
 - [Agent documentation index](./docs/for-agents/index.md)
 
 ## Doc bridge

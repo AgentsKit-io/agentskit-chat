@@ -5,6 +5,7 @@
 - Human source: [`../architecture/overview.md`](../architecture/overview.md)
 - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/)
 - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md)
+- Current adoption matrix: [`../architecture/upstream-adoption.md`](../architecture/upstream-adoption.md)
 - Product requirements: [`../product/PRD.md`](../product/PRD.md)
 
 ## Change route

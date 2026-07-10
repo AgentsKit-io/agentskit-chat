@@ -16,6 +16,8 @@ AgentsKit owns adapters, model invocation, tools, memory, RAG, agent runtime, ch
 
 [ADR-0002](./adrs/0002-upstream-first-no-reimplementation.md) makes this boundary enforceable: AgentsKit Chat composes published AgentsKit APIs. Missing or defective framework-neutral primitives are changed at the source in `AgentsKit-io/agentskit` before this repository consumes them.
 
+The concrete source-to-responsibility mapping lives in the [AgentsKit upstream adoption matrix](./upstream-adoption.md). It is revalidated by each implementation issue rather than treated as permanently current.
+
 ## Containers
 
 ```text

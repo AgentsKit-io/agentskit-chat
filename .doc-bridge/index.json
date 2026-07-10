@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "db1cf86f1e583141ade4849415ef5681ded29f62922d4dcecc64f654ca8b1dd8",
+  "contentHash": "a01baad17b4d660cc2b81dacb3414c24b7bdfdc41cad6b24656faa0e587414dc",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-10T22:13:38.912Z",
+  "generatedAt": "2026-07-10T22:40:13.908Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -13,8 +13,8 @@
       "type": "agent-doc",
       "title": "Architecture handoff",
       "path": "docs/for-agents/architecture.md",
-      "description": "- Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md) - Product requirements: [`../product/PRD.md`](../product/PRD.md)",
-      "body": "Architecture handoff Read first - Human source: - Accepted decisions: - Upstream-first guardrail: - Product requirements: Change route Use this ownership area for the universal chat definition, turn protocol, deterministic engine, action policy, session boundary, native renderer contract, theming contract, CLI architecture, and compatibility strategy. Do not place JSX, DOM types, React hooks, Vue reactivity, Svelte stores, Angular signals, React Native primitives, or Ink components in shared contracts. Before adding a primitive, inspect AgentsKit source and public exports. Reuse or compose the upstream API. If a generally useful primitive is missing, link and complete the upstream AgentsKit change before implementing the application-layer integration here. Required evidence - Runtime schemas for external and model-produced data. - Contract fixtures shared by every renderer. - Compatibility policy for versioned events. - ADR for new public architectural decisions. - Upstream-adoption record proving no AgentsKit primitive was copied or reimplemented."
+      "description": "- Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md) - Current adoption matrix:",
+      "body": "Architecture handoff Read first - Human source: - Accepted decisions: - Upstream-first guardrail: - Current adoption matrix: - Product requirements: Change route Use this ownership area for the universal chat definition, turn protocol, deterministic engine, action policy, session boundary, native renderer contract, theming contract, CLI architecture, and compatibility strategy. Do not place JSX, DOM types, React hooks, Vue reactivity, Svelte stores, Angular signals, React Native primitives, or Ink components in shared contracts. Before adding a primitive, inspect AgentsKit source and public exports. Reuse or compose the upstream API. If a generally useful primitive is missing, link and complete the upstream AgentsKit change before implementing the application-layer integration here. Required evidence - Runtime schemas for external and model-produced data. - Contract fixtures shared by every renderer. - Compatibility policy for versioned events. - ADR for new public architectural decisions. - Upstream-adoption record proving no AgentsKit primitive was copied or reimplemented."
     },
     {
       "id": "governance",
