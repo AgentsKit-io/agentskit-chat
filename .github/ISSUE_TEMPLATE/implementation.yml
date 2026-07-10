@@ -67,6 +67,18 @@ body:
     validations:
       required: true
   - type: textarea
+    id: upstream
+    attributes:
+      label: Upstream adoption
+      description: Record the AgentsKit source/exports inspected, primitives reused, application-layer behavior added, and linked upstream issue or PR for any generic gap.
+      placeholder: |-
+        Inspected:
+        Reused:
+        Added here:
+        Upstream gap:
+    validations:
+      required: true
+  - type: textarea
     id: dod
     attributes:
       label: Definition of Done
@@ -77,6 +89,8 @@ body:
         - [ ] Renderer conformance fixtures pass where applicable.
         - [ ] Accessibility or platform interaction evidence exists where applicable.
         - [ ] Public and agent-facing documentation is current.
+        - [ ] Upstream adoption is documented and no AgentsKit primitive is copied or reimplemented.
+        - [ ] Any generic upstream gap is fixed and released from `AgentsKit-io/agentskit` before local integration.
         - [ ] `pnpm docs:bridge:gate` passes.
         - [ ] No untracked TODO, disabled behavior, or undocumented breaking change remains.
     validations:
@@ -90,4 +104,3 @@ body:
           required: true
         - label: Every dependency is represented by an issue link or explicitly absent.
           required: true
-

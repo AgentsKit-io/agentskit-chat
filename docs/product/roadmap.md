@@ -10,7 +10,8 @@ The parent product requirement is [GitHub issue #1](https://github.com/AgentsKit
 
 ```mermaid
 flowchart TD
-  I1["#1 PRD"] --> I2["#2 React vertical slice"]
+  I1["#1 PRD"] --> I31["#31 Upstream convergence gate"]
+  I31 --> I2["#2 React vertical slice"]
   I2 --> I3["#3 React Native parity"]
   I2 --> I4["#4 Ink parity"]
   I2 --> I5["#5 Protocol + conformance"]
@@ -81,6 +82,7 @@ The diagram highlights the critical path. Individual issue bodies are authoritat
 
 ## Architecture proof
 
+- [#31 Upstream convergence and ownership gate](https://github.com/AgentsKit-io/agentskit-chat/issues/31) — HITL, blocks implementation
 - [#2 React hello-world vertical slice](https://github.com/AgentsKit-io/agentskit-chat/issues/2) — AFK
 - [#3 React Native parity](https://github.com/AgentsKit-io/agentskit-chat/issues/3) — AFK
 - [#4 Ink parity](https://github.com/AgentsKit-io/agentskit-chat/issues/4) — AFK
@@ -126,4 +128,3 @@ The diagram highlights the critical path. Individual issue bodies are authoritat
 ## Parallel work
 
 After #5 is accepted, #6, #7, #10, #15, #16, #17, and #18 have independent ownership and may proceed concurrently. Renderer work shares protocol fixtures but must not alter the accepted protocol without a new ADR and coordinated compatibility review.
-

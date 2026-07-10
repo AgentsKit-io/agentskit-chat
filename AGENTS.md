@@ -8,7 +8,7 @@ AgentsKit Chat is the cross-framework application layer for interactive agent ex
 
 ## Non-negotiable rules
 
-1. Depend on AgentsKit; do not recreate its adapters, runtime, tools, memory, RAG, or chat controller.
+1. Follow [ADR-0002](./docs/architecture/adrs/0002-upstream-first-no-reimplementation.md): inspect and reuse AgentsKit before writing a primitive. Never recreate its controller, lifecycle, adapters, tools, confirmation, generative UI, memory, RAG, replay, eval, or framework bindings.
 2. Framework interoperability is a contract. Shared behavior cannot depend on the DOM, JSX, React hooks, or a framework-specific reactive primitive.
 3. UI events and render frames cross boundaries as versioned, runtime-validated data.
 4. Models may propose only registered actions and registered components. Unknown or invalid output is inert.
@@ -16,17 +16,19 @@ AgentsKit Chat is the cross-framework application layer for interactive agent ex
 6. TypeScript strict mode, no `any`, and named exports only.
 7. New public contracts require an ADR. Breaking public contracts require an RFC and migration path.
 8. Every issue must include acceptance criteria, dependencies, test plan, documentation impact, and Definition of Done.
+9. A missing framework-neutral primitive or defect is fixed in `AgentsKit-io/agentskit` first. AgentsKit Chat consumes the supported upstream release; copied source, private workspace imports, and temporary forks are forbidden.
+10. Every implementation issue and review must include an upstream-adoption record: inspected source, reused exports, local application behavior, and linked upstream work when required.
 
 ## Planned module ownership
 
 The approved architecture currently identifies these modules. Their package boundaries are created only by implementation issues; do not add empty packages.
 
-- Core: chat definitions, turn pipeline, deterministic routes, actions, component manifests, state machines.
+- Core: chat definitions that compile to AgentsKit configuration, deterministic application routes, policy composition, component manifests, and conversation state machines.
 - Protocol: versioned events, transports, serialization, compatibility fixtures.
 - Server: handlers, sessions, context, authentication seams, persistence, streaming.
 - Renderers: React, Vue, Svelte, Solid, Angular, React Native, and Ink bindings over their corresponding AgentsKit packages.
 - CLI: project detection, `init`, templates, add-component workflow, diagnostics.
-- Devtools and eval: replay, traces, parity suites, accessibility and renderer conformance.
+- Devtools and eval: application traces and renderer parity composed around AgentsKit replay and eval primitives.
 
 ## Documentation and routing
 
@@ -43,4 +45,3 @@ MCP is enabled with `handoff.resolve`, `doc.search`, `doc.get`, and `gate.status
 ## Current phase
 
 The repository is docs-first. Until the implementation backlog is approved, changes are limited to product, architecture, governance, and planning documentation.
-

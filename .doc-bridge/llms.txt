@@ -2,7 +2,7 @@ AgentsKit Chat is the cross-framework application framework for interactive agen
 
 ## Knowledge
 
-- [Architecture handoff](docs/for-agents/architecture.md): - Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Product requirements: [`../product/PRD.md`](../product/PRD.md)
+- [Architecture handoff](docs/for-agents/architecture.md): - Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md) - Product requirements: [`../product/PRD.md`](../product/PRD.md)
 - [Governance handoff](docs/for-agents/governance.md): - Human source: [`../governance/issues.md`](../governance/issues.md) - Repository rules: [`../../AGENTS.md`](../../AGENTS.md)
 - [AgentsKit Chat agent index](docs/for-agents/index.md): Use this index with `ak-docs query` to locate the owning documentation before changing the repository.
 - [Product handoff](docs/for-agents/product.md): - Human source: [`../product/PRD.md`](../product/PRD.md) - Delivery graph: [`../product/roadmap.md`](../product/roadmap.md) - Architecture: [`../architecture/overview.md`](../architecture/overview.md)

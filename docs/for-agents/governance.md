@@ -18,6 +18,6 @@ Every implementation issue is a thin, demoable vertical slice and includes:
 - documentation impact;
 - explicit Definition of Done;
 - HITL or AFK classification.
+- upstream-adoption evidence and linked AgentsKit source changes where required.
 
 Horizontal foundation work is allowed only when it produces a verifiable contract, fixture, gate, or developer-facing outcome.
-

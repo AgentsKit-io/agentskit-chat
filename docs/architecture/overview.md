@@ -14,6 +14,8 @@ The project begins as a TypeScript modular monorepo. Shared behavior is organize
 
 AgentsKit owns adapters, model invocation, tools, memory, RAG, agent runtime, chat controller, and base framework bindings. AgentsKit Chat owns application definitions, the turn pipeline, deterministic interaction, action policy, session protocol, semantic component manifests, native application shells, scaffolding, and parity tooling.
 
+[ADR-0002](./adrs/0002-upstream-first-no-reimplementation.md) makes this boundary enforceable: AgentsKit Chat composes published AgentsKit APIs. Missing or defective framework-neutral primitives are changed at the source in `AgentsKit-io/agentskit` before this repository consumes them.
+
 ## Containers
 
 ```text
@@ -29,11 +31,11 @@ Application
 
 ### Core
 
-Defines chats, deterministic routes, actions, component manifests, conversation machines, policies, and the turn pipeline without framework or transport dependencies.
+Defines chats that compile to or derive AgentsKit `ChatConfig`, plus deterministic application routes, component manifests, conversation machines, and policy composition. It does not implement another controller, tool loop, confirmation engine, or model runtime.
 
 ### Protocol
 
-Owns versioned client-server events, runtime schemas, serialization, resumption, compatibility fixtures, and semantic fallbacks.
+Owns application-specific client-server events, runtime schemas, serialization, resumption, compatibility fixtures, and semantic fallbacks. Existing AgentsKit lifecycle and UI semantics are transported without being renamed or reimplemented.
 
 ### Server
 
@@ -49,7 +51,22 @@ Detects the host framework and runtime, scaffolds a complete vertical slice, add
 
 ### Devtools and eval
 
-Provides deterministic replay, turn traces, fixture capture, renderer conformance, accessibility evidence, and cross-platform parity reporting.
+Composes application traces, fixture capture, renderer conformance, accessibility evidence, and cross-platform parity reporting around AgentsKit replay and eval primitives.
+
+## Upstream adoption
+
+Before implementation, each issue records the AgentsKit source and exports inspected, what is reused directly, what application-layer behavior is added, and any upstream gap. A generally useful primitive is implemented in AgentsKit first; AgentsKit Chat never vendors or temporarily forks it.
+
+Initial mandatory mappings include:
+
+- `defineChat` → AgentsKit `ChatConfig` and `createChatController`;
+- lifecycle → AgentsKit `ChatController` operations;
+- actions → AgentsKit `ToolDefinition` plus application policy;
+- confirmation → AgentsKit tool confirmation and HITL primitives;
+- portable UI → AgentsKit `UIMessage`/`UIElement` plus registered custom components;
+- message history → AgentsKit `ChatMemory`;
+- replay/eval → AgentsKit replay and eval primitives;
+- renderers → corresponding AgentsKit framework packages.
 
 ## Reference turn pipeline
 
@@ -74,4 +91,3 @@ The first shared example must run from one unchanged chat definition in React, R
 - The framework may duplicate AgentsKit. Mitigation: dependency-direction checks and explicit ownership rules.
 - Generative UI can become unsafe. Mitigation: closed registries, runtime schemas, inert unknown output, semantic fallback, and action policy outside the model.
 - Package proliferation may create shallow modules. Mitigation: packages are introduced only by vertical implementation slices with a public outcome.
-

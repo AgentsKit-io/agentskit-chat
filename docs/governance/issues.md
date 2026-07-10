@@ -14,6 +14,7 @@ Each issue contains:
 6. Documentation impact.
 7. Definition of Done.
 8. Delivery mode: AFK or HITL.
+9. Upstream adoption: inspected AgentsKit source, reused exports, local responsibility, and linked upstream gaps.
 
 ## Definition of Done baseline
 
@@ -28,10 +29,11 @@ An issue is done only when:
 - agent handoffs and ownership metadata remain accurate;
 - `pnpm docs:bridge:gate` passes;
 - no untracked TODO, disabled behavior, or undocumented breaking change remains.
+- the issue records upstream reuse and introduces no duplicate AgentsKit primitive;
+- any generic upstream gap is fixed and released from `AgentsKit-io/agentskit` before local integration.
 
 Issue-specific requirements extend this baseline rather than replace it.
 
 ## Dependencies
 
 Issues are created in dependency order. `Blocked by` must reference real issue numbers. Parallel slices must avoid overlapping ownership or explicitly state their shared contract fixture.
-
