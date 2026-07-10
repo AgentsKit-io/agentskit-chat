@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "agentskit-chat"
+  },
+  "corpus": {
+    "agent": {
+      "root": "docs/for-agents",
+      "index": "docs/for-agents/index.md",
+      "include": [
+        "**/*.md"
+      ],
+      "exclude": [
+        "**/node_modules/**"
+      ]
+    },
+    "human": {
+      "plugin": "plain-markdown",
+      "options": {
+        "contentDir": "docs",
+        "include": [
+          "**/*.md"
+        ],
+        "urlPrefix": null
+      }
+    }
+  },
+  "routing": {
+    "options": {
+      "ownership": {
+        "product": {
+          "path": "docs/product",
+          "purpose": "Product requirements, user stories, scope, and release outcomes",
+          "agentDoc": "docs/for-agents/product.md",
+          "humanDoc": "product/PRD",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        },
+        "architecture": {
+          "path": "docs/architecture",
+          "purpose": "System boundaries, protocols, modules, ADRs, and cross-framework invariants",
+          "agentDoc": "docs/for-agents/architecture.md",
+          "humanDoc": "architecture/overview",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        },
+        "governance": {
+          "path": ".github",
+          "purpose": "Issue structure, Definition of Done, contribution workflow, and project automation",
+          "agentDoc": "docs/for-agents/governance.md",
+          "humanDoc": "governance/issues",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        }
+      }
+    }
+  },
+  "index": {
+    "outFile": ".doc-bridge/index.json",
+    "llmsTxt": {
+      "enabled": true,
+      "outFile": ".doc-bridge/llms.txt",
+      "preamble": "AgentsKit Chat is the cross-framework application framework for interactive agent experiences built on AgentsKit."
+    },
+    "capabilities": {
+      "enabled": true,
+      "outFile": ".doc-bridge/capabilities.json"
+    }
+  },
+  "gates": {
+    "preset": "standard",
+    "exclude": [
+      "okf-type"
+    ]
+  },
+  "surfaces": {
+    "cli": {
+      "bin": "ak-docs",
+      "defaultFormat": "json"
+    },
+    "mcp": {
+      "enabled": true,
+      "tools": [
+        "handoff.resolve",
+        "doc.search",
+        "doc.get",
+        "gate.status"
+      ]
+    }
+  },
+  "federation": {
+    "enabled": true,
+    "sources": [
+      {
+        "id": "agentskit",
+        "llmsTxt": "https://www.agentskit.io/llms.txt"
+      },
+      {
+        "id": "playbook",
+        "llmsTxt": "https://playbook.agentskit.io/llms.txt",
+        "rawBaseUrl": "https://playbook.agentskit.io/raw/"
+      },
+      {
+        "id": "registry",
+        "llmsTxt": "https://registry.agentskit.io/llms.txt"
+      },
+      {
+        "id": "akos",
+        "llmsTxt": "https://akos.agentskit.io/llms.txt"
+      }
+    ]
+  }
+}

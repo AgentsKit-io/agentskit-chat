@@ -1,0 +1,93 @@
+name: Implementation slice
+description: Propose a thin, demoable vertical slice of the AgentsKit Chat roadmap.
+title: "feat: "
+labels:
+  - implementation
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Parent PRD
+      placeholder: "#1"
+    validations:
+      required: true
+  - type: dropdown
+    id: delivery
+    attributes:
+      label: Delivery mode
+      options:
+        - AFK — independently implementable
+        - HITL — requires a human decision or review
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: End-to-end outcome
+      description: Describe the narrow, complete behavior delivered by this slice.
+    validations:
+      required: true
+  - type: textarea
+    id: stories
+    attributes:
+      label: User stories addressed
+      placeholder: "PRD user stories 1, 3, and 14"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "- [ ] Observable behavior..."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Use real Blocked by issue links, or state that the issue can start immediately.
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Test plan
+      placeholder: |-
+        Unit:
+        Integration:
+        Conformance/E2E:
+        Edge cases:
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Documentation impact
+      description: Name the public, architecture, and agent-facing documentation that changes.
+    validations:
+      required: true
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      value: |-
+        - [ ] Acceptance criteria are demonstrated by public behavior.
+        - [ ] Runtime boundaries validate untrusted data.
+        - [ ] Unit and integration tests pass.
+        - [ ] Renderer conformance fixtures pass where applicable.
+        - [ ] Accessibility or platform interaction evidence exists where applicable.
+        - [ ] Public and agent-facing documentation is current.
+        - [ ] `pnpm docs:bridge:gate` passes.
+        - [ ] No untracked TODO, disabled behavior, or undocumented breaking change remains.
+    validations:
+      required: true
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: Readiness
+      options:
+        - label: This issue is a demoable vertical slice rather than an unobservable horizontal layer.
+          required: true
+        - label: Every dependency is represented by an issue link or explicitly absent.
+          required: true
+

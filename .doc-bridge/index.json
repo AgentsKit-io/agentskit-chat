@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "contentHash": "85032dc70ee69930151b792a937869dbb2b57b7bdbdbabc8dc175304c6af8d29",
+  "contentHashAlgo": "sha256-normalized-v1",
+  "generatedAt": "2026-07-10T22:00:17.860Z",
+  "project": {
+    "name": "agentskit-chat",
+    "root": "."
+  },
+  "knowledge": [
+    {
+      "id": "architecture",
+      "type": "agent-doc",
+      "title": "Architecture handoff",
+      "path": "docs/for-agents/architecture.md",
+      "description": "- Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Product requirements: [`../product/PRD.md`](../product/PRD.md)",
+      "body": "Architecture handoff Read first - Human source: - Accepted decisions: - Product requirements: Change route Use this ownership area for the universal chat definition, turn protocol, deterministic engine, action policy, session boundary, native renderer contract, theming contract, CLI architecture, and compatibility strategy. Do not place JSX, DOM types, React hooks, Vue reactivity, Svelte stores, Angular signals, React Native primitives, or Ink components in shared contracts. Required evidence - Runtime schemas for external and model-produced data. - Contract fixtures shared by every renderer. - Compatibility policy for versioned events. - ADR for new public architectural decisions."
+    },
+    {
+      "id": "governance",
+      "type": "agent-doc",
+      "title": "Governance handoff",
+      "path": "docs/for-agents/governance.md",
+      "description": "- Human source: [`../governance/issues.md`](../governance/issues.md) - Repository rules: [`../../AGENTS.md`](../../AGENTS.md)",
+      "body": "Governance handoff Read first - Human source: - Repository rules: Issue requirements Every implementation issue is a thin, demoable vertical slice and includes: - parent PRD; - user stories; - end-to-end outcome; - acceptance criteria; - dependencies and blocked-by links; - test plan; - documentation impact; - explicit Definition of Done; - HITL or AFK classification. Horizontal foundation work is allowed only when it produces a verifiable contract, fixture, gate, or developer-facing outcome."
+    },
+    {
+      "id": "index",
+      "type": "agent-doc",
+      "title": "AgentsKit Chat agent index",
+      "path": "docs/for-agents/index.md",
+      "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+    },
+    {
+      "id": "product",
+      "type": "agent-doc",
+      "title": "Product handoff",
+      "path": "docs/for-agents/product.md",
+      "description": "- Human source: [`../product/PRD.md`](../product/PRD.md) - Architecture: [`../architecture/overview.md`](../architecture/overview.md)",
+      "body": "Product handoff Read first - Human source: - Architecture: Change route Use this ownership area for user stories, scope, release outcomes, positioning, and success criteria. Product changes that alter a public boundary require a corresponding architecture review and, after acceptance, a new ADR. Checks"
+    }
+  ],
+  "handoffs": {
+    "architecture": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "architecture",
+        "path": "docs/architecture"
+      },
+      "startHere": "docs/for-agents/architecture.md",
+      "readBeforeEditing": [
+        "docs/for-agents/architecture.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "docs/architecture"
+      ],
+      "checks": [
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "architecture/overview",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "System boundaries, protocols, modules, ADRs, and cross-framework invariants"
+      ]
+    },
+    "governance": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "governance",
+        "path": ".github"
+      },
+      "startHere": "docs/for-agents/governance.md",
+      "readBeforeEditing": [
+        "docs/for-agents/governance.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        ".github"
+      ],
+      "checks": [
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "governance/issues",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Issue structure, Definition of Done, contribution workflow, and project automation"
+      ]
+    },
+    "product": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "product",
+        "path": "docs/product"
+      },
+      "startHere": "docs/for-agents/product.md",
+      "readBeforeEditing": [
+        "docs/for-agents/product.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "docs/product"
+      ],
+      "checks": [
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "product/PRD",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Product requirements, user stories, scope, and release outcomes"
+      ]
+    }
+  },
+  "lookup": {
+    "packages": [
+      "architecture",
+      "governance",
+      "product"
+    ],
+    "ownership": {
+      "architecture": {
+        "id": "architecture",
+        "path": "docs/architecture",
+        "checks": [
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "System boundaries, protocols, modules, ADRs, and cross-framework invariants",
+        "humanDoc": "architecture/overview",
+        "agentDoc": "docs/for-agents/architecture.md"
+      },
+      "governance": {
+        "id": "governance",
+        "path": ".github",
+        "checks": [
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "Issue structure, Definition of Done, contribution workflow, and project automation",
+        "humanDoc": "governance/issues",
+        "agentDoc": "docs/for-agents/governance.md"
+      },
+      "product": {
+        "id": "product",
+        "path": "docs/product",
+        "checks": [
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "Product requirements, user stories, scope, and release outcomes",
+        "humanDoc": "product/PRD",
+        "agentDoc": "docs/for-agents/product.md"
+      }
+    },
+    "intents": {},
+    "changes": {}
+  }
+}

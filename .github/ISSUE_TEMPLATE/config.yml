@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: AgentsKit discussions
+    url: https://github.com/AgentsKit-io/agentskit/discussions
+    about: Ask ecosystem questions before opening implementation work.
+

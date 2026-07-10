@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "type": "doc-bridge-capabilities",
+  "package": "@agentskit/doc-bridge",
+  "version": "1.0.2",
+  "project": {
+    "name": "agentskit-chat",
+    "root": "."
+  },
+  "contentHash": "85032dc70ee69930151b792a937869dbb2b57b7bdbdbabc8dc175304c6af8d29",
+  "artifacts": {
+    "index": ".doc-bridge/index.json",
+    "llmsTxt": ".doc-bridge/llms.txt"
+  },
+  "capabilities": [
+    "index",
+    "query",
+    "search",
+    "agent-handoff",
+    "gates",
+    "mcp",
+    "human-docs"
+  ],
+  "surfaces": {
+    "cli": {
+      "bin": "ak-docs",
+      "defaultFormat": "json"
+    },
+    "mcp": {
+      "enabled": true,
+      "tools": [
+        "handoff.resolve",
+        "doc.search",
+        "doc.get",
+        "gate.status"
+      ]
+    }
+  }
+}

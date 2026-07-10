@@ -1,0 +1,17 @@
+{
+  "name": "agentskit-chat",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cross-framework application framework for interactive agent experiences, built on AgentsKit.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "docs:bridge:index": "ak-docs index",
+    "docs:bridge:query": "ak-docs query",
+    "docs:bridge:gate": "ak-docs gate run"
+  },
+  "devDependencies": {
+    "@agentskit/doc-bridge": "1.0.2"
+  }
+}
+

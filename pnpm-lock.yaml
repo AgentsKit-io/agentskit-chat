@@ -1,0 +1,51 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      '@agentskit/doc-bridge':
+        specifier: 1.0.2
+        version: 1.0.2
+
+packages:
+
+  '@agentskit/doc-bridge@1.0.2':
+    resolution: {integrity: sha512-kE5oKKvmFOZliMm9Rfr8N+G1RWaBoDabOK3Vqjz7IJLHyTSyYnHxiE08O6HYKudtAbyV8x0o2R/IEsWNohyLVw==}
+    engines: {node: '>=22'}
+    hasBin: true
+    peerDependencies:
+      '@agentskit/adapters': '>=0.12.0 <1'
+      '@agentskit/core': '>=1.0.0 <2'
+      '@agentskit/ink': '>=0.8.0 <1'
+      '@agentskit/memory': '>=0.9.0 <1'
+      '@agentskit/rag': '>=0.3.0 <1'
+      react: '>=18.0.0'
+    peerDependenciesMeta:
+      '@agentskit/adapters':
+        optional: true
+      '@agentskit/core':
+        optional: true
+      '@agentskit/ink':
+        optional: true
+      '@agentskit/memory':
+        optional: true
+      '@agentskit/rag':
+        optional: true
+      react:
+        optional: true
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+snapshots:
+
+  '@agentskit/doc-bridge@1.0.2':
+    dependencies:
+      zod: 3.25.76
+
+  zod@3.25.76: {}

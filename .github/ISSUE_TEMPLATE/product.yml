@@ -1,0 +1,44 @@
+name: Product requirement
+description: Propose or revise a product-level outcome before decomposition.
+title: "prd: "
+labels:
+  - product
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: stories
+    attributes:
+      label: User stories
+      placeholder: "1. As a ..., I want ..., so that ..."
+    validations:
+      required: true
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Implementation decisions
+    validations:
+      required: true
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing decisions
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Out of scope
+    validations:
+      required: true
+
