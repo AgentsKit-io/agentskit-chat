@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   ChoiceListComponent, createActionConfirmation, createCapabilityPolicy,
   commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
+  resumeChatSession,
+  resolveChatSession,
   resolveChoiceListFrame,
   resolveComponentFrame,
   getLifecycleTargets,
@@ -29,6 +31,12 @@ describe('defineChat', () => {
 
     expect(definition).toEqual({ id: 'support', chat })
     expect(definition.chat).toBe(chat)
+  })
+
+  it('rejects a prepared session from another definition', () => {
+    const first = defineChat({ id: 'first', chat: { adapter } })
+    const session = createChatSession(first, { sessionId: 'shared' })
+    expect(() => resolveChatSession(defineChat({ id: 'second', chat: { adapter } }), session)).toThrow('incompatible')
   })
 })
 
@@ -293,6 +301,20 @@ describe('typed action confirmation', () => {
     const rejecting = await confirmation.propose({ name: 'write', input: {} })
     await expect(confirmation.reject(rejecting.token, 'session')).rejects.toThrow('temporary')
     expect((await confirmation.reject(rejecting.token, 'session')).status).toBe('rejected')
+    expect(deny).toHaveBeenCalledTimes(2)
+  })
+
+  it('retries transient expiry denial without persistent storage', async () => {
+    let clock = 0
+    const deny = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
+    const confirmation = createActionConfirmation({
+      sessionId: 'session', ttlMs: 1, now: () => clock, createId: () => 'expiry-retry',
+      chat: { proposeToolCall: async proposal => ({ ...proposal, status: 'requires_confirmation' }), approve: vi.fn(), deny },
+    })
+    const record = await confirmation.propose({ name: 'write', input: {} })
+    clock = record.expiresAt
+    await expect(confirmation.approve(record.token, 'session')).rejects.toThrow('temporary')
+    expect((await confirmation.approve(record.token, 'session')).status).toBe('expired')
     expect(deny).toHaveBeenCalledTimes(2)
   })
 
@@ -566,5 +588,131 @@ describe('deterministic conversation session', () => {
 
   it('rejects an empty exact command', () => {
     expect(() => commandRoute({ id: 'empty', command: '', event: 'go', response: () => '' })).toThrow(ConfigError)
+  })
+
+  it('persists application metadata and resumes deterministic state without replay', async () => {
+    let stored: unknown
+    const storage = { load: async () => stored, save: async (snapshot: unknown) => { stored = structuredClone(snapshot); return true } }
+    const definition = defineChat({
+      id: 'persistent', revision: 2, chat: { adapter },
+      conversation: {
+        initial: 'idle', states: { idle: { on: { start: 'active' } }, active: {} },
+        routes: [{ id: 'start', event: 'start', match: input => input === '/start', response: () => 'started' }],
+      },
+    })
+    const first = createChatSession(definition, { sessionId: 'shared', storage, now: () => new Date('2026-07-11T00:00:00Z') })
+    await read(first.chat.adapter.createSource(request('/start', 'user-1')))
+    await first.persist()
+
+    const resumed = await resumeChatSession(definition, { sessionId: 'shared', storage })
+    expect(resumed.sessionId).toBe('shared')
+    expect(resumed.getConversationSnapshot()?.state).toBe('active')
+    expect(await read(resumed.chat.adapter.createSource(request('/start', 'user-1')))).toContainEqual({ type: 'text', content: 'started' })
+  })
+
+  it('persists decision removal when an edited turn becomes agentic', async () => {
+    let stored: import('../../protocol/src/index.js').SessionSnapshot | undefined
+    const storage = {
+      load: () => stored,
+      save: (snapshot: import('../../protocol/src/index.js').SessionSnapshot, expected: number | undefined) => {
+        if (stored?.cursor !== expected) return false
+        stored = structuredClone(snapshot)
+        return true
+      },
+    }
+    const definition = defineChat({ id: 'editing', chat: { adapter }, conversation: {
+      initial: 'idle', states: { idle: { on: { start: 'active' } }, active: {} },
+      routes: [{ id: 'start', event: 'start', match: input => input === '/start', response: () => 'started' }],
+    } })
+    const session = createChatSession(definition, { sessionId: 'edit-session', storage })
+    await read(session.chat.adapter.createSource(request('/start', 'user-1')))
+    await session.persist()
+    await read(session.chat.adapter.createSource(request('changed', 'user-1')))
+    await session.persist()
+    const resumed = await resumeChatSession(definition, { sessionId: 'edit-session', storage })
+    expect(resumed.getConversationSnapshot()?.state).toBe('idle')
+    expect(stored?.conversation?.decisions).toEqual([])
+  })
+
+  it('rejects corrupt or incompatible stored sessions before hydration', async () => {
+    const definition = defineChat({ id: 'expected', revision: 1, chat: { adapter } })
+    await expect(resumeChatSession(definition, { sessionId: 'shared', storage: { load: () => ({ version: 99 }), save: () => true } })).rejects.toThrow(ConfigError)
+    await expect(resumeChatSession(definition, { sessionId: 'shared', storage: {
+      load: () => ({ protocol: 'agentskit.chat.session', version: 1, sessionId: 'shared', definitionId: 'other', definitionRevision: 1, updatedAt: new Date().toISOString(), cursor: 0, confirmations: [] }),
+      save: () => true,
+    } })).rejects.toThrow('incompatible')
+  })
+
+  it('restores confirmation binding and keeps resolved actions inert', async () => {
+    let stored: unknown
+    const storage = { load: () => stored, save: (snapshot: unknown) => { stored = structuredClone(snapshot); return true } }
+    const definition = defineChat({ id: 'actions', chat: { adapter } })
+    const upstream = { proposeToolCall: vi.fn(async () => ({ id: 'call-1', name: 'email.send', args: { to: 'a@example.com' }, status: 'requires_confirmation' as const })), approve: vi.fn(async () => undefined), deny: vi.fn(async () => undefined) }
+    const first = createChatSession(definition, { sessionId: 'shared', storage })
+    const pending = await first.createConfirmation({ chat: upstream, now: () => 1, createId: () => 'one' }).propose({ name: 'email.send', input: { to: 'a@example.com' } })
+    await first.persist()
+
+    const resumed = await resumeChatSession(definition, { sessionId: 'shared', storage })
+    const coordinator = resumed.createConfirmation({ chat: upstream, now: () => 2 })
+    expect(coordinator.getByToolCall('call-1')?.token).toBe(pending.token)
+    await coordinator.approve(pending.token, 'shared')
+    await resumed.persist()
+    const terminal = (await resumeChatSession(definition, { sessionId: 'shared', storage })).createConfirmation({ chat: upstream, now: () => 3 })
+    await terminal.approve(pending.token, 'shared')
+    expect(upstream.approve).toHaveBeenCalledTimes(1)
+  })
+
+  it('claims a pending confirmation once across concurrent clients', async () => {
+    let stored: import('../../protocol/src/index.js').SessionSnapshot | undefined
+    const storage = {
+      load: () => stored === undefined ? undefined : structuredClone(stored),
+      save: (snapshot: import('../../protocol/src/index.js').SessionSnapshot, expectedCursor: number | undefined) => {
+        if (stored?.cursor !== expectedCursor) return false
+        stored = structuredClone(snapshot)
+        return true
+      },
+    }
+    const definition = defineChat({ id: 'race', chat: { adapter } })
+    const seedUpstream = { proposeToolCall: vi.fn(async () => ({ id: 'call-race', name: 'charge', args: {}, status: 'requires_confirmation' as const })), approve: vi.fn(), deny: vi.fn() }
+    const seed = createChatSession(definition, { sessionId: 'shared', storage })
+    const pending = await seed.createConfirmation({ chat: seedUpstream, createId: () => 'race' }).propose({ name: 'charge', input: {} })
+
+    const [clientA, clientB] = await Promise.all([
+      resumeChatSession(definition, { sessionId: 'shared', storage }),
+      resumeChatSession(definition, { sessionId: 'shared', storage }),
+    ])
+    const approveA = vi.fn(async () => undefined)
+    const approveB = vi.fn(async () => undefined)
+    const coordinatorA = clientA.createConfirmation({ chat: { ...seedUpstream, approve: approveA } })
+    const coordinatorB = clientB.createConfirmation({ chat: { ...seedUpstream, approve: approveB } })
+    const results = await Promise.allSettled([
+      coordinatorA.approve(pending.token, 'shared'),
+      coordinatorB.approve(pending.token, 'shared'),
+    ])
+    expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(1)
+    expect(approveA.mock.calls.length + approveB.mock.calls.length).toBe(1)
+    expect(stored?.confirmations[0]?.status).toBe('approved')
+  })
+
+  it('keeps an accurate processing claim when upstream approval fails', async () => {
+    let stored: import('../../protocol/src/index.js').SessionSnapshot | undefined
+    const storage = {
+      load: () => stored,
+      save: (snapshot: import('../../protocol/src/index.js').SessionSnapshot, expected: number | undefined) => {
+        if (stored?.cursor !== expected) return false
+        stored = structuredClone(snapshot)
+        return true
+      },
+    }
+    const definition = defineChat({ id: 'failure-claim', chat: { adapter } })
+    const upstream = { proposeToolCall: vi.fn(async () => ({ id: 'call-failure', name: 'charge', args: {}, status: 'requires_confirmation' as const })), approve: vi.fn(async () => { throw new Error('network lost') }), deny: vi.fn() }
+    const seed = createChatSession(definition, { sessionId: 'shared', storage })
+    const pending = await seed.createConfirmation({ chat: upstream, createId: () => 'failure' }).propose({ name: 'charge', input: {} })
+    const resumed = await resumeChatSession(definition, { sessionId: 'shared', storage })
+    await expect(resumed.createConfirmation({ chat: upstream }).approve(pending.token, 'shared')).rejects.toThrow('network lost')
+    expect(stored?.confirmations[0]?.status).toBe('approving')
+    const afterCrash = await resumeChatSession(definition, { sessionId: 'shared', storage })
+    await afterCrash.createConfirmation({ chat: upstream }).approve(pending.token, 'shared')
+    expect(upstream.approve).toHaveBeenCalledOnce()
   })
 })

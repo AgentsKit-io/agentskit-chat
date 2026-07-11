@@ -1,4 +1,4 @@
-import type { ComponentDecodeCode, ComponentRenderFrame, ProtocolDecodeCode, TurnEvent } from './index.js'
+import type { ComponentDecodeCode, ComponentRenderFrame, ProtocolDecodeCode, SessionSnapshot, TurnEvent } from './index.js'
 
 export interface TurnEventFixture {
   readonly name: string
@@ -184,3 +184,10 @@ export const invalidComponentFrameFixtures = [
   { name: 'unsupported version', frame: { ...validChoiceListFrame, version: 2 }, code: 'COMPONENT_UNSUPPORTED_VERSION' },
   { name: 'unknown type', frame: { ...validChoiceListFrame, type: 'future' }, code: 'COMPONENT_UNKNOWN_TYPE' },
 ] as const satisfies readonly { readonly name: string; readonly frame: unknown; readonly code: ComponentDecodeCode }[]
+
+export const persistentSessionFixture = {
+  protocol: 'agentskit.chat.session', version: 1, sessionId: 'cross-client', definitionId: 'protocol-session', definitionRevision: 1,
+  updatedAt: '2026-07-11T00:00:00.000Z', cursor: 1,
+  conversation: { state: 'complete', decisions: [] },
+  confirmations: [],
+} as const satisfies SessionSnapshot

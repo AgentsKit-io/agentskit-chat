@@ -14,6 +14,8 @@ const definition = defineChat({ id: 'support', chat: agentskitChatConfig })
 
 `defineChat` preserves the upstream `ChatConfig`; it does not create another runtime.
 
+Use `resumeChatSession(definition, { sessionId, storage })` for cross-client application metadata and pass the returned session to any renderer. Keep messages in `definition.chat.memory` using upstream `ChatMemory`.
+
 The package also owns the runtime-validated semantic fallback envelope shared by native renderers:
 
 ```ts

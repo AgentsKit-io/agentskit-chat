@@ -6,6 +6,8 @@
 
 It does not own the AgentsKit controller, `StreamChunk`, `AgentEvent`, a lifecycle reducer, transport, persistence, or renderer state.
 
+It owns the application-session envelope schema and compatibility decoder, but not its storage implementation. The session envelope must never contain canonical messages; those remain in upstream `ChatMemory`.
+
 ## Read first
 
 - [`../../architecture/adrs/0004-snapshot-first-turn-protocol.md`](../../architecture/adrs/0004-snapshot-first-turn-protocol.md)
