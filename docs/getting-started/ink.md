@@ -20,4 +20,4 @@ const chat = defineChat({ id: 'support', chat: { adapter } })
 render(<AgentChat definition={chat} />)
 ```
 
-The shell delegates lifecycle, streaming, input history, Escape cancellation, and terminal components to `@agentskit/ink`. Render unsupported visual components with `SemanticFallback` so terminal users receive a stable kind and readable summary.
+The shell delegates lifecycle, streaming, input history, Escape cancellation, and terminal components to `@agentskit/ink`. Validate unsupported visual output with `parseSemanticFallback` from `@agentskit/chat`, then render it with Ink's `SemanticFallback`; the shared formatter keeps its kind and readable summary stable across platforms.

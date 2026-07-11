@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "7c98084eb757fd2887297c67b5ed1c7b24b6902e107c4c1083fcbeca79ee3363",
+  "contentHash": "3c113869dcfe21b21c1310870d51c497ea92ed9b5286f3fe2a3113d94c618f92",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T03:22:29.958Z",
+  "generatedAt": "2026-07-11T03:29:50.407Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -69,16 +69,16 @@
       "type": "agent-doc",
       "title": "Chat package handoff",
       "path": "docs/for-agents/packages/chat.md",
-      "description": "`packages/chat` owns only framework-neutral application definitions. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
-      "body": "Chat package handoff Ownership packages/chat owns only framework-neutral application definitions. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - Checks"
+      "description": "`packages/chat` owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
+      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - Checks"
     },
     {
       "id": "ink",
       "type": "agent-doc",
       "title": "Ink package handoff",
       "path": "docs/for-agents/packages/ink.md",
-      "description": "`packages/ink` owns only the application-level Ink composition and semantic text fallback.",
-      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition and semantic text fallback. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
+      "description": "`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.",
+      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
     },
     {
       "id": "react-native",

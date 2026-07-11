@@ -1,19 +1,17 @@
+import { formatSemanticFallback, parseSemanticFallback } from '@agentskit/chat'
 import type { ChatDefinition } from '@agentskit/chat'
 import { ChatContainer, InputBar, Message, ThinkingIndicator, useChat } from '@agentskit/ink'
 import { Box, Text } from 'ink'
 import type { ReactElement } from 'react'
 
 export interface SemanticFallbackProps {
-  readonly kind: string
-  readonly summary: string
+  readonly fallback: unknown
 }
 
-export const formatSemanticFallback = ({ kind, summary }: SemanticFallbackProps): string =>
-  `[unsupported visual: ${kind}] ${summary}`
-
-export const SemanticFallback = (props: SemanticFallbackProps): ReactElement => (
-  <Text dimColor>{formatSemanticFallback(props)}</Text>
-)
+export const SemanticFallback = ({ fallback }: SemanticFallbackProps): ReactElement => {
+  const validated = parseSemanticFallback(fallback)
+  return <Text dimColor>{formatSemanticFallback(validated)}</Text>
+}
 
 export interface AgentChatProps {
   readonly definition: ChatDefinition
@@ -38,4 +36,4 @@ export const AgentChat = (props: AgentChatProps): ReactElement => (
   <AgentChatSession key={props.definition.id} {...props} />
 )
 
-export type { ChatDefinition } from '@agentskit/chat'
+export type { ChatDefinition, SemanticFallback as SemanticFallbackContent } from '@agentskit/chat'

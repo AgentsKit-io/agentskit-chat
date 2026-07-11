@@ -23,6 +23,9 @@
   "peerDependencies": {
     "@agentskit/core": "^1.9.0"
   },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
     "@agentskit/core": "^1.9.0",
     "tsup": "^8.5.1"

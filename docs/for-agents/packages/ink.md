@@ -2,7 +2,7 @@
 
 ## Owner
 
-`packages/ink` owns only the application-level Ink composition and semantic text fallback.
+`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.
 
 ## Upstream boundary
 

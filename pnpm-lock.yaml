@@ -136,6 +136,10 @@ importers:
         version: 1.10.2
 
   packages/chat:
+    dependencies:
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
     devDependencies:
       '@agentskit/core':
         specifier: ^1.9.0
@@ -3478,6 +3482,9 @@ packages:
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -6954,3 +6961,5 @@ snapshots:
   yoga-layout@3.2.1: {}
 
   zod@3.25.76: {}
+
+  zod@4.4.3: {}

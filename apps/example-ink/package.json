@@ -7,7 +7,7 @@
     "build": "tsup src/index.tsx --format esm --clean --external react --external ink --external @agentskit/ink",
     "lint": "tsc --noEmit",
     "start": "node dist/index.js",
-    "test:pty": "pnpm build && vitest run tests/ink-pty.test.ts"
+    "test:pty": "pnpm --filter @agentskit/chat-ink build && pnpm build && vitest run tests/ink-pty.test.ts"
   },
   "dependencies": {
     "@agentskit/chat-example-shared": "workspace:*",
