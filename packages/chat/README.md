@@ -4,6 +4,8 @@ Framework-neutral application definitions for AgentsKit Chat.
 
 Actionable choices use `createActionConfirmation`, which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit.
 
+Use `createCapabilityPolicy` and `withActionPolicy` to default-deny actions from trusted session capabilities while keeping enforcement in AgentsKit.
+
 The package also provides session-scoped deterministic routes and explicit conversation-state projections while unresolved turns stay on the upstream AgentsKit controller.
 
 ```ts

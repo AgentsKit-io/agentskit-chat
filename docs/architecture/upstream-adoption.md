@@ -14,6 +14,10 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 
 The tool/controller lifecycle and official confirmation renderers were inspected. AgentsKit Chat reuses `proposeToolCall`, `approve`, and `deny` from `@agentskit/core@1.11.0`, plus the released React, React Native, and Ink `ToolConfirmation` components. The missing generic seam was resolved in [upstream #1144](https://github.com/AgentsKit-io/agentskit/issues/1144) and [PR #1145](https://github.com/AgentsKit-io/agentskit/pull/1145) before integration. Local code owns only choice declarations and session-bound metadata; it contains no executor, tool validator, controller, or confirmation widget.
 
+## Trusted action policy (#9)
+
+AgentsKit Chat consumes `ChatConfig.authorizeToolCall` from `@agentskit/core@1.12.0`, delivered by [upstream #1147](https://github.com/AgentsKit-io/agentskit/issues/1147) and [PR #1148](https://github.com/AgentsKit-io/agentskit/pull/1148). Upstream owns enforcement before proposal and execution. Local code adds only trusted capability resolution, composition, and replayable application traces.
+
 ## Current upstream packages
 
 | Package | Inspected version | Role in AgentsKit Chat |

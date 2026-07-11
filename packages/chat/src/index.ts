@@ -1,5 +1,5 @@
 import { ConfigError, ErrorCodes } from '@agentskit/core'
-import type { AdapterRequest, ChatConfig, ChatReturn, Message, StreamSource, ToolCall } from '@agentskit/core'
+import type { AdapterRequest, ChatConfig, ChatReturn, Message, StreamSource, ToolAuthorizer, ToolCall } from '@agentskit/core'
 import {
   ComponentFallbackSchema,
   ComponentKeySchema,
@@ -34,6 +34,122 @@ export const ChoiceListPropsSchema = z.object({
 export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
 
 export type ChoiceAction = NonNullable<ChoiceListProps['choices'][number]['action']>
+
+export interface TrustedActionContext {
+  readonly sessionId: string
+  readonly capabilities: readonly string[]
+}
+
+export type ActionPolicyReason = 'allowed' | 'missing-context' | 'session-mismatch' | 'action-unregistered' | 'missing-capability' | 'composed-policy-denied' | 'policy-failure'
+
+export interface ActionPolicyTrace {
+  readonly id: string
+  readonly toolCallId: string
+  readonly action: string
+  readonly phase: 'propose' | 'execute'
+  readonly decision: 'allow' | 'deny'
+  readonly reason: ActionPolicyReason
+  readonly requiredCapabilities: readonly string[]
+  readonly timestamp: number
+}
+
+export interface ActionPolicy {
+  readonly authorizeToolCall: ToolAuthorizer
+  readonly compose: (authorizer?: ToolAuthorizer) => ToolAuthorizer
+  readonly getTrace: () => readonly ActionPolicyTrace[]
+}
+
+export interface CapabilityPolicyOptions {
+  readonly sessionId: string
+  readonly getContext: () => TrustedActionContext | undefined
+  readonly requirements: Readonly<Record<string, readonly string[]>>
+  readonly onTrace?: (trace: ActionPolicyTrace) => void | Promise<void>
+  readonly now?: () => number
+}
+
+export const createCapabilityPolicy = ({ sessionId, getContext, requirements, onTrace, now = Date.now }: CapabilityPolicyOptions): ActionPolicy => {
+  if (sessionId.length === 0) invalidConfirmation('Action policy session is invalid.')
+  const required = new Map(Object.entries(requirements).map(([action, capabilities]) => {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(action)
+      || capabilities.some(capability => !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(capability))) {
+      return invalidConfirmation('Action policy requirements are invalid.')
+    }
+    return [action, Object.freeze([...new Set(capabilities)])] as const
+  }))
+  const traces: ActionPolicyTrace[] = []
+  let sequence = 0
+  const record = (call: ToolCall, phase: ActionPolicyTrace['phase'], capabilities: readonly string[], reason: ActionPolicyReason): ActionPolicyTrace => {
+    const trace: ActionPolicyTrace = Object.freeze({
+      id: `policy-${++sequence}`,
+      toolCallId: call.id,
+      action: call.name,
+      phase,
+      decision: reason === 'allowed' ? 'allow' : 'deny',
+      reason,
+      requiredCapabilities: capabilities,
+      timestamp: now(),
+    })
+    traces.push(trace)
+    try { void Promise.resolve(onTrace?.(trace)).catch(() => undefined) } catch { /* observer isolation */ }
+    return trace
+  }
+  const decide = (call: ToolCall): { readonly capabilities: readonly string[], readonly reason: ActionPolicyReason } => {
+    const capabilities = required.get(call.name)
+    let trusted: TrustedActionContext | undefined
+    try {
+      const candidate = getContext()
+      if (candidate !== undefined && (typeof candidate.sessionId !== 'string'
+        || !Array.isArray(candidate.capabilities)
+        || !candidate.capabilities.every(capability => typeof capability === 'string'))) throw new TypeError('Invalid trusted context')
+      trusted = candidate === undefined ? undefined : {
+        sessionId: candidate.sessionId,
+        capabilities: Object.freeze([...candidate.capabilities]),
+      }
+    } catch { return { capabilities: capabilities ?? Object.freeze([]), reason: 'policy-failure' } }
+    return {
+      capabilities: capabilities ?? Object.freeze([]),
+      reason: capabilities === undefined
+        ? 'action-unregistered'
+        : trusted === undefined
+          ? 'missing-context'
+          : trusted.sessionId !== sessionId
+            ? 'session-mismatch'
+            : capabilities.some(capability => !trusted.capabilities.includes(capability))
+              ? 'missing-capability'
+              : 'allowed',
+    }
+  }
+  return {
+    async authorizeToolCall(call, context) {
+      const { capabilities, reason } = decide(call)
+      const trace = record(call, context.phase, capabilities, reason)
+      return { allowed: trace.decision === 'allow', ...(trace.decision === 'deny' ? { reason: trace.reason } : {}) }
+    },
+    compose: authorizer => async (call, context) => {
+      let local = decide(call)
+      let reason = local.reason
+      if (reason === 'allowed' && authorizer) {
+        try {
+          if (!(await authorizer(call, context)).allowed) reason = 'composed-policy-denied'
+          else {
+            local = decide(call)
+            reason = local.reason
+          }
+        } catch { reason = 'policy-failure' }
+      }
+      const trace = record(call, context.phase, local.capabilities, reason)
+      return { allowed: trace.decision === 'allow', ...(trace.decision === 'deny' ? { reason: trace.reason } : {}) }
+    },
+    getTrace: () => Object.freeze([...traces]),
+  }
+}
+
+export const withActionPolicy = (chat: ChatConfig, policy: ActionPolicy): ChatConfig => {
+  return {
+    ...chat,
+    authorizeToolCall: policy.compose(chat.authorizeToolCall),
+  }
+}
 
 export const resolveChoiceAction = (frame: ComponentRenderFrame, choiceId: string): ChoiceAction | undefined => {
   const props = ChoiceListPropsSchema.parse(frame.props)

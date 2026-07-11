@@ -59,6 +59,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   } }))
   const selectComponent = (event: ComponentSelectionEvent, frame: import('@agentskit/chat-protocol').ComponentRenderFrame): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
+    setActionError(undefined)
     resolvedInstancesRef.current.add(event.instanceId)
     setResolvedInstances(new Set(resolvedInstancesRef.current))
     try { onComponentSelect(event) } catch (error) {
