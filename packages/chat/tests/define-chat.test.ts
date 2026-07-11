@@ -3,11 +3,11 @@ import type { AdapterFactory, AdapterRequest, StreamChunk } from '@agentskit/cor
 import { describe, expect, it, vi } from 'vitest'
 
 import {
-  ChoiceListComponent, createActionConfirmation,
+  ChoiceListComponent, createActionConfirmation, createCapabilityPolicy,
   commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
   resolveChoiceListFrame,
   resolveComponentFrame,
-  selectChoice,
+  selectChoice, withActionPolicy,
   type TurnTrace,
 } from '../src/index.js'
 import { validChoiceListFrame } from '../../protocol/src/fixtures.js'
@@ -74,6 +74,127 @@ describe('component manifest', () => {
 })
 
 describe('typed action confirmation', () => {
+  it('resolves capabilities only from trusted session context and records decisions', async () => {
+    let context = { sessionId: 'session-a', capabilities: ['email.send'] as readonly string[] }
+    const policy = createCapabilityPolicy({
+      sessionId: 'session-a',
+      getContext: () => context,
+      requirements: { 'send-email': ['email.send'], 'delete-user': ['user.delete'] },
+      now: () => 42,
+    })
+    const execute = vi.fn()
+    const controller = createChatController(withActionPolicy({
+      adapter,
+      tools: [
+        { name: 'send-email', requiresConfirmation: true, execute },
+        { name: 'delete-user', requiresConfirmation: true, execute },
+      ],
+    }, policy))
+
+    await expect(controller.proposeToolCall({ id: 'allowed', name: 'send-email', args: {} })).resolves.toMatchObject({ status: 'requires_confirmation' })
+    await expect(controller.proposeToolCall({ id: 'denied', name: 'delete-user', args: { capabilities: ['user.delete'] } })).rejects.toMatchObject({ code: 'AK_TOOL_FORBIDDEN' })
+    context = { sessionId: 'other-session', capabilities: ['email.send', 'user.delete'] }
+    await expect(controller.proposeToolCall({ id: 'confused-deputy', name: 'delete-user', args: {} })).rejects.toMatchObject({ code: 'AK_TOOL_FORBIDDEN' })
+
+    expect(policy.getTrace()).toEqual([
+      expect.objectContaining({ action: 'send-email', phase: 'propose', decision: 'allow', timestamp: 42 }),
+      expect.objectContaining({ action: 'delete-user', phase: 'propose', decision: 'deny', reason: 'missing-capability' }),
+      expect.objectContaining({ action: 'delete-user', phase: 'propose', decision: 'deny', reason: 'session-mismatch' }),
+    ])
+    expect(execute).not.toHaveBeenCalled()
+  })
+
+  it('rechecks revoked capability at execution and composes existing upstream policy', async () => {
+    let capabilities: readonly string[] = ['write']
+    const onTrace = vi.fn()
+    const policy = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => ({ sessionId: 'session', capabilities }),
+      requirements: { write: ['write'] }, onTrace,
+    })
+    const existing = vi.fn(() => ({ allowed: true }))
+    const execute = vi.fn()
+    const controller = createChatController(withActionPolicy({
+      adapter, authorizeToolCall: existing,
+      tools: [{ name: 'write', requiresConfirmation: true, execute }],
+    }, policy))
+    await controller.proposeToolCall({ id: 'revoked', name: 'write', args: {} })
+    capabilities = []
+    await controller.approve('revoked')
+
+    expect(execute).not.toHaveBeenCalled()
+    expect(existing).toHaveBeenCalledOnce()
+    expect(onTrace).toHaveBeenCalledTimes(2)
+    expect(policy.getTrace().at(-1)).toMatchObject({ phase: 'execute', decision: 'deny', reason: 'missing-capability' })
+  })
+
+  it('records the effective denial from a composed upstream policy', async () => {
+    const policy = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => ({ sessionId: 'session', capabilities: [] }), requirements: { read: [] },
+    })
+    const controller = createChatController(withActionPolicy({
+      adapter, authorizeToolCall: () => ({ allowed: false }), tools: [{ name: 'read', requiresConfirmation: true, execute: vi.fn() }],
+    }, policy))
+    await expect(controller.proposeToolCall({ id: 'denied', name: 'read', args: {} })).rejects.toMatchObject({ code: 'AK_TOOL_FORBIDDEN' })
+    expect(policy.getTrace()).toEqual([expect.objectContaining({ decision: 'deny', reason: 'composed-policy-denied' })])
+  })
+
+  it('rechecks capabilities after an asynchronous composed policy', async () => {
+    let capabilities: readonly string[] = ['write']
+    const execute = vi.fn()
+    const policy = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => ({ sessionId: 'session', capabilities }), requirements: { write: ['write'] },
+    })
+    const controller = createChatController(withActionPolicy({
+      adapter,
+      authorizeToolCall: async (_call, context) => {
+        if (context.phase === 'execute') {
+          await Promise.resolve()
+          capabilities = []
+        }
+        return { allowed: true }
+      },
+      tools: [{ name: 'write', requiresConfirmation: true, execute }],
+    }, policy))
+    await controller.proposeToolCall({ id: 'revoked-during-policy', name: 'write', args: {} })
+    await controller.approve('revoked-during-policy')
+    expect(execute).not.toHaveBeenCalled()
+    expect(policy.getTrace().at(-1)).toMatchObject({ phase: 'execute', decision: 'deny', reason: 'missing-capability' })
+  })
+
+  it('defaults missing context, unregistered actions, invalid policy, and trace observers safely', async () => {
+    const policy = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => undefined, requirements: { write: [] },
+      onTrace: () => { throw new Error('observer failed') },
+    })
+    await expect(policy.authorizeToolCall(
+      { id: 'missing', name: 'write', args: {}, status: 'pending' },
+      { phase: 'propose', messages: [] },
+    )).resolves.toEqual({ allowed: false, reason: 'missing-context' })
+    await expect(policy.authorizeToolCall(
+      { id: 'unknown', name: 'unknown', args: {}, status: 'pending' },
+      { phase: 'propose', messages: [] },
+    )).resolves.toEqual({ allowed: false, reason: 'action-unregistered' })
+    const failed = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => { throw new Error('secret failure') }, requirements: { write: [] },
+    })
+    await expect(failed.authorizeToolCall(
+      { id: 'failed', name: 'write', args: {}, status: 'pending' },
+      { phase: 'execute', messages: [] },
+    )).resolves.toEqual({ allowed: false, reason: 'policy-failure' })
+    expect(failed.getTrace()).toEqual([expect.objectContaining({ reason: 'policy-failure', decision: 'deny' })])
+    const malformed = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => ({ sessionId: 'session', capabilities: undefined } as never), requirements: { write: [] },
+    })
+    await expect(malformed.authorizeToolCall(
+      { id: 'malformed', name: 'write', args: {}, status: 'pending' },
+      { phase: 'propose', messages: [] },
+    )).resolves.toEqual({ allowed: false, reason: 'policy-failure' })
+    expect(() => createCapabilityPolicy({ sessionId: '', getContext: () => undefined, requirements: {} })).toThrow()
+    expect(() => createCapabilityPolicy({
+      sessionId: 'session', getContext: () => undefined, requirements: { write: ['invalid capability'] },
+    })).toThrow()
+  })
+
   it('binds a validated upstream proposal and approves exactly once', async () => {
     const execute = vi.fn(() => 'done')
     const controller = createChatController({

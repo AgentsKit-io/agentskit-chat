@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { AgentChat, ChoiceList } from '../src/index.js'
-import { ChoiceListComponent, commandRoute, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, commandRoute, createCapabilityPolicy, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 afterEach(() => {
@@ -106,6 +106,36 @@ describe('AgentChat', () => {
     clock += 2
     fireEvent.click(approve)
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Approve' })).toBeNull())
+    expect(execute).not.toHaveBeenCalled()
+  })
+
+  it('shows safe guidance without confirmation when trusted policy denies an action', async () => {
+    const execute = vi.fn()
+    let trusted = false
+    const actionableFrame = {
+      ...validChoiceListFrame,
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => choice.id === 'docs'
+        ? { ...choice, action: { name: 'open-docs', input: {} } } : choice) },
+    }
+    const policy = createCapabilityPolicy({
+      sessionId: 'session', getContext: () => trusted ? { sessionId: 'session', capabilities: ['docs.open'] } : undefined,
+      requirements: { 'open-docs': ['docs.open'] },
+    })
+    render(<AgentChat definition={defineChat({
+      id: 'policy-denied', components: defineComponentManifest([ChoiceListComponent]),
+      chat: withActionPolicy({
+        adapter: adapter(),
+        initialMessages: [{ id: 'choice', role: 'assistant', content: JSON.stringify(actionableFrame), status: 'complete', createdAt: new Date() }],
+        tools: [{ name: 'open-docs', requiresConfirmation: true, execute }],
+      }, policy),
+    })} />)
+    fireEvent.click(screen.getByRole('button', { name: /Documentation/ }))
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('missing-context'))
+    expect(screen.queryByRole('button', { name: 'Approve' })).toBeNull()
+    trusted = true
+    fireEvent.click(screen.getByRole('button', { name: /Documentation/ }))
+    expect(await screen.findByRole('button', { name: 'Approve' })).toBeTruthy()
+    expect(screen.queryByRole('alert')).toBeNull()
     expect(execute).not.toHaveBeenCalled()
   })
 
