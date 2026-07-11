@@ -13,5 +13,5 @@ export default function App() {
 ```
 
 The renderer consumes `@agentskit/react-native` directly. The shared definition contains no DOM,
-React web, Expo, or React Native imports. Version `0.3.4` or newer is required so active streams
-are cancelled when their owning native screen unmounts.
+React web, Expo, or React Native imports. Version `0.3.5` or newer is required so cancellation
+covers both native-screen unmount and asynchronous preparation before adapter source creation.
