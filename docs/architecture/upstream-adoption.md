@@ -40,7 +40,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
 | `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
 | `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
-| `@agentskit/vue` | 0.3.1 | Vue composable and components. |
+| `@agentskit/vue` | 0.4.4 | Vue composable, headless components, and controller-free slotted `ChatRoot`. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
 | `@agentskit/solid` | 0.3.1 | Solid hook and components. |
 | `@agentskit/angular` | 0.3.1 | Angular service and components. |
