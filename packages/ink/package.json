@@ -1,0 +1,29 @@
+{
+  "name": "@agentskit/chat-ink",
+  "version": "0.0.0",
+  "description": "Ink application shell for AgentsKit Chat.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --clean --external react --external ink --external @agentskit/ink",
+    "lint": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": { "@agentskit/chat": "workspace:*" },
+  "peerDependencies": { "@agentskit/ink": "^0.9.5", "ink": ">=7.1.0", "react": ">=18" },
+  "devDependencies": {
+    "@agentskit/core": "^1.10.2",
+    "@agentskit/ink": "^0.9.5",
+    "@types/react": "^19.2.17",
+    "ink": "^7.1.0",
+    "ink-testing-library": "^4.0.0",
+    "react": "^19.2.7",
+    "tsup": "^8.5.1"
+  },
+  "publishConfig": { "access": "public" }
+}

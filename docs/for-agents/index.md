@@ -10,8 +10,10 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Chat package](./packages/chat.md): minimal framework-neutral `defineChat` contract.
 - [React package](./packages/react.md): native React shell over `@agentskit/react`.
 - [React Native package](./packages/react-native.md): native mobile shell over `@agentskit/react-native`.
+- [Ink package](./packages/ink.md): native terminal shell and semantic text fallback.
 - [React example](./apps/example-react.md): deterministic executable proof.
 - [React Native example](./apps/example-react-native.md): Expo proof using the shared definition.
+- [Ink example](./apps/example-ink.md): PTY proof using the shared definition.
 - [Shared example](./apps/example-shared.md): framework-neutral deterministic definition and fixture.
 
 ## Invariants

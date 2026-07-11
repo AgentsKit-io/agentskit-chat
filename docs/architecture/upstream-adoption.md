@@ -21,7 +21,7 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 | `@agentskit/eval` | 0.4.7 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting. |
 | `@agentskit/react` | 0.6.1 | React hook and headless chat components. |
 | `@agentskit/react-native` | 0.3.1 | React Native hook and components. |
-| `@agentskit/ink` | 0.9.1 | Ink hook, terminal components, theme, and progress observer. |
+| `@agentskit/ink` | 0.9.5 | Ink hook, terminal components, theme, progress observer, and Escape stream cancellation. |
 | `@agentskit/vue` | 0.3.1 | Vue composable and components. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
 | `@agentskit/solid` | 0.3.1 | Solid hook and components. |
@@ -50,7 +50,7 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 | Eval and snapshots | `eval/src/*` | `runEval`, `@agentskit/eval/snapshot`, `diff`, `ci` | Reuse directly | Add renderer and application-policy conformance fixtures. | None. |
 | React rendering | `react/src/*` | `useChat` and headless components from `@agentskit/react` | Reuse directly | Supply an opinionated shell, slots, and application components. | None for #2. |
 | React Native rendering | `react-native/src/*` | `useChat` and native components | Reuse directly | Supply a native shell and application components. | None. |
-| Ink rendering | `ink/src/*` | `useChat`, terminal components, theme | Reuse directly | Supply terminal shell, keyboard flow, and semantic fallbacks. | None. |
+| Ink rendering | `ink/src/useChat.ts`, `ink/src/components/{InputBar,ChatContainer,Message,ThinkingIndicator}.tsx` | `useChat`, terminal components, theme | Reuse directly | Supply the terminal application shell and semantic fallback only. | Escape cancellation fixed upstream by [AgentsKit #1132](https://github.com/AgentsKit-io/agentskit/issues/1132) and released in `@agentskit/ink` 0.9.5 via [PR #1133](https://github.com/AgentsKit-io/agentskit/pull/1133). |
 | Vue/Svelte/Solid/Angular | Corresponding package sources | Corresponding supported composable/store/service and components | Reuse directly | Adapt only native composition conventions to the shared definition. | Verify again in each renderer issue because beta APIs may evolve. |
 | Deterministic application routes | No equivalent application router required in core | `ChatController.send` remains the agentic fallback | Add application layer | Match trusted application routes before delegating unresolved input to the upstream controller. | None: intentionally above core. |
 | Conversation state machine | No general public statechart contract in AgentsKit | Controller remains responsible for chat lifecycle | Add application layer initially | Coordinate application states without replacing controller lifecycle. Promote upstream only if a framework-neutral primitive proves independently useful. | Not currently proven. |
@@ -109,4 +109,3 @@ The following changes are rejected:
 ## Current gap verdict
 
 No upstream change blocks #2. Later issues must repeat the source audit because upstream beta packages and the application requirements may evolve. When a genuine generic gap appears, ADR-0002 requires an AgentsKit issue and supported upstream release before local integration.
-

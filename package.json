@@ -10,6 +10,7 @@
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
     "lint": "pnpm -r --if-present lint",
     "test": "pnpm -r --if-present test",
+    "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
     "test:e2e": "playwright test",
     "docs:bridge:index": "ak-docs index",
     "docs:bridge:query": "ak-docs query",
@@ -19,7 +20,11 @@
     "@agentskit/doc-bridge": "1.0.2",
     "@playwright/test": "^1.61.0",
     "@vitest/coverage-v8": "^4.1.9",
+    "node-pty": "^1.1.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["node-pty"]
   }
 }
