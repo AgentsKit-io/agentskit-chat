@@ -1,0 +1,25 @@
+{
+  "name": "@agentskit/chat-example-react",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-react": "workspace:*",
+    "@agentskit/core": "^1.9.0",
+    "@agentskit/react": "^0.6.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.16"
+  }
+}

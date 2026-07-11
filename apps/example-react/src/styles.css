@@ -1,0 +1,8 @@
+:root { color: #18201b; background: #eef3ed; font: 100%/1.5 sans-serif; }
+body { margin: 0; }
+main { width: min(42rem, calc(100% - 2rem)); margin: 4rem auto; }
+header { margin-bottom: 2rem; }
+h1 { font-size: clamp(2rem, 7vw, 4rem); line-height: 1; margin: 0; }
+[data-ak-app-chat] { display: grid; gap: 1rem; padding: 1rem; background: white; border: 1px solid #cad5c9; border-radius: 1rem; }
+[role="alert"] { color: #9f1d20; }
+*:focus-visible { outline: 0.15rem solid #245c3a; outline-offset: 0.15rem; }

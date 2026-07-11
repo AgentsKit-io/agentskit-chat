@@ -6,12 +6,20 @@
   "license": "MIT",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
+    "build": "pnpm -r --if-present build",
+    "dev": "pnpm --filter @agentskit/chat-example-react dev",
+    "lint": "pnpm -r --if-present lint",
+    "test": "pnpm -r --if-present test",
+    "test:e2e": "playwright test",
     "docs:bridge:index": "ak-docs index",
     "docs:bridge:query": "ak-docs query",
     "docs:bridge:gate": "ak-docs gate run"
   },
   "devDependencies": {
-    "@agentskit/doc-bridge": "1.0.2"
+    "@agentskit/doc-bridge": "1.0.2",
+    "@playwright/test": "^1.61.0",
+    "@vitest/coverage-v8": "^4.1.9",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }
-

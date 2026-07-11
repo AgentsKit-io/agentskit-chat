@@ -1,0 +1,41 @@
+{
+  "name": "@agentskit/chat-react",
+  "version": "0.0.0",
+  "description": "React application shell for AgentsKit Chat.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --clean --external react --external @agentskit/react",
+    "lint": "tsc --noEmit",
+    "test": "vitest run --environment happy-dom"
+  },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*"
+  },
+  "peerDependencies": {
+    "@agentskit/react": "^0.6.1",
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@agentskit/core": "^1.9.0",
+    "@agentskit/react": "^0.6.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.17",
+    "happy-dom": "^20.10.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsup": "^8.5.1"
+  },
+  "publishConfig": { "access": "public" }
+}
