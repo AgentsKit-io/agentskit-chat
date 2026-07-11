@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "3c113869dcfe21b21c1310870d51c497ea92ed9b5286f3fe2a3113d94c618f92",
+  "contentHash": "ac5330e92cb81331c447328a97f3c3db9b4e84aa1743d33d3d627f2196bc2429",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T03:29:50.407Z",
+  "generatedAt": "2026-07-11T06:38:55.876Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "chat",
@@ -79,6 +79,14 @@
       "path": "docs/for-agents/packages/ink.md",
       "description": "`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.",
       "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
+    },
+    {
+      "id": "protocol",
+      "type": "agent-doc",
+      "title": "Protocol package handoff",
+      "path": "docs/for-agents/packages/protocol.md",
+      "description": "`packages/protocol` owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus.",
+      "body": "Protocol package handoff Ownership packages/protocol owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. Read first - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
     },
     {
       "id": "react-native",
@@ -364,6 +372,35 @@
         "Product requirements, user stories, scope, and release outcomes"
       ]
     },
+    "protocol": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "protocol",
+        "path": "packages/protocol"
+      },
+      "startHere": "docs/for-agents/packages/protocol.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/protocol.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/protocol"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-protocol lint",
+        "pnpm --filter @agentskit/chat-protocol test"
+      ],
+      "humanDoc": "protocol/v1",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures"
+      ]
+    },
     "react": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -434,6 +471,7 @@
       "governance",
       "ink",
       "product",
+      "protocol",
       "react",
       "react-native"
     ],
@@ -533,6 +571,17 @@
         "purpose": "Product requirements, user stories, scope, and release outcomes",
         "humanDoc": "product/PRD",
         "agentDoc": "docs/for-agents/product.md"
+      },
+      "protocol": {
+        "id": "protocol",
+        "path": "packages/protocol",
+        "checks": [
+          "pnpm --filter @agentskit/chat-protocol lint",
+          "pnpm --filter @agentskit/chat-protocol test"
+        ],
+        "purpose": "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures",
+        "humanDoc": "protocol/v1",
+        "agentDoc": "docs/for-agents/packages/protocol.md"
       },
       "react": {
         "id": "react",

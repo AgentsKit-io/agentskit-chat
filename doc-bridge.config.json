@@ -65,6 +65,16 @@
             "pnpm --filter @agentskit/chat test"
           ]
         },
+        "protocol": {
+          "path": "packages/protocol",
+          "purpose": "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures",
+          "agentDoc": "docs/for-agents/packages/protocol.md",
+          "humanDoc": "protocol/v1",
+          "checks": [
+            "pnpm --filter @agentskit/chat-protocol lint",
+            "pnpm --filter @agentskit/chat-protocol test"
+          ]
+        },
         "react": {
           "path": "packages/react",
           "purpose": "React application shell consuming @agentskit/react directly",
