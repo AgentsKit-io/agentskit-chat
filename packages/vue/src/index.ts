@@ -3,7 +3,8 @@ import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } f
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatRoot, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/vue'
-import { defineComponent, h, ref, type CSSProperties, type PropType, type Slots, type VNodeChild } from 'vue'
+import type { Message as ChatMessage } from '@agentskit/core'
+import { defineComponent, Fragment, h, ref, type CSSProperties, type PropType, type Slots, type VNodeChild } from 'vue'
 
 export type ChatCssVariables = CSSProperties & { readonly [key: `--ak-${string}`]: string | number }
 
@@ -91,11 +92,18 @@ const agentChatProps = {
 
 const AgentChatSession = defineComponent({
   name: 'AgentsKitChatSession',
-  props: agentChatProps,
+  props: {
+    ...agentChatProps,
+    initialMessages: { type: Array as PropType<ChatMessage[]>, default: undefined },
+    onMessages: { type: Function as PropType<(messages: ChatMessage[]) => void>, required: true },
+  },
   setup(props, { slots }) {
     const session = resolveChatSession(props.definition, props.session)
     const sessionId = session.sessionId
-    const chat = useChat(session.updateChat(props.definition.chat))
+    const chat = useChat(session.updateChat({
+      ...props.definition.chat,
+      ...(props.initialMessages === undefined ? {} : { initialMessages: props.initialMessages }),
+    }))
     const actionError = ref<Error>()
     const editDraft = ref<{ readonly messageId: string, readonly content: string }>()
     const resolvedInstances = ref(new Set<string>())
@@ -133,21 +141,25 @@ const AgentChatSession = defineComponent({
     }
 
     return () => {
+      props.onMessages(chat.messages)
       const targets = getLifecycleTargets(chat.messages)
       const messages = chat.messages.map(message => {
         const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
         const decoded = candidate ? decodeComponentFrame(message.content) : undefined
         if (decoded?.ok) {
           const resolved = props.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, props.definition.components)
-          return resolved?.ok
+          const rendered = resolved?.ok
             ? slot(slots, 'choiceList', { frame: decoded.frame, manifest: props.definition.components, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: props.definition.components!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
-            : h('p', { key: message.id, 'data-ak-component-fallback': '' }, formatSemanticFallback(decoded.frame.fallback))
+            : h('p', { 'data-ak-component-fallback': '' }, formatSemanticFallback(decoded.frame.fallback))
+          return h(Fragment, { key: message.id }, [rendered])
         }
-        if (decoded && !decoded.ok) return h('p', { key: message.id, role: 'alert', 'data-ak-component-diagnostic': decoded.diagnostic.code }, decoded.diagnostic.message)
-        return slot(slots, 'message', { message }, () => h(Message, { key: message.id, message }))
+        const rendered = decoded && !decoded.ok
+          ? h('p', { role: 'alert', 'data-ak-component-diagnostic': decoded.diagnostic.code }, decoded.diagnostic.message)
+          : slot(slots, 'message', { message }, () => h(Message, { message }))
+        return h(Fragment, { key: message.id }, [rendered])
       })
       const confirmations = chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall =>
-        slot(slots, 'confirmation', { toolCall, onApprove: approve, onDeny: deny }, () => h(ToolConfirmation, { key: toolCall.id, toolCall, onApprove: approve, onDeny: deny })))
+        h(Fragment, { key: toolCall.id }, [slot(slots, 'confirmation', { toolCall, onApprove: approve, onDeny: deny }, () => h(ToolConfirmation, { toolCall, onApprove: approve, onDeny: deny }))]))
       const content = [...messages, ...confirmations, slot(slots, 'thinking', { visible: chat.status === 'streaming' }, () => h(ThinkingIndicator, { visible: chat.status === 'streaming' }))]
       const container = slot(slots, 'container', { children: content }, () => h(ChatRoot, {}, { default: () => content }))
       const error = chat.error ?? actionError.value
@@ -184,7 +196,30 @@ export const AgentChat = defineComponent({
   name: 'AgentsKitChat',
   props: agentChatProps,
   setup(props, { slots }) {
-    return () => h(AgentChatSession, { ...props, key: `${props.definition.id}:${props.definition.revision ?? 1}:${props.session?.sessionId ?? 'new'}` } as never, slots)
+    let definitionId = props.definition.id
+    let definitionRevision = props.definition.revision
+    let preparedSession = props.session
+    let session = resolveChatSession(props.definition, preparedSession)
+    let chat = props.definition.chat
+    let chatRevision = 0
+    let messages = chat.initialMessages
+    return () => {
+      if (definitionId !== props.definition.id || definitionRevision !== props.definition.revision || preparedSession !== props.session) {
+        definitionId = props.definition.id
+        definitionRevision = props.definition.revision
+        preparedSession = props.session
+        session = resolveChatSession(props.definition, preparedSession)
+        messages = props.definition.chat.initialMessages
+      }
+      if (chat !== props.definition.chat) { chat = props.definition.chat; chatRevision += 1 }
+      return h(AgentChatSession, {
+        ...props,
+        session,
+        initialMessages: messages,
+        onMessages: (value: ChatMessage[]) => { messages = value },
+        key: `${definitionId}:${definitionRevision ?? 1}:${session.sessionId}:${chatRevision}`,
+      } as never, slots)
+    }
   },
 })
 

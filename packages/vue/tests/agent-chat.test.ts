@@ -1,6 +1,6 @@
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
 import { ChoiceListComponent, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
-import { createApp, h, nextTick, shallowRef, type Component } from 'vue'
+import { createApp, defineComponent, h, nextTick, shallowRef, type Component, type PropType } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import { AgentChat, ChoiceList, toChatCssVariables } from '../src/index.js'
@@ -117,7 +117,7 @@ describe('AgentChat Vue', () => {
     await click(root, 'button:not([aria-label])')
     const edit = root.querySelector('[aria-label="Edit message"]') as HTMLInputElement
     edit.value = 'updated'; edit.dispatchEvent(new Event('input')); await nextTick()
-    ;(root.querySelector('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    ;(edit.closest('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
     expect(root.textContent).toContain('Echo: updated')
   })
 
@@ -131,5 +131,40 @@ describe('AgentChat Vue', () => {
     expect(root.querySelector('[data-custom-container]')).toBeTruthy()
     expect(root.textContent).toContain('custom input')
     expect(calls).toEqual(expect.arrayContaining(['container', 'thinking', 'input']))
+  })
+
+  it('keys stateful message slots by message identity across edits', async () => {
+    const mountedIds: string[] = []
+    const StatefulMessage = defineComponent({
+      props: { message: { type: Object as PropType<{ id: string, content: string }>, required: true } },
+      setup(props) { mountedIds.push(props.message.id); return () => h('p', { 'data-stateful-message': props.message.id }, props.message.content) },
+    })
+    const root = await mount({ render: () => h(AgentChat, { definition: { id: 'keyed-slots', chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'user', content: 'old' }), buildMessage({ role: 'assistant', content: 'Echo: old' })] } } }, { message: ({ message }: { message: { content: string } }) => h(StatefulMessage, { message }) }) })
+    await click(root, 'button:not([aria-label])')
+    const input = root.querySelector('[aria-label="Edit message"]') as HTMLInputElement
+    input.value = 'updated'; input.dispatchEvent(new Event('input')); await nextTick()
+    ;(input.closest('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    expect([...root.querySelectorAll('[data-stateful-message]')].map(element => element.textContent)).toEqual(['updated', 'Echo: updated'])
+    expect(mountedIds).toHaveLength(3)
+  })
+
+  it('updates the upstream controller config while preserving conversation progress', async () => {
+    const makeDefinition = (answer: string) => defineChat({
+      id: 'stable-session',
+      chat: { adapter: { createSource: () => ({ async *stream() { yield { type: 'text' as const, content: answer }; yield { type: 'done' as const } }, abort() {} }) } },
+      conversation: { initial: 'idle', states: { idle: { on: { start: 'complete' } }, complete: {} }, routes: [commandRoute({ id: 'start', command: '/start', event: 'start', response: () => 'Started' })] },
+    })
+    const definition = shallowRef(makeDefinition('Old adapter'))
+    const session = createChatSession(definition.value, { sessionId: 'stable' })
+    const root = await mount({ render: () => h(AgentChat, { definition: definition.value, session }) })
+    let input = root.querySelector('textarea') as HTMLTextAreaElement
+    input.value = '/start'; input.dispatchEvent(new Event('input')); await nextTick(); (root.querySelector('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    expect(root.textContent).toContain('Started')
+    expect(session.getConversationSnapshot()?.state).toBe('complete')
+    definition.value = makeDefinition('Updated adapter'); await settle()
+    input = root.querySelector('textarea') as HTMLTextAreaElement
+    input.value = 'hello'; input.dispatchEvent(new Event('input')); await nextTick(); (root.querySelector('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    expect(root.textContent).toContain('Updated adapter')
+    expect(session.getConversationSnapshot()?.state).toBe('complete')
   })
 })
