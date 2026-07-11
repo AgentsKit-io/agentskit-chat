@@ -20,9 +20,9 @@ vi.mock('react-native', () => ({
 vi.mock('@agentskit/react-native', () => ({
   useChat,
   ChatContainer: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
-  Message: () => null,
+  Message: ({ contentStyle }: { contentStyle?: React.CSSProperties }) => <span data-testid="upstream-message-content" style={contentStyle}>Message</span>,
   ThinkingIndicator: ({ visible }: { visible: boolean }) => visible ? <span>Thinking</span> : null,
-  InputBar: () => <input />,
+  InputBar: ({ inputStyle }: { inputStyle?: React.CSSProperties }) => <input data-testid="upstream-input" style={inputStyle} />,
   ToolConfirmation: ({ toolCall, onApprove, onDeny }: { toolCall: { id: string; status: string }; onApprove: (id: string) => void; onDeny: (id: string) => void }) => toolCall.status === 'requires_confirmation' ? <><button onClick={() => onApprove(toolCall.id)}>Approve</button><button onClick={() => onDeny(toolCall.id)}>Deny</button></> : null,
 }))
 
@@ -46,6 +46,22 @@ describe('AgentChatNative', () => {
     expect(useChat).toHaveBeenCalledWith(definition.chat)
     expect(screen.getByText('Thinking')).toBeTruthy()
     expect(document.querySelector('[data-live="polite"]')).toBeTruthy()
+  })
+
+  it('maps semantic tokens to native styles and accepts a native slot', async () => {
+    const { AgentChatNative, toChatNativeStyles } = await import('../src/index')
+    expect(toChatNativeStyles({ colors: { accent: '#800080' }, spacing: { medium: 20 }, fontFamily: 'Brand Sans' })).toMatchObject({
+      userMessage: { backgroundColor: '#800080', padding: 20 }, userMessageText: { color: '#ffffff', fontFamily: 'Brand Sans' }, input: { padding: 20 }, inputText: { fontFamily: 'Brand Sans' }, choiceText: { fontFamily: 'Brand Sans' },
+    })
+    expect(toChatNativeStyles().inputText).not.toHaveProperty('fontFamily')
+    useChat.mockReturnValue({ messages: [{ id: 'assistant', role: 'assistant', content: 'hello' }], status: 'idle', stop } as unknown as ChatReturn)
+    const Slot = () => <span>Custom native message</span>
+    render(<AgentChatNative definition={definition} slots={{ Message: Slot }} />)
+    expect(screen.getByText('Custom native message')).toBeTruthy()
+    cleanup()
+    render(<AgentChatNative definition={definition} theme={{ colors: { surface: '#111827', text: '#ffffff' }, fontFamily: 'Brand Sans' }} />)
+    expect(screen.getByTestId('upstream-message-content').style.color).toBe('#ffffff')
+    expect(screen.getByTestId('upstream-input').style.fontFamily).toContain('Brand Sans')
   })
 
   it('resumes a React-prepared pending action in React Native and persists terminal state', async () => {

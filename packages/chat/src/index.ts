@@ -18,6 +18,59 @@ import { z } from 'zod'
 
 export const CHOICE_LIST_COMPONENT_KEY = 'choice-list' as const
 
+const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
+const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
+const ThemeFontFamilySchema = z.string().regex(/^(?:system|[A-Za-z0-9][A-Za-z0-9 _-]{0,127})$/, 'Theme fontFamily must be system or one portable family name.')
+const ChatThemeColorsSchema = z.object({
+  background: ThemeColorSchema,
+  surface: ThemeColorSchema,
+  border: ThemeColorSchema,
+  text: ThemeColorSchema,
+  muted: ThemeColorSchema,
+  accent: ThemeColorSchema,
+  onAccent: ThemeColorSchema,
+  danger: ThemeColorSchema,
+}).strict()
+const ChatThemeSpacingSchema = z.object({ small: ThemeLengthSchema, medium: ThemeLengthSchema, large: ThemeLengthSchema }).strict()
+const ChatThemeRadiusSchema = z.object({ medium: ThemeLengthSchema, large: ThemeLengthSchema }).strict()
+
+export const ChatThemeSchema = z.object({
+  colors: ChatThemeColorsSchema.readonly(),
+  spacing: ChatThemeSpacingSchema.readonly(),
+  radius: ChatThemeRadiusSchema.readonly(),
+  fontFamily: ThemeFontFamilySchema,
+}).strict().readonly()
+
+export type ChatTheme = z.infer<typeof ChatThemeSchema>
+export type ChatThemeInput = {
+  readonly colors?: Partial<ChatTheme['colors']>
+  readonly spacing?: Partial<ChatTheme['spacing']>
+  readonly radius?: Partial<ChatTheme['radius']>
+  readonly fontFamily?: string
+}
+
+export const defaultChatTheme: ChatTheme = ChatThemeSchema.parse({
+  colors: { background: '#ffffff', surface: '#f3f4f6', border: '#d1d5db', text: '#111827', muted: '#6b7280', accent: '#2563eb', onAccent: '#ffffff', danger: '#dc2626' },
+  spacing: { small: 8, medium: 12, large: 16 },
+  radius: { medium: 8, large: 12 },
+  fontFamily: 'system',
+})
+
+export const resolveChatTheme = (input: unknown = {}): ChatTheme => {
+  const candidate = z.object({
+    colors: ChatThemeColorsSchema.partial().strict().optional(),
+    spacing: ChatThemeSpacingSchema.partial().strict().optional(),
+    radius: ChatThemeRadiusSchema.partial().strict().optional(),
+    fontFamily: ThemeFontFamilySchema.optional(),
+  }).strict().parse(input)
+  return ChatThemeSchema.parse({
+    colors: { ...defaultChatTheme.colors, ...candidate.colors },
+    spacing: { ...defaultChatTheme.spacing, ...candidate.spacing },
+    radius: { ...defaultChatTheme.radius, ...candidate.radius },
+    fontFamily: candidate.fontFamily ?? defaultChatTheme.fontFamily,
+  })
+}
+
 export const ChoiceListPropsSchema = z.object({
   prompt: z.string().min(1),
   choices: z.array(z.object({
