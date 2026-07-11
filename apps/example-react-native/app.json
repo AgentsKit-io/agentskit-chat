@@ -1,0 +1,8 @@
+{
+  "expo": {
+    "name": "AgentsKit Chat Native",
+    "slug": "agentskit-chat-native",
+    "version": "0.0.0",
+    "platforms": ["ios", "android", "web"]
+  }
+}
