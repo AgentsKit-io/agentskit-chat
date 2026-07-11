@@ -85,6 +85,16 @@
             "pnpm --filter @agentskit/chat-react-native test"
           ]
         },
+        "ink": {
+          "path": "packages/ink",
+          "purpose": "Ink application shell consuming @agentskit/ink directly with semantic text fallback",
+          "agentDoc": "docs/for-agents/packages/ink.md",
+          "humanDoc": "getting-started/ink",
+          "checks": [
+            "pnpm --filter @agentskit/chat-ink lint",
+            "pnpm --filter @agentskit/chat-ink test"
+          ]
+        },
         "example-react": {
           "path": "apps/example-react",
           "purpose": "Deterministic executable proof of the React vertical slice",
@@ -113,6 +123,16 @@
           "checks": [
             "pnpm --filter @agentskit/chat-example-react-native build",
             "pnpm test:e2e"
+          ]
+        },
+        "example-ink": {
+          "path": "apps/example-ink",
+          "purpose": "Executable PTY proof of shared-definition Ink parity",
+          "agentDoc": "docs/for-agents/apps/example-ink.md",
+          "humanDoc": "getting-started/ink",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-ink build",
+            "pnpm test:pty"
           ]
         }
       }

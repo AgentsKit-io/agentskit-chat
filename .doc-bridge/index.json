@@ -1,13 +1,21 @@
 {
   "schemaVersion": 1,
-  "contentHash": "e2b55b1d893d5e73c1678c44b98e1b0695d88dc18cffda2e90a3e1a8ce6c8b79",
+  "contentHash": "3c113869dcfe21b21c1310870d51c497ea92ed9b5286f3fe2a3113d94c618f92",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T02:30:07.481Z",
+  "generatedAt": "2026-07-11T03:29:50.407Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
   },
   "knowledge": [
+    {
+      "id": "example-ink",
+      "type": "agent-doc",
+      "title": "Ink example handoff",
+      "path": "docs/for-agents/apps/example-ink.md",
+      "description": "`apps/example-ink` is the executable terminal proof for the unchanged `helloWorldChat` definition. It owns only Ink process startup and PTY verification.",
+      "body": "Ink example handoff apps/example-ink is the executable terminal proof for the unchanged helloWorldChat definition. It owns only Ink process startup and PTY verification. The PTY suite must prove deterministic response output, Escape cancellation without process termination, and graceful Ctrl+C exit."
+    },
     {
       "id": "example-react-native",
       "type": "agent-doc",
@@ -54,15 +62,23 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : deterministic executable proof. - : Expo proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "chat",
       "type": "agent-doc",
       "title": "Chat package handoff",
       "path": "docs/for-agents/packages/chat.md",
-      "description": "`packages/chat` owns only framework-neutral application definitions. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
-      "body": "Chat package handoff Ownership packages/chat owns only framework-neutral application definitions. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - Checks"
+      "description": "`packages/chat` owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
+      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - Checks"
+    },
+    {
+      "id": "ink",
+      "type": "agent-doc",
+      "title": "Ink package handoff",
+      "path": "docs/for-agents/packages/ink.md",
+      "description": "`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.",
+      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
     },
     {
       "id": "react-native",
@@ -145,6 +161,35 @@
       },
       "notes": [
         "Framework-neutral chat application definitions composed around AgentsKit ChatConfig"
+      ]
+    },
+    "example-ink": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-ink",
+        "path": "apps/example-ink"
+      },
+      "startHere": "docs/for-agents/apps/example-ink.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-ink.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-ink"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-ink build",
+        "pnpm test:pty"
+      ],
+      "humanDoc": "getting-started/ink",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Executable PTY proof of shared-definition Ink parity"
       ]
     },
     "example-react": {
@@ -262,6 +307,35 @@
         "Issue structure, Definition of Done, contribution workflow, and project automation"
       ]
     },
+    "ink": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "ink",
+        "path": "packages/ink"
+      },
+      "startHere": "docs/for-agents/packages/ink.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/ink.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/ink"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-ink lint",
+        "pnpm --filter @agentskit/chat-ink test"
+      ],
+      "humanDoc": "getting-started/ink",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Ink application shell consuming @agentskit/ink directly with semantic text fallback"
+      ]
+    },
     "product": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -353,10 +427,12 @@
     "packages": [
       "architecture",
       "chat",
+      "example-ink",
       "example-react",
       "example-react-native",
       "example-shared",
       "governance",
+      "ink",
       "product",
       "react",
       "react-native"
@@ -382,6 +458,17 @@
         "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
         "humanDoc": "getting-started/react",
         "agentDoc": "docs/for-agents/packages/chat.md"
+      },
+      "example-ink": {
+        "id": "example-ink",
+        "path": "apps/example-ink",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-ink build",
+          "pnpm test:pty"
+        ],
+        "purpose": "Executable PTY proof of shared-definition Ink parity",
+        "humanDoc": "getting-started/ink",
+        "agentDoc": "docs/for-agents/apps/example-ink.md"
       },
       "example-react": {
         "id": "example-react",
@@ -425,6 +512,17 @@
         "purpose": "Issue structure, Definition of Done, contribution workflow, and project automation",
         "humanDoc": "governance/issues",
         "agentDoc": "docs/for-agents/governance.md"
+      },
+      "ink": {
+        "id": "ink",
+        "path": "packages/ink",
+        "checks": [
+          "pnpm --filter @agentskit/chat-ink lint",
+          "pnpm --filter @agentskit/chat-ink test"
+        ],
+        "purpose": "Ink application shell consuming @agentskit/ink directly with semantic text fallback",
+        "humanDoc": "getting-started/ink",
+        "agentDoc": "docs/for-agents/packages/ink.md"
       },
       "product": {
         "id": "product",

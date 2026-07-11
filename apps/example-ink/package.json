@@ -1,0 +1,25 @@
+{
+  "name": "@agentskit/chat-example-ink",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm --clean --external react --external ink --external @agentskit/ink",
+    "lint": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "test:pty": "pnpm --filter @agentskit/chat-ink build && pnpm build && vitest run tests/ink-pty.test.ts"
+  },
+  "dependencies": {
+    "@agentskit/chat-example-shared": "workspace:*",
+    "@agentskit/chat-ink": "workspace:*",
+    "@agentskit/ink": "^0.9.5",
+    "ink": "^7.1.0",
+    "react": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.0",
+    "@types/react": "^19.2.17",
+    "node-pty": "^1.1.0",
+    "tsup": "^8.5.1"
+  }
+}
