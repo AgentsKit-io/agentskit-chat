@@ -20,6 +20,7 @@ export const CHOICE_LIST_COMPONENT_KEY = 'choice-list' as const
 
 const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
+const ThemeFontFamilySchema = z.string().regex(/^(?:system|[A-Za-z0-9][A-Za-z0-9 _-]{0,127})$/, 'Theme fontFamily must be system or one portable family name.')
 const ChatThemeColorsSchema = z.object({
   background: ThemeColorSchema,
   surface: ThemeColorSchema,
@@ -37,7 +38,7 @@ export const ChatThemeSchema = z.object({
   colors: ChatThemeColorsSchema.readonly(),
   spacing: ChatThemeSpacingSchema.readonly(),
   radius: ChatThemeRadiusSchema.readonly(),
-  fontFamily: z.string().trim().min(1).max(128),
+  fontFamily: ThemeFontFamilySchema,
 }).strict().readonly()
 
 export type ChatTheme = z.infer<typeof ChatThemeSchema>
@@ -60,7 +61,7 @@ export const resolveChatTheme = (input: unknown = {}): ChatTheme => {
     colors: ChatThemeColorsSchema.partial().strict().optional(),
     spacing: ChatThemeSpacingSchema.partial().strict().optional(),
     radius: ChatThemeRadiusSchema.partial().strict().optional(),
-    fontFamily: z.string().trim().min(1).max(128).optional(),
+    fontFamily: ThemeFontFamilySchema.optional(),
   }).strict().parse(input)
   return ChatThemeSchema.parse({
     colors: { ...defaultChatTheme.colors, ...candidate.colors },
