@@ -18,6 +18,8 @@
 
 `createChatSession` may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount.
 
+`resumeChatSession` persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream `ChatMemory`. Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal.
+
 ## Component boundary
 
 Model or route frames are untrusted. Resolve them against `definition.components`; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit `UIElement` types remain upstream.

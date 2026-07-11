@@ -7,6 +7,7 @@ import {
   createSnapshotEvent,
   createTurnSnapshotCursor,
   decodeComponentFrame,
+  decodeSessionSnapshot,
   decodeTurnEvent,
   encodeTurnEvent,
   snapshotMessages,
@@ -221,6 +222,33 @@ describe('v1 turn protocol', () => {
     })
     expect(event.payload.lineage).toEqual({ operation, parentTurnId: 'turn-parent', sourceMessageId: 'message-source' })
     expect(snapshotMessages(event)[0]?.content).toBe(operation)
+  })
+})
+
+describe('application session protocol', () => {
+  const snapshot = {
+    protocol: 'agentskit.chat.session', version: 1, sessionId: 'session', definitionId: 'support', definitionRevision: 1,
+    updatedAt: '2026-07-11T00:00:00.000Z', cursor: 2,
+    conversation: { state: 'collecting', decisions: [{ messageId: 'user-1', input: '/start', routeId: 'start', kind: 'deterministic', content: 'Name?', fromState: 'idle', toState: 'collecting' }] },
+    confirmations: [{ token: 'confirm-1', action: 'email.send', input: { to: 'a@example.com' }, toolCallId: 'call-1', expiresAt: 99, status: 'pending' }],
+  } as const
+
+  it('validates current snapshots and explicitly migrates v0', () => {
+    expect(decodeSessionSnapshot(snapshot)).toEqual({ ok: true, snapshot })
+    const { protocol: _protocol, ...legacy } = snapshot
+    const decoded = decodeSessionSnapshot({ ...legacy, version: 0 })
+    expect(decoded.ok && decoded.snapshot).toMatchObject({ protocol: 'agentskit.chat.session', version: 1, sessionId: 'session' })
+  })
+
+  it('rejects corrupt and unsupported snapshots without validator details', () => {
+    expect(decodeSessionSnapshot('{').ok).toBe(false)
+    expect(decodeSessionSnapshot({ ...snapshot, version: 9 })).toEqual({
+      ok: false,
+      diagnostic: { code: 'SESSION_UNSUPPORTED_VERSION', message: 'Session snapshot uses an unsupported version.', retryable: false },
+    })
+    expect(decodeSessionSnapshot({ ...snapshot, confirmations: [{ ...snapshot.confirmations[0], input: { bad: () => undefined } }] }).ok).toBe(false)
+    expect(decodeSessionSnapshot({ ...snapshot, confirmations: [snapshot.confirmations[0], snapshot.confirmations[0]] }).ok).toBe(false)
+    expect(decodeSessionSnapshot({ ...snapshot, conversation: { ...snapshot.conversation, decisions: [snapshot.conversation.decisions[0], snapshot.conversation.decisions[0]] } }).ok).toBe(false)
   })
 })
 

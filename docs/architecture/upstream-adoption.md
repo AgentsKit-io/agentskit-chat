@@ -18,6 +18,10 @@ The tool/controller lifecycle and official confirmation renderers were inspected
 
 AgentsKit Chat consumes `ChatConfig.authorizeToolCall` from `@agentskit/core@1.12.0`, delivered by [upstream #1147](https://github.com/AgentsKit-io/agentskit/issues/1147) and [PR #1148](https://github.com/AgentsKit-io/agentskit/pull/1148). Upstream owns enforcement before proposal and execution. Local code adds only trusted capability resolution, composition, and replayable application traces.
 
+## Persistent application sessions (#11)
+
+Inspected Core `ChatMemory`, controller memory hydration, canonical tool-call status and `approve`/`deny`, plus the published Memory adapters. AgentsKit Chat stores no messages: it adds only the versioned application-session metadata envelope, definition compatibility, deterministic decisions, cursor, and confirmation bindings. Hosts combine `SessionStorage` with their selected upstream `ChatMemory`. No upstream gap or reimplementation exists.
+
 ## Current upstream packages
 
 | Package | Inspected version | Role in AgentsKit Chat |

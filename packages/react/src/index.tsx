@@ -1,5 +1,5 @@
-import { createActionConfirmation, createChatSession, formatSemanticFallback, getLifecycleTargets, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
-import type { ChatDefinition, ComponentManifest } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import type { ChatDefinition, ChatSession, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import {
@@ -17,6 +17,7 @@ export interface AgentChatProps {
   readonly placeholder?: string
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
   readonly actionConfirmationTtlMs?: number
+  readonly session?: ChatSession
 }
 
 export interface ChoiceListProps {
@@ -42,9 +43,9 @@ export const ChoiceList = ({ frame, manifest, onSelect, disabled = false }: Choi
   )
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs }: AgentChatProps): ReactElement => {
-  const [session] = useState(() => createChatSession(definition))
-  const [sessionId] = useState(() => `${definition.id}:${Date.now().toString(36)}`)
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession }: AgentChatProps): ReactElement => {
+  const [session] = useState(() => resolveChatSession(definition, preparedSession))
+  const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
   const [editDraft, setEditDraft] = useState<{ readonly messageId: string, readonly content: string }>()
   const [resolvedInstances, setResolvedInstances] = useState<ReadonlySet<string>>(() => new Set())
@@ -53,7 +54,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const chat = useChat(config)
   const chatRef = useRef(chat)
   chatRef.current = chat
-  const [confirmation] = useState(() => createActionConfirmation({ sessionId, ...(actionConfirmationTtlMs === undefined ? {} : { ttlMs: actionConfirmationTtlMs }), chat: {
+  const [confirmation] = useState(() => session.createConfirmation({ ...(actionConfirmationTtlMs === undefined ? {} : { ttlMs: actionConfirmationTtlMs }), chat: {
     proposeToolCall: proposal => chatRef.current.proposeToolCall(proposal),
     approve: id => chatRef.current.approve(id),
     deny: (id, reason) => chatRef.current.deny(id, reason),
@@ -142,7 +143,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
 }
 
 export const AgentChat = (props: AgentChatProps): ReactElement => (
-  <AgentChatSession key={props.definition.id} {...props} />
+  <AgentChatSession key={`${props.definition.id}:${props.definition.revision ?? 1}:${props.session?.sessionId ?? 'new'}`} {...props} />
 )
 
 export type { ChatDefinition } from '@agentskit/chat'

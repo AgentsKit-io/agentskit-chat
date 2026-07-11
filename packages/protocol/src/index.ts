@@ -380,3 +380,90 @@ export const snapshotMessages = (event: unknown): Message[] => {
   const validated = SnapshotEventSchema.parse(event)
   return deserializeMessages({ version: 1, messages: validated.payload.messages })
 }
+
+export const SESSION_PROTOCOL = 'agentskit.chat.session' as const
+export const SESSION_PROTOCOL_VERSION = 1 as const
+
+const SessionDecisionSchema = z.object({
+  messageId: SafeIdentifierSchema,
+  input: z.string().max(16_384),
+  routeId: SafeIdentifierSchema,
+  kind: z.enum(['deterministic', 'repaired', 'fallback']),
+  content: z.string().max(65_536),
+  fromState: z.string().min(1).max(128),
+  toState: z.string().min(1).max(128),
+}).readonly()
+
+export const SessionConfirmationSchema = z.object({
+  token: SafeIdentifierSchema,
+  action: SafeIdentifierSchema,
+  input: z.record(z.string(), z.unknown()).refine(isBoundedJsonValue),
+  toolCallId: SafeIdentifierSchema,
+  expiresAt: z.number().int().nonnegative(),
+  status: z.enum(['pending', 'approving', 'rejecting', 'expiring', 'approved', 'rejected', 'expired']),
+}).readonly()
+
+const uniqueBy = <T>(items: readonly T[], key: (item: T) => string, context: z.RefinementCtx, path: string): void => {
+  const seen = new Set<string>()
+  items.forEach((item, index) => {
+    const value = key(item)
+    if (seen.has(value)) context.addIssue({ code: 'custom', path: [index, path], message: `${path} must be unique.` })
+    seen.add(value)
+  })
+}
+
+const SessionDecisionsSchema = z.array(SessionDecisionSchema).max(1_000).superRefine((items, context) =>
+  uniqueBy(items, item => item.messageId, context, 'messageId'))
+const SessionConfirmationsSchema = z.array(SessionConfirmationSchema).max(1_000).superRefine((items, context) => {
+  uniqueBy(items, item => item.token, context, 'token')
+  uniqueBy(items, item => item.toolCallId, context, 'toolCallId')
+})
+
+const SessionSnapshotObjectSchema = z.object({
+  protocol: z.literal(SESSION_PROTOCOL),
+  version: z.literal(SESSION_PROTOCOL_VERSION),
+  sessionId: SafeIdentifierSchema,
+  definitionId: SafeIdentifierSchema,
+  definitionRevision: z.number().int().positive(),
+  updatedAt: z.string().datetime({ offset: true }),
+  cursor: z.number().int().nonnegative(),
+  conversation: z.object({
+    state: z.string().min(1).max(128),
+    decisions: SessionDecisionsSchema,
+  }).readonly().optional(),
+  confirmations: SessionConfirmationsSchema,
+})
+
+export const SessionSnapshotSchema = SessionSnapshotObjectSchema.readonly()
+
+const LegacySessionSnapshotSchema = SessionSnapshotObjectSchema.omit({ protocol: true, version: true })
+  .extend({ version: z.literal(0) })
+
+export type SessionSnapshot = z.infer<typeof SessionSnapshotSchema>
+export type SessionConfirmation = z.infer<typeof SessionConfirmationSchema>
+
+export type DecodeSessionSnapshotResult =
+  | { readonly ok: true; readonly snapshot: SessionSnapshot }
+  | { readonly ok: false; readonly diagnostic: { readonly code: 'SESSION_INVALID_SNAPSHOT' | 'SESSION_UNSUPPORTED_VERSION'; readonly message: string; readonly retryable: false } }
+
+export const decodeSessionSnapshot = (input: unknown): DecodeSessionSnapshotResult => {
+  let candidate = input
+  if (typeof input === 'string') {
+    try { candidate = JSON.parse(input) as unknown } catch {
+      return { ok: false, diagnostic: { code: 'SESSION_INVALID_SNAPSHOT', message: 'Session snapshot is not valid JSON.', retryable: false } }
+    }
+  }
+  try {
+    if (isRecord(candidate) && typeof candidate.version === 'number' && candidate.version !== 0 && candidate.version !== SESSION_PROTOCOL_VERSION) {
+      return { ok: false, diagnostic: { code: 'SESSION_UNSUPPORTED_VERSION', message: 'Session snapshot uses an unsupported version.', retryable: false } }
+    }
+    const current = SessionSnapshotSchema.safeParse(candidate)
+    if (current.success) return { ok: true, snapshot: current.data }
+    const legacy = LegacySessionSnapshotSchema.safeParse(candidate)
+    return legacy.success
+      ? { ok: true, snapshot: SessionSnapshotSchema.parse({ ...legacy.data, protocol: SESSION_PROTOCOL, version: SESSION_PROTOCOL_VERSION }) }
+      : { ok: false, diagnostic: { code: 'SESSION_INVALID_SNAPSHOT', message: 'Session snapshot payload is invalid.', retryable: false } }
+  } catch {
+    return { ok: false, diagnostic: { code: 'SESSION_INVALID_SNAPSHOT', message: 'Session snapshot payload is invalid.', retryable: false } }
+  }
+}

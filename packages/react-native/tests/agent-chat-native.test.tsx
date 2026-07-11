@@ -1,7 +1,9 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ChatReturn } from '@agentskit/core'
-import { ChoiceListComponent, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, createChatSession, defineChat, defineComponentManifest, resumeChatSession } from '@agentskit/chat'
+import type { SessionSnapshot } from '@agentskit/chat-protocol'
+import { AgentChat } from '../../react/src/index.js'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import type { ReactNode } from 'react'
 
@@ -44,6 +46,36 @@ describe('AgentChatNative', () => {
     expect(useChat).toHaveBeenCalledWith(definition.chat)
     expect(screen.getByText('Thinking')).toBeTruthy()
     expect(document.querySelector('[data-live="polite"]')).toBeTruthy()
+  })
+
+  it('resumes a React-prepared pending action in React Native and persists terminal state', async () => {
+    const { AgentChatNative } = await import('../src/index')
+    let stored: SessionSnapshot | undefined
+    const storage = {
+      load: () => stored,
+      save: (snapshot: SessionSnapshot, expected: number | undefined) => {
+        if (stored?.cursor !== expected) return false
+        stored = structuredClone(snapshot)
+        return true
+      },
+    }
+    const shared = defineChat({ id: 'cross-renderer', chat: { adapter: definition.chat.adapter } })
+    const reactSession = createChatSession(shared, { sessionId: 'customer', storage })
+    const reactView = render(<AgentChat definition={shared} session={reactSession} />)
+    reactView.unmount()
+    const proposal = { id: 'call-cross', name: 'open-docs', args: {}, status: 'requires_confirmation' as const }
+    await reactSession.createConfirmation({ chat: { proposeToolCall: async () => proposal, approve: async () => undefined, deny: async () => undefined }, createId: () => 'cross' }).propose({ name: 'open-docs', input: {} })
+
+    const nativeSession = await resumeChatSession(shared, { sessionId: 'customer', storage })
+    const approve = vi.fn(async () => undefined)
+    useChat.mockReturnValue({ messages: [{ id: 'assistant', role: 'assistant', content: '', toolCalls: [proposal] }], status: 'complete', stop, approve, deny: vi.fn() } as unknown as ChatReturn)
+    render(<AgentChatNative definition={shared} session={nativeSession} />)
+    fireEvent.click(screen.getByText('Approve'))
+    await waitFor(() => expect(approve).toHaveBeenCalledOnce())
+    expect(stored?.confirmations[0]?.status).toBe('approved')
+
+    const terminal = await resumeChatSession(shared, { sessionId: 'customer', storage })
+    expect(terminal.createConfirmation({ chat: { proposeToolCall: async () => proposal, approve, deny: vi.fn() } }).getByToolCall('call-cross')?.status).toBe('approved')
   })
 
   it('exposes cancellation while streaming', async () => {

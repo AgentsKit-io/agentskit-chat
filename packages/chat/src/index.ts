@@ -5,8 +5,14 @@ import {
   ComponentKeySchema,
   createSelectionEvent,
   decodeComponentFrame,
+  decodeSessionSnapshot,
+  SESSION_PROTOCOL,
+  SESSION_PROTOCOL_VERSION,
+  SessionSnapshotSchema,
   type ComponentRenderFrame,
   type ComponentSelectionEvent,
+  type SessionConfirmation,
+  type SessionSnapshot,
 } from '@agentskit/chat-protocol'
 import { z } from 'zod'
 
@@ -165,7 +171,7 @@ export const resolveChoiceAction = (frame: ComponentRenderFrame, choiceId: strin
   return props.choices.find(choice => choice.id === choiceId)?.action
 }
 
-export type ActionConfirmationStatus = 'pending' | 'approved' | 'rejected' | 'expired'
+export type ActionConfirmationStatus = 'pending' | 'approving' | 'rejecting' | 'expiring' | 'approved' | 'rejected' | 'expired'
 
 export interface ActionConfirmation {
   readonly token: string
@@ -182,6 +188,7 @@ export interface ActionConfirmationCoordinator {
   readonly approve: (token: string, sessionId: string) => Promise<ActionConfirmation>
   readonly reject: (token: string, sessionId: string, reason?: string) => Promise<ActionConfirmation>
   readonly getByToolCall: (toolCallId: string) => ActionConfirmation | undefined
+  readonly getSnapshot: () => readonly ActionConfirmation[]
 }
 
 export interface ActionConfirmationOptions {
@@ -190,6 +197,9 @@ export interface ActionConfirmationOptions {
   readonly ttlMs?: number
   readonly now?: () => number
   readonly createId?: () => string
+  readonly initialRecords?: readonly SessionConfirmation[]
+  readonly onChange?: (records: readonly ActionConfirmation[]) => void | Promise<void>
+  readonly claimStatus?: (record: ActionConfirmation, status: Exclude<ActionConfirmationStatus, 'pending'>) => boolean | Promise<boolean>
 }
 
 const invalidConfirmation = (message: string): never => {
@@ -214,6 +224,9 @@ export const createActionConfirmation = ({
   ttlMs = 300_000,
   now = Date.now,
   createId,
+  initialRecords = [],
+  onChange,
+  claimStatus,
 }: ActionConfirmationOptions): ActionConfirmationCoordinator => {
   if (sessionId.length === 0 || !Number.isSafeInteger(ttlMs) || ttlMs <= 0) invalidConfirmation('Action confirmation options are invalid.')
   let sequence = 0
@@ -234,6 +247,19 @@ export const createActionConfirmation = ({
     operations.set(token, pending)
     return pending
   }
+  const changed = async (): Promise<void> => { await onChange?.(Object.freeze([...records.values()])) }
+  const claim = async (record: ActionConfirmation, status: Exclude<ActionConfirmationStatus, 'pending'>): Promise<ActionConfirmation> => {
+    const terminal = snapshot(record, status)
+    if (claimStatus && !(await claimStatus(record, status))) invalidConfirmation('Action confirmation was already resolved by another client.')
+    records.set(record.token, terminal)
+    if (!claimStatus) await changed()
+    return terminal
+  }
+  for (const persisted of initialRecords) {
+    const record = freezeJson({ ...persisted, sessionId }) as ActionConfirmation
+    records.set(record.token, record)
+    tokensByCall.set(record.toolCallId, record.token)
+  }
   return {
     async propose(action) {
       const suffix = nextId()
@@ -251,6 +277,7 @@ export const createActionConfirmation = ({
       })
       records.set(token, record)
       tokensByCall.set(call.id, token)
+      await changed()
       return record
     },
     approve(token, requestedSession) {
@@ -258,31 +285,41 @@ export const createActionConfirmation = ({
         const record = requireRecord(token, requestedSession)
         if (record.status !== 'pending') return record
         if (now() >= record.expiresAt) {
+          if (claimStatus) {
+            const expiring = await claim(record, 'expiring')
+            await chat.deny(record.toolCallId, 'confirmation expired')
+            return claim(expiring, 'expired')
+          }
           await chat.deny(record.toolCallId, 'confirmation expired')
-          const expired = snapshot(record, 'expired')
-          records.set(token, expired)
-          return expired
+          return claim(record, 'expired')
+        }
+        if (claimStatus) {
+          const approving = await claim(record, 'approving')
+          await chat.approve(record.toolCallId)
+          return claim(approving, 'approved')
         }
         await chat.approve(record.toolCallId)
-        const approved = snapshot(record, 'approved')
-        records.set(token, approved)
-        return approved
+        return claim(record, 'approved')
       })
     },
     reject(token, requestedSession, reason) {
       return runOnce(token, async () => {
         const record = requireRecord(token, requestedSession)
         if (record.status !== 'pending') return record
+        if (claimStatus) {
+          const rejecting = await claim(record, 'rejecting')
+          await chat.deny(record.toolCallId, reason)
+          return claim(rejecting, 'rejected')
+        }
         await chat.deny(record.toolCallId, reason)
-        const rejected = snapshot(record, 'rejected')
-        records.set(token, rejected)
-        return rejected
+        return claim(record, 'rejected')
       })
     },
     getByToolCall(toolCallId) {
       const token = tokensByCall.get(toolCallId)
       return token === undefined ? undefined : records.get(token)
     },
+    getSnapshot: () => Object.freeze([...records.values()]),
   }
 }
 
@@ -418,6 +455,7 @@ export interface ConversationDefinition {
 
 export interface ChatDefinition {
   readonly id: string
+  readonly revision?: number
   readonly chat: ChatConfig
   readonly conversation?: ConversationDefinition
   readonly components?: ComponentManifest
@@ -432,9 +470,33 @@ export interface ConversationSnapshot {
 }
 
 export interface ChatSession {
+  readonly sessionId: string
+  readonly definitionId: string
+  readonly definitionRevision: number
   readonly chat: ChatConfig
   readonly updateChat: (chat: ChatConfig) => ChatConfig
   readonly getConversationSnapshot: () => ConversationSnapshot | undefined
+  readonly createConfirmation: (options: Omit<ActionConfirmationOptions, 'sessionId' | 'initialRecords' | 'onChange' | 'claimStatus'>) => ActionConfirmationCoordinator
+  readonly persist: () => Promise<void>
+}
+
+export interface SessionStorage {
+  readonly load: (sessionId: string) => unknown | Promise<unknown>
+  readonly save: (snapshot: SessionSnapshot, expectedCursor: number | undefined) => boolean | Promise<boolean>
+  readonly delete?: (sessionId: string) => void | Promise<void>
+}
+
+interface ChatSessionOptions {
+  readonly sessionId?: string
+  readonly snapshot?: SessionSnapshot
+  readonly storage?: SessionStorage
+  readonly now?: () => Date
+}
+
+export interface ResumeChatSessionOptions {
+  readonly sessionId: string
+  readonly storage: SessionStorage
+  readonly now?: () => Date
 }
 
 const invalidConversation = (message: string): never => {
@@ -498,17 +560,86 @@ interface RouteDecision {
 
 const wrappedAdapters = new WeakMap<ChatConfig['adapter'], ChatConfig['adapter']>()
 
-export const createChatSession = (definition: ChatDefinition): ChatSession => {
+export const createChatSession = (definition: ChatDefinition, options: ChatSessionOptions = {}): ChatSession => {
+  const revision = definition.revision ?? 1
+  if (!Number.isSafeInteger(revision) || revision <= 0) invalidConversation('Chat definition revision is invalid.')
+  const sessionId = options.sessionId ?? `${definition.id}:${Date.now().toString(36)}`
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(sessionId)) invalidConversation('Chat session identity is invalid.')
+  const restored = options.snapshot
+  let confirmations: readonly SessionConfirmation[] = restored?.confirmations ?? []
+  let cursor = restored?.cursor ?? 0
+  let exists = restored !== undefined
+  let persistQueue = Promise.resolve()
   const conversation = definition.conversation
+  if (conversation) {
+    validateConversation(conversation)
+    if (restored?.conversation) {
+      const states = new Set(Object.keys(conversation.states))
+      const routes = new Set(conversation.routes.map(route => route.id))
+      if (!states.has(restored.conversation.state) || restored.conversation.decisions.some(decision =>
+        !states.has(decision.fromState) || !states.has(decision.toState) || !routes.has(decision.routeId)
+      )) invalidConversation('Session conversation metadata is incompatible with this chat definition.')
+    }
+  } else if (restored?.conversation) invalidConversation('Session conversation metadata is incompatible with this chat definition.')
+
+  let currentState = restored?.conversation?.state ?? conversation?.initial ?? ''
+  const decisions = new Map<string, RouteDecision>()
+  for (const decision of restored?.conversation?.decisions ?? []) {
+    decisions.set(decision.messageId, decision)
+  }
+  const buildSnapshot = (nextCursor: number): SessionSnapshot => SessionSnapshotSchema.parse({
+    protocol: SESSION_PROTOCOL,
+    version: SESSION_PROTOCOL_VERSION,
+    sessionId,
+    definitionId: definition.id,
+    definitionRevision: revision,
+    updatedAt: (options.now?.() ?? new Date()).toISOString(),
+    cursor: nextCursor,
+    ...(conversation ? {
+      conversation: {
+        state: currentState,
+        decisions: [...decisions].map(([messageId, decision]) => ({ messageId, ...decision })),
+      },
+    } : {}),
+    confirmations,
+  })
+  const persist = (): Promise<void> => {
+    if (!options.storage) return Promise.resolve()
+    persistQueue = persistQueue.catch(() => undefined).then(async () => {
+      const expectedCursor = exists ? cursor : undefined
+      const snapshot = buildSnapshot(cursor + 1)
+      if (!(await options.storage!.save(snapshot, expectedCursor))) invalidConversation('Session snapshot changed in another client.')
+      cursor = snapshot.cursor
+      exists = true
+    })
+    return persistQueue
+  }
+  const createConfirmation = (confirmationOptions: Omit<ActionConfirmationOptions, 'sessionId' | 'initialRecords' | 'onChange' | 'claimStatus'>): ActionConfirmationCoordinator =>
+    createActionConfirmation({
+      ...confirmationOptions,
+      sessionId,
+      initialRecords: confirmations,
+      onChange: async records => {
+        const previous = confirmations
+        confirmations = records.map(({ sessionId: _sessionId, ...record }) => record)
+        try { await persist() } catch (error) { confirmations = previous; throw error }
+      },
+      ...(options.storage ? { claimStatus: async (record: ActionConfirmation, status: Exclude<ActionConfirmationStatus, 'pending'>) => {
+        const previous = confirmations
+        confirmations = confirmations.map(candidate => candidate.token === record.token ? { ...candidate, status } : candidate)
+        try { await persist(); return true } catch (error) { confirmations = previous; throw error }
+      } } : {}),
+    })
   if (!conversation) return {
+    sessionId,
+    definitionId: definition.id,
+    definitionRevision: revision,
     chat: definition.chat,
     updateChat: chat => chat,
     getConversationSnapshot: () => undefined,
+    createConfirmation,
+    persist,
   }
-  validateConversation(conversation)
-
-  let currentState = conversation.initial
-  const decisions = new Map<string, RouteDecision>()
   const emitTrace = (trace: TurnTrace): void => {
     try {
       void Promise.resolve(conversation.onTrace?.(trace)).catch(() => undefined)
@@ -534,6 +665,7 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
       actions: [...(state.actions ?? [])],
     }
   }
+  const schedulePersist = (): void => { void persist().catch(() => undefined) }
 
   const createSource = (adapter: ChatConfig['adapter'], request: AdapterRequest): StreamSource => {
           const userMessages = request.messages.filter(message => message.role === 'user')
@@ -549,6 +681,7 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
           if (replay?.input === input && replay.fromState === currentState) {
             currentState = replay.toState
             emitTrace({ kind: replay.kind, routeId: replay.routeId, fromState: replay.fromState, toState: replay.toState })
+            schedulePersist()
             return deterministicSource(replay.content)
           }
           if (userMessage !== undefined) decisions.delete(userMessage.id)
@@ -562,11 +695,13 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
               && candidate.match(input)
             )
           } catch {
+            schedulePersist()
             return routeErrorSource()
           }
 
           if (!route) {
             emitTrace({ kind: 'agentic', fromState: currentState, toState: currentState })
+            schedulePersist()
             return adapter.createSource(request)
           }
 
@@ -576,6 +711,7 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
           try {
             content = route.response(input)
           } catch {
+            schedulePersist()
             return routeErrorSource()
           }
           currentState = toState
@@ -589,6 +725,7 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
             fromState,
             toState: currentState,
           })
+          schedulePersist()
           return deterministicSource(content)
   }
   const updateChat = (chat: ChatConfig): ChatConfig => {
@@ -598,10 +735,35 @@ export const createChatSession = (definition: ChatDefinition): ChatSession => {
     return { ...chat, adapter: wrapped }
   }
   return {
+    sessionId,
+    definitionId: definition.id,
+    definitionRevision: revision,
     chat: updateChat(definition.chat),
     updateChat,
     getConversationSnapshot,
+    createConfirmation,
+    persist,
   }
+}
+
+export const resumeChatSession = async (definition: ChatDefinition, options: ResumeChatSessionOptions): Promise<ChatSession> => {
+  const input = await options.storage.load(options.sessionId)
+  if (input === undefined || input === null) return createChatSession(definition, options)
+  const decoded = decodeSessionSnapshot(input)
+  if (!decoded.ok) return invalidConversation(decoded.diagnostic.message)
+  const snapshot = decoded.snapshot
+  if (snapshot.sessionId !== options.sessionId || snapshot.definitionId !== definition.id || snapshot.definitionRevision !== (definition.revision ?? 1)) {
+    invalidConversation('Session snapshot is incompatible with this chat definition.')
+  }
+  return createChatSession(definition, { ...options, snapshot })
+}
+
+export const resolveChatSession = (definition: ChatDefinition, session?: ChatSession): ChatSession => {
+  if (!session) return createChatSession(definition)
+  if (session.definitionId !== definition.id || session.definitionRevision !== (definition.revision ?? 1)) {
+    invalidConversation('Prepared session is incompatible with this chat definition.')
+  }
+  return session
 }
 
 export const commandRoute = (options: Omit<DeterministicRoute, 'match'> & { readonly command: string }): DeterministicRoute => {

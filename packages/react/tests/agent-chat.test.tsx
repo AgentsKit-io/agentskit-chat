@@ -3,12 +3,31 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { AgentChat, ChoiceList } from '../src/index.js'
-import { ChoiceListComponent, commandRoute, createCapabilityPolicy, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
+import { ChoiceListComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
+})
+
+it('remounts when the prepared session identity changes', () => {
+  const definition = defineChat({ id: 'switch-session', chat: { adapter: adapter() } })
+  const first = createChatSession(definition, { sessionId: 'customer-a' })
+  const second = createChatSession(definition, { sessionId: 'customer-b' })
+  const firstConfirmation = vi.spyOn(first, 'createConfirmation')
+  const secondConfirmation = vi.spyOn(second, 'createConfirmation')
+  const view = render(<AgentChat definition={definition} session={first} />)
+  view.rerender(<AgentChat definition={definition} session={second} />)
+  expect(firstConfirmation).toHaveBeenCalledOnce()
+  expect(secondConfirmation).toHaveBeenCalledOnce()
+})
+
+it('rejects a prepared session after the definition revision changes', () => {
+  const definition = defineChat({ id: 'revision-session', revision: 1, chat: { adapter: adapter() } })
+  const session = createChatSession(definition, { sessionId: 'customer' })
+  const view = render(<AgentChat definition={definition} session={session} />)
+  expect(() => view.rerender(<AgentChat definition={{ ...definition, revision: 2 }} session={session} />)).toThrow('incompatible')
 })
 
 const adapter = (fail = false): AdapterFactory => ({
