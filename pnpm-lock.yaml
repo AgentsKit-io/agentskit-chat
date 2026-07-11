@@ -309,10 +309,10 @@ importers:
       '@agentskit/chat-protocol':
         specifier: workspace:*
         version: link:../protocol
-    devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
+    devDependencies:
       '@agentskit/svelte':
         specifier: ^0.4.3
         version: 0.4.3(svelte@5.56.4)
