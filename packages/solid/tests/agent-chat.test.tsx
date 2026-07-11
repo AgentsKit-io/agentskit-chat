@@ -24,6 +24,15 @@ describe('AgentChat Solid', () => {
     expect(view.container.querySelector('[data-custom-container]')).toBeTruthy(); expect(view.container.textContent).toContain('Solid: hello'); expect(view.container.textContent).toContain('custom input')
   })
 
+  it('updates presentation props for existing messages without resetting chat state', async () => {
+    const initial = buildMessage({ role: 'assistant', content: 'hello' })
+    const [custom, setCustom] = createSignal(false)
+    const view = render(() => <AgentChat definition={{ id: 'presentation', chat: { adapter: adapter(), initialMessages: [initial] } }} {...(custom() ? { message: (message: typeof initial) => <strong data-updated-message>{message.content}</strong> } : {})} />)
+    expect(view.container.querySelector('[data-ak-message]')).toBeTruthy()
+    setCustom(true)
+    await waitFor(() => expect(view.container.querySelector('[data-updated-message]')?.textContent).toBe('hello'))
+  })
+
   it('renders and selects a validated ChoiceList accessibly', async () => {
     const onSelect = vi.fn(); const view = render(() => <ChoiceList frame={validChoiceListFrame} manifest={defineComponentManifest([ChoiceListComponent])} onSelect={onSelect} />)
     expect(view.container.querySelector('fieldset')?.getAttribute('aria-label')).toBe('Where should we go?')

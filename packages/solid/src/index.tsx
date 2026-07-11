@@ -76,18 +76,21 @@ function AgentChatSession(props: AgentChatProps): JSX.Element {
   const run = (operation: Promise<void>): void => { setActionError(); void operation.catch(error => fail(error, 'Lifecycle operation failed.')) }
 
   const renderMessage = (item: ChatMessage): JSX.Element => {
-    const candidate = item.role === 'assistant' && isComponentFrameCandidate(item.content)
-    const decoded = candidate ? decodeComponentFrame(item.content) : undefined
-    if (decoded?.ok) {
-      const resolved = props.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, props.definition.components)
-      if (resolved?.ok) {
-        const choiceProps: ChoiceListProps = { frame: decoded.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(decoded.frame.instanceId) }, onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }
-        return props.choiceList?.(choiceProps) ?? <ChoiceList frame={choiceProps.frame} manifest={choiceProps.manifest} disabled={resolvedInstances().has(decoded.frame.instanceId)} onSelect={choiceProps.onSelect} />
+    const rendered = createMemo<JSX.Element>(() => {
+      const candidate = item.role === 'assistant' && isComponentFrameCandidate(item.content)
+      const decoded = candidate ? decodeComponentFrame(item.content) : undefined
+      if (decoded?.ok) {
+        const resolved = props.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, props.definition.components)
+        if (resolved?.ok) {
+          const choiceProps: ChoiceListProps = { frame: decoded.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(decoded.frame.instanceId) }, onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }
+          return props.choiceList?.(choiceProps) ?? <ChoiceList frame={choiceProps.frame} manifest={choiceProps.manifest} disabled={resolvedInstances().has(decoded.frame.instanceId)} onSelect={choiceProps.onSelect} />
+        }
+        return <p data-ak-component-fallback>{formatSemanticFallback(decoded.frame.fallback)}</p>
       }
-      return <p data-ak-component-fallback>{formatSemanticFallback(decoded.frame.fallback)}</p>
-    }
-    if (decoded && !decoded.ok) return <p role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
-    return props.message?.(item) ?? <Message message={item} />
+      if (decoded && !decoded.ok) return <p role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
+      return props.message?.(item) ?? <Message message={item} />
+    })
+    return rendered as unknown as JSX.Element
   }
 
   const renderChat = (chat: ChatReturn): JSX.Element => {
