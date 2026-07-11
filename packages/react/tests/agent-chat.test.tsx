@@ -47,8 +47,8 @@ const adapter = (fail = false): AdapterFactory => ({
 
 describe('AgentChat', () => {
   it('maps semantic tokens to upstream CSS variables and accepts a native slot', () => {
-    expect(toChatCssVariables({ colors: { accent: 'rebeccapurple' }, radius: { large: 20 } })).toMatchObject({
-      '--ak-color-button': 'rebeccapurple', '--ak-color-bubble-user': 'rebeccapurple', '--ak-radius-lg': '20px',
+    expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({
+      '--ak-color-button': '#663399', '--ak-color-bubble-user': '#663399', '--ak-radius-lg': '20px',
     })
     const Slot = () => <p>Custom message slot</p>
     render(<AgentChat definition={{ id: 'slots', chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } }} slots={{ Message: Slot }} />)

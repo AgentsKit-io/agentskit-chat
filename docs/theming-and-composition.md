@@ -16,10 +16,10 @@ const theme = {
 
 | Intent | React | React Native | Ink |
 |---|---|---|---|
-| colors | AgentsKit CSS variables | upstream `style` plus native application styles | complete upstream `InkTheme` |
+| colors | AgentsKit CSS variables | upstream wrapper and text style seams plus native application styles | complete upstream `InkTheme` |
 | spacing | CSS variables | numeric native layout styles | unsupported by terminal layout |
 | radius | CSS variables | native border radius | unsupported |
-| font family | upstream CSS variable | application text where native text is owned locally | unsupported |
+| font family | upstream CSS variable | upstream message/input text seams plus native application text | unsupported |
 
 The mapping helpers are public for host integration: `toChatCssVariables`, `toChatNativeStyles`, and `toChatInkTheme`.
 

@@ -18,7 +18,7 @@ import { z } from 'zod'
 
 export const CHOICE_LIST_COMPONENT_KEY = 'choice-list' as const
 
-const ThemeColorSchema = z.string().trim().min(1).max(128)
+const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
 const ChatThemeColorsSchema = z.object({
   background: ThemeColorSchema,

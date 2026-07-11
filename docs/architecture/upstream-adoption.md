@@ -32,14 +32,14 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 
 | Package | Inspected version | Role in AgentsKit Chat |
 |---|---:|---|
-| `@agentskit/core` | 1.10.5 | Controller, chat contracts, messages, tools, memory serialization and validation, generative UI, HITL, events, errors. |
+| `@agentskit/core` | 1.12.2 | Controller, chat contracts, messages, tools, cancellable memory, serialization and validation, generative UI, HITL, events, errors. |
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
 | `@agentskit/memory` | 0.10.2 | Persistent `ChatMemory` implementations. |
 | `@agentskit/eval` | 0.4.7 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting. |
-| `@agentskit/react` | 0.6.1 | React hook and headless chat components. |
-| `@agentskit/react-native` | 0.3.1 | React Native hook and components. |
-| `@agentskit/ink` | 0.9.5 | Ink hook, terminal components, theme, progress observer, and Escape stream cancellation. |
+| `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
+| `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
+| `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
 | `@agentskit/vue` | 0.3.1 | Vue composable and components. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
 | `@agentskit/solid` | 0.3.1 | Solid hook and components. |
@@ -136,4 +136,4 @@ No upstream change blocks #7. `ChatConfig`, framework bindings, and the standard
 
 ## Theming and composition adoption record (#13)
 
-Inspected the published and source contracts for AgentsKit React theme CSS/component attributes, React Native component `style`/`testID` pass-throughs, and Ink `InkThemeProvider`/`InkTheme` on 2026-07-11. AgentsKit Chat consumes those seams directly and adds only runtime-validated application tokens, capability-aware mappings, and renderer-native slots. Fully headless consumers use upstream `useChat`; no local state hook, design system, or renderer primitive is recreated. No upstream change blocks #13.
+Inspected `@agentskit/react@0.7.1` theme CSS/component attributes, `@agentskit/react-native@0.4.4` component wrapper/content/input style and `testID` pass-throughs, and `@agentskit/ink@0.10.1` `components/theme.tsx` (`InkThemeProvider`, `InkTheme`) on 2026-07-11. AgentsKit Chat consumes those seams directly and adds only runtime-validated application tokens, capability-aware mappings, and renderer-native slots. Fully headless consumers use upstream `useChat`; no local state hook, design system, or renderer primitive is recreated. The missing native text-style seams were fixed upstream in AgentsKit #1158/#1159 and released in `@agentskit/react-native@0.4.4` via #1160 before downstream integration.

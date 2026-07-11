@@ -107,8 +107,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/react-native
       '@agentskit/react-native':
-        specifier: ^0.4.1
-        version: 0.4.1(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
+        specifier: ^0.4.4
+        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
       expo:
         specifier: ^57.0.4
         version: 57.0.4(@babel/core@7.29.7)(@expo/dom-webview@57.0.0)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
@@ -245,8 +245,8 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       '@agentskit/react-native':
-        specifier: ^0.4.1
-        version: 0.4.1(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
+        specifier: ^0.4.4
+        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -323,8 +323,8 @@ packages:
     peerDependencies:
       react: '>=18.0.0'
 
-  '@agentskit/react-native@0.4.1':
-    resolution: {integrity: sha512-xtOeC/OoYsDPG1NIMT++nTS4ar9bbjPvJzk7GJQCdpNKItkor1nHjxobapmYm/zocRZBcocwflzEaEo1+N5SmQ==}
+  '@agentskit/react-native@0.4.4':
+    resolution: {integrity: sha512-zdFpQL8M8LpIRV3XTpGPXf1eNMIsw36Fel/6ICtB6aFEE4jExb2b4ro8fWNIJQjNRSwUG0JBpg3Qyb4W+ZfLng==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-native: '*'
@@ -3554,15 +3554,15 @@ snapshots:
       - react-devtools-core
       - utf-8-validate
 
-  '@agentskit/react-native@0.4.1(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)':
+  '@agentskit/react-native@0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)':
     dependencies:
-      '@agentskit/core': 1.12.0
+      '@agentskit/core': 1.12.2
       react: 19.2.3
       react-native: 0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3)
 
-  '@agentskit/react-native@0.4.1(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)':
+  '@agentskit/react-native@0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@agentskit/core': 1.12.0
+      '@agentskit/core': 1.12.2
       react: 19.2.7
       react-native: 0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7)
 

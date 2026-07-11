@@ -68,6 +68,7 @@ describe('semantic theme', () => {
       colors: { accent: '#123456', background: '#ffffff' }, spacing: { small: 8, medium: 20 },
     })
     expect(() => resolveChatTheme({ colors: { accent: '' } })).toThrow()
+    expect(() => resolveChatTheme({ colors: { accent: 'var(--brand)' } })).toThrow()
     expect(() => resolveChatTheme({ futureToken: true })).toThrow()
   })
 })

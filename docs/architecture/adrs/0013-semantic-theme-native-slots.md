@@ -34,4 +34,4 @@ Default shells retain their documented accessibility and keyboard behavior. A ho
 
 ## Upstream adoption
 
-Inspected AgentsKit React theme CSS and component attributes, React Native component style/testID pass-throughs, and Ink `InkThemeProvider`/`InkTheme`. Reused all of them directly. Added only application token validation, mapping, and renderer-local slots. No upstream primitive or behavior is copied.
+Inspected AgentsKit React theme CSS and component attributes, React Native component style/testID pass-throughs, and Ink `InkThemeProvider`/`InkTheme`. Reused all of them directly. The missing React Native content/input text-style seams were added at the source in AgentsKit #1158/#1159 and released as `@agentskit/react-native@0.4.4` via #1160 before integration. Added here only application token validation, mapping, and renderer-local slots. No upstream primitive or behavior is copied.

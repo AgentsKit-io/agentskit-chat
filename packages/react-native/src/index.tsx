@@ -20,12 +20,15 @@ export interface ChatNativeStyles {
   readonly root: NativeViewStyle
   readonly container: NativeViewStyle
   readonly userMessage: NativeViewStyle
+  readonly userMessageText: NativeTextStyle
   readonly assistantMessage: NativeViewStyle
+  readonly assistantMessageText: NativeTextStyle
   readonly choiceList: NativeViewStyle
   readonly choice: NativeViewStyle
   readonly choiceText: NativeTextStyle
   readonly mutedText: NativeTextStyle
   readonly input: NativeViewStyle
+  readonly inputText: NativeTextStyle
   readonly dangerText: NativeTextStyle
 }
 
@@ -35,13 +38,16 @@ export const toChatNativeStyles = (input?: ChatThemeInput): ChatNativeStyles => 
     root: { flex: 1, backgroundColor: theme.colors.background, padding: theme.spacing.large },
     container: { backgroundColor: theme.colors.background },
     userMessage: { alignSelf: 'flex-end', backgroundColor: theme.colors.accent, borderRadius: theme.radius.large, padding: theme.spacing.medium },
+    userMessageText: { color: theme.colors.onAccent, fontFamily: theme.fontFamily },
     assistantMessage: { alignSelf: 'flex-start', backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, padding: theme.spacing.medium },
+    assistantMessageText: { color: theme.colors.text, fontFamily: theme.fontFamily },
     choiceList: { gap: theme.spacing.small, padding: theme.spacing.medium },
     choice: { borderColor: theme.colors.border, borderRadius: theme.radius.medium, borderWidth: 1, padding: theme.spacing.medium },
-    choiceText: { color: theme.colors.text },
-    mutedText: { color: theme.colors.muted },
+    choiceText: { color: theme.colors.text, fontFamily: theme.fontFamily },
+    mutedText: { color: theme.colors.muted, fontFamily: theme.fontFamily },
     input: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderTopWidth: 1, padding: theme.spacing.medium },
-    dangerText: { color: theme.colors.danger },
+    inputText: { color: theme.colors.text, fontFamily: theme.fontFamily },
+    dangerText: { color: theme.colors.danger, fontFamily: theme.fontFamily },
   }
 }
 
@@ -163,7 +169,12 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
                 : <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
             }
             if (decoded && !decoded.ok) return <Text key={message.id} accessibilityRole="alert">{decoded.diagnostic.message}</Text>
-            return <MessageSlot key={message.id} message={message} style={message.role === 'user' ? styles.userMessage : styles.assistantMessage} />
+            return <MessageSlot
+              key={message.id}
+              message={message}
+              style={message.role === 'user' ? styles.userMessage : styles.assistantMessage}
+              contentStyle={message.role === 'user' ? styles.userMessageText : styles.assistantMessageText}
+            />
           })}
           {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
             <ConfirmationSlot key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
@@ -200,6 +211,7 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
         chat={chat}
         disabled={chat.status === 'streaming'}
         style={styles.input}
+        inputStyle={styles.inputText}
         {...(placeholder === undefined ? {} : { placeholder })}
       />
     </View>

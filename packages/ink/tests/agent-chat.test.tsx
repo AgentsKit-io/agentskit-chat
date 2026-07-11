@@ -16,8 +16,8 @@ const adapter: AdapterFactory = {
 
 describe('Ink application shell', () => {
   it('maps semantic tokens to Ink capabilities and accepts a terminal slot', () => {
-    expect(toChatInkTheme({ colors: { accent: 'blue', danger: 'red' } })).toMatchObject({
-      prompt: { active: 'blue' }, toolStatus: { error: { color: 'red' } },
+    expect(toChatInkTheme({ colors: { accent: '#0000ff', danger: '#ff0000' } })).toMatchObject({
+      prompt: { active: '#0000ff' }, toolStatus: { error: { color: '#ff0000' } },
     })
     const Slot = () => <Text>Custom terminal message</Text>
     const view = render(<AgentChat definition={{ id: 'slots', chat: { adapter, initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } }} slots={{ Message: Slot }} />)
