@@ -3,8 +3,8 @@ import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } f
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatRoot, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/vue'
-import type { Message as ChatMessage } from '@agentskit/core'
-import { defineComponent, Fragment, h, ref, type CSSProperties, type PropType, type Slots, type VNodeChild } from 'vue'
+import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
+import { defineComponent, Fragment, h, ref, watchEffect, type CSSProperties, type PropType, type Slots, type SlotsType, type VNode, type VNodeChild } from 'vue'
 
 export type ChatCssVariables = CSSProperties & { readonly [key: `--ak-${string}`]: string | number }
 
@@ -78,6 +78,15 @@ export interface AgentChatProps {
   readonly theme?: ChatThemeInput
 }
 
+export interface AgentChatSlots {
+  readonly container?: (props: { readonly children: VNodeChild }) => VNode[]
+  readonly message?: (props: { readonly message: ChatMessage }) => VNode[]
+  readonly input?: (props: { readonly chat: ChatReturn, readonly disabled: boolean, readonly placeholder?: string }) => VNode[]
+  readonly thinking?: (props: { readonly visible: boolean }) => VNode[]
+  readonly confirmation?: (props: { readonly toolCall: ToolCall, readonly onApprove: (id: string) => void, readonly onDeny: (id: string, reason?: string) => void }) => VNode[]
+  readonly choiceList?: (props: ChoiceListProps) => VNode[]
+}
+
 const slot = (slots: Slots, name: string, props: Record<string, unknown>, fallback: () => VNodeChild): VNodeChild =>
   slots[name]?.(props) ?? fallback()
 
@@ -90,29 +99,41 @@ const agentChatProps = {
   theme: { type: Object as PropType<ChatThemeInput>, default: undefined },
 } as const
 
+const ChatBinding = defineComponent({
+  name: 'AgentsKitChatBinding',
+  props: {
+    config: { type: Object as PropType<ChatDefinition['chat']>, required: true },
+    onState: { type: Function as PropType<(chat: ChatReturn) => void>, required: true },
+  },
+  setup(props, { slots }) {
+    const chat = useChat(props.config)
+    watchEffect(() => { void chat.status; void chat.messages; props.onState(chat) })
+    return () => slots.default?.({ chat })
+  },
+})
+
 const AgentChatSession = defineComponent({
   name: 'AgentsKitChatSession',
-  props: {
-    ...agentChatProps,
-    initialMessages: { type: Array as PropType<ChatMessage[]>, default: undefined },
-    onMessages: { type: Function as PropType<(messages: ChatMessage[]) => void>, required: true },
-  },
+  props: agentChatProps,
+  slots: Object as SlotsType<AgentChatSlots>,
   setup(props, { slots }) {
     const session = resolveChatSession(props.definition, props.session)
     const sessionId = session.sessionId
-    const chat = useChat(session.updateChat({
-      ...props.definition.chat,
-      ...(props.initialMessages === undefined ? {} : { initialMessages: props.initialMessages }),
-    }))
+    let activeChat = props.definition.chat
+    let pendingChat = activeChat
+    let messages = activeChat.initialMessages
+    let status: ChatReturn['status'] = 'idle'
+    let currentChat: ChatReturn | undefined
+    const bindingRevision = ref(0)
     const actionError = ref<Error>()
     const editDraft = ref<{ readonly messageId: string, readonly content: string }>()
     const resolvedInstances = ref(new Set<string>())
     const confirmation = session.createConfirmation({
       ...(props.actionConfirmationTtlMs === undefined ? {} : { ttlMs: props.actionConfirmationTtlMs }),
       chat: {
-        proposeToolCall: proposal => chat.proposeToolCall(proposal),
-        approve: id => chat.approve(id),
-        deny: (id, reason) => chat.deny(id, reason),
+        proposeToolCall: proposal => currentChat!.proposeToolCall(proposal),
+        approve: id => currentChat!.approve(id),
+        deny: (id, reason) => currentChat!.deny(id, reason),
       },
     })
     const fail = (error: unknown, fallback: string): void => { actionError.value = error instanceof Error ? error : new Error(fallback) }
@@ -129,19 +150,20 @@ const AgentChatSession = defineComponent({
     }
     const approve = (toolCallId: string): void => {
       const record = confirmation.getByToolCall(toolCallId)
-      void (record ? confirmation.approve(record.token, sessionId) : chat.approve(toolCallId)).catch(error => fail(error, 'Action approval failed.'))
+      void (record ? confirmation.approve(record.token, sessionId) : currentChat!.approve(toolCallId)).catch(error => fail(error, 'Action approval failed.'))
     }
     const deny = (toolCallId: string, reason?: string): void => {
       const record = confirmation.getByToolCall(toolCallId)
-      void (record ? confirmation.reject(record.token, sessionId, reason) : chat.deny(toolCallId, reason)).catch(error => fail(error, 'Action rejection failed.'))
+      void (record ? confirmation.reject(record.token, sessionId, reason) : currentChat!.deny(toolCallId, reason)).catch(error => fail(error, 'Action rejection failed.'))
     }
     const runLifecycle = (operation: Promise<void>): void => {
       actionError.value = undefined
       void operation.catch(error => fail(error, 'Lifecycle operation failed.'))
     }
 
-    return () => {
-      props.onMessages(chat.messages)
+    const renderChat = (chat: ChatReturn): VNodeChild => {
+      currentChat = chat
+      const nativeSlots = slots as unknown as Slots
       const targets = getLifecycleTargets(chat.messages)
       const messages = chat.messages.map(message => {
         const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
@@ -149,19 +171,19 @@ const AgentChatSession = defineComponent({
         if (decoded?.ok) {
           const resolved = props.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, props.definition.components)
           const rendered = resolved?.ok
-            ? slot(slots, 'choiceList', { frame: decoded.frame, manifest: props.definition.components, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: props.definition.components!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
+            ? slot(nativeSlots, 'choiceList', { frame: decoded.frame, manifest: props.definition.components, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: props.definition.components!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
             : h('p', { 'data-ak-component-fallback': '' }, formatSemanticFallback(decoded.frame.fallback))
           return h(Fragment, { key: message.id }, [rendered])
         }
         const rendered = decoded && !decoded.ok
           ? h('p', { role: 'alert', 'data-ak-component-diagnostic': decoded.diagnostic.code }, decoded.diagnostic.message)
-          : slot(slots, 'message', { message }, () => h(Message, { message }))
+          : slot(nativeSlots, 'message', { message }, () => h(Message, { message }))
         return h(Fragment, { key: message.id }, [rendered])
       })
       const confirmations = chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall =>
-        h(Fragment, { key: toolCall.id }, [slot(slots, 'confirmation', { toolCall, onApprove: approve, onDeny: deny }, () => h(ToolConfirmation, { toolCall, onApprove: approve, onDeny: deny }))]))
-      const content = [...messages, ...confirmations, slot(slots, 'thinking', { visible: chat.status === 'streaming' }, () => h(ThinkingIndicator, { visible: chat.status === 'streaming' }))]
-      const container = slot(slots, 'container', { children: content }, () => h(ChatRoot, {}, { default: () => content }))
+        h(Fragment, { key: toolCall.id }, [slot(nativeSlots, 'confirmation', { toolCall, onApprove: approve, onDeny: deny }, () => h(ToolConfirmation, { toolCall, onApprove: approve, onDeny: deny }))]))
+      const content = [...messages, ...confirmations, slot(nativeSlots, 'thinking', { visible: chat.status === 'streaming' }, () => h(ThinkingIndicator, { visible: chat.status === 'streaming' }))]
+      const container = slot(nativeSlots, 'container', { children: content }, () => h(ChatRoot, {}, { default: () => content }))
       const error = chat.error ?? actionError.value
       return h('section', {
         'aria-label': `${props.definition.id} chat`,
@@ -186,8 +208,23 @@ const AgentChatSession = defineComponent({
             h('button', { type: 'button', onClick: () => { editDraft.value = undefined } }, 'Cancel edit'),
           ]),
         ]) : null,
-        slot(slots, 'input', { chat, disabled: chat.status === 'streaming', placeholder: props.placeholder }, () => h(InputBar, { chat, disabled: chat.status === 'streaming', ...(props.placeholder === undefined ? {} : { placeholder: props.placeholder }) })),
+        slot(nativeSlots, 'input', { chat, disabled: chat.status === 'streaming', placeholder: props.placeholder }, () => h(InputBar, { chat, disabled: chat.status === 'streaming', ...(props.placeholder === undefined ? {} : { placeholder: props.placeholder }) })),
       ])
+    }
+    return () => {
+      pendingChat = props.definition.chat
+      if (activeChat !== pendingChat && status !== 'streaming') { activeChat = pendingChat; bindingRevision.value += 1 }
+      const config = session.updateChat({ ...activeChat, ...(messages === undefined ? {} : { initialMessages: messages }) })
+      return h(ChatBinding, {
+        key: bindingRevision.value,
+        config,
+        onState: (chat: ChatReturn) => {
+          currentChat = chat
+          messages = chat.messages
+          status = chat.status
+          if (activeChat !== pendingChat && status !== 'streaming') { activeChat = pendingChat; bindingRevision.value += 1 }
+        },
+      }, { default: ({ chat }: { chat: ChatReturn }) => renderChat(chat) })
     }
   },
 })
@@ -195,31 +232,12 @@ const AgentChatSession = defineComponent({
 export const AgentChat = defineComponent({
   name: 'AgentsKitChat',
   props: agentChatProps,
+  slots: Object as SlotsType<AgentChatSlots>,
   setup(props, { slots }) {
-    let definitionId = props.definition.id
-    let definitionRevision = props.definition.revision
-    let preparedSession = props.session
-    let session = resolveChatSession(props.definition, preparedSession)
-    let chat = props.definition.chat
-    let chatRevision = 0
-    let messages = chat.initialMessages
-    return () => {
-      if (definitionId !== props.definition.id || definitionRevision !== props.definition.revision || preparedSession !== props.session) {
-        definitionId = props.definition.id
-        definitionRevision = props.definition.revision
-        preparedSession = props.session
-        session = resolveChatSession(props.definition, preparedSession)
-        messages = props.definition.chat.initialMessages
-      }
-      if (chat !== props.definition.chat) { chat = props.definition.chat; chatRevision += 1 }
-      return h(AgentChatSession, {
-        ...props,
-        session,
-        initialMessages: messages,
-        onMessages: (value: ChatMessage[]) => { messages = value },
-        key: `${definitionId}:${definitionRevision ?? 1}:${session.sessionId}:${chatRevision}`,
-      } as never, slots)
-    }
+    return () => h(AgentChatSession, {
+      ...props,
+      key: `${props.definition.id}:${props.definition.revision ?? 1}:${props.session?.sessionId ?? 'new'}`,
+    } as never, slots)
   },
 })
 

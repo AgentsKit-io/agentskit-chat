@@ -167,4 +167,37 @@ describe('AgentChat Vue', () => {
     expect(root.textContent).toContain('Updated adapter')
     expect(session.getConversationSnapshot()?.state).toBe('complete')
   })
+
+  it('settles an active stream before replacing the controller config', async () => {
+    let release: (() => void) | undefined
+    const gate = new Promise<void>(resolve => { release = resolve })
+    const aborted = vi.fn()
+    const oldDefinition = defineChat({ id: 'stream-swap', chat: { adapter: { createSource: () => ({ async *stream() { yield { type: 'text' as const, content: 'Old start' }; await gate; yield { type: 'text' as const, content: ' old end' }; yield { type: 'done' as const } }, abort: aborted }) } } })
+    const updatedDefinition = defineChat({ id: 'stream-swap', chat: { adapter: { createSource: () => ({ async *stream() { yield { type: 'text' as const, content: 'Updated adapter' }; yield { type: 'done' as const } }, abort() {} }) } } })
+    const definition = shallowRef(oldDefinition)
+    const root = await mount({ render: () => h(AgentChat, { definition: definition.value }) })
+    let input = root.querySelector('textarea') as HTMLTextAreaElement
+    input.value = 'first'; input.dispatchEvent(new Event('input')); await nextTick(); (root.querySelector('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    definition.value = updatedDefinition; await nextTick()
+    expect(root.textContent).toContain('Old start')
+    expect(aborted).not.toHaveBeenCalled()
+    release?.(); await settle(); await settle()
+    expect(root.textContent).toContain('Old start old end')
+    input = root.querySelector('textarea') as HTMLTextAreaElement
+    input.value = 'second'; input.dispatchEvent(new Event('input')); await nextTick(); (root.querySelector('form') as HTMLFormElement).dispatchEvent(new Event('submit')); await settle()
+    expect(root.textContent).toContain('Updated adapter')
+  })
+
+  it('keeps resolved ChoiceList instances disabled across config replacement', async () => {
+    const selected = vi.fn()
+    const makeDefinition = () => defineChat({ id: 'resolved-swap', components: defineComponentManifest([ChoiceListComponent]), chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(validChoiceListFrame) })] } })
+    const definition = shallowRef(makeDefinition())
+    const root = await mount({ render: () => h(AgentChat, { definition: definition.value, onComponentSelect: selected }) })
+    await click(root, '[data-ak-component="choice-list"] button')
+    definition.value = makeDefinition(); await settle()
+    const choice = root.querySelector('[data-ak-component="choice-list"] button') as HTMLButtonElement
+    expect(choice.disabled).toBe(true)
+    choice.click(); await nextTick()
+    expect(selected).toHaveBeenCalledOnce()
+  })
 })
