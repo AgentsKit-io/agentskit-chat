@@ -1,5 +1,5 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
-import type { ChatDefinition, ChatSession, ComponentManifest } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import {
@@ -10,8 +10,49 @@ import {
   ToolConfirmation,
   useChat,
 } from '@agentskit/react-native'
-import { useMemo, useRef, useState, type ReactElement } from 'react'
-import { Pressable, Text, TextInput, View } from 'react-native'
+import { useMemo, useRef, useState, type ComponentProps, type ComponentType, type ReactElement } from 'react'
+import { Pressable, Text, TextInput, View, type TextStyle, type ViewStyle } from 'react-native'
+
+type NativeViewStyle = ViewStyle & Readonly<Record<string, unknown>>
+type NativeTextStyle = TextStyle & Readonly<Record<string, unknown>>
+
+export interface ChatNativeStyles {
+  readonly root: NativeViewStyle
+  readonly container: NativeViewStyle
+  readonly userMessage: NativeViewStyle
+  readonly assistantMessage: NativeViewStyle
+  readonly choiceList: NativeViewStyle
+  readonly choice: NativeViewStyle
+  readonly choiceText: NativeTextStyle
+  readonly mutedText: NativeTextStyle
+  readonly input: NativeViewStyle
+  readonly dangerText: NativeTextStyle
+}
+
+export const toChatNativeStyles = (input?: ChatThemeInput): ChatNativeStyles => {
+  const theme = resolveChatTheme(input)
+  return {
+    root: { flex: 1, backgroundColor: theme.colors.background, padding: theme.spacing.large },
+    container: { backgroundColor: theme.colors.background },
+    userMessage: { alignSelf: 'flex-end', backgroundColor: theme.colors.accent, borderRadius: theme.radius.large, padding: theme.spacing.medium },
+    assistantMessage: { alignSelf: 'flex-start', backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, padding: theme.spacing.medium },
+    choiceList: { gap: theme.spacing.small, padding: theme.spacing.medium },
+    choice: { borderColor: theme.colors.border, borderRadius: theme.radius.medium, borderWidth: 1, padding: theme.spacing.medium },
+    choiceText: { color: theme.colors.text },
+    mutedText: { color: theme.colors.muted },
+    input: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderTopWidth: 1, padding: theme.spacing.medium },
+    dangerText: { color: theme.colors.danger },
+  }
+}
+
+export interface AgentChatNativeSlots {
+  readonly Container?: ComponentType<ComponentProps<typeof ChatContainer>>
+  readonly Message?: ComponentType<ComponentProps<typeof Message>>
+  readonly Input?: ComponentType<ComponentProps<typeof InputBar>>
+  readonly Thinking?: ComponentType<ComponentProps<typeof ThinkingIndicator>>
+  readonly Confirmation?: ComponentType<ComponentProps<typeof ToolConfirmation>>
+  readonly ChoiceList?: ComponentType<ChoiceListNativeProps>
+}
 
 export interface AgentChatNativeProps {
   readonly definition: ChatDefinition
@@ -19,6 +60,8 @@ export interface AgentChatNativeProps {
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
+  readonly theme?: ChatThemeInput
+  readonly slots?: AgentChatNativeSlots
 }
 
 export interface ChoiceListNativeProps {
@@ -26,14 +69,15 @@ export interface ChoiceListNativeProps {
   readonly manifest: ComponentManifest
   readonly onSelect: (event: ComponentSelectionEvent) => void
   readonly disabled?: boolean
+  readonly styles?: ChatNativeStyles
 }
 
-export const ChoiceListNative = ({ frame, manifest, onSelect, disabled = false }: ChoiceListNativeProps): ReactElement | null => {
+export const ChoiceListNative = ({ frame, manifest, onSelect, disabled = false, styles = toChatNativeStyles() }: ChoiceListNativeProps): ReactElement | null => {
   const resolved = resolveChoiceListFrame(frame, manifest)
   if (!resolved.ok) return null
   return (
-  <View testID="ak-choice-list">
-    <Text>{resolved.props.prompt}</Text>
+  <View testID="ak-choice-list" style={styles.choiceList}>
+    <Text style={styles.choiceText}>{resolved.props.prompt}</Text>
     {resolved.props.choices.map(choice => (
       <Pressable
         key={choice.id}
@@ -42,16 +86,24 @@ export const ChoiceListNative = ({ frame, manifest, onSelect, disabled = false }
         accessibilityLabel={choice.description === undefined ? choice.label : `${choice.label}. ${choice.description}`}
         onPress={() => onSelect(selectChoice(resolved.frame, choice.id))}
         testID={`ak-choice-${choice.id}`}
+        style={styles.choice}
       >
-        <Text>{choice.label}</Text>
-        {choice.description === undefined ? null : <Text>{choice.description}</Text>}
+        <Text style={styles.choiceText}>{choice.label}</Text>
+        {choice.description === undefined ? null : <Text style={styles.mutedText}>{choice.description}</Text>}
       </Pressable>
     ))}
   </View>
   )
 }
 
-const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession }: AgentChatNativeProps): ReactElement => {
+const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme, slots = {} }: AgentChatNativeProps): ReactElement => {
+  const styles = toChatNativeStyles(theme)
+  const ContainerSlot = slots.Container ?? ChatContainer
+  const MessageSlot = slots.Message ?? Message
+  const InputSlot = slots.Input ?? InputBar
+  const ThinkingSlot = slots.Thinking ?? ThinkingIndicator
+  const ConfirmationSlot = slots.Confirmation ?? ToolConfirmation
+  const ChoiceListSlot = slots.ChoiceList ?? ChoiceListNative
   const [session] = useState(() => resolveChatSession(definition, preparedSession))
   const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
@@ -96,9 +148,9 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
   }
 
   return (
-    <View testID="ak-app-chat" accessibilityLabel={`${definition.id} chat`}>
+    <View testID="ak-app-chat" accessibilityLabel={`${definition.id} chat`} style={styles.root}>
       <View accessibilityLiveRegion="polite">
-        <ChatContainer>
+        <ContainerSlot style={styles.container}>
           {chat.messages.map(message => {
             const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
             const decoded = candidate ? decodeComponentFrame(message.content) : undefined
@@ -107,19 +159,19 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
                 ? undefined
                 : resolveChoiceListFrame(decoded.frame, definition.components)
               return resolved?.ok
-                ? <ChoiceListNative key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
+                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} styles={styles} />
                 : <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
             }
             if (decoded && !decoded.ok) return <Text key={message.id} accessibilityRole="alert">{decoded.diagnostic.message}</Text>
-            return <Message key={message.id} message={message} />
+            return <MessageSlot key={message.id} message={message} style={message.role === 'user' ? styles.userMessage : styles.assistantMessage} />
           })}
           {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
-            <ToolConfirmation key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
+            <ConfirmationSlot key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
           ))}
-          <ThinkingIndicator visible={chat.status === 'streaming'} />
-        </ChatContainer>
+          <ThinkingSlot visible={chat.status === 'streaming'} />
+        </ContainerSlot>
       </View>
-      {chat.error || actionError ? <Text accessibilityRole="alert">{chat.error?.message ?? actionError?.message}</Text> : null}
+      {chat.error || actionError ? <Text accessibilityRole="alert" style={styles.dangerText}>{chat.error?.message ?? actionError?.message}</Text> : null}
       {chat.status === 'streaming' ? (
         <Pressable
           testID="ak-stop"
@@ -144,9 +196,10 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
           </>}
         </View>
       ) : null}
-      <InputBar
+      <InputSlot
         chat={chat}
         disabled={chat.status === 'streaming'}
+        style={styles.input}
         {...(placeholder === undefined ? {} : { placeholder })}
       />
     </View>

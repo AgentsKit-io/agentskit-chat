@@ -48,6 +48,17 @@ describe('AgentChatNative', () => {
     expect(document.querySelector('[data-live="polite"]')).toBeTruthy()
   })
 
+  it('maps semantic tokens to native styles and accepts a native slot', async () => {
+    const { AgentChatNative, toChatNativeStyles } = await import('../src/index')
+    expect(toChatNativeStyles({ colors: { accent: 'purple' }, spacing: { medium: 20 } })).toMatchObject({
+      userMessage: { backgroundColor: 'purple', padding: 20 }, input: { padding: 20 },
+    })
+    useChat.mockReturnValue({ messages: [{ id: 'assistant', role: 'assistant', content: 'hello' }], status: 'idle', stop } as unknown as ChatReturn)
+    const Slot = () => <span>Custom native message</span>
+    render(<AgentChatNative definition={definition} slots={{ Message: Slot }} />)
+    expect(screen.getByText('Custom native message')).toBeTruthy()
+  })
+
   it('resumes a React-prepared pending action in React Native and persists terminal state', async () => {
     const { AgentChatNative } = await import('../src/index')
     let stored: SessionSnapshot | undefined

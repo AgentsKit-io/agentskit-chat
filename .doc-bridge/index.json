@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "bdd57df3394bbac8536e58ce5465a147586400722e6d71a800fb9d32b18f915c",
+  "contentHash": "b6ec685d721cc8a0e56485ffb3323524b933ebec701ee84b4d87d4ffc35b3087",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T13:48:20.730Z",
+  "generatedAt": "2026-07-11T14:29:09.425Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -78,7 +78,7 @@
       "title": "Ink package handoff",
       "path": "docs/for-agents/packages/ink.md",
       "description": "`packages/ink` owns only the application-level Ink composition, native `ChoiceList` input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input.",
-      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition, native ChoiceList input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input. Upstream boundary Use useChat , ChatContainer , Message , InputBar , ThinkingIndicator , and ToolConfirmation from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, cancellation, and confirmation UI must remain upstream. Typed action proposal requires @agentskit/ink 0.10.0 or newer. Lifecycle slash commands are consumed through upstream InputBar.onSubmitInput and call ChatReturn directly. Escape cancellation remains owned by @agentskit/ink . Checks"
+      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition, native ChoiceList input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input. Upstream boundary Use useChat , ChatContainer , Message , InputBar , ThinkingIndicator , and ToolConfirmation from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, cancellation, and confirmation UI must remain upstream. Typed action proposal requires @agentskit/ink 0.10.0 or newer. Map supported semantic colors through the upstream InkThemeProvider ; do not imitate unsupported spatial tokens in terminal output. Slots remain Ink components and must preserve single-owner keyboard input. Fully headless state uses upstream useChat directly. Lifecycle slash commands are consumed through upstream InputBar.onSubmitInput and call ChatReturn directly. Escape cancellation remains owned by @agentskit/ink . Checks"
     },
     {
       "id": "protocol",
@@ -94,7 +94,7 @@
       "title": "React Native renderer",
       "path": "docs/for-agents/packages/react-native.md",
       "description": "- Owns only the native application shell and native `ChoiceList` presentation in `packages/react-native`. - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events. - Delegate controller state and UI primitives to `@agentskit/react-native`. - Keep React Native as a peer dependency; native modules belong to the Expo app.",
-      "body": "React Native renderer - Owns only the native application shell and native ChoiceList presentation in packages/react-native . - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events. - Delegate controller state and UI primitives to @agentskit/react-native . - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Native retry, edit, regenerate, and stop controls call ChatReturn directly; AgentsKit owns mutation and abort semantics. - Render typed actions with the published upstream ToolConfirmation ; do not add a native confirmation duplicate. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates."
+      "body": "React Native renderer - Owns only the native application shell and native ChoiceList presentation in packages/react-native . - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events. - Delegate controller state and UI primitives to @agentskit/react-native . - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Native retry, edit, regenerate, and stop controls call ChatReturn directly; AgentsKit owns mutation and abort semantics. - Render typed actions with the published upstream ToolConfirmation ; do not add a native confirmation duplicate. - Map semantic themes through upstream style pass-throughs and native application styles. Slots remain React Native components; fully headless state uses upstream useChat directly. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates."
     },
     {
       "id": "react",
@@ -102,7 +102,7 @@
       "title": "React package handoff",
       "path": "docs/for-agents/packages/react.md",
       "description": "`packages/react` supplies an accessible application shell and native `ChoiceList` presentation over `useChat` and headless components from `@agentskit/react`. Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.",
-      "body": "React package handoff Ownership packages/react supplies an accessible application shell and native ChoiceList presentation over useChat and headless components from @agentskit/react . Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Retry, edit, regenerate, and stop controls must call the corresponding ChatReturn methods directly. Do not reproduce truncation, lineage, abort, or late-chunk behavior in this package. Typed actions compose the published upstream ToolConfirmation ; approval and denial go through the shared session coordinator and then the upstream hook. Read first - - Checks"
+      "body": "React package handoff Ownership packages/react supplies an accessible application shell and native ChoiceList presentation over useChat and headless components from @agentskit/react . Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Retry, edit, regenerate, and stop controls must call the corresponding ChatReturn methods directly. Do not reproduce truncation, lineage, abort, or late-chunk behavior in this package. Typed actions compose the published upstream ToolConfirmation ; approval and denial go through the shared session coordinator and then the upstream hook. Semantic themes map only to published upstream CSS variables. Native slots stay in this package; fully headless state uses useChat from @agentskit/react directly. Preserve the default shell's log, alert, labeling, and keyboard semantics when replacing slots. Read first - - Checks"
     },
     {
       "id": "server",

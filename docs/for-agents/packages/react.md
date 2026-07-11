@@ -8,6 +8,8 @@ Retry, edit, regenerate, and stop controls must call the corresponding `ChatRetu
 
 Typed actions compose the published upstream `ToolConfirmation`; approval and denial go through the shared session coordinator and then the upstream hook.
 
+Semantic themes map only to published upstream CSS variables. Native slots stay in this package; fully headless state uses `useChat` from `@agentskit/react` directly. Preserve the default shell's log, alert, labeling, and keyboard semantics when replacing slots.
+
 ## Read first
 
 - [`../../getting-started/react.md`](../../getting-started/react.md)

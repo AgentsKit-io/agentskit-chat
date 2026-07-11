@@ -2,7 +2,7 @@ import { buildMessage, type AdapterFactory } from '@agentskit/core'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { AgentChat, ChoiceList } from '../src/index.js'
+import { AgentChat, ChoiceList, toChatCssVariables } from '../src/index.js'
 import { ChoiceListComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
@@ -46,6 +46,15 @@ const adapter = (fail = false): AdapterFactory => ({
 })
 
 describe('AgentChat', () => {
+  it('maps semantic tokens to upstream CSS variables and accepts a native slot', () => {
+    expect(toChatCssVariables({ colors: { accent: 'rebeccapurple' }, radius: { large: 20 } })).toMatchObject({
+      '--ak-color-button': 'rebeccapurple', '--ak-color-bubble-user': 'rebeccapurple', '--ak-radius-lg': '20px',
+    })
+    const Slot = () => <p>Custom message slot</p>
+    render(<AgentChat definition={{ id: 'slots', chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } }} slots={{ Message: Slot }} />)
+    expect(screen.getByText('Custom message slot')).toBeTruthy()
+  })
+
   it('renders and selects a validated ChoiceList accessibly', () => {
     const manifest = defineComponentManifest([ChoiceListComponent])
     const onSelect = vi.fn()

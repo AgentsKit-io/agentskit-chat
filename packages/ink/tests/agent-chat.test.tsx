@@ -1,19 +1,30 @@
 import { buildMessage } from '@agentskit/core'
 import type { AdapterFactory } from '@agentskit/core'
 import { render } from 'ink-testing-library'
+import { Text } from 'ink'
 import React from 'react'
 import { describe, expect, it } from 'vitest'
 import { vi } from 'vitest'
 
 import { ChoiceListComponent, defineComponentManifest } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
-import { AgentChat, ChoiceList, SemanticFallback } from '../src/index.js'
+import { AgentChat, ChoiceList, SemanticFallback, toChatInkTheme } from '../src/index.js'
 
 const adapter: AdapterFactory = {
   createSource: () => ({ async *stream() { yield { type: 'done' } }, abort() {} }),
 }
 
 describe('Ink application shell', () => {
+  it('maps semantic tokens to Ink capabilities and accepts a terminal slot', () => {
+    expect(toChatInkTheme({ colors: { accent: 'blue', danger: 'red' } })).toMatchObject({
+      prompt: { active: 'blue' }, toolStatus: { error: { color: 'red' } },
+    })
+    const Slot = () => <Text>Custom terminal message</Text>
+    const view = render(<AgentChat definition={{ id: 'slots', chat: { adapter, initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } }} slots={{ Message: Slot }} />)
+    expect(view.lastFrame()).toContain('Custom terminal message')
+    view.unmount()
+  })
+
   it('selects a ChoiceList with terminal navigation', () => {
     const manifest = defineComponentManifest([ChoiceListComponent])
     const onSelect = vi.fn()

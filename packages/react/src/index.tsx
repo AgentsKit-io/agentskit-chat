@@ -1,5 +1,5 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
-import type { ChatDefinition, ChatSession, ComponentManifest } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import {
@@ -10,7 +10,47 @@ import {
   ToolConfirmation,
   useChat,
 } from '@agentskit/react'
-import { useMemo, useRef, useState, type ReactElement } from 'react'
+import { useMemo, useRef, useState, type ComponentProps, type ComponentType, type CSSProperties, type ReactElement } from 'react'
+
+export type ChatCssVariables = CSSProperties & { readonly [key: `--ak-${string}`]: string | number }
+
+export const toChatCssVariables = (input?: ChatThemeInput): ChatCssVariables => {
+  const theme = resolveChatTheme(input)
+  return {
+    '--ak-color-bg': theme.colors.background,
+    '--ak-color-surface': theme.colors.surface,
+    '--ak-color-border': theme.colors.border,
+    '--ak-color-text': theme.colors.text,
+    '--ak-color-text-muted': theme.colors.muted,
+    '--ak-color-bubble-user': theme.colors.accent,
+    '--ak-color-bubble-user-text': theme.colors.onAccent,
+    '--ak-color-bubble-assistant': theme.colors.surface,
+    '--ak-color-bubble-assistant-text': theme.colors.text,
+    '--ak-color-input-bg': theme.colors.background,
+    '--ak-color-input-border': theme.colors.border,
+    '--ak-color-input-focus': theme.colors.accent,
+    '--ak-color-button': theme.colors.accent,
+    '--ak-color-button-text': theme.colors.onAccent,
+    '--ak-color-tool-bg': theme.colors.surface,
+    '--ak-color-tool-border': theme.colors.border,
+    '--ak-app-color-danger': theme.colors.danger,
+    '--ak-font-family': theme.fontFamily,
+    '--ak-radius': `${theme.radius.medium}px`,
+    '--ak-radius-lg': `${theme.radius.large}px`,
+    '--ak-spacing-sm': `${theme.spacing.small}px`,
+    '--ak-spacing-md': `${theme.spacing.medium}px`,
+    '--ak-spacing-lg': `${theme.spacing.large}px`,
+  }
+}
+
+export interface AgentChatSlots {
+  readonly Container?: ComponentType<ComponentProps<typeof ChatContainer>>
+  readonly Message?: ComponentType<ComponentProps<typeof Message>>
+  readonly Input?: ComponentType<ComponentProps<typeof InputBar>>
+  readonly Thinking?: ComponentType<ComponentProps<typeof ThinkingIndicator>>
+  readonly Confirmation?: ComponentType<ComponentProps<typeof ToolConfirmation>>
+  readonly ChoiceList?: ComponentType<ChoiceListProps>
+}
 
 export interface AgentChatProps {
   readonly definition: ChatDefinition
@@ -18,6 +58,8 @@ export interface AgentChatProps {
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
+  readonly theme?: ChatThemeInput
+  readonly slots?: AgentChatSlots
 }
 
 export interface ChoiceListProps {
@@ -43,7 +85,14 @@ export const ChoiceList = ({ frame, manifest, onSelect, disabled = false }: Choi
   )
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme: themeInput, slots = {} }: AgentChatProps): ReactElement => {
+  const theme: ChatTheme = resolveChatTheme(themeInput)
+  const ContainerSlot = slots.Container ?? ChatContainer
+  const MessageSlot = slots.Message ?? Message
+  const InputSlot = slots.Input ?? InputBar
+  const ThinkingSlot = slots.Thinking ?? ThinkingIndicator
+  const ConfirmationSlot = slots.Confirmation ?? ToolConfirmation
+  const ChoiceListSlot = slots.ChoiceList ?? ChoiceList
   const [session] = useState(() => resolveChatSession(definition, preparedSession))
   const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
@@ -89,9 +138,9 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   }
 
   return (
-    <section aria-label={`${definition.id} chat`} data-ak-app-chat="">
+    <section aria-label={`${definition.id} chat`} data-ak-app-chat="" style={themeInput === undefined ? undefined : toChatCssVariables(theme)}>
       <div aria-live="polite" aria-relevant="additions text" role="log">
-        <ChatContainer>
+        <ContainerSlot>
           {chat.messages.map(message => {
             const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
             const decoded = candidate ? decodeComponentFrame(message.content) : undefined
@@ -100,19 +149,19 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
                 ? undefined
                 : resolveChoiceListFrame(decoded.frame, definition.components)
               return resolved?.ok
-                ? <ChoiceList key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
+                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
                 : <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
             }
             if (decoded && !decoded.ok) return <p key={message.id} role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
-            return <Message key={message.id} message={message} />
+            return <MessageSlot key={message.id} message={message} />
           })}
           {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
-            <ToolConfirmation key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
+            <ConfirmationSlot key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
           ))}
-          <ThinkingIndicator visible={chat.status === 'streaming'} />
-        </ChatContainer>
+          <ThinkingSlot visible={chat.status === 'streaming'} />
+        </ContainerSlot>
       </div>
-      {chat.error || actionError ? <p role="alert">{chat.error?.message ?? actionError?.message}</p> : null}
+      {chat.error || actionError ? <p role="alert" style={{ color: theme.colors.danger }}>{chat.error?.message ?? actionError?.message}</p> : null}
       {chat.status === 'streaming' ? <button type="button" onClick={chat.stop}>Stop</button> : null}
       {chat.status !== 'streaming' && targets.userId ? (
         <div aria-label="Response actions">
@@ -133,7 +182,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
           )}
         </div>
       ) : null}
-      <InputBar
+      <InputSlot
         chat={chat}
         disabled={chat.status === 'streaming'}
         {...(placeholder === undefined ? {} : { placeholder })}

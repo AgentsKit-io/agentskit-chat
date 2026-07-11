@@ -9,6 +9,7 @@ import {
   resolveChatSession,
   resolveChoiceListFrame,
   resolveComponentFrame,
+  resolveChatTheme,
   getLifecycleTargets,
   selectChoice, withActionPolicy,
   type TurnTrace,
@@ -58,6 +59,16 @@ describe('semantic fallback', () => {
 
   it('rejects empty fallback fields at the runtime boundary', () => {
     expect(() => parseSemanticFallback({ kind: '', summary: 'Missing kind.' })).toThrow()
+  })
+})
+
+describe('semantic theme', () => {
+  it('deep-merges valid partial tokens and rejects unknown input', () => {
+    expect(resolveChatTheme({ colors: { accent: '#123456' }, spacing: { medium: 20 } })).toMatchObject({
+      colors: { accent: '#123456', background: '#ffffff' }, spacing: { small: 8, medium: 20 },
+    })
+    expect(() => resolveChatTheme({ colors: { accent: '' } })).toThrow()
+    expect(() => resolveChatTheme({ futureToken: true })).toThrow()
   })
 })
 

@@ -49,6 +49,8 @@ The first server slice is `@agentskit/chat-server`: a Web `Request`/`Response` h
 
 React, Vue, Svelte, Solid, Angular, React Native, and Ink renderers consume the protocol and the matching AgentsKit package. Custom visual implementations are platform-specific; component identity, props schema, actions, and fallback behavior are shared.
 
+The first renderer set shares a runtime-validated semantic application theme and maps it through upstream CSS variables, React Native styles, and Ink theming. Composition slots remain native to each renderer, while fully headless state remains the corresponding AgentsKit `useChat` API ([ADR-0013](./adrs/0013-semantic-theme-native-slots.md)).
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.
