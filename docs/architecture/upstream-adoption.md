@@ -14,7 +14,7 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 
 | Package | Inspected version | Role in AgentsKit Chat |
 |---|---:|---|
-| `@agentskit/core` | 1.9.0 | Controller, chat contracts, messages, tools, memory contracts, generative UI, HITL, events, errors. |
+| `@agentskit/core` | 1.10.2 | Controller, chat contracts, messages, tools, memory serialization, generative UI, HITL, events, errors. |
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
 | `@agentskit/memory` | 0.10.2 | Persistent `ChatMemory` implementations. |
@@ -54,7 +54,7 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 | Vue/Svelte/Solid/Angular | Corresponding package sources | Corresponding supported composable/store/service and components | Reuse directly | Adapt only native composition conventions to the shared definition. | Verify again in each renderer issue because beta APIs may evolve. |
 | Deterministic application routes | No equivalent application router required in core | `ChatController.send` remains the agentic fallback | Add application layer | Match trusted application routes before delegating unresolved input to the upstream controller. | None: intentionally above core. |
 | Conversation state machine | No general public statechart contract in AgentsKit | Controller remains responsible for chat lifecycle | Add application layer initially | Coordinate application states without replacing controller lifecycle. Promote upstream only if a framework-neutral primitive proves independently useful. | Not currently proven. |
-| Client-server transport | No required application server package | Upstream types and lifecycle are canonical | Add application layer | Serialize upstream semantics plus versioned application events using Web-standard APIs. | None: deployment/application concern. |
+| Client-server protocol | `core/src/types/{chat,message,tool,stream}.ts`, `core/src/memory.ts` | `ChatState`, `Message`, `ToolCall`, `TokenUsage`, `MemoryRecord`, `serializeMessages`, `deserializeMessages` | Reuse canonical shapes; add application envelope | Transport validated snapshots without redefining controller or adapter stream semantics. | None: versioned application transport belongs to AgentsKit Chat. |
 | Observability | Core observers and AgentsKit observability packages | `Observer` and supported integrations | Reuse directly | Add application identifiers and decisions without creating another telemetry substrate. | None. |
 
 ## Minimal `defineChat` contract for #2

@@ -1,0 +1,152 @@
+import type { ProtocolDecodeCode, TurnEvent } from './index.js'
+
+export interface TurnEventFixture {
+  readonly name: string
+  readonly event: TurnEvent
+}
+
+export interface InvalidTurnEventFixture {
+  readonly name: string
+  readonly event: unknown
+  readonly code: ProtocolDecodeCode
+}
+
+const base = {
+  protocol: 'agentskit.chat.turn',
+  version: 1,
+  sessionId: 'session-conformance',
+  turnId: 'turn-conformance',
+  emittedAt: '2026-07-11T03:00:00.000Z',
+} as const
+
+export const validTurnEventFixtures = [
+  {
+    name: 'submit',
+    event: {
+      ...base,
+      eventId: 'event-submit',
+      sequence: 0,
+      event: 'client.turn.submit',
+      payload: { input: 'hello' },
+    },
+  },
+  {
+    name: 'idle snapshot',
+    event: {
+      ...base,
+      eventId: 'event-idle',
+      sequence: 1,
+      event: 'server.turn.snapshot',
+      payload: {
+        status: 'idle',
+        usage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+        messages: [],
+      },
+    },
+  },
+  {
+    name: 'streaming snapshot',
+    event: {
+      ...base,
+      eventId: 'event-streaming',
+      sequence: 2,
+      event: 'server.turn.snapshot',
+      payload: {
+        status: 'streaming',
+        usage: { promptTokens: 2, completionTokens: 1, totalTokens: 3 },
+        messages: [{
+          id: 'message-assistant',
+          role: 'assistant',
+          content: 'AgentsKit',
+          status: 'streaming',
+          createdAt: '2026-07-11T03:00:00.000Z',
+        }],
+      },
+    },
+  },
+  {
+    name: 'complete snapshot with tool call',
+    event: {
+      ...base,
+      eventId: 'event-complete',
+      sequence: 3,
+      event: 'server.turn.snapshot',
+      payload: {
+        status: 'complete',
+        usage: { promptTokens: 2, completionTokens: 3, totalTokens: 5 },
+        messages: [{
+          id: 'message-assistant',
+          role: 'assistant',
+          content: 'AgentsKit received: hello',
+          status: 'complete',
+          toolCalls: [{
+            id: 'tool-call-1',
+            name: 'lookup',
+            args: { query: 'hello' },
+            result: 'found',
+            status: 'complete',
+          }],
+          createdAt: '2026-07-11T03:00:01.000Z',
+        }],
+      },
+    },
+  },
+  {
+    name: 'diagnostic',
+    event: {
+      ...base,
+      eventId: 'event-diagnostic',
+      sequence: 4,
+      event: 'server.turn.diagnostic',
+      payload: {
+        version: 1,
+        code: 'ADAPTER_FAILED',
+        message: 'The adapter failed.',
+        retryable: false,
+      },
+    },
+  },
+  {
+    name: 'error snapshot',
+    event: {
+      ...base,
+      eventId: 'event-error',
+      sequence: 5,
+      event: 'server.turn.snapshot',
+      payload: {
+        status: 'error',
+        usage: { promptTokens: 2, completionTokens: 0, totalTokens: 2 },
+        messages: [],
+        error: {
+          version: 1,
+          code: 'ADAPTER_FAILED',
+          message: 'The adapter failed.',
+          retryable: false,
+        },
+      },
+    },
+  },
+] as const satisfies readonly TurnEventFixture[]
+
+export const invalidTurnEventFixtures = [
+  {
+    name: 'invalid payload',
+    event: null,
+    code: 'PROTOCOL_INVALID_PAYLOAD',
+  },
+  {
+    name: 'unknown version',
+    event: { ...base, eventId: 'future', version: 2, sequence: 0, event: 'client.turn.submit', payload: { input: 'hello' } },
+    code: 'PROTOCOL_UNSUPPORTED_VERSION',
+  },
+  {
+    name: 'unknown event',
+    event: { ...base, eventId: 'unknown', sequence: 0, event: 'server.turn.future', payload: {} },
+    code: 'PROTOCOL_UNKNOWN_EVENT',
+  },
+  {
+    name: 'blank input',
+    event: { ...base, eventId: 'blank', sequence: 0, event: 'client.turn.submit', payload: { input: '   ' } },
+    code: 'PROTOCOL_INVALID_PAYLOAD',
+  },
+] as const satisfies readonly InvalidTurnEventFixture[]
