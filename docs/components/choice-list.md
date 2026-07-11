@@ -44,12 +44,13 @@ The frame may come from an agent response or a deterministic route. Treat both a
 
 - React: `<ChoiceList frame={frame} manifest={components} onSelect={handleSelect} />` uses a labelled fieldset and native buttons.
 - Vue: `<ChoiceList ... />` uses the same labelled fieldset/native buttons and is replaceable through the typed `choiceList` scoped slot.
+- Svelte: `<ChoiceList ... />` uses a labelled fieldset/native buttons and is replaceable through the typed `choiceList` snippet.
 - React Native: `<ChoiceListNative ... />` exposes native accessibility roles and labels.
 - Ink: `<ChoiceList ... />` supports Up/Down or a number followed by Enter.
 
 Each `onSelect` callback receives `{ protocol, version, type: 'select', componentKey, instanceId, choiceId }`. A choice id not declared in the validated frame is rejected.
 
-All four application shells detect component frames in assistant messages (including deterministic route responses), resolve them against `definition.components`, and report the same selection event through `onComponentSelect`. A valid but unregistered component renders only its shared semantic fallback.
+All application shells detect component frames in assistant messages (including deterministic route responses), resolve them against `definition.components`, and report the same selection event through `onComponentSelect`. A valid but unregistered component renders only its shared semantic fallback.
 
 ## Security
 

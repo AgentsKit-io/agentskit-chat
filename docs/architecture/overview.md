@@ -53,6 +53,8 @@ The first renderer set shares a runtime-validated semantic application theme and
 
 The Vue renderer uses native named scoped slots and the controller-free `ChatRoot` released upstream in `@agentskit/vue@0.4.4`. Its application behavior remains identical to the shared renderer contract; no Vue reactive state is introduced downstream.
 
+The Svelte renderer uses the upstream `createChatStore` and Svelte 5 snippets. Store replacement is isolated to a keyed binding; an active store is cancelled through its upstream `stop` action before replacement, while application/session state stays mounted.
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.
