@@ -26,13 +26,13 @@
     "test": "vitest run --coverage"
   },
   "peerDependencies": {
-    "@agentskit/core": "^1.10.2"
+    "@agentskit/core": "^1.10.5"
   },
   "dependencies": {
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.10.2",
+    "@agentskit/core": "^1.10.5",
     "tsup": "^8.5.1"
   },
   "publishConfig": { "access": "public" }

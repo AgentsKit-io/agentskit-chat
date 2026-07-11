@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "e87c38601b2c23ec234fe331f49e2d594d052646121bd5007ba83923999996e0",
+  "contentHash": "ac5330e92cb81331c447328a97f3c3db9b4e84aa1743d33d3d627f2196bc2429",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T03:41:10.553Z",
+  "generatedAt": "2026-07-11T06:38:55.876Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -86,7 +86,7 @@
       "title": "Protocol package handoff",
       "path": "docs/for-agents/packages/protocol.md",
       "description": "`packages/protocol` owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus.",
-      "body": "Protocol package handoff Ownership packages/protocol owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. Read first - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Checks"
+      "body": "Protocol package handoff Ownership packages/protocol owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. Read first - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
     },
     {
       "id": "react-native",

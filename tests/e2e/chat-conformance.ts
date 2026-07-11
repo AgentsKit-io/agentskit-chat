@@ -10,7 +10,7 @@ export const testChatConformance = ({ placeholder, stopName }: ChatConformanceOp
     await page.goto('/')
     await page.getByPlaceholder(placeholder).fill('hello')
     await page.getByRole('button', { name: 'Send', exact: false }).click()
-    await expect(page.getByText('AgentsKit received: hello')).toBeVisible()
+    await expect(page.getByText('AgentsKit received: hello').last()).toBeVisible()
   })
 
   test('announces adapter errors', async ({ page }) => {

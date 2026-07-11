@@ -14,7 +14,7 @@ When this matrix identifies a missing generic primitive, work moves first to `Ag
 
 | Package | Inspected version | Role in AgentsKit Chat |
 |---|---:|---|
-| `@agentskit/core` | 1.10.2 | Controller, chat contracts, messages, tools, memory serialization, generative UI, HITL, events, errors. |
+| `@agentskit/core` | 1.10.5 | Controller, chat contracts, messages, tools, memory serialization and validation, generative UI, HITL, events, errors. |
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
 | `@agentskit/memory` | 0.10.2 | Persistent `ChatMemory` implementations. |

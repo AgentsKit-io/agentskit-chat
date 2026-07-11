@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@agentskit/doc-bridge':
         specifier: 1.0.2
-        version: 1.0.2(@agentskit/core@1.10.2)(@agentskit/ink@0.9.5(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)
+        version: 1.0.2(@agentskit/core@1.10.5)(@agentskit/ink@0.9.5(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)
       '@playwright/test':
         specifier: ^1.61.0
         version: 1.61.1
@@ -100,6 +100,9 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
       '@agentskit/chat-react-native':
         specifier: workspace:*
         version: link:../../packages/react-native
@@ -183,8 +186,8 @@ importers:
         version: 4.4.3
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.10.2
-        version: 1.10.2
+        specifier: ^1.10.5
+        version: 1.10.5
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
@@ -264,6 +267,9 @@ packages:
 
   '@agentskit/core@1.10.2':
     resolution: {integrity: sha512-OaHfADPDcVIZF3rRGrg5+xmz1taH4m+RMkZfVNN2GYIORmwvuJzKg69f2BeK9asJvQbmujuUCmvffBHexpoYbg==}
+
+  '@agentskit/core@1.10.5':
+    resolution: {integrity: sha512-0egcrUXuHswP35dzC8kHunq4UL0ch5qOnnMqMh5gVSpf59Zs6wNQe6Ixf9f1GJ/l06F/VUaQTw/O1X881ERgyA==}
 
   '@agentskit/doc-bridge@1.0.2':
     resolution: {integrity: sha512-kE5oKKvmFOZliMm9Rfr8N+G1RWaBoDabOK3Vqjz7IJLHyTSyYnHxiE08O6HYKudtAbyV8x0o2R/IEsWNohyLVw==}
@@ -3507,11 +3513,13 @@ snapshots:
 
   '@agentskit/core@1.10.2': {}
 
-  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.10.2)(@agentskit/ink@0.9.5(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)':
+  '@agentskit/core@1.10.5': {}
+
+  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.10.5)(@agentskit/ink@0.9.5(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)':
     dependencies:
       zod: 3.25.76
     optionalDependencies:
-      '@agentskit/core': 1.10.2
+      '@agentskit/core': 1.10.5
       '@agentskit/ink': 0.9.5(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react: 19.2.7
 
