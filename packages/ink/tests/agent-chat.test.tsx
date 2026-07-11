@@ -95,6 +95,34 @@ describe('Ink application shell', () => {
     view.unmount()
   })
 
+  it.each([
+    { key: '1', expected: 1, label: 'approves once' },
+    { key: '3', expected: 0, label: 'rejects without execution' },
+  ])('$label through the official terminal confirmation', async ({ key, expected }) => {
+    const execute = vi.fn()
+    const actionable = {
+      ...validChoiceListFrame,
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => choice.id === 'docs'
+        ? { ...choice, action: { name: 'open-docs', input: { path: '/guide' } } } : choice) },
+    }
+    const view = render(<AgentChat definition={{
+      id: `ink-action-${key}`,
+      components: defineComponentManifest([ChoiceListComponent]),
+      chat: {
+        adapter,
+        initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(actionable) })],
+        tools: [{ name: 'open-docs', requiresConfirmation: true, execute }],
+      },
+    }} />)
+    view.stdin.write('\r')
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(view.lastFrame()).toContain('Allow open-docs?')
+    view.stdin.write(key)
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(execute).toHaveBeenCalledTimes(expected)
+    view.unmount()
+  })
+
   it('renders the semantic fallback in a terminal frame', () => {
     const view = render(<SemanticFallback fallback={{ kind: 'map', summary: 'Two selected regions.' }} />)
     expect(view.lastFrame()).toContain('[unsupported visual: map] Two selected regions.')

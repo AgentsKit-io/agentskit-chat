@@ -21,14 +21,14 @@
     "test": "pnpm --filter @agentskit/chat-protocol build && vitest run"
   },
   "peerDependencies": {
-    "@agentskit/core": "^1.9.0"
+    "@agentskit/core": "^1.11.0"
   },
   "dependencies": {
     "@agentskit/chat-protocol": "workspace:*",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.9.0",
+    "@agentskit/core": "^1.11.0",
     "tsup": "^8.5.1"
   },
   "publishConfig": { "access": "public" }

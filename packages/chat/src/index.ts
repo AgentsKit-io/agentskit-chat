@@ -1,5 +1,5 @@
 import { ConfigError, ErrorCodes } from '@agentskit/core'
-import type { AdapterRequest, ChatConfig, Message, StreamSource } from '@agentskit/core'
+import type { AdapterRequest, ChatConfig, ChatReturn, Message, StreamSource, ToolCall } from '@agentskit/core'
 import {
   ComponentFallbackSchema,
   ComponentKeySchema,
@@ -18,6 +18,10 @@ export const ChoiceListPropsSchema = z.object({
     id: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
     label: z.string().min(1),
     description: z.string().min(1).optional(),
+    action: z.object({
+      name: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+      input: z.record(z.string(), z.json()),
+    }).readonly().optional(),
   }).readonly()).min(1).max(20).superRefine((choices, context) => {
     const ids = new Set<string>()
     for (const [index, choice] of choices.entries()) {
@@ -28,6 +32,134 @@ export const ChoiceListPropsSchema = z.object({
 }).readonly()
 
 export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
+
+export type ChoiceAction = NonNullable<ChoiceListProps['choices'][number]['action']>
+
+export const resolveChoiceAction = (frame: ComponentRenderFrame, choiceId: string): ChoiceAction | undefined => {
+  const props = ChoiceListPropsSchema.parse(frame.props)
+  return props.choices.find(choice => choice.id === choiceId)?.action
+}
+
+export type ActionConfirmationStatus = 'pending' | 'approved' | 'rejected' | 'expired'
+
+export interface ActionConfirmation {
+  readonly token: string
+  readonly sessionId: string
+  readonly action: string
+  readonly input: Readonly<Record<string, unknown>>
+  readonly toolCallId: string
+  readonly expiresAt: number
+  readonly status: ActionConfirmationStatus
+}
+
+export interface ActionConfirmationCoordinator {
+  readonly propose: (action: ChoiceAction) => Promise<ActionConfirmation>
+  readonly approve: (token: string, sessionId: string) => Promise<ActionConfirmation>
+  readonly reject: (token: string, sessionId: string, reason?: string) => Promise<ActionConfirmation>
+  readonly getByToolCall: (toolCallId: string) => ActionConfirmation | undefined
+}
+
+export interface ActionConfirmationOptions {
+  readonly sessionId: string
+  readonly chat: Pick<ChatReturn, 'proposeToolCall' | 'approve' | 'deny'>
+  readonly ttlMs?: number
+  readonly now?: () => number
+  readonly createId?: () => string
+}
+
+const invalidConfirmation = (message: string): never => {
+  throw new ConfigError({
+    code: ErrorCodes.AK_CONFIG_INVALID,
+    message,
+    hint: 'Use the pending confirmation token in the session that created it.',
+  })
+}
+
+const freezeJson = <T>(value: T): T => {
+  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) freezeJson(child)
+    Object.freeze(value)
+  }
+  return value
+}
+
+export const createActionConfirmation = ({
+  sessionId,
+  chat,
+  ttlMs = 300_000,
+  now = Date.now,
+  createId,
+}: ActionConfirmationOptions): ActionConfirmationCoordinator => {
+  if (sessionId.length === 0 || !Number.isSafeInteger(ttlMs) || ttlMs <= 0) invalidConfirmation('Action confirmation options are invalid.')
+  let sequence = 0
+  const nextId = createId ?? (() => `${(++sequence).toString(36)}-${now().toString(36)}`)
+  const records = new Map<string, ActionConfirmation>()
+  const tokensByCall = new Map<string, string>()
+  const operations = new Map<string, Promise<ActionConfirmation>>()
+  const snapshot = (record: ActionConfirmation, status: ActionConfirmationStatus): ActionConfirmation => Object.freeze({ ...record, status })
+  const requireRecord = (token: string, requestedSession: string): ActionConfirmation => {
+    const record = records.get(token)
+    if (!record || record.sessionId !== requestedSession) return invalidConfirmation('Action confirmation token is invalid for this session.')
+    return record
+  }
+  const runOnce = (token: string, operation: () => Promise<ActionConfirmation>): Promise<ActionConfirmation> => {
+    const current = operations.get(token)
+    if (current) return current
+    const pending = operation().finally(() => operations.delete(token))
+    operations.set(token, pending)
+    return pending
+  }
+  return {
+    async propose(action) {
+      const suffix = nextId()
+      if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,119}$/.test(suffix)) invalidConfirmation('Action confirmation id is invalid.')
+      const call: ToolCall = await chat.proposeToolCall({ id: `app-${suffix}`, name: action.name, args: action.input })
+      const token = `confirm-${suffix}`
+      const record: ActionConfirmation = Object.freeze({
+        token,
+        sessionId,
+        action: call.name,
+        input: freezeJson(structuredClone(call.args)),
+        toolCallId: call.id,
+        expiresAt: now() + ttlMs,
+        status: call.status === 'requires_confirmation' ? 'pending' : 'rejected',
+      })
+      records.set(token, record)
+      tokensByCall.set(call.id, token)
+      return record
+    },
+    approve(token, requestedSession) {
+      return runOnce(token, async () => {
+        const record = requireRecord(token, requestedSession)
+        if (record.status !== 'pending') return record
+        if (now() >= record.expiresAt) {
+          await chat.deny(record.toolCallId, 'confirmation expired')
+          const expired = snapshot(record, 'expired')
+          records.set(token, expired)
+          return expired
+        }
+        await chat.approve(record.toolCallId)
+        const approved = snapshot(record, 'approved')
+        records.set(token, approved)
+        return approved
+      })
+    },
+    reject(token, requestedSession, reason) {
+      return runOnce(token, async () => {
+        const record = requireRecord(token, requestedSession)
+        if (record.status !== 'pending') return record
+        await chat.deny(record.toolCallId, reason)
+        const rejected = snapshot(record, 'rejected')
+        records.set(token, rejected)
+        return rejected
+      })
+    },
+    getByToolCall(toolCallId) {
+      const token = tokensByCall.get(toolCallId)
+      return token === undefined ? undefined : records.get(token)
+    },
+  }
+}
 
 export interface ComponentDefinition<T> {
   readonly key: string

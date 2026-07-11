@@ -11,7 +11,7 @@ const useChat = vi.fn()
 vi.mock('react-native', () => ({
   View: ({ children, testID, accessibilityLiveRegion }: { children?: ReactNode; testID?: string; accessibilityLiveRegion?: string }) => <div data-testid={testID} data-live={accessibilityLiveRegion}>{children}</div>,
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
-  Pressable: ({ children, onPress, testID }: { children?: ReactNode; onPress?: () => void; testID?: string }) => <button data-testid={testID} onClick={onPress}>{children}</button>,
+  Pressable: ({ children, onPress, testID, disabled }: { children?: ReactNode; onPress?: () => void; testID?: string; disabled?: boolean }) => <button data-testid={testID} disabled={disabled} onClick={onPress}>{children}</button>,
 }))
 
 vi.mock('@agentskit/react-native', () => ({
@@ -20,6 +20,7 @@ vi.mock('@agentskit/react-native', () => ({
   Message: () => null,
   ThinkingIndicator: ({ visible }: { visible: boolean }) => visible ? <span>Thinking</span> : null,
   InputBar: () => <input />,
+  ToolConfirmation: ({ toolCall, onApprove, onDeny }: { toolCall: { id: string; status: string }; onApprove: (id: string) => void; onDeny: (id: string) => void }) => toolCall.status === 'requires_confirmation' ? <><button onClick={() => onApprove(toolCall.id)}>Approve</button><button onClick={() => onDeny(toolCall.id)}>Deny</button></> : null,
 }))
 
 const definition = defineChat({
@@ -86,5 +87,31 @@ describe('AgentChatNative', () => {
     } as unknown as ChatReturn)
     view.rerender(<AgentChatNative definition={{ ...definition, components: manifest }} />)
     expect(screen.getByText('Component frame uses an unsupported version.')).toBeTruthy()
+  })
+
+  it('keeps a typed action bound through native rerenders and approves once', async () => {
+    const { AgentChatNative } = await import('../src/index')
+    const proposeToolCall = vi.fn(async proposal => ({ ...proposal, status: 'requires_confirmation' as const }))
+    const approve = vi.fn(async () => undefined)
+    const deny = vi.fn(async () => undefined)
+    const actionable = {
+      ...validChoiceListFrame,
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => choice.id === 'docs'
+        ? { ...choice, action: { name: 'open-docs', input: {} } } : choice) },
+    }
+    const manifest = defineComponentManifest([ChoiceListComponent])
+    const base = { status: 'idle', stop, proposeToolCall, approve, deny }
+    useChat.mockReturnValue({ ...base, messages: [{ id: 'choice', role: 'assistant', content: JSON.stringify(actionable) }] } as unknown as ChatReturn)
+    const view = render(<AgentChatNative definition={{ ...definition, components: manifest }} />)
+    const choice = screen.getByTestId('ak-choice-docs')
+    fireEvent.click(choice)
+    fireEvent.click(choice)
+    expect(proposeToolCall).toHaveBeenCalledOnce()
+    const call = await proposeToolCall.mock.results[0]!.value
+    useChat.mockReturnValue({ ...base, messages: [{ id: 'call', role: 'assistant', content: '', toolCalls: [call] }] } as unknown as ChatReturn)
+    view.rerender(<AgentChatNative definition={{ ...definition, components: manifest }} />)
+    fireEvent.click(screen.getByText('Approve'))
+    expect(approve).toHaveBeenCalledOnce()
+    expect(deny).not.toHaveBeenCalled()
   })
 })

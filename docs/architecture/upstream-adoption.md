@@ -10,6 +10,10 @@ AgentsKit Chat is a composition layer. It may add application definitions, deter
 
 When this matrix identifies a missing generic primitive, work moves first to `AgentsKit-io/agentskit` and remains blocked here until a supported upstream release contains it.
 
+## Typed application actions (#8)
+
+The tool/controller lifecycle and official confirmation renderers were inspected. AgentsKit Chat reuses `proposeToolCall`, `approve`, and `deny` from `@agentskit/core@1.11.0`, plus the released React, React Native, and Ink `ToolConfirmation` components. The missing generic seam was resolved in [upstream #1144](https://github.com/AgentsKit-io/agentskit/issues/1144) and [PR #1145](https://github.com/AgentsKit-io/agentskit/pull/1145) before integration. Local code owns only choice declarations and session-bound metadata; it contains no executor, tool validator, controller, or confirmation widget.
+
 ## Current upstream packages
 
 | Package | Inspected version | Role in AgentsKit Chat |

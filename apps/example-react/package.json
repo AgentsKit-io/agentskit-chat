@@ -12,8 +12,8 @@
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
     "@agentskit/chat-react": "workspace:*",
-    "@agentskit/core": "^1.9.0",
-    "@agentskit/react": "^0.6.3",
+    "@agentskit/core": "^1.11.0",
+    "@agentskit/react": "^0.7.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

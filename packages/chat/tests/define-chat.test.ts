@@ -1,9 +1,9 @@
 import { ConfigError, createChatController } from '@agentskit/core'
 import type { AdapterFactory, AdapterRequest, StreamChunk } from '@agentskit/core'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
-  ChoiceListComponent,
+  ChoiceListComponent, createActionConfirmation,
   commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
   resolveChoiceListFrame,
   resolveComponentFrame,
@@ -70,6 +70,124 @@ describe('component manifest', () => {
     expect(() => selectChoice(validChoiceListFrame, 'missing')).toThrow(ConfigError)
     expect(() => selectChoice({ ...validChoiceListFrame, componentKey: 'other' }, 'docs')).toThrow(ConfigError)
     expect(() => defineComponentManifest([{ key: 'Invalid Key', propsSchema: ChoiceListComponent.propsSchema }])).toThrow(ConfigError)
+  })
+})
+
+describe('typed action confirmation', () => {
+  it('binds a validated upstream proposal and approves exactly once', async () => {
+    const execute = vi.fn(() => 'done')
+    const controller = createChatController({
+      adapter,
+      tools: [{ name: 'send-email', requiresConfirmation: true, execute, schema: { type: 'object' } }],
+      validateArgs: (_schema, args) => ({ valid: typeof args.to === 'string' }),
+    })
+    const confirmation = createActionConfirmation({
+      sessionId: 'session-a', chat: controller, now: () => 100, createId: () => 'choice-1',
+    })
+    const input = { to: 'ada@example.com' }
+    const pending = await confirmation.propose({ name: 'send-email', input })
+    input.to = 'changed@example.com'
+
+    expect(pending).toMatchObject({
+      token: 'confirm-choice-1', sessionId: 'session-a', action: 'send-email',
+      input: { to: 'ada@example.com' }, toolCallId: 'app-choice-1', expiresAt: 300_100, status: 'pending',
+    })
+    const [first, replay] = await Promise.all([
+      confirmation.approve(pending.token, 'session-a'), confirmation.approve(pending.token, 'session-a'),
+    ])
+    expect(first.status).toBe('approved')
+    expect(replay.status).toBe('approved')
+    expect(execute).toHaveBeenCalledOnce()
+    expect(execute).toHaveBeenCalledWith({ to: 'ada@example.com' }, expect.anything())
+  })
+
+  it('keeps rejected, expired, invalid, and cross-session tokens inert', async () => {
+    let clock = 10
+    const execute = vi.fn()
+    const controller = createChatController({
+      adapter,
+      tools: [{ name: 'delete', requiresConfirmation: true, execute, schema: { type: 'object' } }],
+      validateArgs: () => ({ valid: true }),
+    })
+    let id = 0
+    const confirmation = createActionConfirmation({
+      sessionId: 'session-a', chat: controller, ttlMs: 5, now: () => clock, createId: () => `call-${++id}`,
+    })
+    const rejected = await confirmation.propose({ name: 'delete', input: { id: 1 } })
+    await expect(confirmation.approve(rejected.token, 'session-b')).rejects.toThrow()
+    expect((await confirmation.reject(rejected.token, 'session-a')).status).toBe('rejected')
+    expect((await confirmation.approve(rejected.token, 'session-a')).status).toBe('rejected')
+
+    const expired = await confirmation.propose({ name: 'delete', input: { id: 2 } })
+    clock = expired.expiresAt
+    expect((await confirmation.approve(expired.token, 'session-a')).status).toBe('expired')
+    await expect(confirmation.approve('missing', 'session-a')).rejects.toThrow()
+    expect(execute).not.toHaveBeenCalled()
+  })
+
+  it('delegates tool registration and argument validation to AgentsKit', async () => {
+    const controller = createChatController({
+      adapter,
+      tools: [
+        { name: 'confirmed', requiresConfirmation: true, execute: vi.fn(), schema: { type: 'object' } },
+        { name: 'immediate', execute: vi.fn(), schema: { type: 'object' } },
+      ],
+      validateArgs: (_schema, args) => ({ valid: args.valid === true }),
+    })
+    const confirmation = createActionConfirmation({ sessionId: 'session', chat: controller })
+    await expect(confirmation.propose({ name: 'missing', input: {} })).rejects.toMatchObject({ code: 'AK_TOOL_NOT_FOUND' })
+    await expect(confirmation.propose({ name: 'immediate', input: {} })).rejects.toMatchObject({ code: 'AK_CONFIG_INVALID' })
+    await expect(confirmation.propose({ name: 'confirmed', input: {} })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
+  })
+
+  it('keeps a record pending when upstream approval or rejection fails', async () => {
+    const approve = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
+    const deny = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
+    let call = 0
+    const confirmation = createActionConfirmation({
+      sessionId: 'session',
+      createId: () => `retry-${++call}`,
+      chat: {
+        proposeToolCall: async proposal => ({ ...proposal, status: 'requires_confirmation' }),
+        approve,
+        deny,
+      },
+    })
+    const approving = await confirmation.propose({ name: 'write', input: {} })
+    await expect(confirmation.approve(approving.token, 'session')).rejects.toThrow('temporary')
+    expect((await confirmation.approve(approving.token, 'session')).status).toBe('approved')
+    expect(approve).toHaveBeenCalledTimes(2)
+
+    const rejecting = await confirmation.propose({ name: 'write', input: {} })
+    await expect(confirmation.reject(rejecting.token, 'session')).rejects.toThrow('temporary')
+    expect((await confirmation.reject(rejecting.token, 'session')).status).toBe('rejected')
+    expect(deny).toHaveBeenCalledTimes(2)
+  })
+
+  it('keeps confirmation input isolated from tool mutation', async () => {
+    const execute = vi.fn((args: Record<string, unknown>) => { args.value = 'mutated' })
+    const controller = createChatController({
+      adapter,
+      tools: [{ name: 'mutate', requiresConfirmation: true, execute }],
+    })
+    const confirmation = createActionConfirmation({ sessionId: 'session', chat: controller })
+    const record = await confirmation.propose({ name: 'mutate', input: { value: { nested: 'bound' } } })
+    expect(() => { (record as { expiresAt: number }).expiresAt = Infinity }).toThrow()
+    expect(() => { (record as { sessionId: string }).sessionId = 'other' }).toThrow()
+    expect(() => { (record as { status: string }).status = 'approved' }).toThrow()
+    expect(() => { (record.input.value as { nested: string }).nested = 'changed' }).toThrow()
+    expect(() => { (confirmation.getByToolCall(record.toolCallId)!.input.value as { nested: string }).nested = 'changed' }).toThrow()
+    await confirmation.approve(record.token, 'session')
+    expect(record.input).toEqual({ value: { nested: 'bound' } })
+  })
+
+  it('rejects ids that cannot fit both canonical identifiers without truncation', async () => {
+    const confirmation = createActionConfirmation({
+      sessionId: 'session',
+      createId: () => `a${'x'.repeat(120)}`,
+      chat: { proposeToolCall: vi.fn(), approve: vi.fn(), deny: vi.fn() },
+    })
+    await expect(confirmation.propose({ name: 'write', input: {} })).rejects.toThrow('id is invalid')
   })
 })
 
