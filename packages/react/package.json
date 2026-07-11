@@ -24,12 +24,12 @@
     "@agentskit/chat": "workspace:*"
   },
   "peerDependencies": {
-    "@agentskit/react": "^0.6.1",
+    "@agentskit/react": "^0.6.3",
     "react": ">=18"
   },
   "devDependencies": {
     "@agentskit/core": "^1.9.0",
-    "@agentskit/react": "^0.6.1",
+    "@agentskit/react": "^0.6.3",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.17",
     "happy-dom": "^20.10.3",

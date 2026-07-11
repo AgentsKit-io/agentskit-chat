@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@agentskit/doc-bridge':
         specifier: 1.0.2
-        version: 1.0.2(@agentskit/core@1.10.0)(react@19.2.7)
+        version: 1.0.2(@agentskit/core@1.10.1)(react@19.2.7)
       '@playwright/test':
         specifier: ^1.61.0
         version: 1.61.1
@@ -36,8 +36,8 @@ importers:
         specifier: ^1.9.0
         version: 1.10.0
       '@agentskit/react':
-        specifier: ^0.6.1
-        version: 0.6.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.6.3
+        version: 0.6.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -77,8 +77,8 @@ importers:
         specifier: ^1.9.0
         version: 1.10.0
       '@agentskit/react':
-        specifier: ^0.6.1
-        version: 0.6.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.6.3
+        version: 0.6.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -102,6 +102,9 @@ packages:
 
   '@agentskit/core@1.10.0':
     resolution: {integrity: sha512-Qiq9l9s0dMbnb5tjy0UJEdA40QHd0nvdbpPsPKnFLd+lSHXuU5i4D8rjLrezqiR6xq8FYzmDKItqD5+lkbIZLw==}
+
+  '@agentskit/core@1.10.1':
+    resolution: {integrity: sha512-sTfO1aKBbeZC0WGnNlqDRTydesxNL7ffQJd28uiNsV25+rNj4KSONUXJAD5jWWyxZTU2Lkdcgu8jg71Am36keg==}
 
   '@agentskit/doc-bridge@1.0.2':
     resolution: {integrity: sha512-kE5oKKvmFOZliMm9Rfr8N+G1RWaBoDabOK3Vqjz7IJLHyTSyYnHxiE08O6HYKudtAbyV8x0o2R/IEsWNohyLVw==}
@@ -128,8 +131,8 @@ packages:
       react:
         optional: true
 
-  '@agentskit/react@0.6.2':
-    resolution: {integrity: sha512-ZJDHiwk0Zc0w832wfV/cJ4qJFuuhaEZjSltdi4DhWxb3vHDA3Tt2Zwj6MfCGSR4Fu+T4m0uZAFtk0x1UEOFx6Q==}
+  '@agentskit/react@0.6.3':
+    resolution: {integrity: sha512-E1esasLn90vDv1Pki9doelzD1zkdedJcWj12QF/2QjUu6qUDMGcu781iFCWjffr4fLylSGlHL+tdH6kS9krYMA==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -1270,16 +1273,18 @@ snapshots:
 
   '@agentskit/core@1.10.0': {}
 
-  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.10.0)(react@19.2.7)':
+  '@agentskit/core@1.10.1': {}
+
+  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.10.1)(react@19.2.7)':
     dependencies:
       zod: 3.25.76
     optionalDependencies:
-      '@agentskit/core': 1.10.0
+      '@agentskit/core': 1.10.1
       react: 19.2.7
 
-  '@agentskit/react@0.6.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@agentskit/react@0.6.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@agentskit/core': 1.10.0
+      '@agentskit/core': 1.10.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
