@@ -66,7 +66,8 @@ describe('AgentChat', () => {
     expect(await screen.findByText('Working')).toBeTruthy()
     expect(screen.getByRole('log').getAttribute('aria-live')).toBe('polite')
     expect(screen.getByRole('button', { name: 'Send' }).hasAttribute('disabled')).toBe(true)
-    finish()
+    fireEvent.click(screen.getByRole('button', { name: 'Stop' }))
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Stop' })).toBeNull())
   })
 
   it('starts a fresh upstream controller when the definition identity changes', async () => {

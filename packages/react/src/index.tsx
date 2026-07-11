@@ -25,6 +25,7 @@ const AgentChatSession = ({ definition, placeholder }: AgentChatProps): ReactEle
         </ChatContainer>
       </div>
       {chat.error ? <p role="alert">{chat.error.message}</p> : null}
+      {chat.status === 'streaming' ? <button type="button" onClick={chat.stop}>Stop</button> : null}
       <InputBar
         chat={chat}
         disabled={chat.status === 'streaming'}
