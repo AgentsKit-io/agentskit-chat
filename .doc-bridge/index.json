@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "3b3b76b787bc3bf9c9132b193c8891a550f9b2800dcacddc0b52a81b9555046a",
+  "contentHash": "bdd57df3394bbac8536e58ce5465a147586400722e6d71a800fb9d32b18f915c",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T13:25:41.840Z",
+  "generatedAt": "2026-07-11T13:48:20.730Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -103,6 +103,14 @@
       "path": "docs/for-agents/packages/react.md",
       "description": "`packages/react` supplies an accessible application shell and native `ChoiceList` presentation over `useChat` and headless components from `@agentskit/react`. Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.",
       "body": "React package handoff Ownership packages/react supplies an accessible application shell and native ChoiceList presentation over useChat and headless components from @agentskit/react . Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Retry, edit, regenerate, and stop controls must call the corresponding ChatReturn methods directly. Do not reproduce truncation, lineage, abort, or late-chunk behavior in this package. Typed actions compose the published upstream ToolConfirmation ; approval and denial go through the shared session coordinator and then the upstream hook. Read first - - Checks"
+    },
+    {
+      "id": "server",
+      "type": "agent-doc",
+      "title": "Server package handoff",
+      "path": "docs/for-agents/packages/server.md",
+      "description": "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage.",
+      "body": "Server package handoff Ownership packages/server owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage. It does not own adapters, provider fetch, controller state, stream reduction, tools, confirmation execution, message persistence, authentication implementations, or framework-specific HTTP adapters. Read first - - - - - Guardrails Authenticate before body parsing. Never derive trusted context from a protocol payload. Validate with decodeTurnEvent ; emit only protocol snapshots/diagnostics. Use upstream createChatController and ChatMemory . Forward cancellation through controller.stop() and preserve the outer deadline across all async host seams. Checks"
     },
     {
       "id": "product",
@@ -458,6 +466,35 @@
       "notes": [
         "React Native application shell consuming @agentskit/react-native directly"
       ]
+    },
+    "server": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "server",
+        "path": "packages/server"
+      },
+      "startHere": "docs/for-agents/packages/server.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/server.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/server"
+      ],
+      "checks": [
+        "pnpm --filter server test",
+        "pnpm --filter server lint"
+      ],
+      "humanDoc": "server",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage."
+      ]
     }
   },
   "lookup": {
@@ -473,7 +510,8 @@
       "product",
       "protocol",
       "react",
-      "react-native"
+      "react-native",
+      "server"
     ],
     "ownership": {
       "architecture": {
@@ -604,6 +642,17 @@
         "purpose": "React Native application shell consuming @agentskit/react-native directly",
         "humanDoc": "getting-started/react-native",
         "agentDoc": "docs/for-agents/packages/react-native.md"
+      },
+      "server": {
+        "id": "server",
+        "path": "packages/server",
+        "checks": [
+          "pnpm --filter server test",
+          "pnpm --filter server lint"
+        ],
+        "purpose": "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage.",
+        "humanDoc": "server",
+        "agentDoc": "docs/for-agents/packages/server.md"
       }
     },
     "intents": {},

@@ -1,7 +1,7 @@
 {
-  "name": "@agentskit/chat",
+  "name": "@agentskit/chat-server",
   "version": "0.0.0",
-  "description": "Cross-framework application definitions for AgentsKit Chat.",
+  "description": "Web-standard server handler for AgentsKit Chat applications.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -20,14 +20,14 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "lint": "tsc --noEmit",
-    "test": "pnpm --filter @agentskit/chat-protocol build && vitest run"
-  },
-  "peerDependencies": {
-    "@agentskit/core": "^1.12.1"
+    "test": "pnpm --filter @agentskit/chat build && pnpm --filter @agentskit/chat-protocol build && vitest run --coverage"
   },
   "dependencies": {
-    "@agentskit/chat-protocol": "workspace:*",
-    "zod": "^4.3.6"
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-protocol": "workspace:*"
+  },
+  "peerDependencies": {
+    "@agentskit/core": "^1.12.2"
   },
   "devDependencies": {
     "@agentskit/core": "^1.12.2",

@@ -43,6 +43,8 @@ Owns application-specific client-server events, runtime schemas, serialization, 
 
 Mounts chat definitions onto Web-standard handlers and provides context, authentication seams, sessions, persistence ports, streaming, cancellation, and audit hooks.
 
+The first server slice is `@agentskit/chat-server`: a Web `Request`/`Response` handler that authenticates before parsing, drives the upstream controller, and streams versioned full snapshots as NDJSON. Framework HTTP adapters remain thin host bridges.
+
 ### Native renderers
 
 React, Vue, Svelte, Solid, Angular, React Native, and Ink renderers consume the protocol and the matching AgentsKit package. Custom visual implementations are platform-specific; component identity, props schema, actions, and fallback behavior are shared.
