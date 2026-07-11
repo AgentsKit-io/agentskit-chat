@@ -12,6 +12,7 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [React package](./packages/react.md): native React shell over `@agentskit/react`.
 - [React Native package](./packages/react-native.md): native mobile shell over `@agentskit/react-native`.
 - [Ink package](./packages/ink.md): native terminal shell and semantic text fallback.
+- [CLI package](./packages/cli.md): safe project detection and application scaffolding.
 - [React example](./apps/example-react.md): deterministic executable proof.
 - [React Native example](./apps/example-react-native.md): Expo proof using the shared definition.
 - [Ink example](./apps/example-ink.md): PTY proof using the shared definition.

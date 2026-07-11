@@ -55,6 +55,8 @@ The first renderer set shares a runtime-validated semantic application theme and
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.
 
+The first slice is `@agentskit/chat-cli`: a safe, standard-library `init` for React, Expo/React Native, and Ink ([ADR-0014](./adrs/0014-safe-cli-scaffolding.md)).
+
 ### Devtools and eval
 
 Composes application traces, fixture capture, renderer conformance, accessibility evidence, and cross-platform parity reporting around AgentsKit replay and eval primitives.

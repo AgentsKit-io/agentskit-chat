@@ -1,0 +1,21 @@
+{
+  "name": "@agentskit/chat-cli",
+  "version": "0.0.0",
+  "description": "Safe scaffolding for AgentsKit Chat applications.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "agentskit-chat": "./dist/bin.js" },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": { "zod": "^4.3.6" },
+  "devDependencies": { "@types/node": "^25.0.0", "node-pty": "^1.1.0", "tsup": "^8.5.1" },
+  "publishConfig": { "access": "public" }
+}
