@@ -43,4 +43,42 @@ describe('AgentChat', () => {
 
     await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('Test adapter failed'))
   })
+
+  it('announces the transcript and prevents overlapping sends while streaming', async () => {
+    let finish = () => {}
+    const pending = new Promise<void>(resolve => { finish = resolve })
+    const streaming: AdapterFactory = {
+      createSource: () => ({
+        async *stream() {
+          yield { type: 'text', content: 'Working' }
+          await pending
+          yield { type: 'done' }
+        },
+        abort: finish,
+      }),
+    }
+    render(<AgentChat definition={{ id: 'demo', chat: { adapter: streaming } }} />)
+
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { target: { value: 'hello' } })
+    fireEvent.submit(input.closest('form')!)
+
+    expect(await screen.findByText('Working')).toBeTruthy()
+    expect(screen.getByRole('log').getAttribute('aria-live')).toBe('polite')
+    expect(screen.getByRole('button', { name: 'Send' }).hasAttribute('disabled')).toBe(true)
+    finish()
+  })
+
+  it('starts a fresh upstream controller when the definition identity changes', async () => {
+    const view = render(<AgentChat definition={{ id: 'first', chat: { adapter: adapter() } }} />)
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { target: { value: 'first message' } })
+    fireEvent.submit(input.closest('form')!)
+    expect(await screen.findByText('Echo: first message')).toBeTruthy()
+
+    view.rerender(<AgentChat definition={{ id: 'second', chat: { adapter: adapter() } }} />)
+
+    expect(screen.queryByText('first message')).toBeNull()
+    expect(screen.getByLabelText('second chat')).toBeTruthy()
+  })
 })

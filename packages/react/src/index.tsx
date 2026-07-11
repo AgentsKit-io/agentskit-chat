@@ -13,19 +13,29 @@ export interface AgentChatProps {
   readonly placeholder?: string
 }
 
-export const AgentChat = ({ definition, placeholder }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder }: AgentChatProps): ReactElement => {
   const chat = useChat(definition.chat)
 
   return (
     <section aria-label={`${definition.id} chat`} data-ak-app-chat="">
-      <ChatContainer>
-        {chat.messages.map(message => <Message key={message.id} message={message} />)}
-        <ThinkingIndicator visible={chat.status === 'streaming'} />
-      </ChatContainer>
+      <div aria-live="polite" aria-relevant="additions text" role="log">
+        <ChatContainer>
+          {chat.messages.map(message => <Message key={message.id} message={message} />)}
+          <ThinkingIndicator visible={chat.status === 'streaming'} />
+        </ChatContainer>
+      </div>
       {chat.error ? <p role="alert">{chat.error.message}</p> : null}
-      <InputBar chat={chat} {...(placeholder === undefined ? {} : { placeholder })} />
+      <InputBar
+        chat={chat}
+        disabled={chat.status === 'streaming'}
+        {...(placeholder === undefined ? {} : { placeholder })}
+      />
     </section>
   )
 }
+
+export const AgentChat = (props: AgentChatProps): ReactElement => (
+  <AgentChatSession key={props.definition.id} {...props} />
+)
 
 export type { ChatDefinition } from '@agentskit/chat'
