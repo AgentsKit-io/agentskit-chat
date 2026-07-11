@@ -34,20 +34,21 @@ export interface ChatNativeStyles {
 
 export const toChatNativeStyles = (input?: ChatThemeInput): ChatNativeStyles => {
   const theme = resolveChatTheme(input)
+  const font = theme.fontFamily === 'system' ? {} : { fontFamily: theme.fontFamily }
   return {
     root: { flex: 1, backgroundColor: theme.colors.background, padding: theme.spacing.large },
     container: { backgroundColor: theme.colors.background },
     userMessage: { alignSelf: 'flex-end', backgroundColor: theme.colors.accent, borderRadius: theme.radius.large, padding: theme.spacing.medium },
-    userMessageText: { color: theme.colors.onAccent, fontFamily: theme.fontFamily },
+    userMessageText: { color: theme.colors.onAccent, ...font },
     assistantMessage: { alignSelf: 'flex-start', backgroundColor: theme.colors.surface, borderRadius: theme.radius.large, padding: theme.spacing.medium },
-    assistantMessageText: { color: theme.colors.text, fontFamily: theme.fontFamily },
+    assistantMessageText: { color: theme.colors.text, ...font },
     choiceList: { gap: theme.spacing.small, padding: theme.spacing.medium },
     choice: { borderColor: theme.colors.border, borderRadius: theme.radius.medium, borderWidth: 1, padding: theme.spacing.medium },
-    choiceText: { color: theme.colors.text, fontFamily: theme.fontFamily },
-    mutedText: { color: theme.colors.muted, fontFamily: theme.fontFamily },
+    choiceText: { color: theme.colors.text, ...font },
+    mutedText: { color: theme.colors.muted, ...font },
     input: { backgroundColor: theme.colors.surface, borderColor: theme.colors.border, borderTopWidth: 1, padding: theme.spacing.medium },
-    inputText: { color: theme.colors.text, fontFamily: theme.fontFamily },
-    dangerText: { color: theme.colors.danger, fontFamily: theme.fontFamily },
+    inputText: { color: theme.colors.text, ...font },
+    dangerText: { color: theme.colors.danger, ...font },
   }
 }
 
@@ -166,9 +167,9 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
                 : resolveChoiceListFrame(decoded.frame, definition.components)
               return resolved?.ok
                 ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} styles={styles} />
-                : <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
+                : <Text key={message.id} style={styles.assistantMessageText}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
             }
-            if (decoded && !decoded.ok) return <Text key={message.id} accessibilityRole="alert">{decoded.diagnostic.message}</Text>
+            if (decoded && !decoded.ok) return <Text key={message.id} accessibilityRole="alert" style={styles.dangerText}>{decoded.diagnostic.message}</Text>
             return <MessageSlot
               key={message.id}
               message={message}
@@ -190,20 +191,20 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
           accessibilityLabel="Stop response"
           onPress={chat.stop}
         >
-          <Text>Stop</Text>
+          <Text style={styles.choiceText}>Stop</Text>
         </Pressable>
       ) : null}
       {chat.status !== 'streaming' && targets.userId ? (
         <View accessibilityLabel="Response actions">
-          <Pressable accessibilityRole="button" accessibilityLabel="Retry response" testID="ak-retry" onPress={() => runLifecycle(chat.retry())}><Text>Retry</Text></Pressable>
-          {targets.assistantId ? <Pressable accessibilityRole="button" accessibilityLabel="Regenerate response" testID="ak-regenerate" onPress={() => runLifecycle(chat.regenerate(targets.assistantId))}><Text>Regenerate</Text></Pressable> : null}
-          <Pressable accessibilityRole="button" accessibilityLabel="Edit last message" testID="ak-edit" onPress={() => setEditDraft({ messageId: targets.userId!, content: chat.messages.find(message => message.id === targets.userId)?.content ?? '' })}><Text>Edit</Text></Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel="Retry response" testID="ak-retry" onPress={() => runLifecycle(chat.retry())}><Text style={styles.choiceText}>Retry</Text></Pressable>
+          {targets.assistantId ? <Pressable accessibilityRole="button" accessibilityLabel="Regenerate response" testID="ak-regenerate" onPress={() => runLifecycle(chat.regenerate(targets.assistantId))}><Text style={styles.choiceText}>Regenerate</Text></Pressable> : null}
+          <Pressable accessibilityRole="button" accessibilityLabel="Edit last message" testID="ak-edit" onPress={() => setEditDraft({ messageId: targets.userId!, content: chat.messages.find(message => message.id === targets.userId)?.content ?? '' })}><Text style={styles.choiceText}>Edit</Text></Pressable>
           {editDraft === undefined ? null : <>
-            <TextInput accessibilityLabel="Edit message" testID="ak-edit-input" value={editDraft.content} onChangeText={content => setEditDraft({ ...editDraft, content })} />
+            <TextInput accessibilityLabel="Edit message" testID="ak-edit-input" value={editDraft.content} style={styles.inputText} onChangeText={content => setEditDraft({ ...editDraft, content })} />
             <Pressable accessibilityRole="button" accessibilityLabel="Save edit" testID="ak-edit-save" disabled={editDraft.content.trim() === ''} onPress={() => {
               runLifecycle(chat.edit(editDraft.messageId, editDraft.content))
               setEditDraft(undefined)
-            }}><Text>Save</Text></Pressable>
+            }}><Text style={styles.choiceText}>Save</Text></Pressable>
           </>}
         </View>
       ) : null}

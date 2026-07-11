@@ -53,6 +53,7 @@ describe('AgentChatNative', () => {
     expect(toChatNativeStyles({ colors: { accent: '#800080' }, spacing: { medium: 20 }, fontFamily: 'Brand Sans' })).toMatchObject({
       userMessage: { backgroundColor: '#800080', padding: 20 }, userMessageText: { color: '#ffffff', fontFamily: 'Brand Sans' }, input: { padding: 20 }, inputText: { fontFamily: 'Brand Sans' }, choiceText: { fontFamily: 'Brand Sans' },
     })
+    expect(toChatNativeStyles().inputText).not.toHaveProperty('fontFamily')
     useChat.mockReturnValue({ messages: [{ id: 'assistant', role: 'assistant', content: 'hello' }], status: 'idle', stop } as unknown as ChatReturn)
     const Slot = () => <span>Custom native message</span>
     render(<AgentChatNative definition={definition} slots={{ Message: Slot }} />)

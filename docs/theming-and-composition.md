@@ -19,7 +19,7 @@ const theme = {
 | colors | AgentsKit CSS variables | upstream wrapper and text style seams plus native application styles | complete upstream `InkTheme` |
 | spacing | CSS variables | numeric native layout styles | unsupported by terminal layout |
 | radius | CSS variables | native border radius | unsupported |
-| font family | upstream CSS variable | upstream message/input text seams plus native application text | unsupported |
+| font family | `system` maps to the platform CSS stack; a custom name maps to the upstream variable | `system` preserves the native default; a loaded custom family maps through upstream message/input text seams and native application text | unsupported |
 
 The mapping helpers are public for host integration: `toChatCssVariables`, `toChatNativeStyles`, and `toChatInkTheme`.
 

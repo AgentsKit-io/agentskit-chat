@@ -34,7 +34,7 @@ export const toChatCssVariables = (input?: ChatThemeInput): ChatCssVariables => 
     '--ak-color-tool-bg': theme.colors.surface,
     '--ak-color-tool-border': theme.colors.border,
     '--ak-app-color-danger': theme.colors.danger,
-    '--ak-font-family': theme.fontFamily,
+    '--ak-font-family': theme.fontFamily === 'system' ? "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" : theme.fontFamily,
     '--ak-radius': `${theme.radius.medium}px`,
     '--ak-radius-lg': `${theme.radius.large}px`,
     '--ak-spacing-sm': `${theme.spacing.small}px`,

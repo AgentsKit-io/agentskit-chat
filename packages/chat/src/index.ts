@@ -37,7 +37,7 @@ export const ChatThemeSchema = z.object({
   colors: ChatThemeColorsSchema.readonly(),
   spacing: ChatThemeSpacingSchema.readonly(),
   radius: ChatThemeRadiusSchema.readonly(),
-  fontFamily: z.string().trim().min(1).max(256),
+  fontFamily: z.string().trim().min(1).max(128),
 }).strict().readonly()
 
 export type ChatTheme = z.infer<typeof ChatThemeSchema>
@@ -52,7 +52,7 @@ export const defaultChatTheme: ChatTheme = ChatThemeSchema.parse({
   colors: { background: '#ffffff', surface: '#f3f4f6', border: '#d1d5db', text: '#111827', muted: '#6b7280', accent: '#2563eb', onAccent: '#ffffff', danger: '#dc2626' },
   spacing: { small: 8, medium: 12, large: 16 },
   radius: { medium: 8, large: 12 },
-  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  fontFamily: 'system',
 })
 
 export const resolveChatTheme = (input: unknown = {}): ChatTheme => {
@@ -60,7 +60,7 @@ export const resolveChatTheme = (input: unknown = {}): ChatTheme => {
     colors: ChatThemeColorsSchema.partial().strict().optional(),
     spacing: ChatThemeSpacingSchema.partial().strict().optional(),
     radius: ChatThemeRadiusSchema.partial().strict().optional(),
-    fontFamily: z.string().trim().min(1).max(256).optional(),
+    fontFamily: z.string().trim().min(1).max(128).optional(),
   }).strict().parse(input)
   return ChatThemeSchema.parse({
     colors: { ...defaultChatTheme.colors, ...candidate.colors },

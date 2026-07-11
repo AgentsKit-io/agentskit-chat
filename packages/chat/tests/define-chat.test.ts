@@ -65,7 +65,7 @@ describe('semantic fallback', () => {
 describe('semantic theme', () => {
   it('deep-merges valid partial tokens and rejects unknown input', () => {
     expect(resolveChatTheme({ colors: { accent: '#123456' }, spacing: { medium: 20 } })).toMatchObject({
-      colors: { accent: '#123456', background: '#ffffff' }, spacing: { small: 8, medium: 20 },
+      colors: { accent: '#123456', background: '#ffffff' }, spacing: { small: 8, medium: 20 }, fontFamily: 'system',
     })
     expect(() => resolveChatTheme({ colors: { accent: '' } })).toThrow()
     expect(() => resolveChatTheme({ colors: { accent: 'var(--brand)' } })).toThrow()
