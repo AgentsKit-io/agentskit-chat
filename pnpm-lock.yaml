@@ -314,8 +314,8 @@ importers:
         version: 1.12.2
     devDependencies:
       '@agentskit/svelte':
-        specifier: ^0.4.3
-        version: 0.4.3(svelte@5.56.4)
+        specifier: ^0.4.4
+        version: 0.4.4(svelte@5.56.4)
       '@sveltejs/package':
         specifier: ^2.5.8
         version: 2.5.8(svelte@5.56.4)(typescript@6.0.3)
@@ -413,8 +413,8 @@ packages:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
-  '@agentskit/svelte@0.4.3':
-    resolution: {integrity: sha512-hAy8nAxQD7HMFBqhvHkPldqzrmoPerZZJ7+23QYK5CTud7suTd5bBT3FndkeQ8IWeM4Jr4cbZoFR5YpW9FPqRg==}
+  '@agentskit/svelte@0.4.4':
+    resolution: {integrity: sha512-6sMNXZ5p5PC6rlNvtlsLpzb469GNxI8MlEJkYgUlW6pAd3rfPDceLZpkndJL/aiEXBChPPYR5vuCSy64PB5fCQ==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -3832,7 +3832,7 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@agentskit/svelte@0.4.3(svelte@5.56.4)':
+  '@agentskit/svelte@0.4.4(svelte@5.56.4)':
     dependencies:
       '@agentskit/core': 1.12.2
       svelte: 5.56.4

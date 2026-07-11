@@ -28,11 +28,11 @@
     "@agentskit/core": "^1.12.2"
   },
   "peerDependencies": {
-    "@agentskit/svelte": "^0.4.3",
+    "@agentskit/svelte": "^0.4.4",
     "svelte": "^5.0.0"
   },
   "devDependencies": {
-    "@agentskit/svelte": "^0.4.3",
+    "@agentskit/svelte": "^0.4.4",
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.2.0",
     "@testing-library/svelte": "^5.4.2",
