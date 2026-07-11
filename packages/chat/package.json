@@ -1,0 +1,31 @@
+{
+  "name": "@agentskit/chat",
+  "version": "0.0.0",
+  "description": "Cross-framework application definitions for AgentsKit Chat.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "lint": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@agentskit/core": "^1.9.0"
+  },
+  "devDependencies": {
+    "@agentskit/core": "^1.9.0",
+    "tsup": "^8.5.1"
+  },
+  "publishConfig": { "access": "public" }
+}

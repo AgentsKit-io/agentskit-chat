@@ -1,13 +1,21 @@
 {
   "schemaVersion": 1,
-  "contentHash": "a01baad17b4d660cc2b81dacb3414c24b7bdfdc41cad6b24656faa0e587414dc",
+  "contentHash": "564390f8559a2fc11f157c826d6c1767bc7ba563a3a6fdbfb2dc819739b07722",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-10T22:40:13.908Z",
+  "generatedAt": "2026-07-11T00:08:08.273Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
   },
   "knowledge": [
+    {
+      "id": "example-react",
+      "type": "agent-doc",
+      "title": "React example handoff",
+      "path": "docs/for-agents/apps/example-react.md",
+      "description": "`apps/example-react` demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through `ChatConfig`.",
+      "body": "React example handoff Ownership apps/example-react demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through ChatConfig . Checks"
+    },
     {
       "id": "architecture",
       "type": "agent-doc",
@@ -30,7 +38,23 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : deterministic executable proof. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+    },
+    {
+      "id": "chat",
+      "type": "agent-doc",
+      "title": "Chat package handoff",
+      "path": "docs/for-agents/packages/chat.md",
+      "description": "`packages/chat` owns only framework-neutral application definitions. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
+      "body": "Chat package handoff Ownership packages/chat owns only framework-neutral application definitions. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - Checks"
+    },
+    {
+      "id": "react",
+      "type": "agent-doc",
+      "title": "React package handoff",
+      "path": "docs/for-agents/packages/react.md",
+      "description": "`packages/react` supplies an accessible application shell over `useChat` and headless components from `@agentskit/react`. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.",
+      "body": "React package handoff Ownership packages/react supplies an accessible application shell over useChat and headless components from @agentskit/react . It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Read first - - Checks"
     },
     {
       "id": "product",
@@ -68,6 +92,64 @@
       },
       "notes": [
         "System boundaries, protocols, modules, ADRs, and cross-framework invariants"
+      ]
+    },
+    "chat": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "chat",
+        "path": "packages/chat"
+      },
+      "startHere": "docs/for-agents/packages/chat.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/chat.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/chat"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat lint",
+        "pnpm --filter @agentskit/chat test"
+      ],
+      "humanDoc": "getting-started/react",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Framework-neutral chat application definitions composed around AgentsKit ChatConfig"
+      ]
+    },
+    "example-react": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-react",
+        "path": "apps/example-react"
+      },
+      "startHere": "docs/for-agents/apps/example-react.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-react.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-react"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-react build",
+        "pnpm test:e2e"
+      ],
+      "humanDoc": "getting-started/react",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Deterministic executable proof of the React vertical slice"
       ]
     },
     "governance": {
@@ -125,13 +207,45 @@
       "notes": [
         "Product requirements, user stories, scope, and release outcomes"
       ]
+    },
+    "react": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "react",
+        "path": "packages/react"
+      },
+      "startHere": "docs/for-agents/packages/react.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/react.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/react"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-react lint",
+        "pnpm --filter @agentskit/chat-react test"
+      ],
+      "humanDoc": "getting-started/react",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "React application shell consuming @agentskit/react directly"
+      ]
     }
   },
   "lookup": {
     "packages": [
       "architecture",
+      "chat",
+      "example-react",
       "governance",
-      "product"
+      "product",
+      "react"
     ],
     "ownership": {
       "architecture": {
@@ -143,6 +257,28 @@
         "purpose": "System boundaries, protocols, modules, ADRs, and cross-framework invariants",
         "humanDoc": "architecture/overview",
         "agentDoc": "docs/for-agents/architecture.md"
+      },
+      "chat": {
+        "id": "chat",
+        "path": "packages/chat",
+        "checks": [
+          "pnpm --filter @agentskit/chat lint",
+          "pnpm --filter @agentskit/chat test"
+        ],
+        "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
+        "humanDoc": "getting-started/react",
+        "agentDoc": "docs/for-agents/packages/chat.md"
+      },
+      "example-react": {
+        "id": "example-react",
+        "path": "apps/example-react",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-react build",
+          "pnpm test:e2e"
+        ],
+        "purpose": "Deterministic executable proof of the React vertical slice",
+        "humanDoc": "getting-started/react",
+        "agentDoc": "docs/for-agents/apps/example-react.md"
       },
       "governance": {
         "id": "governance",
@@ -163,6 +299,17 @@
         "purpose": "Product requirements, user stories, scope, and release outcomes",
         "humanDoc": "product/PRD",
         "agentDoc": "docs/for-agents/product.md"
+      },
+      "react": {
+        "id": "react",
+        "path": "packages/react",
+        "checks": [
+          "pnpm --filter @agentskit/chat-react lint",
+          "pnpm --filter @agentskit/chat-react test"
+        ],
+        "purpose": "React application shell consuming @agentskit/react directly",
+        "humanDoc": "getting-started/react",
+        "agentDoc": "docs/for-agents/packages/react.md"
       }
     },
     "intents": {},

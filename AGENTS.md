@@ -44,4 +44,4 @@ MCP is enabled with `handoff.resolve`, `doc.search`, `doc.get`, and `gate.status
 
 ## Current phase
 
-The repository is docs-first. Until the implementation backlog is approved, changes are limited to product, architecture, governance, and planning documentation.
+The v0 backlog is approved. Implementation proceeds in dependency order from the GitHub milestone, with ADR-0002 upstream-adoption evidence and the issue Definition of Done enforced for every slice.
