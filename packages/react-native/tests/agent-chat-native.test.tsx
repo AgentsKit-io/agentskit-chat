@@ -11,6 +11,7 @@ const useChat = vi.fn()
 vi.mock('react-native', () => ({
   View: ({ children, testID, accessibilityLiveRegion }: { children?: ReactNode; testID?: string; accessibilityLiveRegion?: string }) => <div data-testid={testID} data-live={accessibilityLiveRegion}>{children}</div>,
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
+  TextInput: ({ value, onChangeText, testID }: { value: string; onChangeText: (value: string) => void; testID?: string }) => <input data-testid={testID} value={value} onChange={event => onChangeText(event.target.value)} />,
   Pressable: ({ children, onPress, testID, disabled }: { children?: ReactNode; onPress?: () => void; testID?: string; disabled?: boolean }) => <button data-testid={testID} disabled={disabled} onClick={onPress}>{children}</button>,
 }))
 
@@ -51,6 +52,35 @@ describe('AgentChatNative', () => {
     fireEvent.click(screen.getByTestId('ak-stop'))
 
     expect(stop).toHaveBeenCalledOnce()
+  })
+
+  it('delegates native retry, regenerate, and edit controls', async () => {
+    const { AgentChatNative } = await import('../src/index')
+    const retry = vi.fn(async () => undefined)
+    const regenerate = vi.fn(async () => undefined)
+    const edit = vi.fn(async () => undefined)
+    useChat.mockReturnValue({
+      messages: [
+        { id: 'user', role: 'user', content: 'original' },
+        { id: 'assistant', role: 'assistant', content: 'answer' },
+      ], status: 'complete', stop, retry, regenerate, edit,
+    } as unknown as ChatReturn)
+    const view = render(<AgentChatNative definition={definition} />)
+    fireEvent.click(screen.getByTestId('ak-retry'))
+    fireEvent.click(screen.getByTestId('ak-regenerate'))
+    fireEvent.click(screen.getByTestId('ak-edit'))
+    useChat.mockReturnValue({
+      messages: [
+        { id: 'user-new', role: 'user', content: 'new' },
+        { id: 'assistant-new', role: 'assistant', content: 'new answer' },
+      ], status: 'complete', stop, retry, regenerate, edit,
+    } as unknown as ChatReturn)
+    view.rerender(<AgentChatNative definition={definition} />)
+    fireEvent.change(screen.getByTestId('ak-edit-input'), { target: { value: 'changed' } })
+    fireEvent.click(screen.getByTestId('ak-edit-save'))
+    expect(retry).toHaveBeenCalledOnce()
+    expect(regenerate).toHaveBeenCalledWith('assistant')
+    expect(edit).toHaveBeenCalledWith('user', 'changed')
   })
 
   it('emits the common event from a native ChoiceList', async () => {

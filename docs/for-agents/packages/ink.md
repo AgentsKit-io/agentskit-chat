@@ -8,6 +8,8 @@
 
 Use `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from published `@agentskit/ink`. Keyboard editing, history, lifecycle, streaming, cancellation, and confirmation UI must remain upstream. Typed action proposal requires `@agentskit/ink` 0.10.0 or newer.
 
+Lifecycle slash commands are consumed through upstream `InputBar.onSubmitInput` and call `ChatReturn` directly. Escape cancellation remains owned by `@agentskit/ink`.
+
 ## Checks
 
 ```bash

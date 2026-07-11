@@ -35,6 +35,16 @@ const waitFor = async (read: () => string, text: string): Promise<void> => {
   }
 }
 
+const occurrences = (value: string, text: string): number => value.split(text).length - 1
+
+const waitForAnother = async (read: () => string, text: string, before: number): Promise<void> => {
+  const deadline = Date.now() + 5_000
+  while (occurrences(read(), text) <= before) {
+    if (Date.now() >= deadline) throw new Error(`Timed out waiting for another ${JSON.stringify(text)}`)
+    await new Promise(resolve => setTimeout(resolve, 25))
+  }
+}
+
 const submit = async (pty: IPty, value: string): Promise<void> => {
   pty.write(value)
   await new Promise(resolve => setTimeout(resolve, 25))
@@ -72,6 +82,21 @@ describe('Ink PTY host', () => {
     await submit(app.pty, 'after')
     await waitFor(app.output, 'AgentsKit received: after')
     expect(app.pty.pid).toBeGreaterThan(0)
+  })
+
+  it('retries, regenerates, and edits through lifecycle commands', async () => {
+    const app = startApp()
+    await waitFor(app.output, 'Message AgentsKit')
+    await submit(app.pty, 'before-edit')
+    await waitFor(app.output, 'AgentsKit received: before-edit')
+    let before = occurrences(app.output(), 'AgentsKit received: before-edit')
+    await submit(app.pty, '/retry')
+    await waitForAnother(app.output, 'AgentsKit received: before-edit', before)
+    before = occurrences(app.output(), 'AgentsKit received: before-edit')
+    await submit(app.pty, '/regenerate')
+    await waitForAnother(app.output, 'AgentsKit received: before-edit', before)
+    await submit(app.pty, '/edit after-edit')
+    await waitFor(app.output, 'AgentsKit received: after-edit')
   })
 
   it('exits gracefully on Ctrl+C', async () => {

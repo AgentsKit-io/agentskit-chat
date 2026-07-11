@@ -144,4 +144,5 @@ describe('Ink application shell', () => {
     expect(view.lastFrame()).toContain('Welcome')
     view.unmount()
   })
+
 })

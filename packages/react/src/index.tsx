@@ -1,4 +1,4 @@
-import { createActionConfirmation, createChatSession, formatSemanticFallback, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { createActionConfirmation, createChatSession, formatSemanticFallback, getLifecycleTargets, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
@@ -46,6 +46,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const [session] = useState(() => createChatSession(definition))
   const [sessionId] = useState(() => `${definition.id}:${Date.now().toString(36)}`)
   const [actionError, setActionError] = useState<Error | undefined>()
+  const [editDraft, setEditDraft] = useState<{ readonly messageId: string, readonly content: string }>()
   const [resolvedInstances, setResolvedInstances] = useState<ReadonlySet<string>>(() => new Set())
   const resolvedInstancesRef = useRef(new Set<string>())
   const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
@@ -80,6 +81,11 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     const record = confirmation.getByToolCall(toolCallId)
     void (record ? confirmation.reject(record.token, sessionId, reason) : chat.deny(toolCallId, reason)).catch(error => setActionError(error instanceof Error ? error : new Error('Action rejection failed.')))
   }
+  const targets = getLifecycleTargets(chat.messages)
+  const runLifecycle = (operation: Promise<void>): void => {
+    setActionError(undefined)
+    void operation.catch(error => setActionError(error instanceof Error ? error : new Error('Lifecycle operation failed.')))
+  }
 
   return (
     <section aria-label={`${definition.id} chat`} data-ak-app-chat="">
@@ -107,6 +113,25 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       </div>
       {chat.error || actionError ? <p role="alert">{chat.error?.message ?? actionError?.message}</p> : null}
       {chat.status === 'streaming' ? <button type="button" onClick={chat.stop}>Stop</button> : null}
+      {chat.status !== 'streaming' && targets.userId ? (
+        <div aria-label="Response actions">
+          <button type="button" aria-label="Retry response" onClick={() => runLifecycle(chat.retry())}>Retry</button>
+          {targets.assistantId ? <button type="button" aria-label="Regenerate response" onClick={() => runLifecycle(chat.regenerate(targets.assistantId))}>Regenerate</button> : null}
+          <button type="button" onClick={() => setEditDraft({ messageId: targets.userId!, content: chat.messages.find(message => message.id === targets.userId)?.content ?? '' })}>Edit last message</button>
+          {editDraft === undefined ? null : (
+            <form onSubmit={event => {
+              event.preventDefault()
+              if (editDraft.content.trim() === '') return
+              runLifecycle(chat.edit(editDraft.messageId, editDraft.content))
+              setEditDraft(undefined)
+            }}>
+              <label>Edit message<input aria-label="Edit message" value={editDraft.content} onChange={event => setEditDraft({ ...editDraft, content: event.target.value })} /></label>
+              <button type="submit" aria-label="Save edit">Save edit</button>
+              <button type="button" onClick={() => setEditDraft(undefined)}>Cancel edit</button>
+            </form>
+          )}
+        </div>
+      ) : null}
       <InputBar
         chat={chat}
         disabled={chat.status === 'streaming'}

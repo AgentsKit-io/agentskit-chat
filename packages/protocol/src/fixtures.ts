@@ -53,6 +53,7 @@ export const validTurnEventFixtures = [
       event: 'server.turn.snapshot',
       payload: {
         status: 'streaming',
+        lineage: { operation: 'submit' },
         usage: { promptTokens: 2, completionTokens: 1, totalTokens: 3 },
         messages: [{
           id: 'message-assistant',
@@ -73,6 +74,7 @@ export const validTurnEventFixtures = [
       event: 'server.turn.snapshot',
       payload: {
         status: 'complete',
+        lineage: { operation: 'regenerate', parentTurnId: 'turn-previous', sourceMessageId: 'message-assistant' },
         usage: { promptTokens: 2, completionTokens: 3, totalTokens: 5 },
         messages: [{
           id: 'message-assistant',

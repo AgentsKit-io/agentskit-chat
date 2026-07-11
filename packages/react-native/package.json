@@ -7,22 +7,33 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
-  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --clean --external react --external react-native --external @agentskit/react-native",
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat build && vitest run --environment happy-dom"
   },
-  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-protocol": "workspace:*"
+  },
   "peerDependencies": {
     "@agentskit/react-native": "^0.4.1",
     "react": ">=18",
     "react-native": "*"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.0",
+    "@agentskit/core": "^1.12.1",
     "@agentskit/react-native": "^0.4.1",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.17",

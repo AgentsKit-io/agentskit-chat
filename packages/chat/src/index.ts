@@ -35,6 +35,15 @@ export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
 
 export type ChoiceAction = NonNullable<ChoiceListProps['choices'][number]['action']>
 
+export const getLifecycleTargets = (messages: readonly Message[]): { readonly userId: string | undefined, readonly assistantId: string | undefined } => {
+  const assistant = messages.at(-1)
+  if (assistant?.role !== 'assistant') return { userId: undefined, assistantId: undefined }
+  const userId = messages.slice(0, -1).reverse().find(message => message.role === 'user')?.id
+  return userId === undefined
+    ? { userId: undefined, assistantId: undefined }
+    : { userId, assistantId: assistant.id }
+}
+
 export interface TrustedActionContext {
   readonly sessionId: string
   readonly capabilities: readonly string[]

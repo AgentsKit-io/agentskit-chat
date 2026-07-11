@@ -6,17 +6,31 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
-  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.tsx --format esm --dts --clean --external react --external ink --external @agentskit/ink",
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
-  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
-  "peerDependencies": { "@agentskit/ink": "^0.10.1", "ink": ">=7.1.0", "react": ">=18" },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-protocol": "workspace:*"
+  },
+  "peerDependencies": {
+    "@agentskit/ink": "^0.10.1",
+    "ink": ">=7.1.0",
+    "react": ">=18"
+  },
   "devDependencies": {
-    "@agentskit/core": "^1.12.0",
+    "@agentskit/core": "^1.12.1",
     "@agentskit/ink": "^0.10.1",
     "@types/react": "^19.2.17",
     "ink": "^7.1.0",
@@ -24,5 +38,7 @@
     "react": "^19.2.7",
     "tsup": "^8.5.1"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }
