@@ -105,6 +105,16 @@
             "pnpm --filter @agentskit/chat-ink test"
           ]
         },
+        "cli": {
+          "path": "packages/cli",
+          "purpose": "Safe React, React Native, and Ink application scaffolding",
+          "agentDoc": "docs/for-agents/packages/cli.md",
+          "humanDoc": "cli",
+          "checks": [
+            "pnpm --filter @agentskit/chat-cli lint",
+            "pnpm --filter @agentskit/chat-cli test"
+          ]
+        },
         "example-react": {
           "path": "apps/example-react",
           "purpose": "Deterministic executable proof of the React vertical slice",

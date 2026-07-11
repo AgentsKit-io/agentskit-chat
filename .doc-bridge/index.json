@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "b6ec685d721cc8a0e56485ffb3323524b933ebec701ee84b4d87d4ffc35b3087",
+  "contentHash": "57054dd4d649096fae30bfd1cfb3579ba4d3a5d84f2e531935e8955dd67176d5",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T14:29:09.425Z",
+  "generatedAt": "2026-07-11T15:01:09.244Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "chat",
@@ -71,6 +71,14 @@
       "path": "docs/for-agents/packages/chat.md",
       "description": "`packages/chat` owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
       "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. resumeChatSession persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream ChatMemory . Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal. Component boundary Model or route frames are untrusted. Resolve them against definition.components ; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit UIElement types remain upstream. Actionable choices use createActionConfirmation and the released upstream ChatReturn.proposeToolCall . Never validate or execute tools locally. Confirmation handles bind application-session metadata; authentication and durable audit remain outside this package. Authorization uses createCapabilityPolicy + withActionPolicy . Trusted context must come from a host closure, never a protocol frame or message. AgentsKit owns enforcement through authorizeToolCall ; this package owns only capability composition and trace projection. Checks"
+    },
+    {
+      "id": "cli",
+      "type": "agent-doc",
+      "title": "CLI package handoff",
+      "path": "docs/for-agents/packages/cli.md",
+      "description": "`packages/cli` owns AgentsKit Chat application detection, safe file generation, and command UX.",
+      "body": "CLI package handoff packages/cli owns AgentsKit Chat application detection, safe file generation, and command UX. - Reuse published AgentsKit/AgentsKit Chat packages in generated source. - Never copy private upstream templates or overwrite a non-empty target. - Keep CI non-interactive and diagnostics on stderr. - Add each renderer to golden, install, typecheck, and generated-test coverage together."
     },
     {
       "id": "ink",
@@ -177,6 +185,35 @@
       },
       "notes": [
         "Framework-neutral chat application definitions composed around AgentsKit ChatConfig"
+      ]
+    },
+    "cli": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "cli",
+        "path": "packages/cli"
+      },
+      "startHere": "docs/for-agents/packages/cli.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/cli.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/cli"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-cli lint",
+        "pnpm --filter @agentskit/chat-cli test"
+      ],
+      "humanDoc": "cli",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Safe React, React Native, and Ink application scaffolding"
       ]
     },
     "example-ink": {
@@ -501,6 +538,7 @@
     "packages": [
       "architecture",
       "chat",
+      "cli",
       "example-ink",
       "example-react",
       "example-react-native",
@@ -534,6 +572,17 @@
         "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
         "humanDoc": "getting-started/react",
         "agentDoc": "docs/for-agents/packages/chat.md"
+      },
+      "cli": {
+        "id": "cli",
+        "path": "packages/cli",
+        "checks": [
+          "pnpm --filter @agentskit/chat-cli lint",
+          "pnpm --filter @agentskit/chat-cli test"
+        ],
+        "purpose": "Safe React, React Native, and Ink application scaffolding",
+        "humanDoc": "cli",
+        "agentDoc": "docs/for-agents/packages/cli.md"
       },
       "example-ink": {
         "id": "example-ink",
