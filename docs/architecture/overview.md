@@ -51,6 +51,8 @@ React, Vue, Svelte, Solid, Angular, React Native, and Ink renderers consume the 
 
 The first renderer set shares a runtime-validated semantic application theme and maps it through upstream CSS variables, React Native styles, and Ink theming. Composition slots remain native to each renderer, while fully headless state remains the corresponding AgentsKit `useChat` API ([ADR-0013](./adrs/0013-semantic-theme-native-slots.md)).
 
+The Vue renderer uses native named scoped slots and the controller-free `ChatRoot` released upstream in `@agentskit/vue@0.4.4`. Its application behavior remains identical to the shared renderer contract; no Vue reactive state is introduced downstream.
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.

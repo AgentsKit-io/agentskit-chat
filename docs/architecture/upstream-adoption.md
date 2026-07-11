@@ -40,7 +40,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
 | `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
 | `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
-| `@agentskit/vue` | 0.3.1 | Vue composable and components. |
+| `@agentskit/vue` | 0.4.4 | Vue composable, headless components, and controller-free slotted `ChatRoot`. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
 | `@agentskit/solid` | 0.3.1 | Solid hook and components. |
 | `@agentskit/angular` | 0.3.1 | Angular service and components. |
@@ -141,3 +141,9 @@ Inspected `@agentskit/react@0.7.1` theme CSS/component attributes, `@agentskit/r
 ## CLI adoption record (#14)
 
 Inspected AgentsKit revision `main` on 2026-07-11: `@agentskit/cli@0.13.10` exports `writeStarterProject` from `packages/cli/src/index.ts`, implemented by `packages/cli/src/init.ts`, with the `init` command adapter in `packages/cli/src/commands/init.ts`; `@agentskit/templates@0.4.3` exports `scaffold` from `packages/templates/src/index.ts`, implemented by `packages/templates/src/scaffold.ts`. They own general AgentsKit starters and extension packages; neither represents a safe AgentsKit Chat application slice. The local CLI uses Node standard-library command/filesystem seams and generates imports of published AgentsKit contracts. It does not copy upstream templates, controller logic, adapters, or renderer primitives. No generic upstream gap blocks #14.
+
+## Vue renderer adoption record (#15)
+
+Inspected AgentsKit revision `a86905c7a4cac3cb0642e8acf7e9e8bb540e8886` and `@agentskit/vue@0.4.3` on 2026-07-11: `packages/vue/src/index.ts` publicly exported `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation`; their implementations live in `useChat.ts`, `ChatContainer.ts`, and `components.ts`. The batteries-included `ChatContainer` always created a controller and could not safely host an application shell that already consumed `useChat`. The generic gap was fixed upstream in AgentsKit #1161/#1162 by adding the controller-free, slotted `ChatRoot`, then released as `@agentskit/vue@0.4.4` via #1163 before downstream integration.
+
+AgentsKit Chat consumes `useChat`, `ChatRoot`, and all standard components directly from `@agentskit/vue@0.4.4`. It adds only application session coordination, validated component-frame presentation, semantic theme mapping, and Vue-native scoped slots. No upstream source, controller, reactive store, renderer root, lifecycle, or confirmation behavior is copied or reimplemented.

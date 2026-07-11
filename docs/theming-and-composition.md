@@ -10,22 +10,22 @@ const theme = {
 }
 ```
 
-`AgentChat`, `AgentChatNative`, and the Ink `AgentChat` accept `theme`. Input is runtime validated, unknown tokens fail early, and missing tokens use accessible defaults.
+React, Vue, React Native, and Ink application shells accept `theme`. Input is runtime validated, unknown tokens fail early, and missing tokens use accessible defaults.
 
 ## Capability map
 
-| Intent | React | React Native | Ink |
-|---|---|---|---|
-| colors | AgentsKit CSS variables | upstream wrapper and text style seams plus native application styles | complete upstream `InkTheme` |
-| spacing | CSS variables | numeric native layout styles | unsupported by terminal layout |
-| radius | CSS variables | native border radius | unsupported |
-| font family | `system` maps to the platform CSS stack; a custom name maps to the upstream variable | `system` preserves the native default; a loaded custom family maps through upstream message/input text seams and native application text | unsupported |
+| Intent | React | Vue | React Native | Ink |
+|---|---|---|---|---|
+| colors | AgentsKit CSS variables | the same upstream CSS variables on `ChatRoot` | upstream wrapper and text style seams plus native application styles | complete upstream `InkTheme` |
+| spacing | CSS variables | CSS variables | numeric native layout styles | unsupported by terminal layout |
+| radius | CSS variables | CSS variables | native border radius | unsupported |
+| font family | `system` maps to the platform CSS stack; a custom name maps to the upstream variable | the same CSS stack/variable mapping | `system` preserves the native default; a loaded custom family maps through upstream message/input text seams and native application text | unsupported |
 
-The mapping helpers are public for host integration: `toChatCssVariables`, `toChatNativeStyles`, and `toChatInkTheme`.
+The mapping helpers are public for host integration: React and Vue publish `toChatCssVariables`; native and terminal publish `toChatNativeStyles` and `toChatInkTheme`.
 
 ## Native slots
 
-Each renderer accepts `slots` for `Container`, `Message`, `Input`, `Thinking`, `Confirmation`, and `ChoiceList`. Slot types use that renderer's native React, React Native, or Ink component contract; they are never serialized into `ChatDefinition`.
+React, React Native, and Ink accept a `slots` component map for `Container`, `Message`, `Input`, `Thinking`, `Confirmation`, and `ChoiceList`. Vue follows its native convention with named scoped slots `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList`; their payloads are published through `AgentChatSlots`/`SlotsType`. Slots are never serialized into `ChatDefinition`.
 
 ```tsx
 <AgentChat definition={chat} slots={{ Message: BrandedMessage }} theme={theme} />
@@ -38,8 +38,10 @@ Defaults provide live-region announcements, labeled controls, alerts, native but
 Use the upstream binding directly when no default shell is wanted:
 
 ```ts
-import { useChat } from '@agentskit/react' // or react-native / ink
+import { useChat } from '@agentskit/react' // or vue / react-native / ink
 const state = useChat(definition.chat)
 ```
+
+Vue headless consumers import the same `useChat` contract from `@agentskit/vue`.
 
 AgentsKit remains the owner of streaming, messages, tools, memory, retry/edit/regenerate, and cancellation. AgentsKit Chat does not wrap or reproduce that hook.
