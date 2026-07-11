@@ -52,6 +52,63 @@ describe('AgentChat', () => {
     expect(onComponentSelect).toHaveBeenCalledWith(expect.objectContaining({ choiceId: 'demo' }))
   })
 
+  it('proposes and approves a typed choice action through AgentsKit confirmation', async () => {
+    const execute = vi.fn()
+    const actionableFrame = {
+      ...validChoiceListFrame,
+      props: {
+        ...validChoiceListFrame.props,
+        choices: validChoiceListFrame.props.choices.map(choice => choice.id === 'docs'
+          ? { ...choice, action: { name: 'open-docs', input: { path: '/guide' } } }
+          : choice),
+      },
+    }
+    render(<AgentChat onComponentSelect={() => { throw new Error('observer failed') }} definition={defineChat({
+      id: 'action',
+      components: defineComponentManifest([ChoiceListComponent]),
+      chat: {
+        adapter: adapter(),
+        initialMessages: [{ id: 'choice', role: 'assistant', content: JSON.stringify(actionableFrame), status: 'complete', createdAt: new Date() }],
+        tools: [{ name: 'open-docs', requiresConfirmation: true, execute, schema: { type: 'object' } }],
+        validateArgs: (_schema, args) => ({ valid: args.path === '/guide' }),
+      },
+    })} />)
+
+    const choice = screen.getByRole('button', { name: /Documentation/ })
+    fireEvent.click(choice)
+    fireEvent.click(choice)
+    expect(await screen.findAllByRole('button', { name: 'Approve' })).toHaveLength(1)
+    fireEvent.click(await screen.findByRole('button', { name: 'Approve' }))
+    await waitFor(() => expect(execute).toHaveBeenCalledOnce())
+    expect(execute).toHaveBeenCalledWith({ path: '/guide' }, expect.anything())
+  })
+
+  it('preserves the coordinator across rerenders and denies an expired action', async () => {
+    let clock = 1_000
+    vi.spyOn(Date, 'now').mockImplementation(() => clock)
+    const execute = vi.fn()
+    const actionableFrame = {
+      ...validChoiceListFrame,
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => (
+        choice.id === 'docs' ? { ...choice, action: { name: 'open-docs', input: {} } } : choice
+      )) },
+    }
+    render(<AgentChat actionConfirmationTtlMs={1} definition={defineChat({
+      id: 'expiring-action', components: defineComponentManifest([ChoiceListComponent]),
+      chat: {
+        adapter: adapter(),
+        initialMessages: [{ id: 'choice', role: 'assistant', content: JSON.stringify(actionableFrame), status: 'complete', createdAt: new Date() }],
+        tools: [{ name: 'open-docs', requiresConfirmation: true, execute }],
+      },
+    })} />)
+    fireEvent.click(screen.getByRole('button', { name: /Documentation/ }))
+    const approve = await screen.findByRole('button', { name: 'Approve' })
+    clock += 2
+    fireEvent.click(approve)
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Approve' })).toBeNull())
+    expect(execute).not.toHaveBeenCalled()
+  })
+
   it('shows fallback and emits nothing for unknown or invalid component props', () => {
     const onSelect = vi.fn()
     const manifest = defineComponentManifest([ChoiceListComponent])

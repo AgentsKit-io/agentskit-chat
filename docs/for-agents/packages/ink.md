@@ -6,7 +6,7 @@
 
 ## Upstream boundary
 
-Use `useChat`, `ChatContainer`, `Message`, `InputBar`, and `ThinkingIndicator` from published `@agentskit/ink`. Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires `@agentskit/ink` 0.9.5 or newer, delivered by AgentsKit PR #1133.
+Use `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from published `@agentskit/ink`. Keyboard editing, history, lifecycle, streaming, cancellation, and confirmation UI must remain upstream. Typed action proposal requires `@agentskit/ink` 0.10.0 or newer.
 
 ## Checks
 

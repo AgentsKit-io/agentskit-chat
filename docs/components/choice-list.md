@@ -2,6 +2,12 @@
 
 `ChoiceList` is the first schema-backed application component. It presents one prompt and 1–20 choices, then emits the same `agentskit.chat.component` v1 selection event on every renderer.
 
+## Typed actions
+
+A choice may declare `{ action: { name: 'send-email', input: { to: 'ada@example.com' } } }`. The name resolves only through `ChatConfig.tools`. The tool must be executable, opt into `requiresConfirmation`, and pass the configured AgentsKit argument validator.
+
+Selection proposes a canonical upstream tool call; it never executes the action. React, React Native, and Ink render the official AgentsKit confirmation component. For manual coordination, `createActionConfirmation` returns an expiring handle bound to session, action, validated input snapshot, and tool-call id. Approval and rejection are idempotent. The handle is correlation metadata, not authentication.
+
 ## Declare the manifest
 
 ```ts

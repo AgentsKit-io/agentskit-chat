@@ -12,7 +12,7 @@
   "dependencies": {
     "@agentskit/chat-example-shared": "workspace:*",
     "@agentskit/chat-ink": "workspace:*",
-    "@agentskit/ink": "^0.9.5",
+    "@agentskit/ink": "^0.10.0",
     "ink": "^7.1.0",
     "react": "^19.2.7"
   },

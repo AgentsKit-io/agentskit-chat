@@ -14,10 +14,10 @@
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
   "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
-  "peerDependencies": { "@agentskit/ink": "^0.9.5", "ink": ">=7.1.0", "react": ">=18" },
+  "peerDependencies": { "@agentskit/ink": "^0.10.0", "ink": ">=7.1.0", "react": ">=18" },
   "devDependencies": {
-    "@agentskit/core": "^1.10.2",
-    "@agentskit/ink": "^0.9.5",
+    "@agentskit/core": "^1.11.0",
+    "@agentskit/ink": "^0.10.0",
     "@types/react": "^19.2.17",
     "ink": "^7.1.0",
     "ink-testing-library": "^4.0.0",

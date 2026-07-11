@@ -1,8 +1,8 @@
-import { createChatSession, formatSemanticFallback, parseSemanticFallback, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { createActionConfirmation, createChatSession, formatSemanticFallback, parseSemanticFallback, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
-import { ChatContainer, InputBar, Message, ThinkingIndicator, useChat } from '@agentskit/ink'
+import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/ink'
 import { Box, Text, useInput } from 'ink'
 import { useMemo, useRef, useState, type ReactElement } from 'react'
 
@@ -19,6 +19,7 @@ export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly actionConfirmationTtlMs?: number
 }
 
 export interface ChoiceListProps {
@@ -77,11 +78,21 @@ export const ChoiceList = ({ frame, manifest, onSelect, isActive = true }: Choic
   return resolved.ok ? <ResolvedChoiceList resolved={resolved} onSelect={onSelect} isActive={isActive} /> : null
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs }: AgentChatProps): ReactElement => {
   const [session] = useState(() => createChatSession(definition))
+  const [sessionId] = useState(() => `${definition.id}:${Date.now().toString(36)}`)
+  const [actionError, setActionError] = useState<Error | undefined>()
   const [resolvedInstances, setResolvedInstances] = useState<ReadonlySet<string>>(() => new Set())
+  const resolvedInstancesRef = useRef(new Set<string>())
   const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
   const chat = useChat(config)
+  const chatRef = useRef(chat)
+  chatRef.current = chat
+  const [confirmation] = useState(() => createActionConfirmation({ sessionId, ...(actionConfirmationTtlMs === undefined ? {} : { ttlMs: actionConfirmationTtlMs }), chat: {
+    proposeToolCall: proposal => chatRef.current.proposeToolCall(proposal),
+    approve: id => chatRef.current.approve(id),
+    deny: (id, reason) => chatRef.current.deny(id, reason),
+  } }))
   const activeComponentId = [...chat.messages].reverse().find(message => {
     if (message.role !== 'assistant' || definition.components === undefined || !isComponentFrameCandidate(message.content)) return false
     const decoded = decodeComponentFrame(message.content)
@@ -89,9 +100,27 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       && !resolvedInstances.has(decoded.frame.instanceId)
       && resolveChoiceListFrame(decoded.frame, definition.components).ok
   })?.id
-  const handleComponentSelect = (event: ComponentSelectionEvent): void => {
-    setResolvedInstances(current => new Set(current).add(event.instanceId))
-    onComponentSelect(event)
+  const handleComponentSelect = (event: ComponentSelectionEvent, frame: import('@agentskit/chat-protocol').ComponentRenderFrame): void => {
+    if (resolvedInstancesRef.current.has(event.instanceId)) return
+    resolvedInstancesRef.current.add(event.instanceId)
+    setResolvedInstances(new Set(resolvedInstancesRef.current))
+    try { onComponentSelect(event) } catch (error) {
+      setActionError(error instanceof Error ? error : new Error('Component selection callback failed.'))
+    }
+    const action = resolveChoiceAction(frame, event.choiceId)
+    if (action) void confirmation.propose(action).catch(error => {
+      resolvedInstancesRef.current.delete(event.instanceId)
+      setResolvedInstances(new Set(resolvedInstancesRef.current))
+      setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
+    })
+  }
+  const approve = (toolCallId: string): void => {
+    const record = confirmation.getByToolCall(toolCallId)
+    void (record ? confirmation.approve(record.token, sessionId) : chat.approve(toolCallId)).catch(error => setActionError(error instanceof Error ? error : new Error('Action approval failed.')))
+  }
+  const deny = (toolCallId: string, reason?: string): void => {
+    const record = confirmation.getByToolCall(toolCallId)
+    void (record ? confirmation.reject(record.token, sessionId, reason) : chat.deny(toolCallId, reason)).catch(error => setActionError(error instanceof Error ? error : new Error('Action rejection failed.')))
   }
   return (
     <Box flexDirection="column" gap={1}>
@@ -104,15 +133,18 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
               ? undefined
               : resolveChoiceListFrame(decoded.frame, definition.components)
             return resolved?.ok
-              ? <ChoiceList key={message.id} frame={decoded.frame} manifest={definition.components!} onSelect={handleComponentSelect} isActive={message.id === activeComponentId} />
+              ? <ChoiceList key={message.id} frame={decoded.frame} manifest={definition.components!} onSelect={event => handleComponentSelect(event, decoded.frame)} isActive={message.id === activeComponentId} />
               : <SemanticFallback key={message.id} fallback={decoded.frame.fallback} />
           }
           if (decoded && !decoded.ok) return <Text key={message.id} color="red">{decoded.diagnostic.message}</Text>
           return <Message key={message.id} message={message} />
         })}
+        {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
+          <ToolConfirmation key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
+        ))}
         <ThinkingIndicator visible={chat.status === 'streaming'} />
       </ChatContainer>
-      {chat.error ? <Text color="red">{chat.error.message}</Text> : null}
+      {chat.error || actionError ? <Text color="red">{chat.error?.message ?? actionError?.message}</Text> : null}
       <InputBar chat={chat} disabled={activeComponentId !== undefined} {...(placeholder === undefined ? {} : { placeholder })} />
     </Box>
   )
