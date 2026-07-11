@@ -106,6 +106,10 @@ The following changes are rejected:
 - a renderer that bypasses its corresponding AgentsKit binding;
 - imports from another repository's source tree or unpublished workspace paths.
 
+## ChoiceList adoption record (#7)
+
+Inspected `@agentskit/core/generative-ui` on 2026-07-11. The upstream standard union provides text, heading, list, button, image, card, stack, and artifact elements, but intentionally does not provide a closed custom application registry. AgentsKit Chat reuses the official controller and framework bindings unchanged and adds only the application registry, custom frame/event envelope, native `ChoiceList` implementations, and conformance fixtures. No upstream gap or copied implementation exists.
+
 ## Current gap verdict
 
-No upstream change blocks #6. `ChatConfig`, `AdapterFactory`, and `StreamSource` are reused unchanged; deterministic route policy and product conversation state remain the application layer described in the responsibility matrix. Later issues must repeat the source audit because upstream beta packages and the application requirements may evolve. When a genuine generic gap appears, ADR-0002 requires an AgentsKit issue and supported upstream release before local integration.
+No upstream change blocks #7. `ChatConfig`, framework bindings, and the standard generative-UI union are reused unchanged; the closed registry and native custom component remain the application layer described in the responsibility matrix. Later issues must repeat the source audit because upstream beta packages and the application requirements may evolve. When a genuine generic gap appears, ADR-0002 requires an AgentsKit issue and supported upstream release before local integration.

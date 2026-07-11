@@ -15,7 +15,7 @@
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat build && vitest run --environment happy-dom"
   },
-  "dependencies": { "@agentskit/chat": "workspace:*" },
+  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
   "peerDependencies": {
     "@agentskit/react-native": "^0.3.5",
     "react": ">=18",

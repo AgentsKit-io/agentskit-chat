@@ -2,7 +2,7 @@
 
 ## Ownership
 
-`packages/protocol` owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus.
+`packages/protocol` owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus.
 
 It does not own the AgentsKit controller, `StreamChunk`, `AgentEvent`, a lifecycle reducer, transport, persistence, or renderer state.
 
@@ -10,6 +10,7 @@ It does not own the AgentsKit controller, `StreamChunk`, `AgentEvent`, a lifecyc
 
 - [`../../architecture/adrs/0004-snapshot-first-turn-protocol.md`](../../architecture/adrs/0004-snapshot-first-turn-protocol.md)
 - [`../../architecture/adrs/0005-upstream-memory-record-validation.md`](../../architecture/adrs/0005-upstream-memory-record-validation.md)
+- [`../../architecture/adrs/0007-closed-application-component-manifest.md`](../../architecture/adrs/0007-closed-application-component-manifest.md)
 - [`../../protocol/v1.md`](../../protocol/v1.md)
 - [`../../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../../architecture/adrs/0002-upstream-first-no-reimplementation.md)
 

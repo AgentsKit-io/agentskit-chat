@@ -3,9 +3,14 @@ import type { AdapterFactory, AdapterRequest, StreamChunk } from '@agentskit/cor
 import { describe, expect, it } from 'vitest'
 
 import {
-  commandRoute, createChatSession, defineChat, formatSemanticFallback, parseSemanticFallback,
+  ChoiceListComponent,
+  commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
+  resolveChoiceListFrame,
+  resolveComponentFrame,
+  selectChoice,
   type TurnTrace,
 } from '../src/index.js'
+import { validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 const adapter: AdapterFactory = {
   createSource: () => ({
@@ -34,6 +39,37 @@ describe('semantic fallback', () => {
 
   it('rejects empty fallback fields at the runtime boundary', () => {
     expect(() => parseSemanticFallback({ kind: '', summary: 'Missing kind.' })).toThrow()
+  })
+})
+
+describe('component manifest', () => {
+  const manifest = defineComponentManifest([ChoiceListComponent])
+
+  it('validates a registered ChoiceList and creates its semantic event', () => {
+    const resolved = resolveChoiceListFrame(validChoiceListFrame, manifest)
+    expect(resolved.ok).toBe(true)
+    if (!resolved.ok) return
+    expect(resolved.props).toEqual(validChoiceListFrame.props)
+    expect(selectChoice(resolved.frame, 'docs')).toMatchObject({ type: 'select', choiceId: 'docs' })
+  })
+
+  it('keeps unknown and invalid component frames inert', () => {
+    expect(resolveComponentFrame({ ...validChoiceListFrame, componentKey: 'future' }, manifest)).toMatchObject({
+      ok: false, diagnostic: { code: 'COMPONENT_UNKNOWN' },
+    })
+    expect(resolveComponentFrame({ ...validChoiceListFrame, props: { prompt: '', choices: [] } }, manifest)).toMatchObject({
+      ok: false, diagnostic: { code: 'COMPONENT_INVALID_PROPS' },
+    })
+    expect(resolveComponentFrame({ ...validChoiceListFrame, componentKey: 'constructor' }, manifest)).toMatchObject({
+      ok: false, diagnostic: { code: 'COMPONENT_UNKNOWN' },
+    })
+  })
+
+  it('rejects duplicate manifest keys and undeclared choices', () => {
+    expect(() => defineComponentManifest([ChoiceListComponent, ChoiceListComponent])).toThrow(ConfigError)
+    expect(() => selectChoice(validChoiceListFrame, 'missing')).toThrow(ConfigError)
+    expect(() => selectChoice({ ...validChoiceListFrame, componentKey: 'other' }, 'docs')).toThrow(ConfigError)
+    expect(() => defineComponentManifest([{ key: 'Invalid Key', propsSchema: ChoiceListComponent.propsSchema }])).toThrow(ConfigError)
   })
 })
 

@@ -17,3 +17,5 @@ const fallback = parseSemanticFallback({ kind: 'chart', summary: 'Revenue rose 1
 formatSemanticFallback(fallback)
 // [unsupported visual: chart] Revenue rose 12%.
 ```
+
+Custom application UI is declared through `defineComponentManifest`. The first schema-backed component is `ChoiceListComponent`; untrusted frames must pass `resolveComponentFrame` before rendering.

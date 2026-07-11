@@ -2,8 +2,9 @@ import type { AdapterFactory } from '@agentskit/core'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { AgentChat } from '../src/index.js'
-import { commandRoute, defineChat } from '@agentskit/chat'
+import { AgentChat, ChoiceList } from '../src/index.js'
+import { ChoiceListComponent, commandRoute, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 afterEach(() => {
   cleanup()
@@ -26,6 +27,53 @@ const adapter = (fail = false): AdapterFactory => ({
 })
 
 describe('AgentChat', () => {
+  it('renders and selects a validated ChoiceList accessibly', () => {
+    const manifest = defineComponentManifest([ChoiceListComponent])
+    const onSelect = vi.fn()
+    render(<ChoiceList frame={validChoiceListFrame} manifest={manifest} onSelect={onSelect} />)
+    fireEvent.click(screen.getByRole('button', { name: /Documentation/ }))
+    expect(screen.getByRole('group', { name: 'Where should we go?' })).toBeTruthy()
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ type: 'select', choiceId: 'docs' }))
+  })
+
+  it('renders a deterministic-route frame inside the chat shell', async () => {
+    const onComponentSelect = vi.fn()
+    render(<AgentChat definition={defineChat({
+      id: 'choices', chat: { adapter: adapter() }, components: defineComponentManifest([ChoiceListComponent]),
+      conversation: {
+        initial: 'idle', states: { idle: { on: { choose: 'done' } }, done: {} },
+        routes: [commandRoute({ id: 'choose', command: '/choose', event: 'choose', response: () => JSON.stringify(validChoiceListFrame) })],
+      },
+    })} onComponentSelect={onComponentSelect} />)
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { target: { value: '/choose' } })
+    fireEvent.submit(input.closest('form')!)
+    fireEvent.click(await screen.findByRole('button', { name: /Demo/ }))
+    expect(onComponentSelect).toHaveBeenCalledWith(expect.objectContaining({ choiceId: 'demo' }))
+  })
+
+  it('shows fallback and emits nothing for unknown or invalid component props', () => {
+    const onSelect = vi.fn()
+    const manifest = defineComponentManifest([ChoiceListComponent])
+    const { rerender } = render(<ChoiceList frame={invalidChoiceListPropsFrame} manifest={manifest} onSelect={onSelect} />)
+    expect(screen.queryByRole('button')).toBeNull()
+    rerender(<AgentChat definition={{
+      id: 'unknown', components: manifest,
+      chat: { adapter: adapter(), initialMessages: [{ id: 'unknown', role: 'assistant', content: JSON.stringify(unknownComponentFrame), status: 'complete', createdAt: new Date() }] },
+    }} onComponentSelect={onSelect} />)
+    expect(screen.getByText('[unsupported visual: choice-list] Choose Documentation or Demo.')).toBeTruthy()
+    expect(onSelect).not.toHaveBeenCalled()
+  })
+
+  it('keeps an invalid component envelope out of the transcript', () => {
+    const content = JSON.stringify(invalidComponentFrameFixtures[1].frame)
+    render(<AgentChat definition={{
+      id: 'invalid-frame', chat: { adapter: adapter(), initialMessages: [{ id: 'invalid', role: 'assistant', content, status: 'complete', createdAt: new Date() }] },
+    }} />)
+    expect(screen.getByRole('alert').textContent).toBe('Component frame uses an unsupported version.')
+    expect(screen.queryByText(content)).toBeNull()
+  })
+
   it('keeps conversation progress when a parent recreates the same definition', async () => {
     const makeDefinition = (fallback: string) => defineChat({
       id: 'stable-session', chat: { adapter: {

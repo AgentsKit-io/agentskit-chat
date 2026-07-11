@@ -2,7 +2,7 @@
 
 ## Ownership
 
-`packages/react` supplies an accessible application shell over `useChat` and headless components from `@agentskit/react`. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.
+`packages/react` supplies an accessible application shell and native `ChoiceList` presentation over `useChat` and headless components from `@agentskit/react`. Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.
 
 ## Read first
 

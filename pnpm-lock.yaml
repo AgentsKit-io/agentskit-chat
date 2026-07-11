@@ -140,6 +140,9 @@ importers:
 
   packages/chat:
     dependencies:
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
       zod:
         specifier: ^4.3.6
         version: 4.4.3
@@ -156,6 +159,9 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.10.2
@@ -197,6 +203,9 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.9.0
@@ -228,6 +237,9 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.10.2

@@ -13,7 +13,7 @@
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
-  "dependencies": { "@agentskit/chat": "workspace:*" },
+  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
   "peerDependencies": { "@agentskit/ink": "^0.9.5", "ink": ">=7.1.0", "react": ">=18" },
   "devDependencies": {
     "@agentskit/core": "^1.10.2",

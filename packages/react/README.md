@@ -7,3 +7,5 @@ Accessible React application shell over `@agentskit/react`.
 ```
 
 See the [React quick start](../../docs/getting-started/react.md).
+
+The package also exports the accessible native-web `ChoiceList` renderer.

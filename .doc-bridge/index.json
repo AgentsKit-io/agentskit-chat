@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8e858ee41640506ed035bbd6857418f0ca39e806ce16d68ce73d5a263b618fd5",
+  "contentHash": "9023d74ab90c9a22bcd57d56b9c1b73b684d45cdff6819edb809e8ab3ba2b488",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T08:06:55.788Z",
+  "generatedAt": "2026-07-11T09:25:45.882Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -69,40 +69,40 @@
       "type": "agent-doc",
       "title": "Chat package handoff",
       "path": "docs/for-agents/packages/chat.md",
-      "description": "`packages/chat` owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
-      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. Checks"
+      "description": "`packages/chat` owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
+      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. Component boundary Model or route frames are untrusted. Resolve them against definition.components ; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit UIElement types remain upstream. Checks"
     },
     {
       "id": "ink",
       "type": "agent-doc",
       "title": "Ink package handoff",
       "path": "docs/for-agents/packages/ink.md",
-      "description": "`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.",
-      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
+      "description": "`packages/ink` owns only the application-level Ink composition, native `ChoiceList` input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input.",
+      "body": "Ink package handoff Owner packages/ink owns only the application-level Ink composition, native ChoiceList input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input. Upstream boundary Use useChat , ChatContainer , Message , InputBar , and ThinkingIndicator from published @agentskit/ink . Keyboard editing, history, lifecycle, streaming, and cancellation must remain upstream. Escape cancellation requires @agentskit/ink 0.9.5 or newer, delivered by AgentsKit PR 1133. Checks"
     },
     {
       "id": "protocol",
       "type": "agent-doc",
       "title": "Protocol package handoff",
       "path": "docs/for-agents/packages/protocol.md",
-      "description": "`packages/protocol` owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus.",
-      "body": "Protocol package handoff Ownership packages/protocol owns the versioned application wire envelope, Zod schemas, encode/decode functions, safe diagnostics, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. Read first - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
+      "description": "`packages/protocol` owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus.",
+      "body": "Protocol package handoff Ownership packages/protocol owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. Read first - - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
     },
     {
       "id": "react-native",
       "type": "agent-doc",
       "title": "React Native renderer",
       "path": "docs/for-agents/packages/react-native.md",
-      "description": "- Owns only the native application shell in `packages/react-native`. - Delegate controller state and UI primitives to `@agentskit/react-native`. - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates.",
-      "body": "React Native renderer - Owns only the native application shell in packages/react-native . - Delegate controller state and UI primitives to @agentskit/react-native . - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates."
+      "description": "- Owns only the native application shell and native `ChoiceList` presentation in `packages/react-native`. - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events. - Delegate controller state and UI primitives to `@agentskit/react-native`. - Keep React Native as a peer dependency; native modules belong to the Expo app.",
+      "body": "React Native renderer - Owns only the native application shell and native ChoiceList presentation in packages/react-native . - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events. - Delegate controller state and UI primitives to @agentskit/react-native . - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates."
     },
     {
       "id": "react",
       "type": "agent-doc",
       "title": "React package handoff",
       "path": "docs/for-agents/packages/react.md",
-      "description": "`packages/react` supplies an accessible application shell over `useChat` and headless components from `@agentskit/react`. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.",
-      "body": "React package handoff Ownership packages/react supplies an accessible application shell over useChat and headless components from @agentskit/react . It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Read first - - Checks"
+      "description": "`packages/react` supplies an accessible application shell and native `ChoiceList` presentation over `useChat` and headless components from `@agentskit/react`. Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior.",
+      "body": "React package handoff Ownership packages/react supplies an accessible application shell and native ChoiceList presentation over useChat and headless components from @agentskit/react . Shared frames, manifests, props, and events remain framework-neutral. It must not implement chat state, streaming, cancellation, message persistence, or adapter behavior. Read first - - Checks"
     },
     {
       "id": "product",

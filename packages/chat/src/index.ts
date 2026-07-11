@@ -1,6 +1,133 @@
 import { ConfigError, ErrorCodes } from '@agentskit/core'
 import type { AdapterRequest, ChatConfig, Message, StreamSource } from '@agentskit/core'
+import {
+  ComponentFallbackSchema,
+  ComponentKeySchema,
+  createSelectionEvent,
+  decodeComponentFrame,
+  type ComponentRenderFrame,
+  type ComponentSelectionEvent,
+} from '@agentskit/chat-protocol'
 import { z } from 'zod'
+
+export const CHOICE_LIST_COMPONENT_KEY = 'choice-list' as const
+
+export const ChoiceListPropsSchema = z.object({
+  prompt: z.string().min(1),
+  choices: z.array(z.object({
+    id: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+    label: z.string().min(1),
+    description: z.string().min(1).optional(),
+  }).readonly()).min(1).max(20).superRefine((choices, context) => {
+    const ids = new Set<string>()
+    for (const [index, choice] of choices.entries()) {
+      if (ids.has(choice.id)) context.addIssue({ code: 'custom', path: [index, 'id'], message: 'Choice ids must be unique.' })
+      ids.add(choice.id)
+    }
+  }),
+}).readonly()
+
+export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
+
+export interface ComponentDefinition<T> {
+  readonly key: string
+  readonly propsSchema: z.ZodType<T>
+}
+
+export type ComponentManifest = Readonly<Record<string, ComponentDefinition<unknown>>>
+
+export const ChoiceListComponent: ComponentDefinition<ChoiceListProps> = {
+  key: CHOICE_LIST_COMPONENT_KEY,
+  propsSchema: ChoiceListPropsSchema,
+}
+
+export const defineComponentManifest = (
+  components: readonly ComponentDefinition<unknown>[],
+): ComponentManifest => {
+  const manifest: Record<string, ComponentDefinition<unknown>> = Object.create(null) as Record<string, ComponentDefinition<unknown>>
+  for (const component of components) {
+    if (!ComponentKeySchema.safeParse(component.key).success || Object.hasOwn(manifest, component.key)) {
+      throw new ConfigError({
+        code: ErrorCodes.AK_CONFIG_INVALID,
+        message: 'Component manifest keys must be non-empty and unique.',
+        hint: 'Register each application component exactly once.',
+      })
+    }
+    manifest[component.key] = component
+  }
+  return manifest
+}
+
+export type ResolveComponentFrameResult<T = unknown> =
+  | { readonly ok: true; readonly frame: ComponentRenderFrame; readonly props: T }
+  | {
+      readonly ok: false
+      readonly diagnostic: {
+        readonly code: 'COMPONENT_UNKNOWN' | 'COMPONENT_INVALID_PROPS' | import('@agentskit/chat-protocol').ComponentDecodeCode
+        readonly message: string
+        readonly retryable: false
+      }
+    }
+
+export const resolveComponentFrame = (
+  input: unknown,
+  manifest: ComponentManifest,
+): ResolveComponentFrameResult => {
+  const decoded = decodeComponentFrame(input)
+  if (!decoded.ok) return decoded
+  if (!Object.hasOwn(manifest, decoded.frame.componentKey)) return {
+    ok: false,
+    diagnostic: { code: 'COMPONENT_UNKNOWN', message: 'Component is not registered.', retryable: false },
+  }
+  const component = manifest[decoded.frame.componentKey]!
+  const props = component.propsSchema.safeParse(decoded.frame.props)
+  return props.success
+    ? { ok: true, frame: decoded.frame, props: props.data }
+    : {
+        ok: false,
+        diagnostic: { code: 'COMPONENT_INVALID_PROPS', message: 'Component props are invalid.', retryable: false },
+      }
+}
+
+export type ResolveChoiceListFrameResult = ResolveComponentFrameResult<ChoiceListProps>
+
+export const resolveChoiceListFrame = (
+  input: unknown,
+  manifest: ComponentManifest,
+): ResolveChoiceListFrameResult => {
+  const resolved = resolveComponentFrame(input, manifest)
+  if (!resolved.ok) return resolved
+  if (resolved.frame.componentKey !== CHOICE_LIST_COMPONENT_KEY) return {
+    ok: false,
+    diagnostic: { code: 'COMPONENT_UNKNOWN', message: 'Component is not a ChoiceList.', retryable: false },
+  }
+  const props = ChoiceListPropsSchema.safeParse(resolved.props)
+  return props.success
+    ? { ok: true, frame: resolved.frame, props: props.data }
+    : {
+        ok: false,
+        diagnostic: { code: 'COMPONENT_INVALID_PROPS', message: 'ChoiceList props are invalid.', retryable: false },
+      }
+}
+
+export const selectChoice = (frame: ComponentRenderFrame, choiceId: string): ComponentSelectionEvent => {
+  if (frame.componentKey !== CHOICE_LIST_COMPONENT_KEY) {
+    throw new ConfigError({
+      code: ErrorCodes.AK_CONFIG_INVALID,
+      message: 'Selection frame is not a ChoiceList.',
+      hint: 'Resolve the frame through ChoiceListComponent before emitting a selection.',
+    })
+  }
+  const props = ChoiceListPropsSchema.parse(frame.props)
+  if (!props.choices.some(choice => choice.id === choiceId)) {
+    throw new ConfigError({
+      code: ErrorCodes.AK_CONFIG_INVALID,
+      message: 'Selected choice is not present in the ChoiceList.',
+      hint: 'Emit only choice ids declared by the validated render frame.',
+    })
+  }
+  return createSelectionEvent(frame, choiceId)
+}
 
 export type TurnTraceKind = 'deterministic' | 'agentic' | 'repaired' | 'fallback'
 
@@ -36,6 +163,7 @@ export interface ChatDefinition {
   readonly id: string
   readonly chat: ChatConfig
   readonly conversation?: ConversationDefinition
+  readonly components?: ComponentManifest
 }
 
 export const defineChat = <const T extends ChatDefinition>(definition: T): T => definition
@@ -225,10 +353,7 @@ export const commandRoute = (options: Omit<DeterministicRoute, 'match'> & { read
   return { ...route, match: input => input === command }
 }
 
-export const SemanticFallbackSchema = z.object({
-  kind: z.string().min(1),
-  summary: z.string().min(1),
-}).readonly()
+export const SemanticFallbackSchema = ComponentFallbackSchema
 
 export type SemanticFallback = z.infer<typeof SemanticFallbackSchema>
 
