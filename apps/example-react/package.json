@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-example-shared": "workspace:*",
     "@agentskit/chat-react": "workspace:*",
     "@agentskit/core": "^1.9.0",
     "@agentskit/react": "^0.6.3",

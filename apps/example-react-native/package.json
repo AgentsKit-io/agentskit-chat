@@ -1,0 +1,22 @@
+{
+  "name": "@agentskit/chat-example-react-native",
+  "version": "0.0.0",
+  "private": true,
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "dev": "expo start",
+    "dev:web": "expo start --web",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@agentskit/chat-example-shared": "workspace:*",
+    "@agentskit/chat-react-native": "workspace:*",
+    "@agentskit/react-native": "^0.3.5",
+    "expo": "^57.0.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "^0.86.0",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": { "@types/react": "^19.2.17" }
+}

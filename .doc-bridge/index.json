@@ -1,13 +1,21 @@
 {
   "schemaVersion": 1,
-  "contentHash": "564390f8559a2fc11f157c826d6c1767bc7ba563a3a6fdbfb2dc819739b07722",
+  "contentHash": "e2b55b1d893d5e73c1678c44b98e1b0695d88dc18cffda2e90a3e1a8ce6c8b79",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T00:08:08.273Z",
+  "generatedAt": "2026-07-11T02:30:07.481Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
   },
   "knowledge": [
+    {
+      "id": "example-react-native",
+      "type": "agent-doc",
+      "title": "React Native example",
+      "path": "docs/for-agents/apps/example-react-native.md",
+      "description": "Expo dogfood app for the unchanged `helloWorldChat` definition. It proves send and cancellation through the native renderer. App-specific native dependencies live here.",
+      "body": "React Native example Expo dogfood app for the unchanged helloWorldChat definition. It proves send and cancellation through the native renderer. App-specific native dependencies live here."
+    },
     {
       "id": "example-react",
       "type": "agent-doc",
@@ -15,6 +23,14 @@
       "path": "docs/for-agents/apps/example-react.md",
       "description": "`apps/example-react` demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through `ChatConfig`.",
       "body": "React example handoff Ownership apps/example-react demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through ChatConfig . Checks"
+    },
+    {
+      "id": "example-shared",
+      "type": "agent-doc",
+      "title": "Shared example definition",
+      "path": "docs/for-agents/apps/example-shared.md",
+      "description": "Owns the deterministic `helloWorldChat` definition used unchanged by React and React Native. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
+      "body": "Shared example definition Owns the deterministic helloWorldChat definition used unchanged by React and React Native. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
     },
     {
       "id": "architecture",
@@ -38,7 +54,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : deterministic executable proof. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : native React shell over @agentskit/react . - : native mobile shell over @agentskit/react-native . - : deterministic executable proof. - : Expo proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "chat",
@@ -47,6 +63,14 @@
       "path": "docs/for-agents/packages/chat.md",
       "description": "`packages/chat` owns only framework-neutral application definitions. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
       "body": "Chat package handoff Ownership packages/chat owns only framework-neutral application definitions. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - Checks"
+    },
+    {
+      "id": "react-native",
+      "type": "agent-doc",
+      "title": "React Native renderer",
+      "path": "docs/for-agents/packages/react-native.md",
+      "description": "- Owns only the native application shell in `packages/react-native`. - Delegate controller state and UI primitives to `@agentskit/react-native`. - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates.",
+      "body": "React Native renderer - Owns only the native application shell in packages/react-native . - Delegate controller state and UI primitives to @agentskit/react-native . - Keep React Native as a peer dependency; native modules belong to the Expo app. - Never add DOM assumptions or reproduce AgentsKit lifecycle behavior. - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates."
     },
     {
       "id": "react",
@@ -152,6 +176,64 @@
         "Deterministic executable proof of the React vertical slice"
       ]
     },
+    "example-react-native": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-react-native",
+        "path": "apps/example-react-native"
+      },
+      "startHere": "docs/for-agents/apps/example-react-native.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-react-native.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-react-native"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-react-native build",
+        "pnpm test:e2e"
+      ],
+      "humanDoc": "getting-started/react-native",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Expo proof of shared-definition React Native parity"
+      ]
+    },
+    "example-shared": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-shared",
+        "path": "apps/example-shared"
+      },
+      "startHere": "docs/for-agents/apps/example-shared.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-shared.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-shared"
+      ],
+      "checks": [
+        "pnpm lint",
+        "pnpm test"
+      ],
+      "humanDoc": "getting-started/react-native",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Framework-neutral deterministic definition shared by example apps"
+      ]
+    },
     "governance": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -236,6 +318,35 @@
       "notes": [
         "React application shell consuming @agentskit/react directly"
       ]
+    },
+    "react-native": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "react-native",
+        "path": "packages/react-native"
+      },
+      "startHere": "docs/for-agents/packages/react-native.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/react-native.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/react-native"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-react-native lint",
+        "pnpm --filter @agentskit/chat-react-native test"
+      ],
+      "humanDoc": "getting-started/react-native",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "React Native application shell consuming @agentskit/react-native directly"
+      ]
     }
   },
   "lookup": {
@@ -243,9 +354,12 @@
       "architecture",
       "chat",
       "example-react",
+      "example-react-native",
+      "example-shared",
       "governance",
       "product",
-      "react"
+      "react",
+      "react-native"
     ],
     "ownership": {
       "architecture": {
@@ -280,6 +394,28 @@
         "humanDoc": "getting-started/react",
         "agentDoc": "docs/for-agents/apps/example-react.md"
       },
+      "example-react-native": {
+        "id": "example-react-native",
+        "path": "apps/example-react-native",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-react-native build",
+          "pnpm test:e2e"
+        ],
+        "purpose": "Expo proof of shared-definition React Native parity",
+        "humanDoc": "getting-started/react-native",
+        "agentDoc": "docs/for-agents/apps/example-react-native.md"
+      },
+      "example-shared": {
+        "id": "example-shared",
+        "path": "apps/example-shared",
+        "checks": [
+          "pnpm lint",
+          "pnpm test"
+        ],
+        "purpose": "Framework-neutral deterministic definition shared by example apps",
+        "humanDoc": "getting-started/react-native",
+        "agentDoc": "docs/for-agents/apps/example-shared.md"
+      },
       "governance": {
         "id": "governance",
         "path": ".github",
@@ -310,6 +446,17 @@
         "purpose": "React application shell consuming @agentskit/react directly",
         "humanDoc": "getting-started/react",
         "agentDoc": "docs/for-agents/packages/react.md"
+      },
+      "react-native": {
+        "id": "react-native",
+        "path": "packages/react-native",
+        "checks": [
+          "pnpm --filter @agentskit/chat-react-native lint",
+          "pnpm --filter @agentskit/chat-react-native test"
+        ],
+        "purpose": "React Native application shell consuming @agentskit/react-native directly",
+        "humanDoc": "getting-started/react-native",
+        "agentDoc": "docs/for-agents/packages/react-native.md"
       }
     },
     "intents": {},

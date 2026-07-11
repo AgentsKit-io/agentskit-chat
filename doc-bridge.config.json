@@ -75,6 +75,16 @@
             "pnpm --filter @agentskit/chat-react test"
           ]
         },
+        "react-native": {
+          "path": "packages/react-native",
+          "purpose": "React Native application shell consuming @agentskit/react-native directly",
+          "agentDoc": "docs/for-agents/packages/react-native.md",
+          "humanDoc": "getting-started/react-native",
+          "checks": [
+            "pnpm --filter @agentskit/chat-react-native lint",
+            "pnpm --filter @agentskit/chat-react-native test"
+          ]
+        },
         "example-react": {
           "path": "apps/example-react",
           "purpose": "Deterministic executable proof of the React vertical slice",
@@ -82,6 +92,26 @@
           "humanDoc": "getting-started/react",
           "checks": [
             "pnpm --filter @agentskit/chat-example-react build",
+            "pnpm test:e2e"
+          ]
+        },
+        "example-shared": {
+          "path": "apps/example-shared",
+          "purpose": "Framework-neutral deterministic definition shared by example apps",
+          "agentDoc": "docs/for-agents/apps/example-shared.md",
+          "humanDoc": "getting-started/react-native",
+          "checks": [
+            "pnpm lint",
+            "pnpm test"
+          ]
+        },
+        "example-react-native": {
+          "path": "apps/example-react-native",
+          "purpose": "Expo proof of shared-definition React Native parity",
+          "agentDoc": "docs/for-agents/apps/example-react-native.md",
+          "humanDoc": "getting-started/react-native",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-react-native build",
             "pnpm test:e2e"
           ]
         }

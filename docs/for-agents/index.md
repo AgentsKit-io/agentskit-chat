@@ -9,7 +9,10 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Governance](./governance.md): issue structure, dependencies, Definition of Done, and delivery rules.
 - [Chat package](./packages/chat.md): minimal framework-neutral `defineChat` contract.
 - [React package](./packages/react.md): native React shell over `@agentskit/react`.
+- [React Native package](./packages/react-native.md): native mobile shell over `@agentskit/react-native`.
 - [React example](./apps/example-react.md): deterministic executable proof.
+- [React Native example](./apps/example-react-native.md): Expo proof using the shared definition.
+- [Shared example](./apps/example-shared.md): framework-neutral deterministic definition and fixture.
 
 ## Invariants
 

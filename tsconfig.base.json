@@ -7,7 +7,9 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@agentskit/chat": ["packages/chat/src/index.ts"],
-      "@agentskit/chat-react": ["packages/react/src/index.tsx"]
+      "@agentskit/chat-react": ["packages/react/src/index.tsx"],
+      "@agentskit/chat-react-native": ["packages/react-native/src/index.tsx"],
+      "@agentskit/chat-example-shared": ["apps/example-shared/src/index.ts"]
     },
     "strict": true,
     "noUncheckedIndexedAccess": true,
