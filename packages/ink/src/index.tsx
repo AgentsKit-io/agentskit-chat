@@ -1,8 +1,8 @@
-import { formatSemanticFallback, parseSemanticFallback } from '@agentskit/chat'
+import { createChatSession, formatSemanticFallback, parseSemanticFallback } from '@agentskit/chat'
 import type { ChatDefinition } from '@agentskit/chat'
 import { ChatContainer, InputBar, Message, ThinkingIndicator, useChat } from '@agentskit/ink'
 import { Box, Text } from 'ink'
-import type { ReactElement } from 'react'
+import { useMemo, useState, type ReactElement } from 'react'
 
 export interface SemanticFallbackProps {
   readonly fallback: unknown
@@ -19,7 +19,9 @@ export interface AgentChatProps {
 }
 
 const AgentChatSession = ({ definition, placeholder }: AgentChatProps): ReactElement => {
-  const chat = useChat(definition.chat)
+  const [session] = useState(() => createChatSession(definition))
+  const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
+  const chat = useChat(config)
   return (
     <Box flexDirection="column" gap={1}>
       <ChatContainer>

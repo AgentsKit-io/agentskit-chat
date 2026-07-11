@@ -108,4 +108,4 @@ The following changes are rejected:
 
 ## Current gap verdict
 
-No upstream change blocks #2. Later issues must repeat the source audit because upstream beta packages and the application requirements may evolve. When a genuine generic gap appears, ADR-0002 requires an AgentsKit issue and supported upstream release before local integration.
+No upstream change blocks #6. `ChatConfig`, `AdapterFactory`, and `StreamSource` are reused unchanged; deterministic route policy and product conversation state remain the application layer described in the responsibility matrix. Later issues must repeat the source audit because upstream beta packages and the application requirements may evolve. When a genuine generic gap appears, ADR-0002 requires an AgentsKit issue and supported upstream release before local integration.

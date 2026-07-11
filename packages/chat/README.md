@@ -2,6 +2,8 @@
 
 Framework-neutral application definitions for AgentsKit Chat.
 
+The package also provides session-scoped deterministic routes and explicit conversation-state projections while unresolved turns stay on the upstream AgentsKit controller.
+
 ```ts
 const definition = defineChat({ id: 'support', chat: agentskitChatConfig })
 ```
