@@ -1,4 +1,4 @@
-import { defineChat } from '@agentskit/chat'
+import { commandRoute, defineChat } from '@agentskit/chat'
 import type { AdapterFactory } from '@agentskit/core'
 
 const deterministicAdapter: AdapterFactory = {
@@ -27,4 +27,16 @@ const deterministicAdapter: AdapterFactory = {
 export const helloWorldChat = defineChat({
   id: 'hello-world',
   chat: { adapter: deterministicAdapter },
+  conversation: {
+    initial: 'idle',
+    states: {
+      idle: { on: { start: 'collecting' }, actions: ['start'] },
+      collecting: { on: { finish: 'complete' }, actions: ['cancel'] },
+      complete: { actions: ['restart'] },
+    },
+    routes: [
+      commandRoute({ id: 'start', command: '/start', event: 'start', response: () => 'What is your name?' }),
+      commandRoute({ id: 'finish', command: '/name Ada', event: 'finish', states: ['collecting'], response: () => 'Welcome, Ada.' }),
+    ],
+  },
 })

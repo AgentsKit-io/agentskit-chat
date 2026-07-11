@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { AgentChat } from '../src/index.js'
+import { commandRoute, defineChat } from '@agentskit/chat'
 
 afterEach(() => {
   cleanup()
@@ -25,6 +26,28 @@ const adapter = (fail = false): AdapterFactory => ({
 })
 
 describe('AgentChat', () => {
+  it('keeps conversation progress when a parent recreates the same definition', async () => {
+    const makeDefinition = (fallback: string) => defineChat({
+      id: 'stable-session', chat: { adapter: {
+        createSource: () => ({ async *stream() { yield { type: 'text' as const, content: fallback }; yield { type: 'done' as const } }, abort() {} }),
+      } },
+      conversation: {
+        initial: 'idle', states: { idle: { on: { start: 'complete' } }, complete: {} },
+        routes: [commandRoute({ id: 'start', command: '/start', event: 'start', response: () => 'Started' })],
+      },
+    })
+    const view = render(<AgentChat definition={makeDefinition('Old adapter')} />)
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { target: { value: '/start' } })
+    fireEvent.submit(input.closest('form')!)
+    expect(await screen.findByText('Started')).toBeTruthy()
+
+    view.rerender(<AgentChat definition={makeDefinition('Updated adapter')} />)
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '/start' } })
+    fireEvent.submit(screen.getByRole('textbox').closest('form')!)
+    expect(await screen.findByText('Updated adapter')).toBeTruthy()
+  })
+
   it('submits through the upstream React binding and renders the streamed answer', async () => {
     render(<AgentChat definition={{ id: 'demo', chat: { adapter: adapter() } }} placeholder="Ask" />)
 

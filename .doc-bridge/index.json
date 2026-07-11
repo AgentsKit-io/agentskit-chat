@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ac5330e92cb81331c447328a97f3c3db9b4e84aa1743d33d3d627f2196bc2429",
+  "contentHash": "8e858ee41640506ed035bbd6857418f0ca39e806ce16d68ce73d5a263b618fd5",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T06:38:55.876Z",
+  "generatedAt": "2026-07-11T08:06:55.788Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -70,7 +70,7 @@
       "title": "Chat package handoff",
       "path": "docs/for-agents/packages/chat.md",
       "description": "`packages/chat` owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
-      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - Checks"
+      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions and the validated semantic fallback envelope from ADR-0003. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. Checks"
     },
     {
       "id": "ink",

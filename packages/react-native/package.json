@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --clean --external react --external react-native --external @agentskit/react-native",
     "lint": "tsc --noEmit",
-    "test": "vitest run --environment happy-dom"
+    "test": "pnpm --filter @agentskit/chat build && vitest run --environment happy-dom"
   },
   "dependencies": { "@agentskit/chat": "workspace:*" },
   "peerDependencies": {

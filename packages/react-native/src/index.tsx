@@ -1,3 +1,4 @@
+import { createChatSession } from '@agentskit/chat'
 import type { ChatDefinition } from '@agentskit/chat'
 import {
   ChatContainer,
@@ -6,7 +7,7 @@ import {
   ThinkingIndicator,
   useChat,
 } from '@agentskit/react-native'
-import type { ReactElement } from 'react'
+import { useMemo, useState, type ReactElement } from 'react'
 import { Pressable, Text, View } from 'react-native'
 
 export interface AgentChatNativeProps {
@@ -15,7 +16,9 @@ export interface AgentChatNativeProps {
 }
 
 const AgentChatNativeSession = ({ definition, placeholder }: AgentChatNativeProps): ReactElement => {
-  const chat = useChat(definition.chat)
+  const [session] = useState(() => createChatSession(definition))
+  const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
+  const chat = useChat(config)
 
   return (
     <View testID="ak-app-chat" accessibilityLabel={`${definition.id} chat`}>

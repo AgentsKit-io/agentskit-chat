@@ -46,6 +46,15 @@ afterEach(() => {
 })
 
 describe('Ink PTY host', () => {
+  it('advances the shared deterministic conversation', async () => {
+    const app = startApp()
+    await waitFor(app.output, 'Message AgentsKit')
+    await submit(app.pty, '/start')
+    await waitFor(app.output, 'What is your name?')
+    await submit(app.pty, '/name Ada')
+    await waitFor(app.output, 'Welcome, Ada.')
+  })
+
   it('accepts a prompt and prints the deterministic streamed response', async () => {
     const app = startApp()
     await waitFor(app.output, 'Message AgentsKit')
