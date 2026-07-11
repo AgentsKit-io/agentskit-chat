@@ -14,18 +14,18 @@ React, Vue, React Native, and Ink application shells accept `theme`. Input is ru
 
 ## Capability map
 
-| Intent | React | Vue | React Native | Ink |
-|---|---|---|---|---|
-| colors | AgentsKit CSS variables | the same upstream CSS variables on `ChatRoot` | upstream wrapper and text style seams plus native application styles | complete upstream `InkTheme` |
-| spacing | CSS variables | CSS variables | numeric native layout styles | unsupported by terminal layout |
-| radius | CSS variables | CSS variables | native border radius | unsupported |
-| font family | `system` maps to the platform CSS stack; a custom name maps to the upstream variable | the same CSS stack/variable mapping | `system` preserves the native default; a loaded custom family maps through upstream message/input text seams and native application text | unsupported |
+| Intent | React | Vue | Svelte | React Native | Ink |
+|---|---|---|---|---|---|
+| colors | AgentsKit CSS variables | same CSS variables | same CSS variables | upstream wrapper/text styles | complete `InkTheme` |
+| spacing | CSS variables | CSS variables | CSS variables | numeric native styles | unsupported |
+| radius | CSS variables | CSS variables | CSS variables | native border radius | unsupported |
+| font family | CSS stack/variable | CSS stack/variable | CSS stack/variable | native default/custom loaded family | unsupported |
 
 The mapping helpers are public for host integration: React and Vue publish `toChatCssVariables`; native and terminal publish `toChatNativeStyles` and `toChatInkTheme`.
 
 ## Native slots
 
-React, React Native, and Ink accept a `slots` component map for `Container`, `Message`, `Input`, `Thinking`, `Confirmation`, and `ChoiceList`. Vue follows its native convention with named scoped slots `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList`; their payloads are published through `AgentChatSlots`/`SlotsType`. Slots are never serialized into `ChatDefinition`.
+React, React Native, and Ink accept a component slot map. Vue uses typed named scoped slots. Svelte uses typed Svelte 5 snippets named `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList`. Composition is never serialized into `ChatDefinition`.
 
 ```tsx
 <AgentChat definition={chat} slots={{ Message: BrandedMessage }} theme={theme} />
