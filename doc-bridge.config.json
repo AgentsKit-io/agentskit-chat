@@ -102,6 +102,13 @@
           "humanDoc": "getting-started/svelte",
           "checks": ["pnpm --filter @agentskit/chat-svelte lint", "pnpm --filter @agentskit/chat-svelte test"]
         },
+        "solid": {
+          "path": "packages/solid",
+          "purpose": "Solid application shell consuming @agentskit/solid directly",
+          "agentDoc": "docs/for-agents/packages/solid.md",
+          "humanDoc": "getting-started/solid",
+          "checks": ["pnpm --filter @agentskit/chat-solid lint", "pnpm --filter @agentskit/chat-solid test"]
+        },
         "react-native": {
           "path": "packages/react-native",
           "purpose": "React Native application shell consuming @agentskit/react-native directly",
