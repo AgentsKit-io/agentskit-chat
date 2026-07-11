@@ -1,4 +1,4 @@
-import { createActionConfirmation, createChatSession, formatSemanticFallback, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { createActionConfirmation, createChatSession, formatSemanticFallback, getLifecycleTargets, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
@@ -11,7 +11,7 @@ import {
   useChat,
 } from '@agentskit/react-native'
 import { useMemo, useRef, useState, type ReactElement } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Pressable, Text, TextInput, View } from 'react-native'
 
 export interface AgentChatNativeProps {
   readonly definition: ChatDefinition
@@ -54,6 +54,7 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
   const [session] = useState(() => createChatSession(definition))
   const [sessionId] = useState(() => `${definition.id}:${Date.now().toString(36)}`)
   const [actionError, setActionError] = useState<Error | undefined>()
+  const [editDraft, setEditDraft] = useState<{ readonly messageId: string, readonly content: string }>()
   const [resolvedInstances, setResolvedInstances] = useState<ReadonlySet<string>>(() => new Set())
   const resolvedInstancesRef = useRef(new Set<string>())
   const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
@@ -86,6 +87,11 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
   const deny = (toolCallId: string, reason?: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
     void (record ? confirmation.reject(record.token, sessionId, reason) : chat.deny(toolCallId, reason)).catch(error => setActionError(error instanceof Error ? error : new Error('Action rejection failed.')))
+  }
+  const targets = getLifecycleTargets(chat.messages)
+  const runLifecycle = (operation: Promise<void>): void => {
+    setActionError(undefined)
+    void operation.catch(error => setActionError(error instanceof Error ? error : new Error('Lifecycle operation failed.')))
   }
 
   return (
@@ -122,6 +128,20 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
         >
           <Text>Stop</Text>
         </Pressable>
+      ) : null}
+      {chat.status !== 'streaming' && targets.userId ? (
+        <View accessibilityLabel="Response actions">
+          <Pressable accessibilityRole="button" accessibilityLabel="Retry response" testID="ak-retry" onPress={() => runLifecycle(chat.retry())}><Text>Retry</Text></Pressable>
+          {targets.assistantId ? <Pressable accessibilityRole="button" accessibilityLabel="Regenerate response" testID="ak-regenerate" onPress={() => runLifecycle(chat.regenerate(targets.assistantId))}><Text>Regenerate</Text></Pressable> : null}
+          <Pressable accessibilityRole="button" accessibilityLabel="Edit last message" testID="ak-edit" onPress={() => setEditDraft({ messageId: targets.userId!, content: chat.messages.find(message => message.id === targets.userId)?.content ?? '' })}><Text>Edit</Text></Pressable>
+          {editDraft === undefined ? null : <>
+            <TextInput accessibilityLabel="Edit message" testID="ak-edit-input" value={editDraft.content} onChangeText={content => setEditDraft({ ...editDraft, content })} />
+            <Pressable accessibilityRole="button" accessibilityLabel="Save edit" testID="ak-edit-save" disabled={editDraft.content.trim() === ''} onPress={() => {
+              runLifecycle(chat.edit(editDraft.messageId, editDraft.content))
+              setEditDraft(undefined)
+            }}><Text>Save</Text></Pressable>
+          </>}
+        </View>
       ) : null}
       <InputBar
         chat={chat}

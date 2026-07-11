@@ -1,5 +1,5 @@
-import { deserializeMessages } from '@agentskit/core'
-import type { MemoryRecord, Message } from '@agentskit/core'
+import { deserializeMessages, serializeMessages } from '@agentskit/core'
+import type { MemoryRecord, Message, TokenUsage } from '@agentskit/core'
 import { validateMemoryRecord } from '@agentskit/core/memory-validation'
 import { z } from 'zod'
 
@@ -159,6 +159,8 @@ export const TurnDiagnosticSchema = z.object({
 
 export type TurnDiagnostic = z.infer<typeof TurnDiagnosticSchema>
 
+const SafeIdentifierSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/)
+
 const EnvelopeFields = {
   protocol: z.literal(TURN_PROTOCOL),
   version: z.literal(TURN_PROTOCOL_VERSION),
@@ -178,6 +180,11 @@ const MemoryMessagesSchema = z.array(z.unknown()).transform((messages, context):
   }
 })
 
+const TurnLineageSchema = z.discriminatedUnion('operation', [
+  z.object({ operation: z.literal('submit') }),
+  z.object({ operation: z.enum(['retry', 'edit', 'regenerate']), parentTurnId: SafeIdentifierSchema, sourceMessageId: SafeIdentifierSchema }),
+])
+
 const SubmitEventSchema = z.object({
   ...EnvelopeFields,
   event: z.literal('client.turn.submit'),
@@ -194,6 +201,7 @@ const SnapshotEventSchema = z.object({
     status: z.enum(['idle', 'streaming', 'complete', 'error']),
     usage: TokenUsageSchema,
     error: TurnDiagnosticSchema.optional(),
+    lineage: TurnLineageSchema.optional(),
   }),
 })
 
@@ -214,6 +222,65 @@ export type WireMessage = MemoryRecord['messages'][number]
 export type SubmitTurnEvent = z.infer<typeof SubmitEventSchema>
 export type SnapshotTurnEvent = z.infer<typeof SnapshotEventSchema>
 export type DiagnosticTurnEvent = z.infer<typeof DiagnosticEventSchema>
+export type TurnLineage = NonNullable<SnapshotTurnEvent['payload']['lineage']>
+
+export interface TurnSnapshotCursor {
+  readonly apply: (event: unknown) => boolean
+  readonly getSnapshot: () => SnapshotTurnEvent | undefined
+}
+
+const deepFreeze = <T>(value: T): T => {
+  if (typeof value !== 'object' || value === null || Object.isFrozen(value)) return value
+  for (const child of Object.values(value)) deepFreeze(child)
+  return Object.freeze(value)
+}
+
+export interface CreateSnapshotEventOptions {
+  readonly eventId: string
+  readonly sessionId: string
+  readonly turnId: string
+  readonly sequence: number
+  readonly emittedAt: string
+  readonly messages: readonly Message[]
+  readonly status: SnapshotTurnEvent['payload']['status']
+  readonly usage: TokenUsage
+  readonly lineage?: TurnLineage
+  readonly error?: TurnDiagnostic
+}
+
+export const createSnapshotEvent = (options: CreateSnapshotEventOptions): SnapshotTurnEvent => SnapshotEventSchema.parse({
+  protocol: TURN_PROTOCOL,
+  version: TURN_PROTOCOL_VERSION,
+  eventId: options.eventId,
+  sessionId: options.sessionId,
+  turnId: options.turnId,
+  sequence: options.sequence,
+  emittedAt: options.emittedAt,
+  event: 'server.turn.snapshot',
+  payload: {
+    messages: serializeMessages([...options.messages]).messages,
+    status: options.status,
+    usage: options.usage,
+    ...(options.lineage === undefined ? {} : { lineage: options.lineage }),
+    ...(options.error === undefined ? {} : { error: options.error }),
+  },
+})
+
+export const createTurnSnapshotCursor = (sessionId: string): TurnSnapshotCursor => {
+  const expectedSessionId = SafeIdentifierSchema.parse(sessionId)
+  let snapshot: SnapshotTurnEvent | undefined
+  return {
+    apply(input) {
+      const decoded = decodeTurnEvent(input)
+      if (!decoded.ok || decoded.event.event !== 'server.turn.snapshot') return false
+      const next = decoded.event
+      if (next.sessionId !== expectedSessionId || (snapshot && next.sequence <= snapshot.sequence)) return false
+      snapshot = deepFreeze(next)
+      return true
+    },
+    getSnapshot: () => snapshot,
+  }
+}
 
 export type ProtocolDecodeCode =
   | 'PROTOCOL_UNSUPPORTED_VERSION'
@@ -232,8 +299,6 @@ export type DecodeTurnEventResult =
   | { readonly ok: false; readonly diagnostic: ProtocolDecodeDiagnostic }
 
 const eventNames = new Set(['client.turn.submit', 'server.turn.snapshot', 'server.turn.diagnostic'])
-const SafeIdentifierSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/)
-
 const safeEventId = (input: unknown): string | undefined => {
   try {
     if (!isRecord(input)) return undefined

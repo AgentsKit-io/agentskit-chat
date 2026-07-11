@@ -38,4 +38,20 @@ export const testChatConformance = ({ placeholder, stopName }: ChatConformanceOp
     await page.getByRole('button', { name: stopName, exact: true }).click()
     await expect(page.getByRole('button', { name: stopName, exact: true })).toBeHidden()
   })
+
+  test('retries, regenerates, and edits through the native lifecycle controls', async ({ page }) => {
+    await page.goto('/')
+    const input = page.getByPlaceholder(placeholder)
+    await input.fill('before edit')
+    await page.getByRole('button', { name: 'Send', exact: false }).click()
+    await expect(page.getByText('AgentsKit received: before edit').last()).toBeVisible()
+    await page.getByRole('button', { name: 'Retry response' }).click()
+    await expect(page.getByText('AgentsKit received: before edit').last()).toBeVisible()
+    await page.getByRole('button', { name: 'Regenerate response' }).click()
+    await expect(page.getByText('AgentsKit received: before edit').last()).toBeVisible()
+    await page.getByRole('button', { name: 'Edit last message' }).click()
+    await page.getByRole('textbox', { name: 'Edit message' }).fill('after edit')
+    await page.getByRole('button', { name: 'Save edit' }).click()
+    await expect(page.getByText('AgentsKit received: after edit').last()).toBeVisible()
+  })
 }

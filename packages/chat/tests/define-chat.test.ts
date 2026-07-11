@@ -7,6 +7,7 @@ import {
   commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
   resolveChoiceListFrame,
   resolveComponentFrame,
+  getLifecycleTargets,
   selectChoice, withActionPolicy,
   type TurnTrace,
 } from '../src/index.js'
@@ -28,6 +29,16 @@ describe('defineChat', () => {
 
     expect(definition).toEqual({ id: 'support', chat })
     expect(definition.chat).toBe(chat)
+  })
+})
+
+describe('lifecycle targets', () => {
+  it('returns only one complete user-assistant turn', () => {
+    const user = { id: 'user', role: 'user' as const, content: 'hello', status: 'complete' as const, createdAt: new Date() }
+    const assistant = { id: 'assistant', role: 'assistant' as const, content: 'hi', status: 'complete' as const, createdAt: new Date() }
+    expect(getLifecycleTargets([user, assistant])).toEqual({ userId: 'user', assistantId: 'assistant' })
+    expect(getLifecycleTargets([user, assistant, { ...user, id: 'pending' }])).toEqual({ userId: undefined, assistantId: undefined })
+    expect(getLifecycleTargets([assistant])).toEqual({ userId: undefined, assistantId: undefined })
   })
 })
 

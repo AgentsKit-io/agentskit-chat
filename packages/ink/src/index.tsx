@@ -1,4 +1,4 @@
-import { createActionConfirmation, createChatSession, formatSemanticFallback, parseSemanticFallback, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { createActionConfirmation, createChatSession, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
@@ -122,6 +122,19 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     const record = confirmation.getByToolCall(toolCallId)
     void (record ? confirmation.reject(record.token, sessionId, reason) : chat.deny(toolCallId, reason)).catch(error => setActionError(error instanceof Error ? error : new Error('Action rejection failed.')))
   }
+  const handleLifecycleCommand = async (input: string): Promise<boolean> => {
+    const targets = getLifecycleTargets(chat.messages)
+    try {
+      if (input === '/retry') await chat.retry()
+      else if (input === '/regenerate') await chat.regenerate(targets.assistantId)
+      else if (input.startsWith('/edit ') && targets.userId) await chat.edit(targets.userId, input.slice(6))
+      else return false
+      setActionError(undefined)
+    } catch (error) {
+      setActionError(error instanceof Error ? error : new Error('Lifecycle operation failed.'))
+    }
+    return true
+  }
   return (
     <Box flexDirection="column" gap={1}>
       <ChatContainer>
@@ -145,7 +158,8 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
         <ThinkingIndicator visible={chat.status === 'streaming'} />
       </ChatContainer>
       {chat.error || actionError ? <Text color="red">{chat.error?.message ?? actionError?.message}</Text> : null}
-      <InputBar chat={chat} disabled={activeComponentId !== undefined} {...(placeholder === undefined ? {} : { placeholder })} />
+      <InputBar chat={chat} disabled={activeComponentId !== undefined} onSubmitInput={handleLifecycleCommand} {...(placeholder === undefined ? {} : { placeholder })} />
+      <Text dimColor>/retry · /regenerate · /edit &lt;message&gt; · Esc stop</Text>
     </Box>
   )
 }

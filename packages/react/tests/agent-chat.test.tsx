@@ -1,4 +1,4 @@
-import type { AdapterFactory } from '@agentskit/core'
+import { buildMessage, type AdapterFactory } from '@agentskit/core'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -210,6 +210,7 @@ describe('AgentChat', () => {
         async *stream() {
           yield { type: 'text', content: 'Working' }
           await pending
+          yield { type: 'text', content: 'Late chunk' }
           yield { type: 'done' }
         },
         abort: finish,
@@ -226,6 +227,35 @@ describe('AgentChat', () => {
     expect(screen.getByRole('button', { name: 'Send' }).hasAttribute('disabled')).toBe(true)
     fireEvent.click(screen.getByRole('button', { name: 'Stop' }))
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Stop' })).toBeNull())
+    expect(screen.queryByText('Late chunk')).toBeNull()
+  })
+
+  it('delegates retry, regenerate, and edit to the upstream lifecycle', async () => {
+    let calls = 0
+    const lifecycleAdapter: AdapterFactory = {
+      createSource: request => ({
+        async *stream() {
+          calls += 1
+          yield { type: 'text', content: `Run ${calls}: ${request.messages.at(-1)?.content ?? ''}` }
+          yield { type: 'done' }
+        },
+        abort() {},
+      }),
+    }
+    render(<AgentChat definition={{ id: 'lifecycle', chat: {
+      adapter: lifecycleAdapter,
+      initialMessages: [buildMessage({ role: 'user', content: 'original' }), buildMessage({ role: 'assistant', content: 'answer' })],
+    } }} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Retry response' }))
+    await waitFor(() => expect(calls).toBe(1))
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate response' }))
+    await waitFor(() => expect(calls).toBe(2))
+    fireEvent.click(screen.getByRole('button', { name: 'Edit last message' }))
+    fireEvent.change(screen.getByRole('textbox', { name: 'Edit message' }), { target: { value: 'changed' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save edit' }))
+    await waitFor(() => expect(calls).toBe(3))
+    expect(screen.getByText('changed')).toBeTruthy()
   })
 
   it('starts a fresh upstream controller when the definition identity changes', async () => {

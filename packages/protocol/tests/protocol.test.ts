@@ -1,8 +1,11 @@
+import { buildMessage } from '@agentskit/core'
 import { describe, expect, it } from 'vitest'
 
 import { invalidComponentFrameFixtures, invalidTurnEventFixtures, validChoiceListFrame, validTurnEventFixtures } from '../src/fixtures.js'
 import {
   createSelectionEvent,
+  createSnapshotEvent,
+  createTurnSnapshotCursor,
   decodeComponentFrame,
   decodeTurnEvent,
   encodeTurnEvent,
@@ -170,6 +173,54 @@ describe('v1 turn protocol', () => {
 
   it('validates snapshots again at the message projection boundary', () => {
     expect(() => snapshotMessages({ event: 'server.turn.snapshot' })).toThrow()
+  })
+
+  it('preserves additive lifecycle lineage', () => {
+    const event = validTurnEventFixtures[3].event
+    const decoded = decodeTurnEvent(event)
+    expect(decoded.ok && decoded.event.event === 'server.turn.snapshot' ? decoded.event.payload.lineage : undefined).toEqual({
+      operation: 'regenerate', parentTurnId: 'turn-previous', sourceMessageId: 'message-assistant',
+    })
+  })
+
+  it('requires explicit parent turn and source message lineage for mutations', () => {
+    const event = validTurnEventFixtures[3].event
+    expect(decodeTurnEvent({ ...event, payload: { ...event.payload, lineage: { operation: 'edit' } } }).ok).toBe(false)
+  })
+
+  it('accepts reconnect snapshots and ignores duplicate, stale, or foreign delivery', () => {
+    const current = validTurnEventFixtures[3].event
+    const cursor = createTurnSnapshotCursor(current.sessionId)
+    expect(cursor.apply({ ...current, eventId: 'foreign-first', sessionId: 'other' })).toBe(false)
+    expect(cursor.apply(current)).toBe(true)
+    expect(cursor.apply(current)).toBe(false)
+    expect(cursor.apply({ ...current, eventId: 'stale', sequence: current.sequence - 1 })).toBe(false)
+    expect(cursor.apply({ ...current, eventId: 'foreign', sessionId: 'other', sequence: current.sequence + 1 })).toBe(false)
+    const next = { ...current, eventId: 'next', sequence: current.sequence + 1 }
+    expect(cursor.apply(next)).toBe(true)
+    expect(cursor.getSnapshot()?.eventId).toBe('next')
+  })
+
+  it('protects accepted cursor state from consumer mutation', () => {
+    const current = validTurnEventFixtures[3].event
+    const cursor = createTurnSnapshotCursor(current.sessionId)
+    cursor.apply(current)
+    const snapshot = cursor.getSnapshot()!
+    expect(() => { (snapshot as { sequence: number }).sequence = 0 }).toThrow()
+    expect(() => { (snapshot.payload.messages as unknown[]).push({}) }).toThrow()
+    expect(cursor.apply({ ...current, eventId: 'stale-after-mutation', sequence: current.sequence - 1 })).toBe(false)
+  })
+
+  it.each(['retry', 'edit', 'regenerate'] as const)('creates canonical %s lineage snapshots', (operation) => {
+    const event = createSnapshotEvent({
+      eventId: `event-${operation}`, sessionId: 'session', turnId: `turn-${operation}`, sequence: 1,
+      emittedAt: '2026-07-11T03:00:00.000Z', status: 'complete',
+      usage: { promptTokens: 1, completionTokens: 1, totalTokens: 2 },
+      messages: [buildMessage({ role: 'assistant', content: operation })],
+      lineage: { operation, parentTurnId: 'turn-parent', sourceMessageId: 'message-source' },
+    })
+    expect(event.payload.lineage).toEqual({ operation, parentTurnId: 'turn-parent', sourceMessageId: 'message-source' })
+    expect(snapshotMessages(event)[0]?.content).toBe(operation)
   })
 })
 
