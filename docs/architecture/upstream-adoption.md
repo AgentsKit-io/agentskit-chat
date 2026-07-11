@@ -22,6 +22,12 @@ AgentsKit Chat consumes `ChatConfig.authorizeToolCall` from `@agentskit/core@1.1
 
 Inspected Core `ChatMemory`, controller memory hydration, canonical tool-call status and `approve`/`deny`, plus the published Memory adapters. AgentsKit Chat stores no messages: it adds only the versioned application-session metadata envelope, definition compatibility, deterministic decisions, cursor, and confirmation bindings. Hosts combine `SessionStorage` with their selected upstream `ChatMemory`. No upstream gap or reimplementation exists.
 
+## Web-standard handler (#12)
+
+Inspected Core controller, adapter, stream, chat, and memory contracts plus published Memory adapters. `@agentskit/chat-server` reuses `createChatController`, canonical state/messages/tool calls, `ChatMemory`, and `StreamSource.abort`. It adds only the Web request boundary, trusted-context seam, outer deadline/cancellation, and projection into the existing snapshot protocol. Raw adapter chunks are not transported and no controller, reducer, provider client, message store, or authentication implementation is recreated.
+
+The missing generic cancellation seam for message IO was added upstream in [AgentsKit #1155](https://github.com/AgentsKit-io/agentskit/issues/1155) and [PR #1156](https://github.com/AgentsKit-io/agentskit/pull/1156), then released as `@agentskit/core@1.12.2` via [#1157](https://github.com/AgentsKit-io/agentskit/pull/1157). The handler consumes that public contract and forwards its request/cleanup signals to `ChatMemory`.
+
 ## Current upstream packages
 
 | Package | Inspected version | Role in AgentsKit Chat |

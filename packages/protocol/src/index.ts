@@ -427,6 +427,9 @@ const SessionSnapshotObjectSchema = z.object({
   definitionRevision: z.number().int().positive(),
   updatedAt: z.string().datetime({ offset: true }),
   cursor: z.number().int().nonnegative(),
+  activeTurn: z.object({ turnId: SafeIdentifierSchema, expiresAt: z.number().int().nonnegative() }).readonly().optional(),
+  terminalTurns: z.array(z.object({ turnId: SafeIdentifierSchema, outcome: z.enum(['completed', 'indeterminate']) }).readonly())
+    .max(64).superRefine((items, context) => uniqueBy(items, item => item.turnId, context, 'turnId')).readonly().optional(),
   conversation: z.object({
     state: z.string().min(1).max(128),
     decisions: SessionDecisionsSchema,

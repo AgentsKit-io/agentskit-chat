@@ -30,7 +30,7 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.1",
+    "@agentskit/core": "^1.12.2",
     "@agentskit/ink": "^0.10.1",
     "@types/react": "^19.2.17",
     "ink": "^7.1.0",

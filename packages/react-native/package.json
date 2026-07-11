@@ -33,7 +33,7 @@
     "react-native": "*"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.1",
+    "@agentskit/core": "^1.12.2",
     "@agentskit/react-native": "^0.4.1",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.17",

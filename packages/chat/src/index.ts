@@ -477,13 +477,16 @@ export interface ChatSession {
   readonly updateChat: (chat: ChatConfig) => ChatConfig
   readonly getConversationSnapshot: () => ConversationSnapshot | undefined
   readonly createConfirmation: (options: Omit<ActionConfirmationOptions, 'sessionId' | 'initialRecords' | 'onChange' | 'claimStatus'>) => ActionConfirmationCoordinator
-  readonly persist: () => Promise<void>
+  readonly persist: (signal?: AbortSignal) => Promise<void>
+  readonly getCursor: () => number
+  readonly claimTurn: (turnId: string, leaseMs: number, signal?: AbortSignal) => Promise<boolean>
+  readonly releaseTurn: (turnId: string, outcome: 'completed' | 'indeterminate', signal?: AbortSignal) => Promise<void>
 }
 
 export interface SessionStorage {
-  readonly load: (sessionId: string) => unknown | Promise<unknown>
-  readonly save: (snapshot: SessionSnapshot, expectedCursor: number | undefined) => boolean | Promise<boolean>
-  readonly delete?: (sessionId: string) => void | Promise<void>
+  readonly load: (sessionId: string, signal?: AbortSignal) => unknown | Promise<unknown>
+  readonly save: (snapshot: SessionSnapshot, expectedCursor: number | undefined, signal?: AbortSignal) => boolean | Promise<boolean>
+  readonly delete?: (sessionId: string, signal?: AbortSignal) => void | Promise<void>
 }
 
 interface ChatSessionOptions {
@@ -491,12 +494,18 @@ interface ChatSessionOptions {
   readonly snapshot?: SessionSnapshot
   readonly storage?: SessionStorage
   readonly now?: () => Date
+  readonly signal?: AbortSignal
 }
 
 export interface ResumeChatSessionOptions {
   readonly sessionId: string
   readonly storage: SessionStorage
   readonly now?: () => Date
+  readonly signal?: AbortSignal
+}
+
+export class SessionConflictError extends Error {
+  constructor() { super('Session snapshot changed in another client.'); this.name = 'SessionConflictError' }
 }
 
 const invalidConversation = (message: string): never => {
@@ -569,6 +578,8 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   let confirmations: readonly SessionConfirmation[] = restored?.confirmations ?? []
   let cursor = restored?.cursor ?? 0
   let exists = restored !== undefined
+  let activeTurn = restored?.activeTurn
+  let terminalTurns: readonly { readonly turnId: string; readonly outcome: 'completed' | 'indeterminate' }[] = restored?.terminalTurns ?? []
   let persistQueue = Promise.resolve()
   const conversation = definition.conversation
   if (conversation) {
@@ -595,6 +606,8 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     definitionRevision: revision,
     updatedAt: (options.now?.() ?? new Date()).toISOString(),
     cursor: nextCursor,
+    ...(activeTurn ? { activeTurn } : {}),
+    ...(terminalTurns.length > 0 ? { terminalTurns } : {}),
     ...(conversation ? {
       conversation: {
         state: currentState,
@@ -603,12 +616,12 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     } : {}),
     confirmations,
   })
-  const persist = (): Promise<void> => {
-    if (!options.storage) return Promise.resolve()
+  const persist = (signal?: AbortSignal): Promise<void> => {
+    if (!options.storage) { cursor += 1; return Promise.resolve() }
     persistQueue = persistQueue.catch(() => undefined).then(async () => {
       const expectedCursor = exists ? cursor : undefined
       const snapshot = buildSnapshot(cursor + 1)
-      if (!(await options.storage!.save(snapshot, expectedCursor))) invalidConversation('Session snapshot changed in another client.')
+      if (!(await options.storage!.save(snapshot, expectedCursor, signal ?? options.signal))) throw new SessionConflictError()
       cursor = snapshot.cursor
       exists = true
     })
@@ -630,6 +643,20 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
         try { await persist(); return true } catch (error) { confirmations = previous; throw error }
       } } : {}),
     })
+  const claimTurn = async (turnId: string, leaseMs: number, signal?: AbortSignal): Promise<boolean> => {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(turnId) || !Number.isSafeInteger(leaseMs) || leaseMs <= 0) invalidConversation('Turn claim is invalid.')
+    const now = (options.now?.() ?? new Date()).getTime()
+    if (terminalTurns.some(turn => turn.turnId === turnId) || (activeTurn && activeTurn.expiresAt > now)) return false
+    activeTurn = { turnId, expiresAt: now + leaseMs }
+    await persist(signal)
+    return true
+  }
+  const releaseTurn = async (turnId: string, outcome: 'completed' | 'indeterminate', signal?: AbortSignal): Promise<void> => {
+    if (activeTurn?.turnId !== turnId) return
+    activeTurn = undefined
+    terminalTurns = [...terminalTurns.filter(candidate => candidate.turnId !== turnId), { turnId, outcome }].slice(-64)
+    await persist(signal)
+  }
   if (!conversation) return {
     sessionId,
     definitionId: definition.id,
@@ -639,6 +666,9 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     getConversationSnapshot: () => undefined,
     createConfirmation,
     persist,
+    getCursor: () => cursor,
+    claimTurn,
+    releaseTurn,
   }
   const emitTrace = (trace: TurnTrace): void => {
     try {
@@ -743,11 +773,14 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     getConversationSnapshot,
     createConfirmation,
     persist,
+    getCursor: () => cursor,
+    claimTurn,
+    releaseTurn,
   }
 }
 
 export const resumeChatSession = async (definition: ChatDefinition, options: ResumeChatSessionOptions): Promise<ChatSession> => {
-  const input = await options.storage.load(options.sessionId)
+  const input = await options.storage.load(options.sessionId, options.signal)
   if (input === undefined || input === null) return createChatSession(definition, options)
   const decoded = decodeSessionSnapshot(input)
   if (!decoded.ok) return invalidConversation(decoded.diagnostic.message)

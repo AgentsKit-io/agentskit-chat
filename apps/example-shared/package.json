@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.1"
+    "@agentskit/core": "^1.12.2"
   }
 }
