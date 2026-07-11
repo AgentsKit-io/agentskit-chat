@@ -1,5 +1,5 @@
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
-import { ChoiceListComponent, commandRoute, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
 import { fireEvent, render, waitFor } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
@@ -17,6 +17,25 @@ const adapter = (fail = false): AdapterFactory => ({ createSource: request => ({
 afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks() })
 
 describe('AgentChat Svelte', () => {
+  it('remounts when the prepared session identity changes', async () => {
+    const definition = defineChat({ id: 'switch-session', chat: { adapter: adapter() } })
+    const first = createChatSession(definition, { sessionId: 'customer-a' })
+    const second = createChatSession(definition, { sessionId: 'customer-b' })
+    const firstConfirmation = vi.spyOn(first, 'createConfirmation')
+    const secondConfirmation = vi.spyOn(second, 'createConfirmation')
+    const view = render(AgentChat, { props: { definition, session: first } })
+    await view.rerender({ definition, session: second })
+    expect(firstConfirmation).toHaveBeenCalledOnce()
+    expect(secondConfirmation).toHaveBeenCalledOnce()
+  })
+
+  it('rejects a prepared session after the definition revision changes', async () => {
+    const definition = defineChat({ id: 'revision-session', revision: 1, chat: { adapter: adapter() } })
+    const session = createChatSession(definition, { sessionId: 'customer' })
+    const view = render(AgentChat, { props: { definition, session } })
+    await expect(view.rerender({ definition: { ...definition, revision: 2 }, session })).rejects.toThrow('incompatible')
+  })
+
   it('maps semantic theme tokens to CSS variables', () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({ '--ak-color-button': '#663399', '--ak-radius-lg': '20px' })
     expect(toChatStyle({ colors: { accent: '#663399' } })).toContain('--ak-color-button:#663399')

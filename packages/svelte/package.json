@@ -4,14 +4,44 @@
   "description": "Svelte application shell for AgentsKit Chat.",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
-  "files": ["dist"],
-  "scripts": { "build": "tsup", "lint": "svelte-check --tsconfig ./tsconfig.json", "test": "pnpm --filter @agentskit/chat build && vitest run --coverage" },
-  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*" },
-  "peerDependencies": { "@agentskit/svelte": "^0.4.3", "svelte": "^5.0.0" },
-  "devDependencies": { "@agentskit/core": "^1.12.2", "@agentskit/svelte": "^0.4.3", "@sveltejs/vite-plugin-svelte": "^7.2.0", "@testing-library/svelte": "^5.4.2", "@types/node": "^25.0.0", "esbuild-svelte": "^0.9.5", "happy-dom": "^20.10.3", "svelte": "^5.56.4", "svelte-check": "^4.4.1", "tsup": "^8.5.1" },
-  "publishConfig": { "access": "public" }
+  "svelte": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "svelte-package -i src -o dist",
+    "lint": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "pnpm --filter @agentskit/chat build && pnpm build && vitest run --coverage && vitest run --config vitest.ssr.config.ts"
+  },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-protocol": "workspace:*"
+  },
+  "peerDependencies": {
+    "@agentskit/svelte": "^0.4.3",
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "@agentskit/core": "^1.12.2",
+    "@agentskit/svelte": "^0.4.3",
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@testing-library/svelte": "^5.4.2",
+    "@types/node": "^25.0.0",
+    "happy-dom": "^20.10.3",
+    "svelte": "^5.56.4",
+    "svelte-check": "^4.4.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
