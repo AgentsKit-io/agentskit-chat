@@ -42,7 +42,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
 | `@agentskit/vue` | 0.4.4 | Vue composable, headless components, and controller-free slotted `ChatRoot`. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
-| `@agentskit/solid` | 0.3.1 | Solid hook and components. |
+| `@agentskit/solid` | 0.4.4 | Solid hook, headless components, and owner-cleanup cancellation. |
 | `@agentskit/angular` | 0.3.1 | Angular service and components. |
 
 ## Responsibility matrix
@@ -153,3 +153,9 @@ AgentsKit Chat consumes `useChat`, `ChatRoot`, and all standard components direc
 Inspected AgentsKit revision `19dd8b68b76b03f577ea28d232a2e59cf78014d7` and `@agentskit/svelte@0.4.3` on 2026-07-11. `packages/svelte/src/index.ts` exports `createChatStore` from `useChat.ts` plus `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from `components/*.svelte`. `ChatContainer` is controller-free and renders its Svelte 5 child snippet, so no upstream gap blocks #16.
 
 AgentsKit Chat consumes those exports directly and adds only application session coordination, validated frames, semantic CSS mapping, typed customization snippets, and a keyed store-binding handoff that invokes upstream `stop` before replacing an active stream. It does not copy or recreate the upstream controller, store, components, lifecycle, streaming, or confirmation behavior.
+
+## Solid renderer adoption record (#17)
+
+Inspected AgentsKit revision `f35bab77ba64731f2524f9132dd02f906c85a443` and `@agentskit/solid@0.4.3` on 2026-07-11. `packages/solid/src/index.ts` exports `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation`. The generic cleanup gap in `useChat` was fixed in AgentsKit [#1169](https://github.com/AgentsKit-io/agentskit/pull/1169) and released as `@agentskit/solid@0.4.4` before integration.
+
+AgentsKit Chat consumes those exports directly and adds only application session coordination, validated semantic-frame presentation, theme mapping, and Solid-native render props. No controller, store, stream consumer, lifecycle, confirmation, or headless component behavior is copied or reimplemented.

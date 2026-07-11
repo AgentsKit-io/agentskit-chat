@@ -55,6 +55,8 @@ The Vue renderer uses native named scoped slots and the controller-free `ChatRoo
 
 The Svelte renderer uses the upstream `createChatStore` and Svelte 5 snippets. Store replacement is isolated to a keyed binding; an active store is cancelled through its upstream `stop` action before replacement, while application/session state stays mounted.
 
+The Solid renderer uses upstream `useChat` and native signals, control flow, and render props. Keyed owners isolate session and config identity; owner cleanup cancels active streams through `@agentskit/solid@0.4.4`.
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.

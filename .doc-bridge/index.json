@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "b22c38e73e7f42fe26615b0224cb0755435b4c6bc53d40b1d0e3aea63997ceeb",
+  "contentHash": "e62ad0c8310c5053df6c9c2de23a4a3d79a2cc72556babde1e0c1e7f119cc86c",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T15:58:39.924Z",
+  "generatedAt": "2026-07-11T16:35:09.669Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : native Svelte 5 shell over @agentskit/svelte . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "chat",
@@ -119,6 +119,14 @@
       "path": "docs/for-agents/packages/server.md",
       "description": "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage.",
       "body": "Server package handoff Ownership packages/server owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage. It does not own adapters, provider fetch, controller state, stream reduction, tools, confirmation execution, message persistence, authentication implementations, or framework-specific HTTP adapters. Read first - - - - - Guardrails Authenticate before body parsing. Never derive trusted context from a protocol payload. Validate with decodeTurnEvent ; emit only protocol snapshots/diagnostics. Use upstream createChatController and ChatMemory . Forward cancellation through controller.stop() and preserve the outer deadline across all async host seams. Checks"
+    },
+    {
+      "id": "solid",
+      "type": "agent-doc",
+      "title": "Solid package handoff",
+      "path": "docs/for-agents/packages/solid.md",
+      "description": "`packages/solid` owns only the Solid application shell, typed render props, semantic CSS mapping, and native `ChoiceList`. It consumes `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from `@agentskit/solid@0.4.4`.",
+      "body": "Solid package handoff packages/solid owns only the Solid application shell, typed render props, semantic CSS mapping, and native ChoiceList . It consumes useChat , ChatContainer , Message , InputBar , ThinkingIndicator , and ToolConfirmation from @agentskit/solid@0.4.4 . Never add another controller, reactive store, stream consumer, lifecycle implementation, confirmation engine, or container primitive. Config and session identity are isolated with keyed Solid owners. Owner cleanup delegates cancellation to the upstream binding fixed in AgentsKit 1169. Checks: pnpm --filter @agentskit/chat-solid lint && pnpm --filter @agentskit/chat-solid test && pnpm --filter @agentskit/chat-solid build ."
     },
     {
       "id": "svelte",
@@ -549,6 +557,35 @@
         "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage."
       ]
     },
+    "solid": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "solid",
+        "path": "packages/solid"
+      },
+      "startHere": "docs/for-agents/packages/solid.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/solid.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/solid"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-solid lint",
+        "pnpm --filter @agentskit/chat-solid test"
+      ],
+      "humanDoc": "getting-started/solid",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Solid application shell consuming @agentskit/solid directly"
+      ]
+    },
     "svelte": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -624,6 +661,7 @@
       "react",
       "react-native",
       "server",
+      "solid",
       "svelte",
       "vue"
     ],
@@ -778,6 +816,17 @@
         "purpose": "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot streaming, outer deadline/cancellation, and composition of existing session/message storage.",
         "humanDoc": "server",
         "agentDoc": "docs/for-agents/packages/server.md"
+      },
+      "solid": {
+        "id": "solid",
+        "path": "packages/solid",
+        "checks": [
+          "pnpm --filter @agentskit/chat-solid lint",
+          "pnpm --filter @agentskit/chat-solid test"
+        ],
+        "purpose": "Solid application shell consuming @agentskit/solid directly",
+        "humanDoc": "getting-started/solid",
+        "agentDoc": "docs/for-agents/packages/solid.md"
       },
       "svelte": {
         "id": "svelte",
