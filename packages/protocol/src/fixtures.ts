@@ -1,4 +1,4 @@
-import type { ProtocolDecodeCode, TurnEvent } from './index.js'
+import type { ComponentDecodeCode, ComponentRenderFrame, ProtocolDecodeCode, TurnEvent } from './index.js'
 
 export interface TurnEventFixture {
   readonly name: string
@@ -150,3 +150,35 @@ export const invalidTurnEventFixtures = [
     code: 'PROTOCOL_INVALID_PAYLOAD',
   },
 ] as const satisfies readonly InvalidTurnEventFixture[]
+
+export const validChoiceListFrame = {
+  protocol: 'agentskit.chat.component',
+  version: 1,
+  type: 'render',
+  componentKey: 'choice-list',
+  instanceId: 'destination-choice',
+  props: {
+    prompt: 'Where should we go?',
+    choices: [
+      { id: 'docs', label: 'Documentation', description: 'Read the component guide.' },
+      { id: 'demo', label: 'Demo' },
+    ],
+  },
+  fallback: { kind: 'choice-list', summary: 'Choose Documentation or Demo.' },
+} as const satisfies ComponentRenderFrame
+
+export const invalidChoiceListPropsFrame = {
+  ...validChoiceListFrame,
+  props: { prompt: '', choices: [] },
+} as const
+
+export const unknownComponentFrame = {
+  ...validChoiceListFrame,
+  componentKey: 'future-component',
+} as const satisfies ComponentRenderFrame
+
+export const invalidComponentFrameFixtures = [
+  { name: 'invalid frame', frame: null, code: 'COMPONENT_INVALID_FRAME' },
+  { name: 'unsupported version', frame: { ...validChoiceListFrame, version: 2 }, code: 'COMPONENT_UNSUPPORTED_VERSION' },
+  { name: 'unknown type', frame: { ...validChoiceListFrame, type: 'future' }, code: 'COMPONENT_UNKNOWN_TYPE' },
+] as const satisfies readonly { readonly name: string; readonly frame: unknown; readonly code: ComponentDecodeCode }[]

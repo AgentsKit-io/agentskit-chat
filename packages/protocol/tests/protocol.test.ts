@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { invalidTurnEventFixtures, validTurnEventFixtures } from '../src/fixtures.js'
+import { invalidComponentFrameFixtures, invalidTurnEventFixtures, validChoiceListFrame, validTurnEventFixtures } from '../src/fixtures.js'
 import {
+  createSelectionEvent,
+  decodeComponentFrame,
   decodeTurnEvent,
   encodeTurnEvent,
   snapshotMessages,
@@ -168,5 +170,60 @@ describe('v1 turn protocol', () => {
 
   it('validates snapshots again at the message projection boundary', () => {
     expect(() => snapshotMessages({ event: 'server.turn.snapshot' })).toThrow()
+  })
+})
+
+describe('v1 component protocol', () => {
+  it('decodes a valid ChoiceList frame', () => {
+    expect(decodeComponentFrame(JSON.stringify(validChoiceListFrame))).toEqual({ ok: true, frame: validChoiceListFrame })
+  })
+
+  it.each(invalidComponentFrameFixtures)('rejects $name inertly', ({ frame, code }) => {
+    const decoded = decodeComponentFrame(frame)
+    expect(decoded.ok).toBe(false)
+    if (!decoded.ok) expect(decoded.diagnostic).toMatchObject({ code, retryable: false })
+  })
+
+  it('creates the common semantic selection event', () => {
+    expect(createSelectionEvent(validChoiceListFrame, 'docs')).toEqual({
+      protocol: 'agentskit.chat.component', version: 1, type: 'select',
+      componentKey: 'choice-list', instanceId: 'destination-choice', choiceId: 'docs',
+    })
+  })
+
+  it('does not throw for invalid JSON or hostile objects', () => {
+    expect(decodeComponentFrame('{').ok).toBe(false)
+    const hostile = new Proxy({}, { get: () => { throw new Error('blocked') } })
+    expect(() => decodeComponentFrame(hostile)).not.toThrow()
+    expect(decodeComponentFrame(hostile).ok).toBe(false)
+  })
+
+  it.each([
+    { unsafe: () => undefined },
+    { unsafe: Symbol('unsafe') },
+  ])('rejects non-JSON props', (props) => {
+    expect(decodeComponentFrame({ ...validChoiceListFrame, props }).ok).toBe(false)
+  })
+
+  it('rejects cyclic and excessively deep props', () => {
+    const cyclic: Record<string, unknown> = {}
+    cyclic.self = cyclic
+    expect(decodeComponentFrame({ ...validChoiceListFrame, props: cyclic }).ok).toBe(false)
+    let deep: Record<string, unknown> = {}
+    for (let index = 0; index < 22; index += 1) deep = { child: deep }
+    expect(decodeComponentFrame({ ...validChoiceListFrame, props: deep }).ok).toBe(false)
+  })
+
+  it.each([undefined, '1'])('classifies a missing or non-numeric version as invalid', (version) => {
+    const decoded = decodeComponentFrame({ ...validChoiceListFrame, version })
+    expect(decoded.ok).toBe(false)
+    if (!decoded.ok) expect(decoded.diagnostic.code).toBe('COMPONENT_INVALID_FRAME')
+  })
+
+  it('rejects oversized fallback text', () => {
+    expect(decodeComponentFrame({
+      ...validChoiceListFrame,
+      fallback: { kind: 'choice-list', summary: 'x'.repeat(4_097) },
+    }).ok).toBe(false)
   })
 })

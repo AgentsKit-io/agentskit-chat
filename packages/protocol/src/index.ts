@@ -3,8 +3,146 @@ import type { MemoryRecord, Message } from '@agentskit/core'
 import { validateMemoryRecord } from '@agentskit/core/memory-validation'
 import { z } from 'zod'
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const isBoundedJsonValue = (input: unknown): boolean => {
+  const seen = new WeakSet<object>()
+  let nodes = 0
+  const visit = (value: unknown, depth: number): boolean => {
+    nodes += 1
+    if (nodes > 1_000 || depth > 20) return false
+    if (value === null || typeof value === 'boolean') return true
+    if (typeof value === 'string') return value.length <= 16_384
+    if (typeof value === 'number') return Number.isFinite(value)
+    if (typeof value !== 'object') return false
+    if (seen.has(value)) return false
+    seen.add(value)
+    if (Array.isArray(value)) return value.length <= 1_000 && value.every(item => visit(item, depth + 1))
+    if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) return false
+    const entries = Object.entries(value)
+    return entries.length <= 1_000 && entries.every(([key, item]) => key.length <= 256 && visit(item, depth + 1))
+  }
+  try {
+    return visit(input, 0)
+  } catch {
+    return false
+  }
+}
+
 export const TURN_PROTOCOL = 'agentskit.chat.turn' as const
 export const TURN_PROTOCOL_VERSION = 1 as const
+
+export const COMPONENT_PROTOCOL = 'agentskit.chat.component' as const
+export const COMPONENT_PROTOCOL_VERSION = 1 as const
+export const ComponentKeySchema = z.string().regex(/^[a-z][a-z0-9-]{0,63}$/)
+
+export const ComponentFallbackSchema = z.object({
+  kind: z.string().min(1).max(64),
+  summary: z.string().min(1).max(4_096),
+}).readonly()
+
+export const ComponentRenderFrameSchema = z.object({
+  protocol: z.literal(COMPONENT_PROTOCOL),
+  version: z.literal(COMPONENT_PROTOCOL_VERSION),
+  type: z.literal('render'),
+  componentKey: ComponentKeySchema,
+  instanceId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+  props: z.unknown().refine(isBoundedJsonValue),
+  fallback: ComponentFallbackSchema,
+}).readonly()
+
+export const ComponentSelectionEventSchema = z.object({
+  protocol: z.literal(COMPONENT_PROTOCOL),
+  version: z.literal(COMPONENT_PROTOCOL_VERSION),
+  type: z.literal('select'),
+  componentKey: ComponentKeySchema,
+  instanceId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+  choiceId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+}).readonly()
+
+export type ComponentFallback = z.infer<typeof ComponentFallbackSchema>
+export type ComponentRenderFrame = z.infer<typeof ComponentRenderFrameSchema>
+export type ComponentSelectionEvent = z.infer<typeof ComponentSelectionEventSchema>
+
+export type ComponentDecodeCode =
+  | 'COMPONENT_UNSUPPORTED_VERSION'
+  | 'COMPONENT_UNKNOWN_TYPE'
+  | 'COMPONENT_INVALID_FRAME'
+
+export type DecodeComponentFrameResult =
+  | { readonly ok: true; readonly frame: ComponentRenderFrame }
+  | {
+      readonly ok: false
+      readonly diagnostic: {
+        readonly code: ComponentDecodeCode
+        readonly message: string
+        readonly retryable: false
+      }
+    }
+
+export const decodeComponentFrame = (input: unknown): DecodeComponentFrameResult => {
+  let candidate = input
+  if (typeof input === 'string') {
+    try {
+      candidate = JSON.parse(input) as unknown
+    } catch {
+      return {
+        ok: false,
+        diagnostic: { code: 'COMPONENT_INVALID_FRAME', message: 'Component frame is not valid JSON.', retryable: false },
+      }
+    }
+  }
+
+  try {
+    if (isRecord(candidate) && candidate.protocol === COMPONENT_PROTOCOL) {
+      if (typeof candidate.version === 'number' && candidate.version !== COMPONENT_PROTOCOL_VERSION) {
+        return {
+          ok: false,
+          diagnostic: { code: 'COMPONENT_UNSUPPORTED_VERSION', message: 'Component frame uses an unsupported version.', retryable: false },
+        }
+      }
+      if (candidate.type !== 'render') {
+        return {
+          ok: false,
+          diagnostic: { code: 'COMPONENT_UNKNOWN_TYPE', message: 'Component frame type is unknown.', retryable: false },
+        }
+      }
+    }
+
+    const parsed = ComponentRenderFrameSchema.safeParse(candidate)
+    return parsed.success
+      ? { ok: true, frame: parsed.data }
+      : {
+          ok: false,
+          diagnostic: { code: 'COMPONENT_INVALID_FRAME', message: 'Component frame payload is invalid.', retryable: false },
+        }
+  } catch {
+    return {
+      ok: false,
+      diagnostic: { code: 'COMPONENT_INVALID_FRAME', message: 'Component frame payload is invalid.', retryable: false },
+    }
+  }
+}
+
+export const isComponentFrameCandidate = (input: unknown): boolean => {
+  try {
+    const candidate = typeof input === 'string' ? JSON.parse(input) as unknown : input
+    return isRecord(candidate) && candidate.protocol === COMPONENT_PROTOCOL
+  } catch {
+    return false
+  }
+}
+
+export const createSelectionEvent = (frame: ComponentRenderFrame, choiceId: string): ComponentSelectionEvent =>
+  ComponentSelectionEventSchema.parse({
+    protocol: COMPONENT_PROTOCOL,
+    version: COMPONENT_PROTOCOL_VERSION,
+    type: 'select',
+    componentKey: frame.componentKey,
+    instanceId: frame.instanceId,
+    choiceId,
+  })
 
 export const TokenUsageSchema = z.object({
   promptTokens: z.number().int().nonnegative(),
@@ -95,9 +233,6 @@ export type DecodeTurnEventResult =
 
 const eventNames = new Set(['client.turn.submit', 'server.turn.snapshot', 'server.turn.diagnostic'])
 const SafeIdentifierSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/)
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const safeEventId = (input: unknown): string | undefined => {
   try {

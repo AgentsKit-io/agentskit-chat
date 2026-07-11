@@ -2,7 +2,7 @@
 
 ## Owner
 
-`packages/ink` owns only the application-level Ink composition and native rendering of the shared semantic text fallback from ADR-0003.
+`packages/ink` owns only the application-level Ink composition, native `ChoiceList` input/presentation, and rendering of the shared semantic text fallback from ADR-0003/ADR-0007. Only the latest list in a transcript owns terminal input.
 
 ## Upstream boundary
 
