@@ -1,6 +1,6 @@
 # ADR-0013: Semantic application themes and native slots
 
-**Status:** Proposed — HITL review required  
+**Status:** Accepted — HITL approved 2026-07-11
 **Date:** 2026-07-11
 
 ## Context
