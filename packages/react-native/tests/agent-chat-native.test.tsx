@@ -8,7 +8,7 @@ const stop = vi.fn()
 const useChat = vi.fn()
 
 vi.mock('react-native', () => ({
-  View: ({ children, testID }: { children?: ReactNode; testID?: string }) => <div data-testid={testID}>{children}</div>,
+  View: ({ children, testID, accessibilityLiveRegion }: { children?: ReactNode; testID?: string; accessibilityLiveRegion?: string }) => <div data-testid={testID} data-live={accessibilityLiveRegion}>{children}</div>,
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
   Pressable: ({ children, onPress, testID }: { children?: ReactNode; onPress?: () => void; testID?: string }) => <button data-testid={testID} onClick={onPress}>{children}</button>,
 }))
@@ -40,6 +40,7 @@ describe('AgentChatNative', () => {
 
     expect(useChat).toHaveBeenCalledWith(definition.chat)
     expect(screen.getByText('Thinking')).toBeTruthy()
+    expect(document.querySelector('[data-live="polite"]')).toBeTruthy()
   })
 
   it('exposes cancellation while streaming', async () => {

@@ -19,10 +19,12 @@ const AgentChatNativeSession = ({ definition, placeholder }: AgentChatNativeProp
 
   return (
     <View testID="ak-app-chat" accessibilityLabel={`${definition.id} chat`}>
-      <ChatContainer>
-        {chat.messages.map(message => <Message key={message.id} message={message} />)}
-        <ThinkingIndicator visible={chat.status === 'streaming'} />
-      </ChatContainer>
+      <View accessibilityLiveRegion="polite">
+        <ChatContainer>
+          {chat.messages.map(message => <Message key={message.id} message={message} />)}
+          <ThinkingIndicator visible={chat.status === 'streaming'} />
+        </ChatContainer>
+      </View>
       {chat.error ? <Text accessibilityRole="alert">{chat.error.message}</Text> : null}
       {chat.status === 'streaming' ? (
         <Pressable
