@@ -71,6 +71,8 @@ The first slice is `@agentskit/chat-cli`: a safe, standard-library `init` for Re
 
 Composes application traces, fixture capture, renderer conformance, accessibility evidence, and cross-platform parity reporting around AgentsKit replay and eval primitives.
 
+The concrete application trace/replay boundary is documented in [ADR-0017](./adrs/0017-application-traces-compose-upstream-replay.md) and the [devtools guide](../devtools.md).
+
 ## Upstream adoption
 
 Before implementation, each issue records the AgentsKit source and exports inspected, what is reused directly, what application-layer behavior is added, and any upstream gap. A generally useful primitive is implemented in AgentsKit first; AgentsKit Chat never vendors or temporarily forks it.

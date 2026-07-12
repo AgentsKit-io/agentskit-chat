@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "0b40811c23fc336aad5b7017b2e237caa8fef8fadbba9aab64664c67e845d37e",
+  "contentHash": "1009f61be496f0ad01648fd5892a5ed1dd8668ce3487db830a8006ab1c12d490",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-12T01:55:58.867Z",
+  "generatedAt": "2026-07-12T02:18:13.394Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -87,6 +87,14 @@
       "path": "docs/for-agents/packages/cli.md",
       "description": "`packages/cli` owns AgentsKit Chat application detection, safe file generation, and command UX.",
       "body": "CLI package handoff packages/cli owns AgentsKit Chat application detection, safe file generation, and command UX. - Reuse published AgentsKit/AgentsKit Chat packages in generated source. - Never copy private upstream templates or overwrite a non-empty target. - Keep CI non-interactive and diagnostics on stderr. - The closed renderer matrix is React, React Native, Ink, Vue, Svelte, Solid, and Angular. - Add each renderer to detection, templates, help/completion, golden, install, typecheck, and generated-test coverage together. - add component owns contract/native file generation but never source-code registration or overwrite merging."
+    },
+    {
+      "id": "devtools",
+      "type": "agent-doc",
+      "title": "Devtools package handoff",
+      "path": "docs/for-agents/packages/devtools.md",
+      "description": "`packages/devtools` owns application-only trace capture, composition with upstream replay cassettes, and framework-neutral semantic parity reports.",
+      "body": "Devtools package handoff packages/devtools owns application-only trace capture, composition with upstream replay cassettes, and framework-neutral semantic parity reports. - Never record adapter requests/chunks or implement replay; use @agentskit/eval/replay . - Never execute actions or tools from a fixture. - Trace details are bounded JSON and configured sensitive keys are redacted recursively. - Parents must precede children and sequence values remain contiguous. - Renderer parity compares semantic outcomes, never markup or pixels."
     },
     {
       "id": "ink",
@@ -274,7 +282,36 @@
         "humanDoc": "linked"
       },
       "notes": [
-        "Safe React, React Native, and Ink application scaffolding"
+        "Safe seven-renderer application and semantic-component scaffolding"
+      ]
+    },
+    "devtools": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "devtools",
+        "path": "packages/devtools"
+      },
+      "startHere": "docs/for-agents/packages/devtools.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/devtools.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/devtools"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-devtools lint",
+        "pnpm --filter @agentskit/chat-devtools test"
+      ],
+      "humanDoc": "devtools",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Replayable application traces and semantic renderer parity composed with AgentsKit eval"
       ]
     },
     "example-ink": {
@@ -688,6 +725,7 @@
       "architecture",
       "chat",
       "cli",
+      "devtools",
       "example-ink",
       "example-react",
       "example-react-native",
@@ -743,9 +781,20 @@
           "pnpm --filter @agentskit/chat-cli lint",
           "pnpm --filter @agentskit/chat-cli test"
         ],
-        "purpose": "Safe React, React Native, and Ink application scaffolding",
+        "purpose": "Safe seven-renderer application and semantic-component scaffolding",
         "humanDoc": "cli",
         "agentDoc": "docs/for-agents/packages/cli.md"
+      },
+      "devtools": {
+        "id": "devtools",
+        "path": "packages/devtools",
+        "checks": [
+          "pnpm --filter @agentskit/chat-devtools lint",
+          "pnpm --filter @agentskit/chat-devtools test"
+        ],
+        "purpose": "Replayable application traces and semantic renderer parity composed with AgentsKit eval",
+        "humanDoc": "devtools",
+        "agentDoc": "docs/for-agents/packages/devtools.md"
       },
       "example-ink": {
         "id": "example-ink",

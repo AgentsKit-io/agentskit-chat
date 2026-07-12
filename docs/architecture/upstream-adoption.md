@@ -45,6 +45,10 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/solid` | 0.4.4 | Solid hook, headless components, and owner-cleanup cancellation. |
 | `@agentskit/angular` | 0.4.6 | Angular signal service, standalone components, lifecycle-safe teardown, and typed partial-Ivy AOT packaging. |
 
+## Replayable application traces (#21)
+
+Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
+
 ## Responsibility matrix
 
 | Planned concern | AgentsKit source inspected | Supported public API | Disposition | AgentsKit Chat responsibility | Upstream gap |

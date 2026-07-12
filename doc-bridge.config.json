@@ -138,12 +138,22 @@
         },
         "cli": {
           "path": "packages/cli",
-          "purpose": "Safe React, React Native, and Ink application scaffolding",
+          "purpose": "Safe seven-renderer application and semantic-component scaffolding",
           "agentDoc": "docs/for-agents/packages/cli.md",
           "humanDoc": "cli",
           "checks": [
             "pnpm --filter @agentskit/chat-cli lint",
             "pnpm --filter @agentskit/chat-cli test"
+          ]
+        },
+        "devtools": {
+          "path": "packages/devtools",
+          "purpose": "Replayable application traces and semantic renderer parity composed with AgentsKit eval",
+          "agentDoc": "docs/for-agents/packages/devtools.md",
+          "humanDoc": "devtools",
+          "checks": [
+            "pnpm --filter @agentskit/chat-devtools lint",
+            "pnpm --filter @agentskit/chat-devtools test"
           ]
         },
         "example-react": {
