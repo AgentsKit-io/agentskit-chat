@@ -15,7 +15,7 @@
     "lint": "tsc --noEmit",
     "test": "vitest run --coverage"
   },
-  "dependencies": { "zod": "^4.3.6" },
+  "dependencies": { "@agentskit/chat": "workspace:*", "zod": "^4.3.6" },
   "devDependencies": { "@types/node": "^25.0.0", "node-pty": "^1.1.0", "tsup": "^8.5.1" },
   "publishConfig": { "access": "public" }
 }

@@ -1,8 +1,10 @@
 import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { STANDARD_COMPONENT_KEYS } from '@agentskit/chat'
 import { z } from 'zod'
 
-export const ChatRendererSchema = z.enum(['react', 'react-native', 'ink'])
+export const CHAT_RENDERERS = ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular'] as const
+export const ChatRendererSchema = z.enum(CHAT_RENDERERS)
 export type ChatRenderer = z.infer<typeof ChatRendererSchema>
 
 export interface InitChatProjectOptions {
@@ -11,22 +13,32 @@ export interface InitChatProjectOptions {
   readonly detectFromDir?: string
 }
 
+export interface AddComponentOptions {
+  readonly projectDir: string
+  readonly name: string
+  readonly renderers: readonly ChatRenderer[]
+}
+
 export class ChatCliError extends Error {
-  constructor(readonly code: 'RENDERER_REQUIRED' | 'TARGET_EXISTS' | 'MANIFEST_INVALID', message: string) {
+  constructor(readonly code: 'RENDERER_REQUIRED' | 'TARGET_EXISTS' | 'MANIFEST_INVALID' | 'COMPONENT_INVALID' | 'COMPONENT_EXISTS', message: string) {
     super(message); this.name = 'ChatCliError'
   }
 }
 
 const packageJson = (renderer: ChatRenderer): string => JSON.stringify({
   name: 'agentskit-chat-app', private: true, version: '0.0.0', type: 'module', ...(renderer === 'react-native' ? { main: 'expo/AppEntry.js' } : {}),
-  scripts: { typecheck: 'tsc --noEmit', test: 'vitest run', ...(renderer === 'react' ? { dev: 'vite', build: 'vite build' } : renderer === 'react-native' ? { dev: 'expo start', build: 'expo export --platform web' } : { dev: 'tsx src/index.tsx' }) },
+  scripts: { typecheck: renderer === 'svelte' ? 'svelte-check --tsconfig ./tsconfig.json' : 'tsc --noEmit', test: 'vitest run', ...(['react', 'vue', 'svelte', 'solid'].includes(renderer) ? { dev: 'vite', build: 'vite build' } : renderer === 'react-native' ? { dev: 'expo start', build: 'expo export --platform web' } : renderer === 'angular' ? { dev: 'tsx src/main.ts', build: 'tsc --noEmit' } : { dev: 'tsx src/index.tsx' }) },
   dependencies: {
-    '@agentskit/chat': 'latest', '@agentskit/chat-protocol': 'latest', '@agentskit/chat-server': 'latest', '@agentskit/core': '^1.12.2',
+    '@agentskit/chat': 'latest', '@agentskit/chat-protocol': 'latest', '@agentskit/chat-server': 'latest', '@agentskit/core': '^1.12.2', zod: '^4.3.6',
     ...(renderer === 'react' ? { '@agentskit/chat-react': 'latest', '@agentskit/react': '^0.7.1', react: '^19.0.0', 'react-dom': '^19.0.0' }
       : renderer === 'react-native' ? { '@agentskit/chat-react-native': 'latest', '@agentskit/react-native': '^0.4.4', expo: '^57.0.4', react: '19.2.3', 'react-dom': '19.2.3', 'react-native': '^0.86.0', 'react-native-web': '^0.21.2' }
-        : { '@agentskit/chat-ink': 'latest', '@agentskit/ink': '^0.10.1', ink: '^7.0.0', react: '^19.0.0' }),
+        : renderer === 'ink' ? { '@agentskit/chat-ink': 'latest', '@agentskit/ink': '^0.10.1', ink: '^7.0.0', react: '^19.0.0' }
+          : renderer === 'vue' ? { '@agentskit/chat-vue': 'latest', '@agentskit/vue': '^0.4.4', vue: '^3.5.0' }
+            : renderer === 'svelte' ? { '@agentskit/chat-svelte': 'latest', '@agentskit/svelte': '^0.4.4', svelte: '^5.0.0' }
+              : renderer === 'solid' ? { '@agentskit/chat-solid': 'latest', '@agentskit/solid': '^0.4.4', 'solid-js': '^1.9.0' }
+                : { '@agentskit/chat-angular': 'latest', '@agentskit/angular': '^0.4.6', '@angular/common': '^21.0.0', '@angular/core': '^21.0.0', '@angular/platform-browser': '^21.0.0', rxjs: '^7.8.0', tslib: '^2.8.0', 'zone.js': '^0.16.0' }),
   },
-  devDependencies: { '@types/node': '^25.0.0', '@types/react': '^19.0.0', tsx: '^4.20.0', typescript: '^6.0.0', vitest: '^4.0.0', ...(renderer === 'react' ? { '@types/react-dom': '^19.0.0', '@vitejs/plugin-react': '^5.0.0', vite: '^8.0.0' } : {}) },
+  devDependencies: { '@types/node': '^25.0.0', tsx: '^4.20.0', typescript: renderer === 'angular' ? '^5.9.0' : '^6.0.0', vitest: '^4.0.0', ...(['react', 'react-native', 'ink'].includes(renderer) ? { '@types/react': '^19.0.0' } : {}), ...(renderer === 'react' ? { '@types/react-dom': '^19.0.0', '@vitejs/plugin-react': '^5.0.0', vite: '^8.0.0' } : renderer === 'vue' ? { '@vitejs/plugin-vue': '^6.0.0', vite: '^8.0.0' } : renderer === 'svelte' ? { '@sveltejs/vite-plugin-svelte': '^7.0.0', 'svelte-check': '^4.0.0', vite: '^8.0.0' } : renderer === 'solid' ? { 'vite-plugin-solid': '^2.11.0', vite: '^8.0.0' } : {}) },
 }, null, 2) + '\n'
 
 const sharedFiles = (): Record<string, string> => ({
@@ -84,6 +96,7 @@ The shared definition lives in \`src/chat.ts\`, the Web-standard server seam in 
 Run \`pnpm typecheck && pnpm test\`, then \`pnpm dev\`. Replace the demo adapter in the shared definition with any published AgentsKit adapter.
 `,
   '.gitignore': 'node_modules\ndist\n.expo\n.env\n',
+  'vitest.config.ts': `import { defineConfig } from 'vitest/config'\nexport default defineConfig({ test: { environment: 'node' } })\n`,
 })
 
 const rendererFiles = (renderer: ChatRenderer): Record<string, string> => renderer === 'react' ? {
@@ -109,18 +122,35 @@ import { chat } from './src/chat'
 export default function App() { return <AgentChatNative definition={chat} /> }
 `,
   'app.json': JSON.stringify({ expo: { name: 'AgentsKit Chat', slug: 'agentskit-chat' } }, null, 2) + '\n',
-} : {
+} : renderer === 'ink' ? {
   'src/index.tsx': `import { AgentChat } from '@agentskit/chat-ink'
 import { render } from 'ink'
 import { chat } from './chat.js'
 const app = render(<AgentChat definition={chat} />)
 if (process.env.CI) setTimeout(() => app.unmount(), 0)
 `,
+} : renderer === 'vue' ? {
+  'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n',
+  'src/main.ts': `import { createApp, h } from 'vue'\nimport { AgentChat } from '@agentskit/chat-vue'\nimport { chat } from './chat.js'\ncreateApp({ render: () => h(AgentChat, { definition: chat }) }).mount('#app')\n`,
+  'vite.config.ts': `import vue from '@vitejs/plugin-vue'\nimport { defineConfig } from 'vite'\nexport default defineConfig({ plugins: [vue()] })\n`,
+} : renderer === 'svelte' ? {
+  'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n',
+  'src/App.svelte': `<script lang="ts">\n  import { AgentChat } from '@agentskit/chat-svelte'\n  import { chat } from './chat.js'\n</script>\n<AgentChat definition={chat} />\n`,
+  'src/main.ts': `import { mount } from 'svelte'\nimport App from './App.svelte'\nmount(App, { target: document.getElementById('app')! })\n`,
+  'src/vite-env.d.ts': `/// <reference types="svelte" />\n`,
+  'vite.config.ts': `import { svelte } from '@sveltejs/vite-plugin-svelte'\nimport { defineConfig } from 'vite'\nexport default defineConfig({ plugins: [svelte()] })\n`,
+} : renderer === 'solid' ? {
+  'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.tsx"></script></body></html>\n',
+  'src/main.tsx': `import { render } from 'solid-js/web'\nimport { AgentChat } from '@agentskit/chat-solid'\nimport { chat } from './chat.js'\nrender(() => <AgentChat definition={chat} />, document.getElementById('app')!)\n`,
+  'vite.config.ts': `import { defineConfig } from 'vite'\nimport solid from 'vite-plugin-solid'\nexport default defineConfig({ plugins: [solid()] })\n`,
+} : {
+  'src/main.ts': `import 'zone.js'\nimport { Component } from '@angular/core'\nimport { bootstrapApplication } from '@angular/platform-browser'\nimport { AgentChatComponent } from '@agentskit/chat-angular'\nimport { chat } from './chat.js'\n@Component({ selector: 'app-root', standalone: true, imports: [AgentChatComponent], template: '<ak-agent-chat [definition]="chat" />' })\nclass AppComponent { readonly chat = chat }\nvoid bootstrapApplication(AppComponent)\n`,
 }
 
 const tsconfig = (renderer: ChatRenderer): string => JSON.stringify({ compilerOptions: {
   target: 'ES2022', module: 'ESNext', moduleResolution: 'bundler', jsx: 'react-jsx', strict: true, noEmit: true, skipLibCheck: true,
-  ...(renderer === 'react' ? { lib: ['ES2022', 'DOM'] } : {}),
+  ...(renderer === 'solid' ? { jsx: 'preserve', jsxImportSource: 'solid-js' } : {}),
+  ...(['react', 'vue', 'svelte', 'solid', 'angular'].includes(renderer) ? { lib: ['ES2022', 'DOM'] } : {}),
   ...(renderer === 'ink' ? { types: ['node'] } : {}),
 }, include: renderer === 'react-native' ? ['App.tsx', 'src', 'tests'] : ['src', 'tests'] }, null, 2) + '\n'
 
@@ -131,6 +161,10 @@ export const detectRenderer = async (targetDir: string): Promise<ChatRenderer | 
     const dependencies = { ...manifest.dependencies, ...manifest.devDependencies }
     if (dependencies.expo || dependencies['react-native']) return 'react-native'
     if (dependencies.ink) return 'ink'
+    if (dependencies['@angular/core']) return 'angular'
+    if (dependencies.svelte) return 'svelte'
+    if (dependencies.vue) return 'vue'
+    if (dependencies['solid-js']) return 'solid'
     return dependencies.react ? 'react' : undefined
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined
@@ -141,7 +175,7 @@ export const detectRenderer = async (targetDir: string): Promise<ChatRenderer | 
 export const initChatProject = async (options: InitChatProjectOptions): Promise<readonly string[]> => {
   const targetDir = path.resolve(options.targetDir)
   const candidate = options.renderer ?? await detectRenderer(options.detectFromDir ?? targetDir)
-  if (!candidate) throw new ChatCliError('RENDERER_REQUIRED', 'Choose a renderer with --renderer react, react-native, or ink.')
+  if (!candidate) throw new ChatCliError('RENDERER_REQUIRED', `Choose a renderer with --renderer ${CHAT_RENDERERS.join(', ')}.`)
   const renderer = ChatRendererSchema.parse(candidate)
   const files = { ...sharedFiles(), ...rendererFiles(renderer), 'package.json': packageJson(renderer), 'tsconfig.json': tsconfig(renderer) }
   const parent = path.dirname(targetDir)
@@ -162,5 +196,42 @@ export const initChatProject = async (options: InitChatProjectOptions): Promise<
     if (code === 'EEXIST' || code === 'ENOTEMPTY' || code === 'EISDIR' || code === 'ENOTDIR') throw new ChatCliError('TARGET_EXISTS', `Refusing to overwrite existing path: ${targetDir}`)
     throw error
   }
+  return Object.keys(files).sort()
+}
+
+const componentName = (input: string): { readonly kebab: string; readonly pascal: string } => {
+  const kebab = input.trim().replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase()
+  if (!/^[a-z][a-z0-9-]{0,63}$/.test(kebab)) throw new ChatCliError('COMPONENT_INVALID', 'Component name must start with a letter and contain only letters, numbers, or dashes.')
+  if (STANDARD_COMPONENT_KEYS.includes(kebab as typeof STANDARD_COMPONENT_KEYS[number])) throw new ChatCliError('COMPONENT_INVALID', 'Component name is reserved by the standard catalog.')
+  return { kebab, pascal: kebab.split('-').map(part => part[0]!.toUpperCase() + part.slice(1)).join('') }
+}
+
+const componentFiles = (name: string, renderers: readonly ChatRenderer[]): Record<string, string> => {
+  const { kebab, pascal } = componentName(name)
+  const shared = `import { z } from 'zod'\nimport type { ComponentDefinition } from '@agentskit/chat'\n\nexport const ${pascal}PropsSchema = z.object({ label: z.string().min(1).max(256) }).strict().readonly()\nexport type ${pascal}Props = z.infer<typeof ${pascal}PropsSchema>\nexport const ${pascal}Component = { key: '${kebab}', propsSchema: ${pascal}PropsSchema, events: [], accessibility: { role: 'group', keyboard: false, live: 'none' }, capabilities: ['display'], fallback: props => props.label } satisfies ComponentDefinition<${pascal}Props>\n`
+  const files: Record<string, string> = { [`src/components/${kebab}.ts`]: shared }
+  for (const renderer of [...new Set(renderers)]) {
+    const relative = `src/components/${renderer}/${kebab}.${renderer === 'svelte' ? 'svelte' : renderer === 'vue' || renderer === 'angular' ? 'ts' : 'tsx'}`
+    files[relative] = renderer === 'svelte'
+      ? `<script lang="ts">\n  import type { ${pascal}Props } from '../${kebab}.js'\n  let { props }: { props: ${pascal}Props } = $props()\n</script>\n<section aria-label={props.label}>{props.label}</section>\n`
+      : renderer === 'vue'
+        ? `import { defineComponent, h, type PropType } from 'vue'\nimport type { ${pascal}Props } from '../${kebab}.js'\nexport const ${pascal} = defineComponent({ props: { value: { type: Object as PropType<${pascal}Props>, required: true } }, setup: props => () => h('section', { 'aria-label': props.value.label }, props.value.label) })\n`
+        : renderer === 'angular'
+          ? `import { Component, Input } from '@angular/core'\nimport type { ${pascal}Props } from '../${kebab}.js'\n@Component({ selector: 'ak-${kebab}', standalone: true, template: '<section [attr.aria-label]="value.label">{{ value.label }}</section>' })\nexport class ${pascal}Component { @Input({ required: true }) value!: ${pascal}Props }\n`
+          : renderer === 'solid'
+            ? `import type { ${pascal}Props } from '../${kebab}.js'\nexport const ${pascal} = (props: { readonly value: ${pascal}Props }) => <section aria-label={props.value.label}>{props.value.label}</section>\n`
+            : `import type { ${pascal}Props } from '../${kebab}.js'\nexport const ${pascal} = ({ value }: { readonly value: ${pascal}Props }) => <${renderer === 'react-native' ? 'Text' : renderer === 'ink' ? 'Text' : 'section'}${renderer === 'react-native' ? ' accessibilityLabel={value.label}' : renderer === 'ink' ? '' : ' aria-label={value.label}'}>{value.label}</${renderer === 'react-native' || renderer === 'ink' ? 'Text' : 'section'}>\n${renderer === 'react-native' ? "import { Text } from 'react-native'\n" : renderer === 'ink' ? "import { Text } from 'ink'\n" : ''}`
+  }
+  return files
+}
+
+export const addChatComponent = async (options: AddComponentOptions): Promise<readonly string[]> => {
+  const projectDir = path.resolve(options.projectDir)
+  const renderers = z.array(ChatRendererSchema).min(1).parse(options.renderers)
+  const files = componentFiles(options.name, renderers)
+  const destinations = Object.keys(files).map(relative => path.join(projectDir, relative))
+  const checks = await Promise.all(destinations.map(destination => readFile(destination).then(() => true, error => (error as NodeJS.ErrnoException).code === 'ENOENT' ? false : Promise.reject(error))))
+  if (checks.some(Boolean)) throw new ChatCliError('COMPONENT_EXISTS', 'Refusing to overwrite an existing component file.')
+  await Promise.all(Object.entries(files).map(async ([relative, content]) => { const destination = path.join(projectDir, relative); await mkdir(path.dirname(destination), { recursive: true }); await writeFile(destination, content, { encoding: 'utf8', flag: 'wx' }) }))
   return Object.keys(files).sort()
 }

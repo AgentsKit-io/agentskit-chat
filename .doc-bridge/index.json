@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "eb66b88653d1c50acd0c79ebb9a6571882edb22b42ee3de36c0558126773d0bb",
+  "contentHash": "0b40811c23fc336aad5b7017b2e237caa8fef8fadbba9aab64664c67e845d37e",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-12T01:28:05.436Z",
+  "generatedAt": "2026-07-12T01:55:58.867Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -86,7 +86,7 @@
       "title": "CLI package handoff",
       "path": "docs/for-agents/packages/cli.md",
       "description": "`packages/cli` owns AgentsKit Chat application detection, safe file generation, and command UX.",
-      "body": "CLI package handoff packages/cli owns AgentsKit Chat application detection, safe file generation, and command UX. - Reuse published AgentsKit/AgentsKit Chat packages in generated source. - Never copy private upstream templates or overwrite a non-empty target. - Keep CI non-interactive and diagnostics on stderr. - Add each renderer to golden, install, typecheck, and generated-test coverage together."
+      "body": "CLI package handoff packages/cli owns AgentsKit Chat application detection, safe file generation, and command UX. - Reuse published AgentsKit/AgentsKit Chat packages in generated source. - Never copy private upstream templates or overwrite a non-empty target. - Keep CI non-interactive and diagnostics on stderr. - The closed renderer matrix is React, React Native, Ink, Vue, Svelte, Solid, and Angular. - Add each renderer to detection, templates, help/completion, golden, install, typecheck, and generated-test coverage together. - add component owns contract/native file generation but never source-code registration or overwrite merging."
     },
     {
       "id": "ink",

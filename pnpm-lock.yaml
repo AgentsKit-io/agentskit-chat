@@ -211,6 +211,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@agentskit/chat':
+        specifier: workspace:*
+        version: link:../chat
       zod:
         specifier: ^4.3.6
         version: 4.4.3
