@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "e62ad0c8310c5053df6c9c2de23a4a3d79a2cc72556babde1e0c1e7f119cc86c",
+  "contentHash": "a486c7f5c277ec04253431ddee97f501c02d54825314d5107597f6a78c334a71",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-11T16:35:09.669Z",
+  "generatedAt": "2026-07-11T22:36:01.816Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,15 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+    },
+    {
+      "id": "angular",
+      "type": "agent-doc",
+      "title": "Angular package handoff",
+      "path": "docs/for-agents/packages/angular.md",
+      "description": "`packages/angular` owns only the standalone Angular application shell, content-template composition, semantic CSS mapping, and native `ChoiceList`. It consumes `AgentskitChat`, `ChatContainerComponent`, `MessageComponent`, `InputBarComponent`, `ThinkingIndicatorComponent`, and `ToolConfirmationComponent` from `@agentskit/angular@0.4.4`.",
+      "body": "Angular package handoff packages/angular owns only the standalone Angular application shell, content-template composition, semantic CSS mapping, and native ChoiceList . It consumes AgentskitChat , ChatContainerComponent , MessageComponent , InputBarComponent , ThinkingIndicatorComponent , and ToolConfirmationComponent from @agentskit/angular@0.4.4 . Never add another controller, signal store, stream consumer, lifecycle implementation, confirmation engine, or container primitive. Each shell scopes the upstream service through its component provider. Config replacement and component destruction delegate cancellation to the upstream cleanup fixed in AgentsKit 1171/ 1172. Checks: pnpm --filter @agentskit/chat-angular lint && pnpm --filter @agentskit/chat-angular test && pnpm --filter @agentskit/chat-angular build ."
     },
     {
       "id": "chat",
@@ -154,6 +162,35 @@
     }
   ],
   "handoffs": {
+    "angular": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "angular",
+        "path": "packages/angular"
+      },
+      "startHere": "docs/for-agents/packages/angular.md",
+      "readBeforeEditing": [
+        "docs/for-agents/packages/angular.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/angular"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-angular lint",
+        "pnpm --filter @agentskit/chat-angular test"
+      ],
+      "humanDoc": "getting-started/angular",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Standalone Angular application shell consuming @agentskit/angular directly"
+      ]
+    },
     "architecture": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -647,6 +684,7 @@
   },
   "lookup": {
     "packages": [
+      "angular",
       "architecture",
       "chat",
       "cli",
@@ -666,6 +704,17 @@
       "vue"
     ],
     "ownership": {
+      "angular": {
+        "id": "angular",
+        "path": "packages/angular",
+        "checks": [
+          "pnpm --filter @agentskit/chat-angular lint",
+          "pnpm --filter @agentskit/chat-angular test"
+        ],
+        "purpose": "Standalone Angular application shell consuming @agentskit/angular directly",
+        "humanDoc": "getting-started/angular",
+        "agentDoc": "docs/for-agents/packages/angular.md"
+      },
       "architecture": {
         "id": "architecture",
         "path": "docs/architecture",

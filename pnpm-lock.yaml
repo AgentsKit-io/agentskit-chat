@@ -138,6 +138,52 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
 
+  packages/angular:
+    dependencies:
+      '@agentskit/chat':
+        specifier: workspace:*
+        version: link:../chat
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
+      '@agentskit/core':
+        specifier: ^1.12.2
+        version: 1.12.2
+    devDependencies:
+      '@agentskit/angular':
+        specifier: ^0.4.4
+        version: 0.4.4(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/common':
+        specifier: ^21.2.18
+        version: 21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.18
+        version: 21.2.18
+      '@angular/core':
+        specifier: ^21.2.18
+        version: 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.18
+        version: 21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))
+      '@angular/platform-browser-dynamic':
+        specifier: ^21.2.18
+        version: 21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.18)(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)))
+      '@types/node':
+        specifier: ^25.0.0
+        version: 25.9.5
+      happy-dom:
+        specifier: ^20.10.3
+        version: 20.10.6
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
+      zone.js:
+        specifier: ^0.16.2
+        version: 0.16.2
+
   packages/chat:
     dependencies:
       '@agentskit/chat-protocol':
@@ -402,6 +448,12 @@ importers:
 
 packages:
 
+  '@agentskit/angular@0.4.4':
+    resolution: {integrity: sha512-V/5lRk2tTB4vDl3Lc7wgNEBbst86ukELo0mugm5KBIVahn7fJVNfgbzcgSFxgEXwJaHK/9GuIhxc9H4DcWUcfw==}
+    peerDependencies:
+      '@angular/core': ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0
+      rxjs: ^7.0.0
+
   '@agentskit/core@1.12.0':
     resolution: {integrity: sha512-xDAEThtU2JDKxknKucY4T0bcssh7sv2JNxXisUTX/ncVvgnInonEGSjyuGC3uegJf+quXGn/UM90OMEgURW+pg==}
 
@@ -468,6 +520,50 @@ packages:
   '@alcalzone/ansi-tokenize@0.3.0':
     resolution: {integrity: sha512-p+CMKJ93HFmLkjXKlXiVGlMQEuRb6H0MokBSwUsX+S6BRX8eV5naFZpQJFfJHjRZY0Hmnqy1/r6UWl3x+19zYA==}
     engines: {node: '>=18'}
+
+  '@angular/common@21.2.18':
+    resolution: {integrity: sha512-gZugZ8gX/KkACIZ3/ekoImLu5z8a0Iu9O5b84kh8e+++VUjmkmd19IygBsq/8/fF3vKf0UcIKcx3P6A/gb2DJw==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/core': 21.2.18
+      rxjs: ^6.5.3 || ^7.4.0
+
+  '@angular/compiler@21.2.18':
+    resolution: {integrity: sha512-ccnDuKLuzIa0ayijR+alarsHNWIksuGV/lxGTZ0t6/0+B6J/RXupz6M2IO6ZHHEcg8r7pcrLCUBTyp3FoiRJrg==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+
+  '@angular/core@21.2.18':
+    resolution: {integrity: sha512-AG4bb6GU0+qp+vVBjc/IhSPjgcRX8QsCb8jzN8dDyhnjsyuuG/LlIiU0l6n65BI9SGKE9m6TfsJ1ObkkAiE5KQ==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/compiler': 21.2.18
+      rxjs: ^6.5.3 || ^7.4.0
+      zone.js: ~0.15.0 || ~0.16.0
+    peerDependenciesMeta:
+      '@angular/compiler':
+        optional: true
+      zone.js:
+        optional: true
+
+  '@angular/platform-browser-dynamic@21.2.18':
+    resolution: {integrity: sha512-doTDss6GhDTGjVuuANlzFrdYKBqHQVlWgy2tiTjy9EbrmMTOOHg0D6yUQXh1ZqmUWKDZ3owkUjUNGiXt92rQ6w==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/common': 21.2.18
+      '@angular/compiler': 21.2.18
+      '@angular/core': 21.2.18
+      '@angular/platform-browser': 21.2.18
+
+  '@angular/platform-browser@21.2.18':
+    resolution: {integrity: sha512-zltF+3HrlgtZbYg8U98LhG0dyGm1aHT3Px8//9wjqi/TUY8UlHsYKByL197QtVWDBjf/dekzXdz5c+iyVtanLQ==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@angular/animations': 21.2.18
+      '@angular/common': 21.2.18
+      '@angular/core': 21.2.18
+    peerDependenciesMeta:
+      '@angular/animations':
+        optional: true
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -3297,6 +3393,9 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  rxjs@7.8.2:
+    resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
+
   sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
@@ -3921,7 +4020,16 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
+  zone.js@0.16.2:
+    resolution: {integrity: sha512-Eky7p2Z1Ig3NnbfodSPoARCjKBSTFMnE/ACsP1L/XJEfY4SdOFce19BsUCWVwL6K5ABZFy5J3bjcMWffX+YM3Q==}
+
 snapshots:
+
+  '@agentskit/angular@0.4.4(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)':
+    dependencies:
+      '@agentskit/core': 1.12.2
+      '@angular/core': 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      rxjs: 7.8.2
 
   '@agentskit/core@1.12.0': {}
 
@@ -3985,6 +4093,38 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.3
       is-fullwidth-code-point: 5.1.0
+
+  '@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)':
+    dependencies:
+      '@angular/core': 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
+  '@angular/compiler@21.2.18':
+    dependencies:
+      tslib: 2.8.1
+
+  '@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+    optionalDependencies:
+      '@angular/compiler': 21.2.18
+      zone.js: 0.16.2
+
+  '@angular/platform-browser-dynamic@21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.18)(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)))':
+    dependencies:
+      '@angular/common': 21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/compiler': 21.2.18
+      '@angular/core': 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))
+      tslib: 2.8.1
+
+  '@angular/platform-browser@21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))':
+    dependencies:
+      '@angular/common': 21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      tslib: 2.8.1
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -7173,6 +7313,10 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.62.2
       fsevents: 2.3.3
 
+  rxjs@7.8.2:
+    dependencies:
+      tslib: 2.8.1
+
   sade@1.8.1:
     dependencies:
       mri: 1.2.0
@@ -7464,8 +7608,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  tslib@2.8.1:
-    optional: true
+  tslib@2.8.1: {}
 
   tsup@8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0):
     dependencies:
@@ -7760,3 +7903,5 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
+
+  zone.js@0.16.2: {}

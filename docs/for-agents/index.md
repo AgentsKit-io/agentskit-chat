@@ -11,6 +11,7 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Protocol package](./packages/protocol.md): versioned turn events, compatibility, and conformance fixtures.
 - [React package](./packages/react.md): native React shell over `@agentskit/react`.
 - [Vue package](./packages/vue.md): native Vue shell over `@agentskit/vue`.
+- [Angular package](./packages/angular.md): standalone Angular shell over `@agentskit/angular`.
 - [Svelte package](./packages/svelte.md): native Svelte 5 shell over `@agentskit/svelte`.
 - [Solid package](./packages/solid.md): native Solid shell over `@agentskit/solid`.
 - [React Native package](./packages/react-native.md): native mobile shell over `@agentskit/react-native`.

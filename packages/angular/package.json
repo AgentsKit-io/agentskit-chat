@@ -1,0 +1,17 @@
+{
+  "name": "@agentskit/chat-angular",
+  "version": "0.0.0",
+  "description": "Angular application shell for AgentsKit Chat.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
+  "files": ["dist"],
+  "scripts": { "build": "tsup", "lint": "tsc --noEmit", "test": "pnpm --filter @agentskit/chat build && vitest run --coverage" },
+  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*", "@agentskit/core": "^1.12.2" },
+  "peerDependencies": { "@agentskit/angular": "^0.4.4", "@angular/common": ">=18 <22", "@angular/core": ">=18 <22", "rxjs": "^7.0.0" },
+  "devDependencies": { "@agentskit/angular": "^0.4.4", "@angular/common": "^21.2.18", "@angular/compiler": "^21.2.18", "@angular/core": "^21.2.18", "@angular/platform-browser": "^21.2.18", "@angular/platform-browser-dynamic": "^21.2.18", "@types/node": "^25.0.0", "happy-dom": "^20.10.3", "rxjs": "^7.8.2", "tsup": "^8.5.1", "zone.js": "^0.16.2" },
+  "publishConfig": { "access": "public" }
+}
