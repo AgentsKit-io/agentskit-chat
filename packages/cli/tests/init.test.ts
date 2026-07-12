@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -52,6 +52,14 @@ describe('chat init', () => {
     await writeFile(path.join(collisionRoot, 'src/components/metric-tile.ts'), 'owned')
     await expect(addChatComponent({ projectDir: collisionRoot, name: 'metric-tile', renderers: ['vue'] })).rejects.toMatchObject({ code: 'COMPONENT_EXISTS' })
     await expect(readFile(path.join(collisionRoot, 'src/components/vue/metric-tile.ts'))).rejects.toMatchObject({ code: 'ENOENT' })
+  })
+
+  it('refuses component writes through symbolic-link directories', async () => {
+    const root = await temporary(); const outside = await temporary()
+    await mkdir(path.join(root, 'src'), { recursive: true })
+    await symlink(outside, path.join(root, 'src/components'))
+    await expect(addChatComponent({ projectDir: root, name: 'unsafe', renderers: ['react'] })).rejects.toMatchObject({ code: 'MANIFEST_INVALID' })
+    await expect(readFile(path.join(outside, 'unsafe.ts'))).rejects.toMatchObject({ code: 'ENOENT' })
   })
 
   it('requires an explicit renderer when detection cannot decide', async () => {

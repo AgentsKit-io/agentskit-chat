@@ -17,7 +17,7 @@ Every starter contains a shared `src/chat.ts`, Web-standard `src/server.ts`, nat
 
 Generate native shell completion with `agentskit-chat completion bash`, `zsh`, or `fish`.
 
-`add component` creates `src/components/<name>.ts` as the single strict schema, semantic identity, metadata, and fallback. It creates presentation files only for the comma-separated renderer targets. Register the exported definition in your component manifest and connect native files through the renderer's `standardComponent` slot. The command checks every destination first and refuses the entire operation if any owned file exists.
+`add component` creates `src/components/<name>.ts` as the single strict schema, semantic identity, metadata, and fallback. It creates presentation files only for the comma-separated renderer targets. Register the exported definition in your component manifest and connect native files through the renderer's `standardComponent` slot. React, React Native, Ink, Vue, and Solid exports already match their slot callback props. Svelte and Angular files accept the slot's `frame` through a snippet or `#standardComponent` template wrapper. The command checks every destination first, rejects symbolic-link directories, and rolls back files created by a failed operation.
 
 ## Troubleshooting
 

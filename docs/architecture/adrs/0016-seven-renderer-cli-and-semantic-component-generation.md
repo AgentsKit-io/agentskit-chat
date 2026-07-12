@@ -9,7 +9,7 @@ The initial CLI supported React, React Native, and Ink. The framework now has se
 
 ## Decision
 
-The CLI owns a closed seven-value renderer enum used by detection, `init`, help, completion, and tests. `init` retains its staged atomic project promotion. `add component` accepts an explicit comma-separated renderer list, validates a portable component name, checks every destination before writing, and creates one strict Zod definition plus selected native source files.
+The CLI owns a closed seven-value renderer enum used by detection, `init`, help, completion, and tests. `init` retains its staged atomic project promotion. `add component` accepts an explicit comma-separated renderer list, validates a portable component name, checks every destination and symbolic-link boundary before writing, rolls back its created files on failure, and creates one strict Zod definition plus selected native source files.
 
 Generated component definitions contain schema, semantic key, event metadata, accessibility, capabilities, and fallback. Native files contain presentation only. Hosts explicitly register the definition and connect native files through renderer slots.
 

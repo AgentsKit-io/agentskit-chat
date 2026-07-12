@@ -13,9 +13,9 @@ const help = `Usage: agentskit-chat init [directory] [--renderer ${CHAT_RENDERER
 `
 
 const completion = (shell: string | undefined): string => {
-  if (shell === 'bash') return 'complete -W "init add component completion --help --version" agentskit-chat\n'
-  if (shell === 'zsh') return `#compdef agentskit-chat\n_arguments "1:command:(init add completion)" "--renderer[renderer]:renderer:(${CHAT_RENDERERS.join(' ')})"\n`
-  if (shell === 'fish') return `complete -c agentskit-chat -f -a "init add completion"\ncomplete -c agentskit-chat -l renderer -a "${CHAT_RENDERERS.join(' ')}"\n`
+  if (shell === 'bash') return `_agentskit_chat_complete() { local words="--renderer --directory --yes"; [[ $COMP_CWORD == 1 ]] && words="init add completion --help --version"; [[ \${COMP_WORDS[COMP_CWORD-1]} == add ]] && words="component"; [[ \${COMP_WORDS[COMP_CWORD-1]} == --renderer ]] && words="${CHAT_RENDERERS.join(' ')}"; COMPREPLY=($(compgen -W "$words" -- "\${COMP_WORDS[COMP_CWORD]}")); }\ncomplete -F _agentskit_chat_complete agentskit-chat\n`
+  if (shell === 'zsh') return `#compdef agentskit-chat\n_arguments "1:command:(init add completion)" "2:subcommand:(component)" "3:component name:" "--renderer[renderer]:renderer:(${CHAT_RENDERERS.join(' ')})" "--directory[project directory]:directory:_directories" "--yes[non-interactive]"\n`
+  if (shell === 'fish') return `complete -c agentskit-chat -f -n '__fish_use_subcommand' -a 'init add completion'\ncomplete -c agentskit-chat -f -n '__fish_seen_subcommand_from add' -a 'component'\ncomplete -c agentskit-chat -l renderer -a "${CHAT_RENDERERS.join(' ')}"\ncomplete -c agentskit-chat -l directory -r\ncomplete -c agentskit-chat -l yes\n`
   throw new Error(`Expected completion shell bash, zsh, or fish.\n${help}`)
 }
 
@@ -35,6 +35,7 @@ const main = async (): Promise<void> => {
     return void stdout.write(`${JSON.stringify({ ok: true, files })}\n`)
   }
   if (parsed.positionals[0] !== 'init') throw new Error(`Expected init command.\n${help}`)
+  if (parsed.values.directory !== undefined) throw new Error(`--directory is only valid with add component.\n${help}`)
   if (parsed.positionals.length > 2) throw new Error(`Expected at most one target directory.\n${help}`)
   let renderer = parsed.values.renderer ?? await detectRenderer(process.cwd())
   if (!renderer && !parsed.values.yes && stdin.isTTY && stdout.isTTY) {
