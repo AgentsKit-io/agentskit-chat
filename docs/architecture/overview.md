@@ -57,6 +57,8 @@ The Svelte renderer uses the upstream `createChatStore` and Svelte 5 snippets. S
 
 The Solid renderer uses upstream `useChat` and native signals, control flow, and render props. Keyed owners isolate session and config identity; owner cleanup cancels active streams through `@agentskit/solid@0.4.4`.
 
+The Angular renderer uses the upstream `AgentskitChat` signal service and standalone components. A component-scoped provider isolates every shell; Angular content templates customize application surfaces, and upstream `destroy()` owns active-stream cancellation.
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.

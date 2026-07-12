@@ -43,7 +43,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/vue` | 0.4.4 | Vue composable, headless components, and controller-free slotted `ChatRoot`. |
 | `@agentskit/svelte` | 0.3.1 | Svelte store and components. |
 | `@agentskit/solid` | 0.4.4 | Solid hook, headless components, and owner-cleanup cancellation. |
-| `@agentskit/angular` | 0.3.1 | Angular service and components. |
+| `@agentskit/angular` | 0.4.6 | Angular signal service, standalone components, lifecycle-safe teardown, and typed partial-Ivy AOT packaging. |
 
 ## Responsibility matrix
 
@@ -159,3 +159,9 @@ AgentsKit Chat consumes those exports directly and adds only application session
 Inspected AgentsKit revision `f35bab77ba64731f2524f9132dd02f906c85a443` and `@agentskit/solid@0.4.3` on 2026-07-11. `packages/solid/src/index.ts` exports `useChat`, `ChatContainer`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation`. The generic cleanup gap in `useChat` was fixed in AgentsKit [#1169](https://github.com/AgentsKit-io/agentskit/pull/1169) and released as `@agentskit/solid@0.4.4` before integration.
 
 AgentsKit Chat consumes those exports directly and adds only application session coordination, validated semantic-frame presentation, theme mapping, and Solid-native render props. No controller, store, stream consumer, lifecycle, confirmation, or headless component behavior is copied or reimplemented.
+
+## Angular renderer adoption record (#18)
+
+Inspected AgentsKit revision `54a34f1256f7e309227c4fb9d6b563134b137fc4` and `@agentskit/angular@0.4.3` on 2026-07-11. `packages/angular/src/index.ts` exports the `AgentskitChat` signal service plus `ChatContainerComponent`, `MessageComponent`, `InputBarComponent`, `ThinkingIndicatorComponent`, and `ToolConfirmationComponent`. The generic teardown gap in `AgentskitChat.destroy()` was fixed in AgentsKit [#1171](https://github.com/AgentsKit-io/agentskit/issues/1171)/[#1172](https://github.com/AgentsKit-io/agentskit/pull/1172). The AOT distribution and declaration-export gaps were then fixed in [#1174](https://github.com/AgentsKit-io/agentskit/issues/1174)/[#1175](https://github.com/AgentsKit-io/agentskit/pull/1175) and [#1177](https://github.com/AgentsKit-io/agentskit/issues/1177)/[#1178](https://github.com/AgentsKit-io/agentskit/pull/1178). All are released in `@agentskit/angular@0.4.6` before integration.
+
+AgentsKit Chat consumes those exports directly and adds only application session coordination, validated semantic-frame presentation, CSS-variable theme mapping, and Angular-native content templates. No controller, signal store, stream consumer, lifecycle, confirmation, or upstream component behavior is copied or reimplemented.
