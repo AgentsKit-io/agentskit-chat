@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "3abcb79d4793c139060feef4c0ff03b759199a2e76963a361ebe80b727e78aea",
+  "contentHash": "9c78904872a4bf077275fc6d3c214f2e4e3da3b22a4e8ea5f2097ebe822a9780",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-12T02:50:15.979Z",
+  "generatedAt": "2026-07-12T03:06:13.357Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -37,8 +37,8 @@
       "type": "agent-doc",
       "title": "Shared example definition",
       "path": "docs/for-agents/apps/example-shared.md",
-      "description": "Owns the `supportChat` definition used unchanged by React, React Native, and Ink, plus injectable host context and ticket service seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
-      "body": "Shared example definition Owns the supportChat definition used unchanged by React, React Native, and Ink, plus injectable host context and ticket service seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
+      "description": "Owns the support and onboarding definitions used unchanged by React, React Native, and Ink, plus injectable domain and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
+      "body": "Shared example definition Owns the support and onboarding definitions used unchanged by React, React Native, and Ink, plus injectable domain and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
     },
     {
       "id": "architecture",
@@ -369,7 +369,7 @@
         "humanDoc": "linked"
       },
       "notes": [
-        "React surface of the production-shaped support reference application"
+        "React surface of the support and deterministic onboarding references"
       ]
     },
     "example-react-native": {
@@ -427,7 +427,7 @@
         "humanDoc": "linked"
       },
       "notes": [
-        "Framework-neutral support domain, typed ticket action, policy, and injected host seams"
+        "Framework-neutral support and deterministic onboarding domains with injected host seams"
       ]
     },
     "governance": {
@@ -814,7 +814,7 @@
           "pnpm --filter @agentskit/chat-example-react build",
           "pnpm test:e2e"
         ],
-        "purpose": "React surface of the production-shaped support reference application",
+        "purpose": "React surface of the support and deterministic onboarding references",
         "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-react.md"
       },
@@ -836,7 +836,7 @@
           "pnpm lint",
           "pnpm test"
         ],
-        "purpose": "Framework-neutral support domain, typed ticket action, policy, and injected host seams",
+        "purpose": "Framework-neutral support and deterministic onboarding domains with injected host seams",
         "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-shared.md"
       },

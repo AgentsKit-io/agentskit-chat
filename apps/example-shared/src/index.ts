@@ -1,4 +1,5 @@
-import { ChoiceListComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
+import { ChoiceListComponent, FormComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, validateStandardComponentInteraction, withActionPolicy, type DeterministicRoute } from '@agentskit/chat'
+import type { ComponentInteractionEvent, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { defineTool, type AdapterFactory, type ToolDefinition } from '@agentskit/core'
 import { createAjvValidator } from '@agentskit/validation'
 
@@ -135,3 +136,104 @@ export const supportTicketService = createInMemoryTicketService()
 export const supportHostContext: SupportHostContext = Object.freeze({ sessionId: 'support-demo', customerId: 'customer-demo', capabilities: ['support.ticket.create'] })
 export const supportChat = createSupportApplication({ context: supportHostContext, ticketService: supportTicketService })
 export const supportSession = createChatSession(supportChat, { sessionId: supportHostContext.sessionId })
+
+export interface OnboardingProfile {
+  readonly role: 'engineering' | 'product' | 'support'
+  readonly goal: string
+}
+
+export interface OnboardingRecommendation {
+  readonly title: string
+  readonly description: string
+}
+
+export interface RecommendationService {
+  recommend(profile: OnboardingProfile): OnboardingRecommendation
+}
+
+const onboardingContext: SupportHostContext = Object.freeze({ sessionId: 'onboarding-demo', customerId: 'onboarding-demo', capabilities: ['onboarding.complete'] })
+
+export interface OnboardingApplicationOptions {
+  readonly context: SupportHostContext
+  readonly recommendations?: RecommendationService
+}
+
+const defaultRecommendations: RecommendationService = { recommend: profile => ({ title: `${profile.role} starter`, description: `A guided workspace for ${profile.goal}.` }) }
+const onboardingFormProps = {
+  title: 'Tell us how you work', submitLabel: 'Save answers', fields: [
+    { id: 'role', label: 'Primary role', type: 'select', required: true, options: [
+      { id: 'engineering', label: 'Engineering' }, { id: 'product', label: 'Product' }, { id: 'support', label: 'Support' },
+    ] },
+    { id: 'goal', label: 'First goal', type: 'text', required: true, placeholder: 'Automate customer handoffs' },
+  ],
+} as const
+
+export const createOnboardingApplication = ({ context, recommendations = defaultRecommendations }: OnboardingApplicationOptions) => {
+  let profile: OnboardingProfile | undefined
+  let decision: 'accept' | 'revise' | undefined
+  let completed = false
+  let activeFormId: string | undefined
+  let activeRecommendationId: string | undefined
+  const frame = (componentKey: string, instanceId: string, props: object, fallback: string): string => JSON.stringify({
+    protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey, instanceId, props,
+    fallback: { kind: 'text', summary: fallback },
+  })
+  const form = (identity: string): string => {
+    activeFormId = `onboarding-form-${identity}`
+    activeRecommendationId = undefined
+    completed = false
+    return frame('form', activeFormId, onboardingFormProps, 'Collect your primary role and first goal.')
+  }
+  const completeTool = defineTool({
+    name: 'complete-onboarding', description: 'Complete onboarding after explicit confirmation.', schema: { type: 'object', additionalProperties: false }, requiresConfirmation: true,
+    execute: () => { completed = true; return 'Onboarding confirmed.' },
+  }) as ToolDefinition
+  const guardedRoute = (route: Omit<DeterministicRoute, 'match'> & { command: string; guard: () => boolean }): DeterministicRoute => ({
+    ...route, match: input => input === route.command && route.guard(),
+  })
+  const definition = defineChat({
+    id: 'onboarding-reference', components: defineComponentManifest([FormComponent, ChoiceListComponent]),
+    chat: withActionPolicy({ adapter: deterministicAdapter, tools: [completeTool], validateArgs: createAjvValidator() }, createCapabilityPolicy({
+      sessionId: context.sessionId, getContext: () => context, requirements: { 'complete-onboarding': ['onboarding.complete'] },
+    })),
+    conversation: {
+      initial: 'welcome', states: {
+        welcome: { on: { begin: 'collecting' }, actions: ['begin'] },
+        collecting: { on: { recommend: 'review' }, actions: ['recommend'] },
+        review: { on: { accept: 'confirming', revise: 'collecting' }, actions: ['accept', 'revise'] },
+        confirming: { on: { done: 'complete', revise: 'collecting' }, actions: ['done', 'revise'] },
+        complete: {},
+      }, routes: [
+        commandRoute({ id: 'begin', command: '/onboarding', event: 'begin', response: (_input, context) => form(context.messageId ?? context.sessionId) }),
+        guardedRoute({ id: 'recommend', command: '/recommend', event: 'recommend', guard: () => profile !== undefined, response: (_input, context) => {
+          const item = recommendations.recommend(profile!)
+          activeFormId = undefined
+          activeRecommendationId = `onboarding-recommendation-${context.messageId ?? context.sessionId}`
+          return frame('choice-list', activeRecommendationId, { prompt: item.title, choices: [
+            { id: 'accept', label: 'Use this setup', description: item.description }, { id: 'revise', label: 'Revise answers' },
+          ] }, `${item.title}: ${item.description}`)
+        } }),
+        guardedRoute({ id: 'accept', command: '/accept', event: 'accept', guard: () => decision === 'accept', response: (_input, context) => { activeRecommendationId = undefined; return frame('choice-list', `onboarding-complete-${context.messageId ?? context.sessionId}`, {
+          prompt: 'Ready to create your workspace?', choices: [{ id: 'complete', label: 'Complete onboarding', action: { name: 'complete-onboarding', input: {} } }],
+        }, 'Confirm onboarding completion.') } }),
+        guardedRoute({ id: 'revise', command: '/revise', event: 'revise', states: ['review', 'confirming'], guard: () => decision === 'revise' || profile !== undefined, response: (_input, context) => { profile = undefined; decision = undefined; completed = false; return form(context.messageId ?? context.sessionId) } }),
+        guardedRoute({ id: 'done', command: '/done', event: 'done', guard: () => completed, response: () => 'Onboarding complete. Your guided workspace is ready.' }),
+      ],
+    },
+  })
+  const session = createChatSession(definition, { sessionId: context.sessionId })
+  return {
+    definition, session,
+    onComponentInteract: (event: ComponentInteractionEvent) => {
+      if (session.getConversationSnapshot()?.state !== 'collecting' || event.instanceId !== activeFormId || event.componentKey !== 'form' || event.event !== 'submit' || typeof event.value !== 'object' || event.value === null) return
+      if (!validateStandardComponentInteraction('form', onboardingFormProps, 'submit', event.value)) return
+      const value = event.value as Record<string, unknown>
+      if ((value.role === 'engineering' || value.role === 'product' || value.role === 'support') && typeof value.goal === 'string' && value.goal.trim()) profile = { role: value.role, goal: value.goal.trim() }
+    },
+    onComponentSelect: (event: ComponentSelectionEvent) => {
+      if (session.getConversationSnapshot()?.state === 'review' && event.instanceId === activeRecommendationId && (event.choiceId === 'accept' || event.choiceId === 'revise')) decision = event.choiceId
+    },
+  }
+}
+
+export const onboardingApplication = createOnboardingApplication({ context: onboardingContext })

@@ -158,7 +158,7 @@
         },
         "example-react": {
           "path": "apps/example-react",
-          "purpose": "React surface of the production-shaped support reference application",
+          "purpose": "React surface of the support and deterministic onboarding references",
           "agentDoc": "docs/for-agents/apps/example-react.md",
           "humanDoc": "examples/support-reference",
           "checks": [
@@ -168,7 +168,7 @@
         },
         "example-shared": {
           "path": "apps/example-shared",
-          "purpose": "Framework-neutral support domain, typed ticket action, policy, and injected host seams",
+          "purpose": "Framework-neutral support and deterministic onboarding domains with injected host seams",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
           "humanDoc": "examples/support-reference",
           "checks": [

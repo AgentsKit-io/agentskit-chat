@@ -10,3 +10,5 @@ Run `pnpm --filter @agentskit/chat-example-ink build` and `pnpm --filter @agents
 - Escape stops an active streamed response.
 - Up/down recalls prompt history.
 - Ctrl+C exits the process.
+
+Set `AK_EXAMPLE=onboarding` for the [deterministic onboarding reference](../../docs/examples/onboarding-reference.md).

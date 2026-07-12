@@ -177,3 +177,7 @@ AgentsKit Chat consumes those exports directly and adds only application session
 ## Standard component catalog adoption record (#19)
 
 Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/core@1.12.2` on 2026-07-11, especially `packages/core/src/generative-ui.ts`. AgentsKit owns `UIElement` (`text`, `heading`, `list`, `button`, `image`, `card`, `stack`, and `artifact`) plus its validators. AgentsKit Chat does not extend or copy that union. It adds only the closed application schemas, intent events, accessibility/capability metadata, native application presentations, and parity evidence established by ADR-0007/ADR-0015. No generic upstream gap blocks #19.
+
+## Deterministic onboarding adoption record (#23)
+
+Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `@agentskit/core@1.12.2`: `ChatConfig`, `AdapterFactory`, typed tools, authorization, confirmation, and official React, React Native, and Ink bindings. AgentsKit owns controller lifecycle, messages, streams, memory, cancellation, tool execution, and confirmation. AgentsKit Chat adds only application routes, Form/ChoiceList intents, guards, and parity evidence. No upstream state-machine primitive exists, no upstream behavior is copied, and no generic gap blocks #23.
