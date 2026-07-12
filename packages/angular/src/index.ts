@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { Component, ContentChild, Input, OnChanges, SimpleChanges, TemplateRef, effect, inject, signal, type OnDestroy } from '@angular/core'
+import { Component, ContentChild, Input, OnChanges, SimpleChanges, TemplateRef, computed, inject, signal, type OnDestroy } from '@angular/core'
 import { AgentskitChat, ChatContainerComponent, InputBarComponent, MessageComponent, ThinkingIndicatorComponent, ToolConfirmationComponent } from '@agentskit/angular'
 import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
@@ -65,13 +65,13 @@ interface MessagePresentation {
       @for (toolCall of toolCalls(); track toolCall.id) { @if (confirmationTemplate) { <ng-container [ngTemplateOutlet]="confirmationTemplate" [ngTemplateOutletContext]="confirmationContext(toolCall)" /> } @else { <ak-tool-confirmation [toolCall]="toolCall" [onApprove]="approve" [onDeny]="deny" /> } }
       @if (thinkingTemplate) { <ng-container [ngTemplateOutlet]="thinkingTemplate" [ngTemplateOutletContext]="{ $implicit: chat()?.status === 'streaming' }" /> } @else { <ak-thinking-indicator [visible]="chat()?.status === 'streaming'" /> }
     </ng-template>@if (containerTemplate) { <ng-container [ngTemplateOutlet]="containerTemplate" [ngTemplateOutletContext]="{ $implicit: content, content: content }" /> } @else { <ak-chat-container><ng-container [ngTemplateOutlet]="content" /></ak-chat-container> }</div>
-    @if (error(); as currentError) { <p role="alert" [style.color]="dangerColor()">{{ currentError.message }}</p> }
+    @if (displayError(); as currentError) { <p role="alert" [style.color]="dangerColor()">{{ currentError.message }}</p> }
     @if (chat()?.status === 'streaming') { <button type="button" (click)="chat()?.stop()">Stop</button> }
     @if (targets().userId && chat()?.status !== 'streaming') { <div aria-label="Response actions">
       <button type="button" aria-label="Retry response" (click)="run(chat()!.retry())">Retry</button>
       @if (targets().assistantId) { <button type="button" aria-label="Regenerate response" (click)="run(chat()!.regenerate(targets().assistantId!))">Regenerate</button> }
       <button type="button" (click)="beginEdit()">Edit last message</button>
-      @if (editDraft(); as draft) { <form (submit)="saveEdit($event)"><label>Edit message<input aria-label="Edit message" [value]="draft.content" (input)="updateEdit($any($event.target).value)" /></label><button type="submit" aria-label="Save edit">Save edit</button><button type="button" (click)="editDraft.set(undefined)">Cancel edit</button></form> }
+      @if (editDraft(); as draft) { <form (submit)="saveEdit($event)"><label>Edit message<input aria-label="Edit message" [value]="draft.content" (input)="updateEditEvent($event)" /></label><button type="submit" aria-label="Save edit">Save edit</button><button type="button" (click)="editDraft.set(undefined)">Cancel edit</button></form> }
     </div> }
     @if (inputTemplate) { <ng-container [ngTemplateOutlet]="inputTemplate" [ngTemplateOutletContext]="inputContext()" /> } @else if (chat(); as currentChat) { <ak-input-bar [chat]="currentChat" [disabled]="currentChat.status === 'streaming'" [placeholder]="placeholder ?? 'Type a message...'" /> }
   </section>`,
@@ -91,22 +91,26 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   @ContentChild('choiceList', { read: TemplateRef }) choiceListTemplate?: TemplateRef<unknown>
 
   private readonly service = inject(AgentskitChat)
-  readonly chat = signal<ChatReturn | null>(null)
+  readonly chat = computed<ChatReturn | null>(() => this.service.state() ? this.service.snapshot() : null)
   readonly error = signal<Error | null>(null)
+  readonly displayError = computed(() => this.chat()?.error ?? this.error())
   readonly editDraft = signal<{ readonly messageId: string; readonly content: string } | undefined>(undefined)
   readonly resolvedInstances = signal(new Set<string>())
   private activeChat?: ChatDefinition['chat']
-  private sessionKey?: string
+  private initialized = false
+  private definitionId?: string
+  private definitionRevision?: number
+  private preparedSession: ChatSession | undefined
   private currentSession?: ChatSession
   private confirmation?: ReturnType<ChatSession['createConfirmation']>
 
-  constructor() { effect(() => { if (this.service.state()) this.chat.set(this.service.snapshot()) }) }
-
   ngOnChanges(_changes: SimpleChanges): void {
     if (!this.definition) return
-    const key = `${this.definition.id}:${this.definition.revision ?? 1}:${this.session?.sessionId ?? 'new'}`
-    if (key !== this.sessionKey) {
-      this.sessionKey = key; this.currentSession = resolveChatSession(this.definition, this.session); this.resolvedInstances.set(new Set()); this.initialize(this.definition.chat, false)
+    const revision = this.definition.revision ?? 1
+    const identityChanged = !this.initialized || this.definition.id !== this.definitionId || revision !== this.definitionRevision || this.session !== this.preparedSession
+    if (identityChanged) {
+      this.initialized = true; this.definitionId = this.definition.id; this.definitionRevision = revision; this.preparedSession = this.session
+      this.currentSession = resolveChatSession(this.definition, this.session); this.resolvedInstances.set(new Set()); this.error.set(null); this.editDraft.set(undefined); this.initialize(this.definition.chat, false)
       this.confirmation = this.currentSession.createConfirmation({ ...(this.actionConfirmationTtlMs === undefined ? {} : { ttlMs: this.actionConfirmationTtlMs }), chat: { proposeToolCall: proposal => this.chat()!.proposeToolCall(proposal), approve: id => this.chat()!.approve(id), deny: (id, reason) => this.chat()!.deny(id, reason) } })
     } else if (this.definition.chat !== this.activeChat) this.initialize(this.definition.chat, true)
   }
@@ -114,7 +118,7 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void { this.service.destroy() }
   private initialize(config: ChatDefinition['chat'], preserve: boolean): void {
     const messages = preserve ? this.chat()?.messages : config.initialMessages
-    this.activeChat = config; this.service.init(this.currentSession!.updateChat({ ...config, ...(messages === undefined ? {} : { initialMessages: messages }) })); this.chat.set(this.service.snapshot())
+    this.activeChat = config; this.service.init(this.currentSession!.updateChat({ ...config, ...(messages === undefined ? {} : { initialMessages: messages }) }))
   }
   readonly styleText = (): string | null => this.theme === undefined ? null : Object.entries(toChatCssVariables(this.theme)).map(([key, value]) => `${key}:${value}`).join(';')
   readonly dangerColor = (): string => resolveChatTheme(this.theme).colors.danger
@@ -139,6 +143,7 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   run(operation: Promise<void>): void { this.error.set(null); void operation.catch(error => this.fail(error, 'Lifecycle operation failed.')) }
   beginEdit(): void { const id = this.targets().userId; if (id) this.editDraft.set({ messageId: id, content: this.chat()!.messages.find(message => message.id === id)?.content ?? '' }) }
   updateEdit(content: string): void { const draft = this.editDraft(); if (draft) this.editDraft.set({ ...draft, content }) }
+  updateEditEvent(event: Event): void { if (event.target instanceof HTMLInputElement) this.updateEdit(event.target.value) }
   saveEdit(event: Event): void { event.preventDefault(); const draft = this.editDraft(); if (!draft?.content.trim()) return; this.run(this.chat()!.edit(draft.messageId, draft.content)); this.editDraft.set(undefined) }
   inputContext(): Record<string, unknown> { const chat = this.chat(); return { $implicit: chat, chat, disabled: chat?.status === 'streaming', placeholder: this.placeholder } }
   confirmationContext(toolCall: ToolCall): Record<string, unknown> { return { $implicit: toolCall, toolCall, approve: this.approve, deny: this.deny } }

@@ -14,6 +14,8 @@ const adapter = (answer = 'Hello from Angular'): AdapterFactory => ({
   }),
 })
 
+const failingAdapter: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'error', content: 'Angular adapter failed' } }, abort() {} }) }
+
 const definition = (initialMessages = [buildMessage({ role: 'assistant', content: 'hello' })]) => defineChat({
   id: 'angular-chat',
   chat: { adapter: adapter(), initialMessages },
@@ -106,6 +108,27 @@ describe('AgentChat Angular', () => {
     await settle()
     fixture.detectChanges()
     expect(fixture.nativeElement.textContent).toContain('second')
+  })
+
+  it('surfaces upstream adapter failures as accessible alerts', async () => {
+    const fixture = mount(defineChat({ id: 'error', chat: { adapter: failingAdapter } }))
+    await fixture.componentInstance.chat()!.send('fail')
+    fixture.detectChanges()
+    expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain('Angular adapter failed')
+  })
+
+  it('clears session-local edit and error state when the session changes', () => {
+    const value = definition([buildMessage({ role: 'user', content: 'old' })])
+    const fixture = TestBed.createComponent(AgentChatComponent)
+    fixture.componentRef.setInput('definition', value)
+    fixture.componentRef.setInput('session', createChatSession(value, { sessionId: 'one' }))
+    fixture.detectChanges()
+    fixture.componentInstance.beginEdit()
+    fixture.componentInstance.error.set(new Error('old session'))
+    fixture.componentRef.setInput('session', createChatSession(value, { sessionId: 'two' }))
+    fixture.detectChanges()
+    expect(fixture.componentInstance.editDraft()).toBeUndefined()
+    expect(fixture.componentInstance.error()).toBeNull()
   })
 
   it('deduplicates typed choice selections', async () => {

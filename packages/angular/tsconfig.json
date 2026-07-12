@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "experimentalDecorators": true, "useDefineForClassFields": false, "types": ["node"] },
+  "compilerOptions": { "experimentalDecorators": true, "ignoreDeprecations": "5.0", "useDefineForClassFields": false, "types": ["node"] },
   "include": ["src", "tests", "tsup.config.ts", "vitest.config.ts"]
 }

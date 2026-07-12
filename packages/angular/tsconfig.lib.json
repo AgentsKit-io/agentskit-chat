@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationMap": true,
+    "inlineSources": true,
+    "ignoreDeprecations": "5.0",
+    "paths": {
+      "@agentskit/chat": ["packages/chat/dist/index.d.ts"],
+      "@agentskit/chat-protocol": ["packages/protocol/dist/index.d.ts"]
+    }
+  },
+  "angularCompilerOptions": { "compilationMode": "partial" },
+  "include": ["src/**/*.ts"]
+}
