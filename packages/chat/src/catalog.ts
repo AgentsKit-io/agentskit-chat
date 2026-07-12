@@ -75,7 +75,12 @@ export const FileAttachmentPropsSchema = z.object({ name: LabelSchema, mimeType:
 export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
 export type ChoiceAction = NonNullable<ChoiceListProps['choices'][number]['action']>
 
-const define = <T>(definition: ComponentDefinition<T>): ComponentDefinition<T> => Object.freeze(definition)
+const define = <T>(definition: ComponentDefinition<T>): ComponentDefinition<T> => Object.freeze({
+  ...definition,
+  events: Object.freeze((definition.events ?? []).map(event => Object.freeze({ ...event }))),
+  capabilities: Object.freeze([...(definition.capabilities ?? [])]),
+  ...(definition.accessibility === undefined ? {} : { accessibility: Object.freeze({ ...definition.accessibility }) }),
+})
 const display = (role: string, live: ComponentAccessibilityDefinition['live'] = 'none'): ComponentAccessibilityDefinition => ({ role, keyboard: false, live })
 const interactive = (role: string): ComponentAccessibilityDefinition => ({ role, keyboard: true, live: 'none' })
 
@@ -98,3 +103,46 @@ export const StandardComponentCatalog = Object.freeze([
 ] as const)
 
 export const STANDARD_COMPONENT_KEYS = Object.freeze(StandardComponentCatalog.map(component => component.key))
+
+const isRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === 'object' && !Array.isArray(value)
+
+export const validateStandardComponentInteraction = (componentKey: string, props: unknown, event: string, value?: unknown): boolean => {
+  switch (componentKey) {
+    case 'button-group': {
+      const parsed = ButtonGroupPropsSchema.safeParse(props)
+      return parsed.success && event === 'select' && typeof value === 'string' && parsed.data.buttons.some(button => button.id === value && button.disabled !== true)
+    }
+    case 'form': {
+      const parsed = FormPropsSchema.safeParse(props)
+      if (!parsed.success || event !== 'submit' || !isRecord(value)) return false
+      if (Object.keys(value).some(key => !parsed.data.fields.some(field => field.id === key))) return false
+      return parsed.data.fields.every(field => {
+        const fieldValue = value[field.id]
+        if (fieldValue === undefined || fieldValue === '') return field.required !== true
+        if (field.type === 'checkbox') return typeof fieldValue === 'boolean'
+        if (field.type === 'number') return (typeof fieldValue === 'number' && Number.isFinite(fieldValue)) || (typeof fieldValue === 'string' && fieldValue.trim() !== '' && Number.isFinite(Number(fieldValue)))
+        if (field.type === 'select') return typeof fieldValue === 'string' && field.options?.some(option => option.id === fieldValue) === true
+        return typeof fieldValue === 'string'
+      })
+    }
+    case 'confirmation': return (event === 'confirm' || event === 'cancel') && value === undefined
+    case 'source-list': {
+      const parsed = SourceListPropsSchema.safeParse(props)
+      return parsed.success && event === 'open' && typeof value === 'string' && parsed.data.sources.some(source => source.id === value && source.url !== undefined)
+    }
+    case 'link-card': {
+      const parsed = LinkCardPropsSchema.safeParse(props)
+      return parsed.success && event === 'open' && value === parsed.data.href
+    }
+    case 'error-notice': {
+      const parsed = ErrorNoticePropsSchema.safeParse(props)
+      return parsed.success && event === 'retry' && parsed.data.retryLabel !== undefined && value === undefined
+    }
+    case 'approval-request': return (event === 'approve' || event === 'deny') && value === undefined
+    case 'file-attachment': {
+      const parsed = FileAttachmentPropsSchema.safeParse(props)
+      return parsed.success && event === 'open' && parsed.data.url !== undefined && value === parsed.data.url
+    }
+    default: return false
+  }
+}

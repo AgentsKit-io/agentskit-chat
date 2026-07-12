@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFrame } from '@agentskit/chat'
+  import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame } from '@agentskit/chat'
   import type { ComponentManifest } from '@agentskit/chat'
   import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
 
@@ -17,7 +17,7 @@
     {@const item = FormPropsSchema.parse(frame.props)}
     <form aria-label={item.title ?? 'Form'} data-ak-component="form" onsubmit={event => { event.preventDefault(); emit('submit', { ...values }) }}>
       {#if item.title}<h3>{item.title}</h3>{/if}
-      {#each item.fields as field (field.id)}<label>{field.label}{#if field.type === 'select'}<select required={field.required} {disabled} onchange={event => values[field.id] = event.currentTarget.value}>{#each field.options ?? [] as option}<option value={option.id}>{option.label}</option>{/each}</select>{:else}<input type={field.type} required={field.required} {disabled} placeholder={field.placeholder} oninput={event => values[field.id] = field.type === 'checkbox' ? event.currentTarget.checked : event.currentTarget.value} />{/if}</label>{/each}
+      {#each item.fields as field (field.id)}<label>{field.label}{#if field.type === 'select'}<select required={field.required} {disabled} value={String(values[field.id] ?? '')} onchange={event => values[field.id] = event.currentTarget.value}><option value="" disabled>Select…</option>{#each field.options ?? [] as option}<option value={option.id}>{option.label}</option>{/each}</select>{:else}<input type={field.type} required={field.required} {disabled} placeholder={field.placeholder} oninput={event => values[field.id] = field.type === 'checkbox' ? event.currentTarget.checked : event.currentTarget.value} />{/if}</label>{/each}
       <button type="submit" {disabled}>{item.submitLabel}</button>
     </form>
   {:else if frame.componentKey === 'confirmation'}
@@ -38,5 +38,6 @@
     {@const item = TablePropsSchema.parse(frame.props)}<table data-ak-component="table"><caption>{item.caption}</caption><thead><tr>{#each item.columns as column (column.key)}<th scope="col">{column.label}</th>{/each}</tr></thead><tbody>{#each item.rows as row}<tr>{#each item.columns as column (column.key)}<td>{String(row[column.key] ?? '')}</td>{/each}</tr>{/each}</tbody></table>
   {:else if frame.componentKey === 'file-attachment'}
     {@const item = FileAttachmentPropsSchema.parse(frame.props)}<article data-ak-component="file-attachment"><strong>{item.name}</strong><span>{item.mimeType}</span>{#if item.sizeBytes !== undefined}<span>{item.sizeBytes} bytes</span>{/if}{#if item.url}<a href={item.url} onclick={event => { event.preventDefault(); emit('open', item.url) }}>Open</a>{/if}</article>
+  {:else}<p data-ak-component-fallback="">{resolveComponentFallback(frame, manifest)}</p>
   {/if}
 {/if}

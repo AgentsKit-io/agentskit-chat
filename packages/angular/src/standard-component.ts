@@ -1,12 +1,12 @@
 import { Component, Input, type OnChanges } from '@angular/core'
-import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
+import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
 import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
 
 @Component({
   selector: 'ak-standard-component', standalone: true,
   template: `@if (valid) { @switch (frame.componentKey) {
     @case ('button-group') { @if (buttonGroup(); as item) { <fieldset [attr.aria-label]="item.label" data-ak-component="button-group"><legend>{{ item.label }}</legend>@for (button of item.buttons; track button.id) { <button type="button" [disabled]="disabled || button.disabled" (click)="emit('select', button.id)">{{ button.label }}</button> }</fieldset> } }
-    @case ('form') { @if (form(); as item) { <form [attr.aria-label]="item.title ?? 'Form'" data-ak-component="form" (submit)="submit($event)">@if (item.title) { <h3>{{ item.title }}</h3> } @for (field of item.fields; track field.id) { <label>{{ field.label }}@if (field.type === 'select') { <select [required]="field.required" [disabled]="disabled" (change)="setSelect(field.id, $event)">@for (option of field.options ?? []; track option.id) { <option [value]="option.id">{{ option.label }}</option> }</select> } @else { <input [type]="field.type" [required]="field.required" [disabled]="disabled" [placeholder]="field.placeholder" (input)="setInput(field.id, field.type, $event)" /> }</label> } <button type="submit" [disabled]="disabled">{{ item.submitLabel }}</button></form> } }
+    @case ('form') { @if (form(); as item) { <form [attr.aria-label]="item.title ?? 'Form'" data-ak-component="form" (submit)="submit($event)">@if (item.title) { <h3>{{ item.title }}</h3> } @for (field of item.fields; track field.id) { <label>{{ field.label }}@if (field.type === 'select') { <select [required]="field.required" [disabled]="disabled" (change)="setSelect(field.id, $event)"><option value="" disabled selected>Select…</option>@for (option of field.options ?? []; track option.id) { <option [value]="option.id">{{ option.label }}</option> }</select> } @else { <input [type]="field.type" [required]="field.required" [disabled]="disabled" [placeholder]="field.placeholder" (input)="setInput(field.id, field.type, $event)" /> }</label> } <button type="submit" [disabled]="disabled">{{ item.submitLabel }}</button></form> } }
     @case ('confirmation') { @if (confirmation(); as item) { <section [attr.aria-label]="item.title" data-ak-component="confirmation"><h3>{{ item.title }}</h3><p>{{ item.message }}</p><button [disabled]="disabled" (click)="emit('confirm')">{{ item.confirmLabel }}</button><button [disabled]="disabled" (click)="emit('cancel')">{{ item.cancelLabel }}</button></section> } }
     @case ('progress') { @if (progress(); as item) { <div data-ak-component="progress"><label>{{ item.label }}<progress max="100" [value]="item.value"></progress></label>@if (item.status) { <p>{{ item.status }}</p> }</div> } }
     @case ('source-list') { @if (sourceList(); as item) { <section data-ak-component="source-list"><h3>{{ item.label }}</h3><ul>@for (source of item.sources; track source.id) { <li>@if (source.url) { <a [href]="source.url" (click)="link($event, 'open', source.id)">{{ source.title }}</a> } @else { {{ source.title }} } @if (source.snippet) { <p>{{ source.snippet }}</p> }</li> }</ul></section> } }
@@ -16,6 +16,7 @@ import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit
     @case ('approval-request') { @if (approval(); as item) { <section [attr.aria-label]="item.title" data-ak-component="approval-request"><h3>{{ item.title }}</h3><p>{{ item.description }}</p><button [disabled]="disabled" (click)="emit('approve')">{{ item.approveLabel }}</button><button [disabled]="disabled" (click)="emit('deny')">{{ item.denyLabel }}</button></section> } }
     @case ('table') { @if (table(); as item) { <table data-ak-component="table"><caption>{{ item.caption }}</caption><thead><tr>@for (column of item.columns; track column.key) { <th scope="col">{{ column.label }}</th> }</tr></thead><tbody>@for (row of item.rows; track $index) { <tr>@for (column of item.columns; track column.key) { <td>{{ cell(row[column.key]) }}</td> }</tr> }</tbody></table> } }
     @case ('file-attachment') { @if (file(); as item) { <article data-ak-component="file-attachment"><strong>{{ item.name }}</strong><span>{{ item.mimeType }}</span>@if (item.sizeBytes !== undefined) { <span>{{ item.sizeBytes }} bytes</span> } @if (item.url) { <a [href]="item.url" (click)="link($event, 'open', item.url)">Open</a> }</article> } }
+    @default { <p data-ak-component-fallback>{{ fallback() }}</p> }
   } }`,
 })
 export class StandardComponentComponent implements OnChanges {
@@ -37,6 +38,7 @@ export class StandardComponentComponent implements OnChanges {
   approval = () => ApprovalRequestPropsSchema.safeParse(this.frame.props).data
   table = () => TablePropsSchema.safeParse(this.frame.props).data
   file = () => FileAttachmentPropsSchema.safeParse(this.frame.props).data
+  fallback = (): string => resolveComponentFallback(this.frame, this.manifest) ?? ''
   emit(event: string, value?: unknown): void { this.onInteract(createComponentInteraction(this.frame, this.manifest, event, value)) }
   link(event: Event, name: string, value: string): void { event.preventDefault(); this.emit(name, value) }
   submit(event: Event): void { event.preventDefault(); this.emit('submit', { ...this.values }) }

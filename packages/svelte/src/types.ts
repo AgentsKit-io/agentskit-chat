@@ -7,7 +7,8 @@ import type { Snippet } from 'svelte'
 export interface AgentChatProps {
   definition: ChatDefinition
   placeholder?: string
-  onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  onComponentSelect?: (event: ComponentSelectionEvent) => void
+  onComponentInteract?: (event: ComponentInteractionEvent) => void
   actionConfirmationTtlMs?: number
   session?: ChatSession
   theme?: ChatThemeInput

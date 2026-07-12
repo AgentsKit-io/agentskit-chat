@@ -15,7 +15,7 @@
     "docs:bridge:index": "ak-docs index",
     "docs:bridge:query": "ak-docs query",
     "docs:bridge:gate": "ak-docs gate run",
-    "catalog:report": "node scripts/generate-catalog-report.mjs"
+    "catalog:report": "pnpm --filter @agentskit/chat build && node scripts/generate-catalog-report.mjs"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.0.2",

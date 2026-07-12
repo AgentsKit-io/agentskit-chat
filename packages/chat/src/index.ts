@@ -17,7 +17,7 @@ import {
   type SessionSnapshot,
 } from '@agentskit/chat-protocol'
 import { z } from 'zod'
-import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, type ChoiceAction, type ChoiceListProps, type ComponentDefinition } from './catalog.js'
+import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, STANDARD_COMPONENT_KEYS, StandardComponentCatalog, validateStandardComponentInteraction, type ChoiceAction, type ChoiceListProps, type ComponentDefinition } from './catalog.js'
 
 export * from './catalog.js'
 
@@ -363,11 +363,12 @@ export const defineComponentManifest = (
 ): ComponentManifest => {
   const manifest: Record<string, ComponentDefinition<unknown>> = Object.create(null) as Record<string, ComponentDefinition<unknown>>
   for (const component of components) {
-    if (!ComponentKeySchema.safeParse(component.key).success || Object.hasOwn(manifest, component.key)) {
+    const standardDefinition = StandardComponentCatalog.find(candidate => candidate.key === component.key)
+    if (!ComponentKeySchema.safeParse(component.key).success || Object.hasOwn(manifest, component.key) || (standardDefinition !== undefined && standardDefinition !== component)) {
       throw new ConfigError({
         code: ErrorCodes.AK_CONFIG_INVALID,
-        message: 'Component manifest keys must be non-empty and unique.',
-        hint: 'Register each application component exactly once.',
+        message: 'Component manifest keys must be non-empty, unique, and must not override standard catalog keys.',
+        hint: 'Register each application component exactly once and use the canonical definition for standard keys.',
       })
     }
     manifest[component.key] = component
@@ -415,7 +416,10 @@ export const createComponentInteraction = (
   const resolved = resolveComponentFrame(frame, manifest)
   const definition = resolved.ok ? manifest[resolved.frame.componentKey] : undefined
   const declared = definition?.events?.find(candidate => candidate.name === event)
-  const validValue = declared?.value === 'none'
+  const isStandard = STANDARD_COMPONENT_KEYS.includes(frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])
+  const validValue = isStandard
+    ? resolved.ok && validateStandardComponentInteraction(frame.componentKey, resolved.props, event, value)
+    : declared?.value === 'none'
     ? value === undefined
     : declared?.value === 'id'
       ? typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value)

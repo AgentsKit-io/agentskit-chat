@@ -10,7 +10,7 @@
   import { toChatStyle } from './index.js'
   import { untrack } from 'svelte'
 
-  let { definition, placeholder, onComponentSelect, actionConfirmationTtlMs, session: preparedSession, theme, container, message, input, thinking, confirmation: confirmationSnippet, choiceList, standardComponent }: AgentChatProps = $props()
+  let { definition, placeholder, onComponentSelect, onComponentInteract, actionConfirmationTtlMs, session: preparedSession, theme, container, message, input, thinking, confirmation: confirmationSnippet, choiceList, standardComponent }: AgentChatProps = $props()
   const initial = untrack(() => ({ definition, preparedSession, actionConfirmationTtlMs }))
   const session = resolveChatSession(initial.definition, initial.preparedSession)
   const sessionId = session.sessionId
@@ -50,7 +50,7 @@
   function interactComponent(event: ComponentInteractionEvent) {
     if (resolvedInstances.has(event.instanceId)) return
     resolvedInstances.add(event.instanceId)
-    try { onComponentSelect?.(event) } catch (error) { fail(error, 'Component interaction callback failed.') }
+    try { onComponentInteract?.(event) } catch (error) { resolvedInstances.delete(event.instanceId); fail(error, 'Component interaction callback failed.') }
   }
   function approve(id: string) { const record = coordinator.getByToolCall(id); void (record ? coordinator.approve(record.token, sessionId) : currentStore!.approve(id)).catch(error => fail(error, 'Action approval failed.')) }
   function deny(id: string, reason?: string) { const record = coordinator.getByToolCall(id); void (record ? coordinator.reject(record.token, sessionId, reason) : currentStore!.deny(id, reason)).catch(error => fail(error, 'Action rejection failed.')) }

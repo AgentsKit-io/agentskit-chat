@@ -1,4 +1,4 @@
-import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, STANDARD_COMPONENT_KEYS, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
@@ -56,7 +56,8 @@ export interface AgentChatSlots {
 export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
-  readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
@@ -124,7 +125,7 @@ export const ChoiceList = ({ frame, manifest, onSelect, disabled = false }: Choi
   )
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme: themeInput, slots = {} }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme: themeInput, slots = {} }: AgentChatProps): ReactElement => {
   const theme: ChatTheme = resolveChatTheme(themeInput)
   const ContainerSlot = slots.Container ?? ChatContainer
   const MessageSlot = slots.Message ?? Message
@@ -166,7 +167,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     resolvedInstancesRef.current.add(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current))
-    try { onComponentSelect(event) } catch (error) { setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
+    try { onComponentInteract(event) } catch (error) { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)); setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
   }
   const approve = (toolCallId: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
@@ -192,6 +193,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
             if (decoded?.ok) {
               const manifest = definition.components
               const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
+              if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
               if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
                 ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
                 : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />

@@ -75,7 +75,8 @@ export const ChoiceList = defineComponent({
 export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
-  readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
@@ -97,7 +98,8 @@ const slot = (slots: Slots, name: string, props: Record<string, unknown>, fallba
 const agentChatProps = {
   definition: { type: Object as PropType<ChatDefinition>, required: true },
   placeholder: { type: String, default: undefined },
-  onComponentSelect: { type: Function as PropType<(event: ComponentSelectionEvent | ComponentInteractionEvent) => void>, default: undefined },
+  onComponentSelect: { type: Function as PropType<(event: ComponentSelectionEvent) => void>, default: undefined },
+  onComponentInteract: { type: Function as PropType<(event: ComponentInteractionEvent) => void>, default: undefined },
   actionConfirmationTtlMs: { type: Number, default: undefined },
   session: { type: Object as PropType<ChatSession>, default: undefined },
   theme: { type: Object as PropType<ChatThemeInput>, default: undefined },
@@ -167,7 +169,7 @@ const AgentChatSession = defineComponent({
     const interactComponent = (event: ComponentInteractionEvent): void => {
       if (resolvedInstances.value.has(event.instanceId)) return
       resolvedInstances.value.add(event.instanceId)
-      try { props.onComponentSelect?.(event) } catch (error) { fail(error, 'Component interaction callback failed.') }
+      try { props.onComponentInteract?.(event) } catch (error) { resolvedInstances.value.delete(event.instanceId); fail(error, 'Component interaction callback failed.') }
     }
 
     const renderChat = (chat: ChatReturn): VNodeChild => {

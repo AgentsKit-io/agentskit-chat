@@ -1,4 +1,4 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
@@ -68,7 +68,8 @@ export interface AgentChatNativeSlots {
 export interface AgentChatNativeProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
-  readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
@@ -107,7 +108,7 @@ export const ChoiceListNative = ({ frame, manifest, onSelect, disabled = false, 
   )
 }
 
-const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme, slots = {} }: AgentChatNativeProps): ReactElement => {
+const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme, slots = {} }: AgentChatNativeProps): ReactElement => {
   const styles = toChatNativeStyles(theme)
   const ContainerSlot = slots.Container ?? ChatContainer
   const MessageSlot = slots.Message ?? Message
@@ -148,7 +149,7 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     resolvedInstancesRef.current.add(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current))
-    try { onComponentSelect(event) } catch (error) { setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
+    try { onComponentInteract(event) } catch (error) { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)); setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
   }
   const approve = (toolCallId: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
@@ -174,6 +175,7 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
             if (decoded?.ok) {
               const manifest = definition.components
               const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
+              if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
               if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
                 ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} styles={styles} />
                 : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />

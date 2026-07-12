@@ -37,7 +37,7 @@ export function ChoiceList(props: ChoiceListProps): JSX.Element {
 }
 
 export interface AgentChatProps {
-  readonly definition: ChatDefinition; readonly placeholder?: string; readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  readonly definition: ChatDefinition; readonly placeholder?: string; readonly onComponentSelect?: (event: ComponentSelectionEvent) => void; readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number; readonly session?: ChatSession; readonly theme?: ChatThemeInput
   readonly container?: (children: JSX.Element) => JSX.Element; readonly message?: (message: ChatMessage) => JSX.Element
   readonly input?: (chat: ChatReturn, disabled: boolean, placeholder?: string) => JSX.Element; readonly thinking?: (visible: boolean) => JSX.Element
@@ -78,7 +78,7 @@ function AgentChatSession(props: AgentChatProps): JSX.Element {
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstances().has(event.instanceId)) return
     setResolvedInstances(current => new Set(current).add(event.instanceId))
-    try { props.onComponentSelect?.(event) } catch (error) { fail(error, 'Component interaction callback failed.') }
+    try { props.onComponentInteract?.(event) } catch (error) { setResolvedInstances(current => { const next = new Set(current); next.delete(event.instanceId); return next }); fail(error, 'Component interaction callback failed.') }
   }
   const approve = (id: string): void => { const record = coordinator.getByToolCall(id); void (record ? coordinator.approve(record.token, sessionId) : currentChat!.approve(id)).catch(error => fail(error, 'Action approval failed.')) }
   const deny = (id: string, reason?: string): void => { const record = coordinator.getByToolCall(id); void (record ? coordinator.reject(record.token, sessionId, reason) : currentChat!.deny(id, reason)).catch(error => fail(error, 'Action rejection failed.')) }

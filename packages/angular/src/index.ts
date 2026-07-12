@@ -60,7 +60,7 @@ interface MessagePresentation {
       @for (message of chat()?.messages ?? []; track message.id) { @let view = present(message);
         @switch (view.kind) {
           @case ('choice') { @if (choiceListTemplate) { <ng-container [ngTemplateOutlet]="choiceListTemplate" [ngTemplateOutletContext]="choiceContext(view.frame!)" /> } @else { <ak-choice-list [frame]="view.frame" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onSelect]="selectFor(view.frame!)" /> } }
-          @case ('standard') { <ak-standard-component [frame]="view.frame!" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onInteract]="interact" /> }
+          @case ('standard') { @if (standardComponentTemplate) { <ng-container [ngTemplateOutlet]="standardComponentTemplate" [ngTemplateOutletContext]="standardContext(view.frame!)" /> } @else { <ak-standard-component [frame]="view.frame!" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onInteract]="interact" /> } }
           @case ('fallback') { <p data-ak-component-fallback>{{ view.fallback }}</p> }
           @case ('diagnostic') { <p role="alert" [attr.data-ak-component-diagnostic]="view.diagnosticCode">{{ view.diagnosticMessage }}</p> }
           @default { @if (messageTemplate) { <ng-container [ngTemplateOutlet]="messageTemplate" [ngTemplateOutletContext]="{ $implicit: message }" /> } @else { <ak-message [message]="message" /> } }
@@ -83,7 +83,8 @@ interface MessagePresentation {
 export class AgentChatComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) definition!: ChatDefinition
   @Input() placeholder?: string
-  @Input() onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
+  @Input() onComponentSelect?: (event: ComponentSelectionEvent) => void
+  @Input() onComponentInteract?: (event: ComponentInteractionEvent) => void
   @Input() actionConfirmationTtlMs?: number
   @Input() session?: ChatSession
   @Input() theme?: ChatThemeInput
@@ -93,6 +94,7 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   @ContentChild('thinking', { read: TemplateRef }) thinkingTemplate?: TemplateRef<unknown>
   @ContentChild('confirmation', { read: TemplateRef }) confirmationTemplate?: TemplateRef<unknown>
   @ContentChild('choiceList', { read: TemplateRef }) choiceListTemplate?: TemplateRef<unknown>
+  @ContentChild('standardComponent', { read: TemplateRef }) standardComponentTemplate?: TemplateRef<unknown>
 
   private readonly service = inject(AgentskitChat)
   readonly chat = computed<ChatReturn | null>(() => this.service.state() ? this.service.snapshot() : null)
@@ -135,7 +137,7 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
     return { kind: 'message', message }
   }
   readonly selectFor = (frame: ComponentRenderFrame) => (event: ComponentSelectionEvent): void => this.selectComponent(event, frame)
-  readonly interact = (event: ComponentInteractionEvent): void => { if (this.resolvedInstances().has(event.instanceId)) return; this.resolvedInstances.update(current => new Set(current).add(event.instanceId)); try { this.onComponentSelect?.(event) } catch (error) { this.fail(error, 'Component interaction callback failed.') } }
+  readonly interact = (event: ComponentInteractionEvent): void => { if (this.resolvedInstances().has(event.instanceId)) return; this.resolvedInstances.update(current => new Set(current).add(event.instanceId)); try { this.onComponentInteract?.(event) } catch (error) { this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next }); this.fail(error, 'Component interaction callback failed.') } }
   private selectComponent(event: ComponentSelectionEvent, frame: ComponentRenderFrame): void {
     if (this.resolvedInstances().has(event.instanceId)) return
     this.error.set(null); this.resolvedInstances.update(current => new Set(current).add(event.instanceId))
@@ -153,6 +155,7 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   inputContext(): Record<string, unknown> { const chat = this.chat(); return { $implicit: chat, chat, disabled: chat?.status === 'streaming', placeholder: this.placeholder } }
   confirmationContext(toolCall: ToolCall): Record<string, unknown> { return { $implicit: toolCall, toolCall, approve: this.approve, deny: this.deny } }
   choiceContext(frame: ComponentRenderFrame): Record<string, unknown> { const props = { frame, manifest: this.definition.components!, disabled: this.resolvedInstances().has(frame.instanceId), onSelect: this.selectFor(frame) }; return { $implicit: props, ...props } }
+  standardContext(frame: ComponentRenderFrame): Record<string, unknown> { const props = { frame, manifest: this.definition.components!, disabled: this.resolvedInstances().has(frame.instanceId), onInteract: this.interact }; return { $implicit: props, ...props } }
   private fail(error: unknown, fallback: string): void { this.error.set(error instanceof Error ? error : new Error(fallback)) }
 }
 

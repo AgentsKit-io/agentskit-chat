@@ -24,6 +24,28 @@ describe('Ink application shell', () => {
     const view = render(<StandardComponent frame={standardComponentFrameFixtures[0]} manifest={manifest} onInteract={onInteract} />)
     view.stdin.write('\r'); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
   })
+  it('collects form fields in the terminal before submitting', async () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog)
+    const frame = standardComponentFrameFixtures.find(item => item.componentKey === 'form')!
+    const onInteract = vi.fn()
+    const view = render(<StandardComponent frame={frame} manifest={manifest} onInteract={onInteract} />)
+    view.stdin.write('A'); view.stdin.write('d'); view.stdin.write('a')
+    await new Promise(resolve => setTimeout(resolve, 0))
+    view.stdin.write('\r')
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'submit', value: expect.objectContaining({ email: 'Ada' }) }))
+    view.unmount()
+  })
+
+  it('does not block the composer for display-only components', async () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog)
+    const frame = standardComponentFrameFixtures.find(item => item.componentKey === 'progress')!
+    const view = render(<AgentChat definition={{ id: 'display-only', components: manifest, chat: { adapter, initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(frame) })] } }} />)
+    view.stdin.write('n'); view.stdin.write('e'); view.stdin.write('x'); view.stdin.write('t')
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(view.lastFrame()).toContain('❯ t')
+    view.unmount()
+  })
   it('maps semantic tokens to Ink capabilities and accepts a terminal slot', () => {
     expect(toChatInkTheme({ colors: { accent: '#0000ff', danger: '#ff0000' } })).toMatchObject({
       prompt: { active: '#0000ff' }, toolStatus: { error: { color: '#ff0000' } },

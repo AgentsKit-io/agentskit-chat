@@ -124,6 +124,23 @@ describe('standard component catalog', () => {
     expect(createComponentInteraction(button, manifest, 'select', 'save')).toMatchObject({ type: 'interact', event: 'select', value: 'save' })
     expect(() => createComponentInteraction(button, manifest, 'submit', {})).toThrow(ConfigError)
     expect(() => createComponentInteraction(standardComponentFrameFixtures[4], manifest, 'select', 'x')).toThrow(ConfigError)
+    expect(() => createComponentInteraction(button, manifest, 'select', 'missing')).toThrow(ConfigError)
+    expect(() => createComponentInteraction(standardComponentFrameFixtures[6], manifest, 'open', '/unrelated')).toThrow(ConfigError)
+    expect(() => createComponentInteraction(standardComponentFrameFixtures[2], manifest, 'submit', {})).toThrow(ConfigError)
+    expect(() => createComponentInteraction(standardComponentFrameFixtures[2], manifest, 'submit', { name: 'Ada', extra: true })).toThrow(ConfigError)
+  })
+
+  it('deep-freezes catalog metadata', () => {
+    const definition = StandardComponentCatalog[0]
+    expect(Object.isFrozen(definition)).toBe(true)
+    expect(Object.isFrozen(definition.events)).toBe(true)
+    expect(Object.isFrozen(definition.events?.[0])).toBe(true)
+    expect(Object.isFrozen(definition.accessibility)).toBe(true)
+    expect(Object.isFrozen(definition.capabilities)).toBe(true)
+  })
+
+  it('prevents custom definitions from overriding reserved standard keys', () => {
+    expect(() => defineComponentManifest([{ key: 'form', propsSchema: ChoiceListComponent.propsSchema }])).toThrow(ConfigError)
   })
 
   it('rejects invalid catalog props at runtime', () => {

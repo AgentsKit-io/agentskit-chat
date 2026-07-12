@@ -1,4 +1,4 @@
-import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
+import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
 import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
 import { createSignal, For, Show, type JSX } from 'solid-js'
 
@@ -10,7 +10,7 @@ const StandardForm = (props: StandardComponentProps): JSX.Element => {
   return <form aria-label={item.title ?? 'Form'} data-ak-component="form" onSubmit={event => { event.preventDefault(); props.onInteract(createComponentInteraction(props.frame, props.manifest, 'submit', values())) }}>
     <Show when={item.title}>{title => <h3>{title()}</h3>}</Show>
     <For each={item.fields}>{field => <label>{field.label}{field.type === 'select'
-      ? <select required={field.required} disabled={props.disabled} onInput={event => setValues(current => ({ ...current, [field.id]: event.currentTarget.value }))}><For each={field.options}>{option => <option value={option.id}>{option.label}</option>}</For></select>
+      ? <select required={field.required} disabled={props.disabled} value={String(values()[field.id] ?? '')} onInput={event => setValues(current => ({ ...current, [field.id]: event.currentTarget.value }))}><option value="" disabled>Select…</option><For each={field.options}>{option => <option value={option.id}>{option.label}</option>}</For></select>
       : <input type={field.type} required={field.required} disabled={props.disabled} placeholder={field.placeholder} onInput={event => setValues(current => ({ ...current, [field.id]: field.type === 'checkbox' ? event.currentTarget.checked : event.currentTarget.value }))} />}</label>}</For>
     <button type="submit" disabled={props.disabled}>{item.submitLabel}</button>
   </form>
@@ -31,5 +31,5 @@ export const StandardComponent = (props: StandardComponentProps): JSX.Element | 
   if (key === 'approval-request') { const item = ApprovalRequestPropsSchema.parse(props.frame.props); return <section aria-label={item.title} data-ak-component={key}><h3>{item.title}</h3><p>{item.description}</p><button disabled={props.disabled} onClick={() => emit('approve')}>{item.approveLabel}</button><button disabled={props.disabled} onClick={() => emit('deny')}>{item.denyLabel}</button></section> }
   if (key === 'table') { const item = TablePropsSchema.parse(props.frame.props); return <table data-ak-component={key}><caption>{item.caption}</caption><thead><tr><For each={item.columns}>{column => <th scope="col">{column.label}</th>}</For></tr></thead><tbody><For each={item.rows}>{row => <tr><For each={item.columns}>{column => <td>{String(row[column.key] ?? '')}</td>}</For></tr>}</For></tbody></table> }
   if (key === 'file-attachment') { const item = FileAttachmentPropsSchema.parse(props.frame.props); return <article data-ak-component={key}><strong>{item.name}</strong><span>{item.mimeType}</span><span>{item.sizeBytes === undefined ? '' : `${item.sizeBytes} bytes`}</span>{item.url ? <a href={item.url} onClick={event => { event.preventDefault(); emit('open', item.url) }}>Open</a> : null}</article> }
-  return null
+  return <p data-ak-component-fallback="">{resolveComponentFallback(props.frame, props.manifest)}</p>
 }
