@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "1009f61be496f0ad01648fd5892a5ed1dd8668ce3487db830a8006ab1c12d490",
+  "contentHash": "3abcb79d4793c139060feef4c0ff03b759199a2e76963a361ebe80b727e78aea",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-12T02:18:13.394Z",
+  "generatedAt": "2026-07-12T02:50:15.979Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -13,16 +13,16 @@
       "type": "agent-doc",
       "title": "Ink example handoff",
       "path": "docs/for-agents/apps/example-ink.md",
-      "description": "`apps/example-ink` is the executable terminal proof for the unchanged `helloWorldChat` definition. It owns only Ink process startup and PTY verification.",
-      "body": "Ink example handoff apps/example-ink is the executable terminal proof for the unchanged helloWorldChat definition. It owns only Ink process startup and PTY verification. The PTY suite must prove deterministic response output, Escape cancellation without process termination, and graceful Ctrl+C exit."
+      "description": "`apps/example-ink` is the executable terminal proof for the unchanged `supportChat` definition. It owns only Ink process startup and PTY verification.",
+      "body": "Ink example handoff apps/example-ink is the executable terminal proof for the unchanged supportChat definition. It owns only Ink process startup and PTY verification. The PTY suite must prove the confirmed ticket flow, deterministic response output, Escape cancellation without process termination, and graceful Ctrl+C exit."
     },
     {
       "id": "example-react-native",
       "type": "agent-doc",
       "title": "React Native example",
       "path": "docs/for-agents/apps/example-react-native.md",
-      "description": "Expo dogfood app for the unchanged `helloWorldChat` definition. It proves send and cancellation through the native renderer. App-specific native dependencies live here.",
-      "body": "React Native example Expo dogfood app for the unchanged helloWorldChat definition. It proves send and cancellation through the native renderer. App-specific native dependencies live here."
+      "description": "Expo dogfood app for the unchanged `supportChat` definition. It proves send, confirmation, and cancellation through the native renderer. App-specific native dependencies live here.",
+      "body": "React Native example Expo dogfood app for the unchanged supportChat definition. It proves send, confirmation, and cancellation through the native renderer. App-specific native dependencies live here."
     },
     {
       "id": "example-react",
@@ -37,8 +37,8 @@
       "type": "agent-doc",
       "title": "Shared example definition",
       "path": "docs/for-agents/apps/example-shared.md",
-      "description": "Owns the deterministic `helloWorldChat` definition used unchanged by React and React Native. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
-      "body": "Shared example definition Owns the deterministic helloWorldChat definition used unchanged by React and React Native. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
+      "description": "Owns the `supportChat` definition used unchanged by React, React Native, and Ink, plus injectable host context and ticket service seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
+      "body": "Shared example definition Owns the supportChat definition used unchanged by React, React Native, and Ink, plus injectable host context and ticket service seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
     },
     {
       "id": "architecture",
@@ -78,7 +78,7 @@
       "title": "Chat package handoff",
       "path": "docs/for-agents/packages/chat.md",
       "description": "`packages/chat` owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. `ChatDefinition.chat` is the upstream `ChatConfig`; do not mirror its fields or add a controller.",
-      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. resumeChatSession persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream ChatMemory . Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal. Component boundary Model or route frames are untrusted. Resolve them against definition.components ; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit UIElement types remain upstream. The standard application catalog is defined in src/catalog.ts . Every entry must ship schema, declared events, accessibility, capabilities, fallback, shared fixture, seven native presentations, and a regenerated parity report. Generic interactions remain intent-only; do not execute navigation, downloads, approvals, or tools in the catalog contract. Actionable choices use createActionConfirmation and the released upstream ChatReturn.proposeToolCall . Never validate or execute tools locally. Confirmation handles bind application-session metadata; authentication and durable audit remain outside this package. Authorization uses createCapabilityPolicy + withActionPolicy . Trusted context must come from a host closure, never a protocol frame or message. AgentsKit owns enforcement through authorizeToolCall ; this package owns only capability composition and trace projection. Checks"
+      "body": "Chat package handoff Ownership packages/chat owns framework-neutral application definitions, the closed component manifest, component props validation, and the semantic fallback API from ADR-0003/ADR-0007. ChatDefinition.chat is the upstream ChatConfig ; do not mirror its fields or add a controller. Read first - - - - - - - Conversation boundary createChatSession may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount. resumeChatSession persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream ChatMemory . Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal. Deterministic route callbacks receive stable session/message identity per ADR-0018. Component-producing routes derive instance IDs from the message identity; never use definition-global counters or constant IDs for repeatable interactive routes. Component boundary Model or route frames are untrusted. Resolve them against definition.components ; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit UIElement types remain upstream. The standard application catalog is defined in src/catalog.ts . Every entry must ship schema, declared events, accessibility, capabilities, fallback, shared fixture, seven native presentations, and a regenerated parity report. Generic interactions remain intent-only; do not execute navigation, downloads, approvals, or tools in the catalog contract. Actionable choices use createActionConfirmation and the released upstream ChatReturn.proposeToolCall . Never validate or execute tools locally. Confirmation handles bind application-session metadata; authentication and durable audit remain outside this package. Authorization uses createCapabilityPolicy + withActionPolicy . Trusted context must come from a host closure, never a protocol frame or message. AgentsKit owns enforcement through authorizeToolCall ; this package owns only capability composition and trace projection. Checks"
     },
     {
       "id": "cli",
@@ -335,7 +335,7 @@
         "pnpm --filter @agentskit/chat-example-ink build",
         "pnpm test:pty"
       ],
-      "humanDoc": "getting-started/ink",
+      "humanDoc": "examples/support-reference",
       "bridge": {
         "humanDoc": "linked"
       },
@@ -364,12 +364,12 @@
         "pnpm --filter @agentskit/chat-example-react build",
         "pnpm test:e2e"
       ],
-      "humanDoc": "getting-started/react",
+      "humanDoc": "examples/support-reference",
       "bridge": {
         "humanDoc": "linked"
       },
       "notes": [
-        "Deterministic executable proof of the React vertical slice"
+        "React surface of the production-shaped support reference application"
       ]
     },
     "example-react-native": {
@@ -393,7 +393,7 @@
         "pnpm --filter @agentskit/chat-example-react-native build",
         "pnpm test:e2e"
       ],
-      "humanDoc": "getting-started/react-native",
+      "humanDoc": "examples/support-reference",
       "bridge": {
         "humanDoc": "linked"
       },
@@ -422,12 +422,12 @@
         "pnpm lint",
         "pnpm test"
       ],
-      "humanDoc": "getting-started/react-native",
+      "humanDoc": "examples/support-reference",
       "bridge": {
         "humanDoc": "linked"
       },
       "notes": [
-        "Framework-neutral deterministic definition shared by example apps"
+        "Framework-neutral support domain, typed ticket action, policy, and injected host seams"
       ]
     },
     "governance": {
@@ -804,7 +804,7 @@
           "pnpm test:pty"
         ],
         "purpose": "Executable PTY proof of shared-definition Ink parity",
-        "humanDoc": "getting-started/ink",
+        "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-ink.md"
       },
       "example-react": {
@@ -814,8 +814,8 @@
           "pnpm --filter @agentskit/chat-example-react build",
           "pnpm test:e2e"
         ],
-        "purpose": "Deterministic executable proof of the React vertical slice",
-        "humanDoc": "getting-started/react",
+        "purpose": "React surface of the production-shaped support reference application",
+        "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-react.md"
       },
       "example-react-native": {
@@ -826,7 +826,7 @@
           "pnpm test:e2e"
         ],
         "purpose": "Expo proof of shared-definition React Native parity",
-        "humanDoc": "getting-started/react-native",
+        "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-react-native.md"
       },
       "example-shared": {
@@ -836,8 +836,8 @@
           "pnpm lint",
           "pnpm test"
         ],
-        "purpose": "Framework-neutral deterministic definition shared by example apps",
-        "humanDoc": "getting-started/react-native",
+        "purpose": "Framework-neutral support domain, typed ticket action, policy, and injected host seams",
+        "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-shared.md"
       },
       "governance": {

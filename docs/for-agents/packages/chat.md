@@ -20,6 +20,8 @@
 
 `resumeChatSession` persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream `ChatMemory`. Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal.
 
+Deterministic route callbacks receive stable session/message identity per ADR-0018. Component-producing routes derive instance IDs from the message identity; never use definition-global counters or constant IDs for repeatable interactive routes.
+
 ## Component boundary
 
 Model or route frames are untrusted. Resolve them against `definition.components`; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit `UIElement` types remain upstream.

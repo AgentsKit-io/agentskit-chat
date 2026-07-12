@@ -2,10 +2,10 @@ AgentsKit Chat is the cross-framework application framework for interactive agen
 
 ## Knowledge
 
-- [Ink example handoff](docs/for-agents/apps/example-ink.md): `apps/example-ink` is the executable terminal proof for the unchanged `helloWorldChat` definition. It owns only Ink process startup and PTY verification.
-- [React Native example](docs/for-agents/apps/example-react-native.md): Expo dogfood app for the unchanged `helloWorldChat` definition. It proves send and cancellation through the native renderer. App-specific native dependencies live here.
+- [Ink example handoff](docs/for-agents/apps/example-ink.md): `apps/example-ink` is the executable terminal proof for the unchanged `supportChat` definition. It owns only Ink process startup and PTY verification.
+- [React Native example](docs/for-agents/apps/example-react-native.md): Expo dogfood app for the unchanged `supportChat` definition. It proves send, confirmation, and cancellation through the native renderer. App-specific native dependencies live here.
 - [React example handoff](docs/for-agents/apps/example-react.md): `apps/example-react` demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through `ChatConfig`.
-- [Shared example definition](docs/for-agents/apps/example-shared.md): Owns the deterministic `helloWorldChat` definition used unchanged by React and React Native. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.
+- [Shared example definition](docs/for-agents/apps/example-shared.md): Owns the `supportChat` definition used unchanged by React, React Native, and Ink, plus injectable host context and ticket service seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.
 - [Architecture handoff](docs/for-agents/architecture.md): - Human source: [`../architecture/overview.md`](../architecture/overview.md) - Accepted decisions: [`../architecture/adrs/`](../architecture/adrs/) - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md) - Current adoption matrix:
 - [Governance handoff](docs/for-agents/governance.md): - Human source: [`../governance/issues.md`](../governance/issues.md) - Repository rules: [`../../AGENTS.md`](../../AGENTS.md)
 - [AgentsKit Chat agent index](docs/for-agents/index.md): Use this index with `ak-docs query` to locate the owning documentation before changing the repository.

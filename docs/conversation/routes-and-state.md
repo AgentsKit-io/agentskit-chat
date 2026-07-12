@@ -30,3 +30,7 @@ The session records deterministic decisions against upstream user-message identi
 `createChatSession(definition)` exposes the derived `chat` configuration and `getConversationSnapshot()`. The snapshot contains only the current state and its allowed events/actions. Create one session per user or mounted renderer; the built-in renderers do this automatically.
 
 Use `onTrace` to observe decisions. Trace kinds distinguish `deterministic`, `agentic`, `repaired`, and `fallback` turns without copying prompt content into telemetry.
+
+## Route identity context
+
+Route response callbacks receive `(input, context)`. Use `context.messageId` when a rendered application component needs a deterministic identity that is unique per turn; use `context.sessionId` only as a fallback when no user message exists. Never use a process-global counter for replayed route output.
