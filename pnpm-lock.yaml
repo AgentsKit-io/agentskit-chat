@@ -243,6 +243,9 @@ importers:
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
+      '@types/node':
+        specifier: ^25.0.0
+        version: 25.9.5
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
