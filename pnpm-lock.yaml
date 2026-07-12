@@ -228,6 +228,28 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
 
+  packages/devtools:
+    dependencies:
+      '@agentskit/chat':
+        specifier: workspace:*
+        version: link:../chat
+      '@agentskit/eval':
+        specifier: ^0.4.17
+        version: 0.4.17
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
+    devDependencies:
+      '@agentskit/core':
+        specifier: ^1.12.2
+        version: 1.12.2
+      '@types/node':
+        specifier: ^25.0.0
+        version: 25.9.5
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
+
   packages/ink:
     dependencies:
       '@agentskit/chat':
@@ -496,6 +518,9 @@ packages:
         optional: true
       react:
         optional: true
+
+  '@agentskit/eval@0.4.17':
+    resolution: {integrity: sha512-4hpj6UMmantcZZGeEgG5/66CZ3I4h3q+iAY2AK4lsTkZze6GH2tNtXJ2wXHG+P8i3GcFBJ7ZH/NkdHQoiFS+bA==}
 
   '@agentskit/ink@0.10.1':
     resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
@@ -4506,6 +4531,10 @@ snapshots:
       '@agentskit/core': 1.12.2
       '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react: 19.2.7
+
+  '@agentskit/eval@0.4.17':
+    dependencies:
+      '@agentskit/core': 1.12.2
 
   '@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:

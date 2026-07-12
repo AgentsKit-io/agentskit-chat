@@ -1,0 +1,51 @@
+{
+  "protocol": "agentskit.chat.replay",
+  "version": 1,
+  "cassette": {
+    "version": 1,
+    "entries": [
+      {
+        "request": {
+          "messages": [
+            {
+              "id": "user-fixture",
+              "role": "user",
+              "content": "open support",
+              "status": "complete",
+              "createdAt": "1970-01-01T00:00:00.000Z"
+            }
+          ]
+        },
+        "chunks": [
+          { "type": "text", "content": "fixture response" },
+          { "type": "done" }
+        ]
+      }
+    ]
+  },
+  "traces": [
+    {
+      "id": "trace-0",
+      "sequence": 0,
+      "at": "1970-01-01T00:00:00.000Z",
+      "category": "route",
+      "detail": { "turnId": "turn-1", "routeId": "support", "fromState": "idle", "toState": "open" }
+    },
+    {
+      "id": "trace-1",
+      "sequence": 1,
+      "at": "1970-01-01T00:00:00.000Z",
+      "category": "policy",
+      "parentId": "trace-0",
+      "detail": { "turnId": "turn-1", "action": "open-ticket", "decision": "allow" }
+    },
+    {
+      "id": "trace-2",
+      "sequence": 2,
+      "at": "1970-01-01T00:00:00.000Z",
+      "category": "action",
+      "parentId": "trace-1",
+      "detail": { "turnId": "turn-1", "action": "open-ticket", "status": "approved" }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "renderer": "react",
+    "outcomes": [
+      { "turnId": "turn-1", "kind": "text", "value": "fixture response" },
+      { "turnId": "turn-1", "kind": "component", "value": { "key": "confirmation" } }
+    ]
+  },
+  {
+    "renderer": "ink",
+    "outcomes": [
+      { "turnId": "turn-1", "kind": "text", "value": "fixture response" },
+      { "turnId": "turn-1", "kind": "component", "value": { "key": "fallback" } }
+    ]
+  }
+]
