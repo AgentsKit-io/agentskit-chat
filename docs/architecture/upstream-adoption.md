@@ -49,6 +49,10 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 
 Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
 
+## Support reference application (#22)
+
+Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824`: `@agentskit/core@1.12.2` supplies `defineTool`, typed schema inference, `requiresConfirmation`, controller proposal/approve/deny, and `ChatConfig.validateArgs`; `@agentskit/validation@0.2.1` supplies `createAjvValidator`. The support example consumes those contracts and the released framework bindings directly. Local code adds only an injected ticket-service seam, trusted host context, support routes, native presentation, and executable examples. No upstream behavior is copied and no gap blocks the example.
+
 ## Responsibility matrix
 
 | Planned concern | AgentsKit source inspected | Supported public API | Disposition | AgentsKit Chat responsibility | Upstream gap |

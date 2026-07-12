@@ -58,7 +58,7 @@ afterEach(() => {
 describe('Ink PTY host', () => {
   it('advances the shared deterministic conversation', async () => {
     const app = startApp()
-    await waitFor(app.output, 'Message AgentsKit')
+    await waitFor(app.output, 'Ask support or type /support')
     await submit(app.pty, '/start')
     await waitFor(app.output, 'What is your name?')
     await submit(app.pty, '/name Ada')
@@ -67,14 +67,14 @@ describe('Ink PTY host', () => {
 
   it('accepts a prompt and prints the deterministic streamed response', async () => {
     const app = startApp()
-    await waitFor(app.output, 'Message AgentsKit')
+    await waitFor(app.output, 'Ask support or type /support')
     await submit(app.pty, 'hello')
     await waitFor(app.output, 'AgentsKit received: hello')
   })
 
   it('cancels a slow response with Escape without exiting', async () => {
     const app = startApp()
-    await waitFor(app.output, 'Message AgentsKit')
+    await waitFor(app.output, 'Ask support or type /support')
     await submit(app.pty, '/slow')
     await waitFor(app.output, 'press Esc to stop')
     app.pty.write('\u001b')
@@ -86,7 +86,7 @@ describe('Ink PTY host', () => {
 
   it('retries, regenerates, and edits through lifecycle commands', async () => {
     const app = startApp()
-    await waitFor(app.output, 'Message AgentsKit')
+    await waitFor(app.output, 'Ask support or type /support')
     await submit(app.pty, 'before-edit')
     await waitFor(app.output, 'AgentsKit received: before-edit')
     let before = occurrences(app.output(), 'AgentsKit received: before-edit')
@@ -101,9 +101,20 @@ describe('Ink PTY host', () => {
 
   it('exits gracefully on Ctrl+C', async () => {
     const app = startApp()
-    await waitFor(app.output, 'Message AgentsKit')
+    await waitFor(app.output, 'Ask support or type /support')
     const exited = new Promise<{ exitCode: number; signal?: number }>(resolve => app.pty.onExit(resolve))
     app.pty.write('\u0003')
     expect((await exited).exitCode).toBe(0)
   })
+
+  it('opens a support ticket only after terminal confirmation', async () => {
+    const app = startApp()
+    await waitFor(app.output, 'Ask support or type /support')
+    await submit(app.pty, '/support')
+    await waitFor(app.output, 'Open support ticket')
+    app.pty.write('\r')
+    await waitFor(app.output, 'Allow create-support-ticket?')
+    app.pty.write('1')
+    await waitFor(app.output, 'SUP-')
+  }, 15_000)
 })

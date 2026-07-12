@@ -158,9 +158,9 @@
         },
         "example-react": {
           "path": "apps/example-react",
-          "purpose": "Deterministic executable proof of the React vertical slice",
+          "purpose": "React surface of the production-shaped support reference application",
           "agentDoc": "docs/for-agents/apps/example-react.md",
-          "humanDoc": "getting-started/react",
+          "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-react build",
             "pnpm test:e2e"
@@ -168,9 +168,9 @@
         },
         "example-shared": {
           "path": "apps/example-shared",
-          "purpose": "Framework-neutral deterministic definition shared by example apps",
+          "purpose": "Framework-neutral support domain, typed ticket action, policy, and injected host seams",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
-          "humanDoc": "getting-started/react-native",
+          "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm lint",
             "pnpm test"
@@ -180,7 +180,7 @@
           "path": "apps/example-react-native",
           "purpose": "Expo proof of shared-definition React Native parity",
           "agentDoc": "docs/for-agents/apps/example-react-native.md",
-          "humanDoc": "getting-started/react-native",
+          "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-react-native build",
             "pnpm test:e2e"
@@ -190,7 +190,7 @@
           "path": "apps/example-ink",
           "purpose": "Executable PTY proof of shared-definition Ink parity",
           "agentDoc": "docs/for-agents/apps/example-ink.md",
-          "humanDoc": "getting-started/ink",
+          "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-ink build",
             "pnpm test:pty"

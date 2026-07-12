@@ -1,7 +1,9 @@
-# React example
+# React support reference
 
-Executable proof that one `ChatDefinition` streams through the upstream AgentsKit React binding. The deterministic adapter supports normal messages and `/fail`; replace it with any AgentsKit adapter for a real model.
+Runs the shared `supportChat` definition through the native React shell.
 
 ```bash
 pnpm dev
 ```
+
+See the [support reference guide](../../docs/examples/support-reference.md) for deterministic, provider, testing, persistence, and deployment modes.

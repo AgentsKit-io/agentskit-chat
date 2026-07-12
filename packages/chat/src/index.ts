@@ -503,8 +503,13 @@ export interface DeterministicRoute {
   readonly event: string
   readonly states?: readonly string[]
   readonly match: (input: string) => boolean
-  readonly response: (input: string) => string
+  readonly response: (input: string, context: DeterministicRouteContext) => string
   readonly traceKind?: Exclude<TurnTraceKind, 'agentic'>
+}
+
+export interface DeterministicRouteContext {
+  readonly sessionId: string
+  readonly messageId?: string
 }
 
 export interface ConversationDefinition {
@@ -800,7 +805,7 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
           const toState = state.on![route.event]!
           let content: string
           try {
-            content = route.response(input)
+            content = route.response(input, { sessionId, ...(userMessage ? { messageId: userMessage.id } : {}) })
           } catch {
             schedulePersist()
             return routeErrorSource()

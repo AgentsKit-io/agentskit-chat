@@ -9,6 +9,7 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
+    "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
     "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/chat-react-native": "workspace:*",
