@@ -7,3 +7,5 @@ pnpm dev
 ```
 
 See the [support reference guide](../../docs/examples/support-reference.md) for deterministic, provider, testing, persistence, and deployment modes.
+
+Open `/?reference=onboarding` for the [deterministic onboarding reference](../../docs/examples/onboarding-reference.md).

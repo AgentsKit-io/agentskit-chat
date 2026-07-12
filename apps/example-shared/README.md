@@ -1,5 +1,5 @@
-# Shared support application
+# Shared reference applications
 
-Framework-neutral `supportChat`, injectable `TicketService`, trusted host context, deterministic adapter, typed ticket action, policy, and component routes shared unchanged by React, React Native, and Ink.
+Framework-neutral support and onboarding definitions shared unchanged by React, React Native, and Ink.
 
-See the [support reference guide](../../docs/examples/support-reference.md).
+See the [support](../../docs/examples/support-reference.md) and [onboarding](../../docs/examples/onboarding-reference.md) guides.

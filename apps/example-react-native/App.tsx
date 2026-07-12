@@ -1,4 +1,4 @@
-import { supportChat } from '@agentskit/chat-example-shared'
+import { onboardingApplication, supportChat } from '@agentskit/chat-example-shared'
 import { createChatSession } from '@agentskit/chat'
 import { decodeTurnEvent, snapshotMessages } from '@agentskit/chat-protocol'
 import { validTurnEventFixtures } from '@agentskit/chat-protocol/fixtures'
@@ -14,16 +14,19 @@ const protocolConformanceChat = {
   chat: { ...supportChat.chat, initialMessages: snapshotMessages(completeSnapshot.event) },
 }
 const supportSession = createChatSession(protocolConformanceChat, { sessionId: 'support-demo' })
+const onboarding = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('reference') === 'onboarding'
 
 export default function App() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>NORTHSTAR SUPPORT · ONLINE</Text>
-        <Text accessibilityRole="header" style={styles.title}>Answers now. A human when you need one.</Text>
-        <Text style={styles.lede}>Ask a question, or type /support for a confirmed ticket.</Text>
+        <Text style={styles.eyebrow}>{onboarding ? 'NORTHSTAR · GUIDED SETUP' : 'NORTHSTAR SUPPORT · ONLINE'}</Text>
+        <Text accessibilityRole="header" style={styles.title}>{onboarding ? 'Build a workspace around the way you work.' : 'Answers now. A human when you need one.'}</Text>
+        <Text style={styles.lede}>{onboarding ? 'Type /onboarding to begin a deterministic, revisable setup.' : 'Ask a question, or type /support for a confirmed ticket.'}</Text>
       </View>
-      <AgentChatNative definition={protocolConformanceChat} session={supportSession} placeholder="Ask support or type /support" />
+      {onboarding
+        ? <AgentChatNative definition={onboardingApplication.definition} session={onboardingApplication.session} onComponentInteract={onboardingApplication.onComponentInteract} onComponentSelect={onboardingApplication.onComponentSelect} placeholder="Type /onboarding to begin" />
+        : <AgentChatNative definition={protocolConformanceChat} session={supportSession} placeholder="Ask support or type /support" />}
     </SafeAreaView>
   )
 }

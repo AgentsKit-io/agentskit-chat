@@ -1,7 +1,7 @@
 import { createActionConfirmation, createChatSession } from '@agentskit/chat'
 import { createChatController } from '@agentskit/core'
 import { describe, expect, it, vi } from 'vitest'
-import { createInMemoryTicketService, createSupportApplication, helloWorldChat, type SupportHostContext, type TicketService } from '../src/index.js'
+import { createInMemoryTicketService, createOnboardingApplication, createSupportApplication, helloWorldChat, type SupportHostContext, type TicketService } from '../src/index.js'
 
 const context: SupportHostContext = { sessionId: 'test-session', customerId: 'customer-1', capabilities: ['support.ticket.create'] }
 const ticketInput = { subject: 'Need help', priority: 'urgent' } as const
@@ -88,5 +88,85 @@ describe('support reference domain', () => {
   it('rejects malformed ticket input at the upstream validation boundary', async () => {
     const definition = createSupportApplication({ context, ticketService: createInMemoryTicketService() })
     await expect(createChatController(definition.chat).proposeToolCall({ id: 'invalid', name: 'create-support-ticket', args: { subject: '', priority: 'critical' } })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
+  })
+})
+
+describe('onboarding reference domain', () => {
+  let onboardingSequence = 0
+  const onboarding = (recommendations?: Parameters<typeof createOnboardingApplication>[0]['recommendations']) => createOnboardingApplication({
+    context: { sessionId: `onboarding-test-${++onboardingSequence}`, customerId: 'customer-1', capabilities: ['onboarding.complete'] }, ...(recommendations ? { recommendations } : {}),
+  })
+  const instanceId = (controller: ReturnType<typeof createChatController>): string => JSON.parse(controller.getState().messages.at(-1)?.content ?? '{}').instanceId as string
+  const submitProfile = (application: ReturnType<typeof createOnboardingApplication>, controller: ReturnType<typeof createChatController>) => application.onComponentInteract({
+    protocol: 'agentskit.chat.component', version: 1, type: 'interact', componentKey: 'form', instanceId: instanceId(controller), event: 'submit', value: { role: 'engineering', goal: 'Automate handoffs' },
+  })
+
+  it('guards collection, recommendation, selection, confirmation, and completion', async () => {
+    const application = onboarding()
+    const controller = createChatController(application.session.chat)
+    await controller.send('/recommend')
+    expect(application.session.getConversationSnapshot()!.state).toBe('welcome')
+    await controller.send('/onboarding')
+    expect(controller.getState().messages.at(-1)?.content).toContain('Tell us how you work')
+    submitProfile(application, controller)
+    await controller.send('/recommend')
+    expect(controller.getState().messages.at(-1)?.content).toContain('engineering starter')
+    application.onComponentSelect({ protocol: 'agentskit.chat.component', version: 1, type: 'select', componentKey: 'choice-list', instanceId: instanceId(controller), choiceId: 'accept' })
+    await controller.send('/accept')
+    expect(controller.getState().messages.at(-1)?.content).toContain('Complete onboarding')
+    const confirmation = createActionConfirmation({ sessionId: application.session.sessionId, chat: controller, createId: () => 'complete', now: () => 0 })
+    const pending = await confirmation.propose({ name: 'complete-onboarding', input: {} })
+    await confirmation.approve(pending.token, application.session.sessionId)
+    await controller.send('/revise')
+    expect(application.session.getConversationSnapshot()!.state).toBe('collecting')
+    submitProfile(application, controller)
+    await controller.send('/recommend')
+    application.onComponentSelect({ protocol: 'agentskit.chat.component', version: 1, type: 'select', componentKey: 'choice-list', instanceId: instanceId(controller), choiceId: 'accept' })
+    await controller.send('/accept')
+    await controller.send('/done')
+    expect(application.session.getConversationSnapshot()!.state).toBe('confirming')
+  })
+
+  it('revises without allowing the recommendation to choose a transition', async () => {
+    const application = onboarding()
+    const controller = createChatController(application.session.chat)
+    await controller.send('/onboarding')
+    submitProfile(application, controller)
+    await controller.send('/recommend')
+    expect(application.session.getConversationSnapshot()!.state).toBe('review')
+    application.onComponentSelect({ protocol: 'agentskit.chat.component', version: 1, type: 'select', componentKey: 'choice-list', instanceId: instanceId(controller), choiceId: 'revise' })
+    await controller.send('/revise')
+    expect(application.session.getConversationSnapshot()!.state).toBe('collecting')
+    expect(controller.getState().messages.at(-1)?.content).toContain('Tell us how you work')
+  })
+
+  it('keeps recommendation failures in the collecting state', async () => {
+    const application = onboarding({ recommend: () => { throw new Error('recommendation unavailable') } })
+    const controller = createChatController(application.session.chat)
+    await controller.send('/onboarding')
+    submitProfile(application, controller)
+    await controller.send('/recommend')
+    expect(application.session.getConversationSnapshot()!.state).toBe('collecting')
+    expect(controller.getState().status).toBe('error')
+  })
+
+  it('ignores stale component intents and isolates application factories', async () => {
+    const first = onboarding()
+    const second = onboarding()
+    const firstController = createChatController(first.session.chat)
+    const secondController = createChatController(second.session.chat)
+    first.onComponentInteract({ protocol: 'agentskit.chat.component', version: 1, type: 'interact', componentKey: 'form', instanceId: 'forged', event: 'submit', value: { role: 'engineering', goal: 'Forged' } })
+    await firstController.send('/onboarding')
+    const staleForm = instanceId(firstController)
+    submitProfile(first, firstController)
+    await firstController.send('/recommend')
+    const staleRecommendation = instanceId(firstController)
+    first.onComponentInteract({ protocol: 'agentskit.chat.component', version: 1, type: 'interact', componentKey: 'form', instanceId: staleForm, event: 'submit', value: { role: 'support', goal: 'Stale' } })
+    first.onComponentSelect({ protocol: 'agentskit.chat.component', version: 1, type: 'select', componentKey: 'choice-list', instanceId: 'foreign', choiceId: 'accept' })
+    await firstController.send('/accept')
+    expect(first.session.getConversationSnapshot()!.state).toBe('review')
+    await secondController.send('/recommend')
+    expect(second.session.getConversationSnapshot()!.state).toBe('welcome')
+    expect(staleRecommendation).toContain('onboarding-recommendation-')
   })
 })

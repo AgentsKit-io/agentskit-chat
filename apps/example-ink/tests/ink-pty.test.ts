@@ -14,13 +14,13 @@ if (process.platform === 'darwin') {
   chmodSync(path.join(packageRoot, 'prebuilds', `darwin-${process.arch}`, 'spawn-helper'), 0o755)
 }
 
-const startApp = (): { readonly pty: IPty; readonly output: () => string } => {
+const startApp = (example?: string): { readonly pty: IPty; readonly output: () => string } => {
   let buffer = ''
   const pty = spawn(process.execPath, ['dist/index.js'], {
     cwd: appDirectory,
     cols: 100,
     rows: 30,
-    env: { ...process.env, TERM: 'xterm-256color' },
+    env: { ...process.env, TERM: 'xterm-256color', ...(example ? { AK_EXAMPLE: example } : {}) },
   })
   pty.onData(data => { buffer += data })
   processes.push(pty)
@@ -117,4 +117,28 @@ describe('Ink PTY host', () => {
     app.pty.write('1')
     await waitFor(app.output, 'SUP-')
   }, 15_000)
+
+  it('completes onboarding with keyboard-only form and confirmation controls', async () => {
+    const app = startApp('onboarding')
+    await waitFor(app.output, 'Type /onboarding to begin')
+    await submit(app.pty, '/onboarding')
+    await waitFor(app.output, 'Primary role')
+    app.pty.write('\r')
+    await new Promise(resolve => setTimeout(resolve, 50))
+    app.pty.write('Automate handoffs')
+    app.pty.write('\r')
+    await new Promise(resolve => setTimeout(resolve, 200))
+    await submit(app.pty, '/recommend')
+    await waitFor(app.output, 'engineering starter')
+    app.pty.write('\r')
+    await submit(app.pty, '/accept')
+    await waitFor(app.output, 'Complete onboarding')
+    app.pty.write('\r')
+    await waitFor(app.output, 'Allow complete-onboarding?')
+    app.pty.write('1')
+    await waitFor(app.output, 'Onboarding confirmed.')
+    app.pty.write('\u007f')
+    await submit(app.pty, '/done')
+    await waitFor(app.output, 'Onboarding complete. Your guided workspace is ready.')
+  }, 20_000)
 })
