@@ -1,10 +1,10 @@
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
-import { ChoiceListComponent, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, StandardComponentCatalog, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
 import { fireEvent, render, waitFor } from '@solidjs/testing-library'
 import { createSignal } from 'solid-js'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
-import { AgentChat, ChoiceList, toChatCssVariables } from '../src/index.js'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { AgentChat, ChoiceList, StandardComponent, toChatCssVariables } from '../src/index.js'
 
 const adapter = (fail = false): AdapterFactory => ({ createSource: request => ({ async *stream() {
   if (fail) { yield { type: 'error', content: 'Test adapter failed' }; return }
@@ -18,6 +18,15 @@ const submit = async (root: HTMLElement, value: string): Promise<void> => {
 afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks() })
 
 describe('AgentChat Solid', () => {
+  it('renders the complete standard catalog and emits interactions', async () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const view = render(() => <StandardComponent frame={frame} manifest={manifest} onInteract={onInteract} />)
+      expect(view.container.querySelector(`[data-ak-component="${frame.componentKey}"]`)).toBeTruthy(); view.unmount()
+    }
+    const view = render(() => <StandardComponent frame={standardComponentFrameFixtures[0]} manifest={manifest} onInteract={onInteract} />)
+    fireEvent.click(view.getByText('Save')); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+  })
   it('maps semantic tokens and accepts native render props', () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({ '--ak-color-button': '#663399', '--ak-radius-lg': '20px' })
     const view = render(() => <AgentChat definition={{ id: 'native', chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } }} message={message => <strong data-custom-message>Solid: {message.content}</strong>} container={children => <main data-custom-container>{children}</main>} input={() => <label>custom input</label>} />)

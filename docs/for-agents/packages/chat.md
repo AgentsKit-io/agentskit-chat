@@ -24,6 +24,8 @@
 
 Model or route frames are untrusted. Resolve them against `definition.components`; unknown or invalid frames are inert. Selection events express intent only and never execute an action. Standard AgentsKit `UIElement` types remain upstream.
 
+The standard application catalog is defined in `src/catalog.ts`. Every entry must ship schema, declared events, accessibility, capabilities, fallback, shared fixture, seven native presentations, and a regenerated parity report. Generic interactions remain intent-only; do not execute navigation, downloads, approvals, or tools in the catalog contract.
+
 Actionable choices use `createActionConfirmation` and the released upstream `ChatReturn.proposeToolCall`. Never validate or execute tools locally. Confirmation handles bind application-session metadata; authentication and durable audit remain outside this package.
 
 Authorization uses `createCapabilityPolicy` + `withActionPolicy`. Trusted context must come from a host closure, never a protocol frame or message. AgentsKit owns enforcement through `authorizeToolCall`; this package owns only capability composition and trace projection.

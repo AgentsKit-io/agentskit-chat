@@ -1,6 +1,7 @@
 export { default as AgentChat } from './AgentChat.svelte'
 export { default as ChoiceList } from './ChoiceList.svelte'
-export type { AgentChatProps, ChoiceListProps } from './types.js'
+export { default as StandardComponent } from './StandardComponent.svelte'
+export type { AgentChatProps, ChoiceListProps, StandardComponentProps } from './types.js'
 export type { ChatDefinition } from '@agentskit/chat'
 
 import { resolveChatTheme } from '@agentskit/chat'

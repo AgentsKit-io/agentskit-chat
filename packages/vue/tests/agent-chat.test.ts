@@ -1,9 +1,9 @@
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
-import { ChoiceListComponent, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, StandardComponentCatalog, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
 import { createApp, defineComponent, h, nextTick, shallowRef, type Component, type PropType } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
-import { AgentChat, ChoiceList, toChatCssVariables } from '../src/index.js'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { AgentChat, ChoiceList, StandardComponent, toChatCssVariables } from '../src/index.js'
 
 const apps: Array<ReturnType<typeof createApp>> = []
 const mount = async (component: Component): Promise<HTMLElement> => {
@@ -36,6 +36,15 @@ const click = async (root: HTMLElement, selector: string): Promise<void> => {
 const settle = async (): Promise<void> => { await new Promise(resolve => setTimeout(resolve, 0)); await nextTick() }
 
 describe('AgentChat Vue', () => {
+  it('renders the complete standard catalog and emits interactions', async () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const root = await mount({ render: () => h(StandardComponent, { frame, manifest, onInteract }) })
+      expect(root.querySelector(`[data-ak-component="${frame.componentKey}"]`)).toBeTruthy()
+    }
+    const root = await mount({ render: () => h(StandardComponent, { frame: standardComponentFrameFixtures[0], manifest, onInteract }) })
+    await click(root, 'button'); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+  })
   it('maps semantic tokens and accepts a native scoped slot', async () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({ '--ak-color-button': '#663399', '--ak-radius-lg': '20px' })
     const root = await mount({ render: () => h(AgentChat, { definition: { id: 'slots', chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: 'hello' })] } } }, { message: ({ message }: { message: { content: string } }) => h('strong', `Slot: ${message.content}`) }) })

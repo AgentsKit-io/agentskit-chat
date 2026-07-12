@@ -3,6 +3,7 @@ import type { AdapterRequest, ChatConfig, ChatReturn, Message, StreamSource, Too
 import {
   ComponentFallbackSchema,
   ComponentKeySchema,
+  createInteractionEvent,
   createSelectionEvent,
   decodeComponentFrame,
   decodeSessionSnapshot,
@@ -10,13 +11,15 @@ import {
   SESSION_PROTOCOL_VERSION,
   SessionSnapshotSchema,
   type ComponentRenderFrame,
+  type ComponentInteractionEvent,
   type ComponentSelectionEvent,
   type SessionConfirmation,
   type SessionSnapshot,
 } from '@agentskit/chat-protocol'
 import { z } from 'zod'
+import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, STANDARD_COMPONENT_KEYS, StandardComponentCatalog, validateStandardComponentInteraction, type ChoiceAction, type ChoiceListProps, type ComponentDefinition } from './catalog.js'
 
-export const CHOICE_LIST_COMPONENT_KEY = 'choice-list' as const
+export * from './catalog.js'
 
 const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
@@ -70,29 +73,6 @@ export const resolveChatTheme = (input: unknown = {}): ChatTheme => {
     fontFamily: candidate.fontFamily ?? defaultChatTheme.fontFamily,
   })
 }
-
-export const ChoiceListPropsSchema = z.object({
-  prompt: z.string().min(1),
-  choices: z.array(z.object({
-    id: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
-    label: z.string().min(1),
-    description: z.string().min(1).optional(),
-    action: z.object({
-      name: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
-      input: z.record(z.string(), z.json()),
-    }).readonly().optional(),
-  }).readonly()).min(1).max(20).superRefine((choices, context) => {
-    const ids = new Set<string>()
-    for (const [index, choice] of choices.entries()) {
-      if (ids.has(choice.id)) context.addIssue({ code: 'custom', path: [index, 'id'], message: 'Choice ids must be unique.' })
-      ids.add(choice.id)
-    }
-  }),
-}).readonly()
-
-export type ChoiceListProps = z.infer<typeof ChoiceListPropsSchema>
-
-export type ChoiceAction = NonNullable<ChoiceListProps['choices'][number]['action']>
 
 export const getLifecycleTargets = (messages: readonly Message[]): { readonly userId: string | undefined, readonly assistantId: string | undefined } => {
   const assistant = messages.at(-1)
@@ -376,28 +356,19 @@ export const createActionConfirmation = ({
   }
 }
 
-export interface ComponentDefinition<T> {
-  readonly key: string
-  readonly propsSchema: z.ZodType<T>
-}
-
 export type ComponentManifest = Readonly<Record<string, ComponentDefinition<unknown>>>
-
-export const ChoiceListComponent: ComponentDefinition<ChoiceListProps> = {
-  key: CHOICE_LIST_COMPONENT_KEY,
-  propsSchema: ChoiceListPropsSchema,
-}
 
 export const defineComponentManifest = (
   components: readonly ComponentDefinition<unknown>[],
 ): ComponentManifest => {
   const manifest: Record<string, ComponentDefinition<unknown>> = Object.create(null) as Record<string, ComponentDefinition<unknown>>
   for (const component of components) {
-    if (!ComponentKeySchema.safeParse(component.key).success || Object.hasOwn(manifest, component.key)) {
+    const standardDefinition = StandardComponentCatalog.find(candidate => candidate.key === component.key)
+    if (!ComponentKeySchema.safeParse(component.key).success || Object.hasOwn(manifest, component.key) || (standardDefinition !== undefined && standardDefinition !== component)) {
       throw new ConfigError({
         code: ErrorCodes.AK_CONFIG_INVALID,
-        message: 'Component manifest keys must be non-empty and unique.',
-        hint: 'Register each application component exactly once.',
+        message: 'Component manifest keys must be non-empty, unique, and must not override standard catalog keys.',
+        hint: 'Register each application component exactly once and use the canonical definition for standard keys.',
       })
     }
     manifest[component.key] = component
@@ -434,6 +405,43 @@ export const resolveComponentFrame = (
         ok: false,
         diagnostic: { code: 'COMPONENT_INVALID_PROPS', message: 'Component props are invalid.', retryable: false },
       }
+}
+
+export const createComponentInteraction = (
+  frame: ComponentRenderFrame,
+  manifest: ComponentManifest,
+  event: string,
+  value?: unknown,
+): ComponentInteractionEvent => {
+  const resolved = resolveComponentFrame(frame, manifest)
+  const definition = resolved.ok ? manifest[resolved.frame.componentKey] : undefined
+  const declared = definition?.events?.find(candidate => candidate.name === event)
+  const isStandard = STANDARD_COMPONENT_KEYS.includes(frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])
+  const validValue = isStandard
+    ? resolved.ok && validateStandardComponentInteraction(frame.componentKey, resolved.props, event, value)
+    : declared?.value === 'none'
+    ? value === undefined
+    : declared?.value === 'id'
+      ? typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value)
+      : declared?.value === 'url'
+        ? typeof value === 'string' && (/^\/(?!\/)/.test(value) || (() => { try { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) && url.username === '' && url.password === '' } catch { return false } })())
+        : declared?.value === 'form'
+          ? value !== null && typeof value === 'object' && !Array.isArray(value)
+          : false
+  if (!resolved.ok || !declared || !validValue) {
+    throw new ConfigError({
+      code: ErrorCodes.AK_CONFIG_INVALID,
+      message: 'Component interaction is not declared by the resolved component.',
+      hint: 'Emit only catalog events with the declared value shape.',
+    })
+  }
+  return createInteractionEvent(frame, event, value)
+}
+
+export const resolveComponentFallback = (input: unknown, manifest: ComponentManifest): string | undefined => {
+  const resolved = resolveComponentFrame(input, manifest)
+  if (!resolved.ok) return undefined
+  return manifest[resolved.frame.componentKey]?.fallback?.(resolved.props)
 }
 
 export type ResolveChoiceListFrameResult = ResolveComponentFrameResult<ChoiceListProps>

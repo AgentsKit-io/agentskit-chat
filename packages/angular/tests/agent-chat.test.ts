@@ -2,10 +2,10 @@ import { Component, TemplateRef, viewChild } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { NgTemplateOutlet } from '@angular/common'
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
-import { ChoiceListComponent as ChoiceListDefinition, createChatSession, defineChat, defineComponentManifest, type ChatDefinition } from '@agentskit/chat'
+import { ChoiceListComponent as ChoiceListDefinition, StandardComponentCatalog, createChatSession, defineChat, defineComponentManifest, type ChatDefinition } from '@agentskit/chat'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
-import { AgentChatComponent, ChoiceListComponent, toChatCssVariables } from '../src/index.js'
+import { invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { AgentChatComponent, ChoiceListComponent, StandardComponentComponent, toChatCssVariables } from '../src/index.js'
 
 const adapter = (answer = 'Hello from Angular'): AdapterFactory => ({
   createSource: () => ({
@@ -39,6 +39,17 @@ afterEach(() => {
 })
 
 describe('AgentChat Angular', () => {
+  it('renders the complete standard catalog and emits interactions', () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const fixture = TestBed.createComponent(StandardComponentComponent)
+      fixture.componentRef.setInput('frame', frame); fixture.componentRef.setInput('manifest', manifest); fixture.componentRef.setInput('onInteract', onInteract); fixture.detectChanges()
+      expect(fixture.nativeElement.querySelector(`[data-ak-component="${frame.componentKey}"]`)).toBeTruthy(); fixture.destroy()
+    }
+    const fixture = TestBed.createComponent(StandardComponentComponent)
+    fixture.componentRef.setInput('frame', standardComponentFrameFixtures[0]); fixture.componentRef.setInput('manifest', manifest); fixture.componentRef.setInput('onInteract', onInteract); fixture.detectChanges()
+    fixture.nativeElement.querySelector('button').click(); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+  })
   it('maps semantic theme tokens to upstream CSS variables', () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({
       '--ak-color-button': '#663399',

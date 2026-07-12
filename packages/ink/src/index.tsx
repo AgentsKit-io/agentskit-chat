@@ -1,11 +1,14 @@
-import { formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
-import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatContainer, defaultInkTheme, InkThemeProvider, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat, useInkTheme } from '@agentskit/ink'
 import type { InkTheme } from '@agentskit/ink'
 import { Box, Text, useInput } from 'ink'
 import { useMemo, useRef, useState, type ComponentProps, type ComponentType, type ReactElement } from 'react'
+import { StandardComponent, type StandardComponentProps } from './StandardComponent.js'
+
+export { StandardComponent, type StandardComponentProps } from './StandardComponent.js'
 
 export const toChatInkTheme = (input?: ChatThemeInput): InkTheme => {
   const theme = resolveChatTheme(input)
@@ -40,6 +43,7 @@ export interface AgentChatSlots {
   readonly Thinking?: ComponentType<ComponentProps<typeof ThinkingIndicator>>
   readonly Confirmation?: ComponentType<ComponentProps<typeof ToolConfirmation>>
   readonly ChoiceList?: ComponentType<ChoiceListProps>
+  readonly StandardComponent?: ComponentType<StandardComponentProps>
 }
 
 export interface SemanticFallbackProps {
@@ -55,6 +59,7 @@ export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
@@ -118,7 +123,7 @@ export const ChoiceList = ({ frame, manifest, onSelect, isActive = true }: Choic
   return resolved.ok ? <ResolvedChoiceList resolved={resolved} onSelect={onSelect} isActive={isActive} /> : null
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, actionConfirmationTtlMs, session: preparedSession, slots = {} }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, actionConfirmationTtlMs, session: preparedSession, slots = {} }: AgentChatProps): ReactElement => {
   const theme = useInkTheme()
   const ContainerSlot = slots.Container ?? ChatContainer
   const MessageSlot = slots.Message ?? Message
@@ -126,6 +131,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const ThinkingSlot = slots.Thinking ?? ThinkingIndicator
   const ConfirmationSlot = slots.Confirmation ?? ToolConfirmation
   const ChoiceListSlot = slots.ChoiceList ?? ChoiceList
+  const StandardComponentSlot = slots.StandardComponent ?? StandardComponent
   const [session] = useState(() => resolveChatSession(definition, preparedSession))
   const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
@@ -143,11 +149,13 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const activeComponentId = [...chat.messages].reverse().find(message => {
     if (message.role !== 'assistant' || definition.components === undefined || !isComponentFrameCandidate(message.content)) return false
     const decoded = decodeComponentFrame(message.content)
+    const resolved = decoded.ok ? resolveComponentFrame(decoded.frame, definition.components) : undefined
     return decoded.ok
+      && resolved?.ok === true
+      && (definition.components[decoded.frame.componentKey]?.events?.length ?? 0) > 0
       && !resolvedInstances.has(decoded.frame.instanceId)
-      && resolveChoiceListFrame(decoded.frame, definition.components).ok
   })?.id
-  const handleComponentSelect = (event: ComponentSelectionEvent, frame: import('@agentskit/chat-protocol').ComponentRenderFrame): void => {
+  const handleComponentSelect = (event: ComponentSelectionEvent, frame: ComponentRenderFrame): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     resolvedInstancesRef.current.add(event.instanceId)
     setResolvedInstances(new Set(resolvedInstancesRef.current))
@@ -160,6 +168,11 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       setResolvedInstances(new Set(resolvedInstancesRef.current))
       setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
     })
+  }
+  const interactComponent = (event: ComponentInteractionEvent): void => {
+    if (resolvedInstancesRef.current.has(event.instanceId)) return
+    resolvedInstancesRef.current.add(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current))
+    try { onComponentInteract(event) } catch (error) { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)); setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
   }
   const approve = (toolCallId: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
@@ -189,12 +202,13 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
           const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
           const decoded = candidate ? decodeComponentFrame(message.content) : undefined
           if (decoded?.ok) {
-            const resolved = definition.components === undefined
-              ? undefined
-              : resolveChoiceListFrame(decoded.frame, definition.components)
-            return resolved?.ok
-              ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={definition.components!} onSelect={event => handleComponentSelect(event, decoded.frame)} isActive={message.id === activeComponentId} />
-              : <SemanticFallback key={message.id} fallback={decoded.frame.fallback} />
+            const manifest = definition.components
+            const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
+            if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
+            if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
+              ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} onSelect={event => handleComponentSelect(event, decoded.frame)} isActive={message.id === activeComponentId} />
+              : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} onInteract={interactComponent} isActive={message.id === activeComponentId} />
+            return <SemanticFallback key={message.id} fallback={decoded.frame.fallback} />
           }
           if (decoded && !decoded.ok) return <Text key={message.id} color={theme.toolStatus.error.color}>{decoded.diagnostic.message}</Text>
           return <MessageSlot key={message.id} message={message} />
