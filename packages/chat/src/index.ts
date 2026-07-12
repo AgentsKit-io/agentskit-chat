@@ -318,34 +318,22 @@ export const createActionConfirmation = ({
         const record = requireRecord(token, requestedSession)
         if (record.status !== 'pending') return record
         if (now() >= record.expiresAt) {
-          if (claimStatus) {
-            const expiring = await claim(record, 'expiring')
-            await chat.deny(record.toolCallId, 'confirmation expired')
-            return claim(expiring, 'expired')
-          }
-          await chat.deny(record.toolCallId, 'confirmation expired')
-          return claim(record, 'expired')
+          const expiring = await claim(record, 'expiring')
+          try { await chat.deny(record.toolCallId, 'confirmation expired') } catch (error) { if (!claimStatus) { records.set(token, record); await changed() }; throw error }
+          return claim(expiring, 'expired')
         }
-        if (claimStatus) {
-          const approving = await claim(record, 'approving')
-          await chat.approve(record.toolCallId)
-          return claim(approving, 'approved')
-        }
-        await chat.approve(record.toolCallId)
-        return claim(record, 'approved')
+        const approving = await claim(record, 'approving')
+        try { await chat.approve(record.toolCallId) } catch (error) { if (!claimStatus) { records.set(token, record); await changed() }; throw error }
+        return claim(approving, 'approved')
       })
     },
     reject(token, requestedSession, reason) {
       return runOnce(token, async () => {
         const record = requireRecord(token, requestedSession)
         if (record.status !== 'pending') return record
-        if (claimStatus) {
-          const rejecting = await claim(record, 'rejecting')
-          await chat.deny(record.toolCallId, reason)
-          return claim(rejecting, 'rejected')
-        }
-        await chat.deny(record.toolCallId, reason)
-        return claim(record, 'rejected')
+        const rejecting = await claim(record, 'rejecting')
+        try { await chat.deny(record.toolCallId, reason) } catch (error) { if (!claimStatus) { records.set(token, record); await changed() }; throw error }
+        return claim(rejecting, 'rejected')
       })
     },
     getByToolCall(toolCallId) {
@@ -555,12 +543,13 @@ export interface SessionStorage {
   readonly delete?: (sessionId: string, signal?: AbortSignal) => void | Promise<void>
 }
 
-interface ChatSessionOptions {
+export interface ChatSessionOptions {
   readonly sessionId?: string
   readonly snapshot?: SessionSnapshot
   readonly storage?: SessionStorage
   readonly now?: () => Date
   readonly signal?: AbortSignal
+  readonly onConfirmationChange?: (records: readonly ActionConfirmation[]) => void | Promise<void>
 }
 
 export interface ResumeChatSessionOptions {
@@ -702,11 +691,12 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
         const previous = confirmations
         confirmations = records.map(({ sessionId: _sessionId, ...record }) => record)
         try { await persist() } catch (error) { confirmations = previous; throw error }
+        try { void Promise.resolve(options.onConfirmationChange?.(records)).catch(() => undefined) } catch { /* observer isolation */ }
       },
       ...(options.storage ? { claimStatus: async (record: ActionConfirmation, status: Exclude<ActionConfirmationStatus, 'pending'>) => {
         const previous = confirmations
         confirmations = confirmations.map(candidate => candidate.token === record.token ? { ...candidate, status } : candidate)
-        try { await persist(); return true } catch (error) { confirmations = previous; throw error }
+        try { await persist(); const observed = Object.freeze(confirmations.map(record => Object.freeze({ ...record, sessionId }))); try { void Promise.resolve(options.onConfirmationChange?.(observed)).catch(() => undefined) } catch { /* observer isolation */ }; return true } catch (error) { confirmations = previous; throw error }
       } } : {}),
     })
   const claimTurn = async (turnId: string, leaseMs: number, signal?: AbortSignal): Promise<boolean> => {

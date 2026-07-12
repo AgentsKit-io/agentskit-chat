@@ -38,3 +38,13 @@ test('completes deterministic onboarding through native controls', async ({ page
   await page.getByRole('button', { name: 'Send', exact: false }).click()
   await expect(page.getByText('Onboarding complete. Your guided workspace is ready.')).toBeVisible()
 })
+
+test('confirms a protected operation through native controls', async ({ page }) => {
+  await page.goto('/?reference=operations')
+  const input = page.getByPlaceholder('Type /operations to begin')
+  await input.fill('/operations')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await page.getByRole('button', { name: 'Restart operation' }).click()
+  await page.getByRole('button', { name: 'Approve' }).click()
+  await expect(page.getByText(/checkout-api restarted/)).toBeVisible()
+})

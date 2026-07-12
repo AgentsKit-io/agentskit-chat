@@ -42,3 +42,28 @@ test('completes and revises the deterministic onboarding reference', async ({ pa
   await page.getByRole('button', { name: 'Send', exact: false }).click()
   await expect(page.getByText('Onboarding complete. Your guided workspace is ready.')).toBeVisible()
 })
+
+test('reads status and confirms a policy-protected restart', async ({ page }) => {
+  await page.goto('/?reference=operations')
+  const input = page.getByPlaceholder('Type /operations to begin')
+  await input.fill('/operations')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await page.getByRole('button', { name: 'Read status' }).click()
+  await page.getByRole('button', { name: 'Approve' }).click()
+  await expect(page.getByText(/checkout-api is healthy/)).toBeVisible()
+  await input.fill('/operations')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await page.getByRole('button', { name: 'Restart operation' }).last().click()
+  await page.getByRole('button', { name: 'Approve' }).click()
+  await expect(page.getByText(/checkout-api restarted/)).toBeVisible()
+})
+
+test('denies an unauthorized operations proposal', async ({ page }) => {
+  await page.goto('/?reference=operations-unauthorized')
+  const input = page.getByPlaceholder('Type /operations to begin')
+  await input.fill('/operations')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await page.getByRole('button', { name: 'Restart operation' }).click()
+  await expect(page.getByRole('alert')).toBeVisible()
+  await expect(page.getByText(/restarted/)).toHaveCount(0)
+})

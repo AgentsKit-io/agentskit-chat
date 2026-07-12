@@ -9,6 +9,7 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-protocol": "workspace:*",
+    "@agentskit/chat-devtools": "workspace:*",
     "@agentskit/core": "^1.12.2",
     "@agentskit/validation": "^0.2.1"
   },

@@ -141,4 +141,16 @@ describe('Ink PTY host', () => {
     await submit(app.pty, '/done')
     await waitFor(app.output, 'Onboarding complete. Your guided workspace is ready.')
   }, 20_000)
+
+  it('confirms a protected operation with keyboard controls', async () => {
+    const app = startApp('operations')
+    await waitFor(app.output, 'Type /operations to begin')
+    await submit(app.pty, '/operations')
+    await waitFor(app.output, 'Restart operation')
+    app.pty.write('\u001b[B')
+    app.pty.write('\r')
+    await waitFor(app.output, 'Allow restart-operation?')
+    app.pty.write('1')
+    await waitFor(app.output, 'checkout-api restarted')
+  }, 15_000)
 })

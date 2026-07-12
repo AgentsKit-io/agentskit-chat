@@ -1,5 +1,6 @@
 import { ChoiceListComponent, FormComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, validateStandardComponentInteraction, withActionPolicy, type DeterministicRoute } from '@agentskit/chat'
 import type { ComponentInteractionEvent, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import { captureActionPolicyTrace, captureActionTrace, createTraceCapture } from '@agentskit/chat-devtools'
 import { defineTool, type AdapterFactory, type ToolDefinition } from '@agentskit/core'
 import { createAjvValidator } from '@agentskit/validation'
 
@@ -237,3 +238,85 @@ export const createOnboardingApplication = ({ context, recommendations = default
 }
 
 export const onboardingApplication = createOnboardingApplication({ context: onboardingContext })
+
+export interface OperationStatus { readonly id: string; readonly status: 'healthy' | 'degraded'; readonly revision: number }
+export interface OperationsService {
+  readStatus(id: string): Promise<OperationStatus>
+  restart(id: string, idempotencyKey: string): Promise<OperationStatus>
+}
+export interface OperationsApplicationOptions { readonly context: SupportHostContext; readonly service: OperationsService }
+
+export const createInMemoryOperationsService = (): OperationsService & { readonly restarts: readonly string[] } => {
+  const restarts: string[] = []
+  const results = new Map<string, OperationStatus>()
+  return {
+    restarts,
+    readStatus: async id => ({ id, status: 'healthy', revision: restarts.length + 1 }),
+    restart: async (id, idempotencyKey) => { const prior = results.get(idempotencyKey); if (prior) return prior; restarts.push(id); const result = { id, status: 'healthy', revision: restarts.length + 1 } as const; results.set(idempotencyKey, result); return result },
+  }
+}
+
+export const createOperationsApplication = ({ context, service }: OperationsApplicationOptions) => {
+  const traces = createTraceCapture({ redactFields: ['token', 'secret', 'credential'] })
+  const operationSchema = { type: 'object', additionalProperties: false, properties: { id: { type: 'string', pattern: '^[a-z][a-z0-9-]{0,63}$' } }, required: ['id'] } as const
+  const parseStatus = (value: unknown): OperationStatus => {
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid operation status')
+    const item = value as Record<string, unknown>
+    if (Object.keys(item).some(key => !['id', 'status', 'revision'].includes(key)) || typeof item.id !== 'string' || (item.status !== 'healthy' && item.status !== 'degraded') || !Number.isSafeInteger(item.revision) || (item.revision as number) < 0) throw new TypeError('Invalid operation status')
+    return item as unknown as OperationStatus
+  }
+  const readStatus = defineTool({
+    name: 'read-operation-status', description: 'Read the current operation status after operator confirmation.', schema: operationSchema, requiresConfirmation: true,
+    execute: async (input, execution) => {
+      const result = parseStatus(await service.readStatus(input.id))
+      traces.append({ category: 'lifecycle', detail: { action: 'read-operation-status', phase: 'result', toolCallId: execution.call.id, operationId: result.id, status: result.status, revision: result.revision } })
+      return `${result.id} is ${result.status} at revision ${result.revision}.`
+    },
+  }) as ToolDefinition
+  const restart = defineTool({
+    name: 'restart-operation', description: 'Restart an operation after explicit confirmation.', schema: operationSchema, requiresConfirmation: true,
+    execute: async (input, execution) => {
+      traces.append({ category: 'action', detail: { action: 'restart-operation', phase: 'confirmed-execution', toolCallId: execution.call.id, operationId: input.id } })
+      try {
+        const raw = await service.restart(input.id, `${context.sessionId}:${execution.call.id}`)
+        let result: OperationStatus
+        try { result = parseStatus(raw) } catch { try { traces.append({ category: 'lifecycle', detail: { action: 'restart-operation', phase: 'result-invalid', toolCallId: execution.call.id } }) } catch { /* observer isolation */ }; return `${input.id} restart accepted.` }
+        try { traces.append({ category: 'lifecycle', detail: { action: 'restart-operation', phase: 'result', toolCallId: execution.call.id, operationId: result.id, status: result.status, revision: result.revision } }) } catch { /* post-commit audit observer isolation */ }
+        return `${result.id} restarted at revision ${result.revision}.`
+      } catch (error) {
+        try { traces.append({ category: 'lifecycle', detail: { action: 'restart-operation', phase: 'error', toolCallId: execution.call.id, errorType: error instanceof Error ? error.name : 'UnknownError' } }) } catch { /* observer isolation */ }
+        throw error
+      }
+    },
+  }) as ToolDefinition
+  const policy = createCapabilityPolicy({
+    sessionId: context.sessionId, getContext: () => context,
+    requirements: { 'read-operation-status': ['operations.read'], 'restart-operation': ['operations.restart'] },
+    onTrace: trace => { captureActionPolicyTrace(traces, trace) },
+  })
+  const definition = defineChat({
+    id: 'operations-reference', components: defineComponentManifest([ChoiceListComponent]),
+    chat: withActionPolicy({ adapter: deterministicAdapter, tools: [readStatus, restart], validateArgs: createAjvValidator() }, policy),
+    conversation: { initial: 'ready', states: { ready: { on: { operations: 'ready' }, actions: ['operations'] } }, routes: [
+      commandRoute({ id: 'operations', command: '/operations', event: 'operations', response: (_input, route) => JSON.stringify({
+        protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey: 'choice-list', instanceId: `operations-${route.messageId ?? route.sessionId}`,
+        props: { prompt: 'Operation checkout-api', choices: [
+          { id: 'status', label: 'Read status', action: { name: 'read-operation-status', input: { id: 'checkout-api' } } },
+          { id: 'restart', label: 'Restart operation', description: 'Requires restart capability and confirmation.', action: { name: 'restart-operation', input: { id: 'checkout-api' } } },
+        ] }, fallback: { kind: 'choice-list', summary: 'Read or restart checkout-api.' },
+      }) }),
+    ] },
+  })
+  const confirmationStatuses = new Set<string>()
+  const session = createChatSession(definition, { sessionId: context.sessionId, onConfirmationChange: records => {
+    for (const record of records) {
+      const key = `${record.token}:${record.status}`
+      if (!confirmationStatuses.has(key)) { confirmationStatuses.add(key); captureActionTrace(traces, record) }
+    }
+  } })
+  return { definition, session, traces: () => traces.snapshot() }
+}
+
+const operationsContext: SupportHostContext = Object.freeze({ sessionId: 'operations-demo', customerId: 'operator-demo', capabilities: ['operations.read', 'operations.restart'] })
+export const operationsApplication = createOperationsApplication({ context: operationsContext, service: createInMemoryOperationsService() })
+export const unauthorizedOperationsApplication = createOperationsApplication({ context: { ...operationsContext, sessionId: 'operations-unauthorized', capabilities: [] }, service: createInMemoryOperationsService() })
