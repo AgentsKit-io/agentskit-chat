@@ -1,15 +1,16 @@
 <script lang="ts">
   import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, type SvelteChatStore } from '@agentskit/svelte'
-  import { decodeComponentFrame, isComponentFrameCandidate, type ComponentRenderFrame, type ComponentSelectionEvent } from '@agentskit/chat-protocol'
-  import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame } from '@agentskit/chat'
+  import { decodeComponentFrame, isComponentFrameCandidate, type ComponentInteractionEvent, type ComponentRenderFrame, type ComponentSelectionEvent } from '@agentskit/chat-protocol'
+  import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveComponentFrame } from '@agentskit/chat'
   import type { ChatState, Message as ChatMessage } from '@agentskit/core'
   import type { AgentChatProps } from './types.js'
   import ChatBinding from './ChatBinding.svelte'
   import ChoiceList from './ChoiceList.svelte'
+  import StandardComponent from './StandardComponent.svelte'
   import { toChatStyle } from './index.js'
   import { untrack } from 'svelte'
 
-  let { definition, placeholder, onComponentSelect, actionConfirmationTtlMs, session: preparedSession, theme, container, message, input, thinking, confirmation: confirmationSnippet, choiceList }: AgentChatProps = $props()
+  let { definition, placeholder, onComponentSelect, actionConfirmationTtlMs, session: preparedSession, theme, container, message, input, thinking, confirmation: confirmationSnippet, choiceList, standardComponent }: AgentChatProps = $props()
   const initial = untrack(() => ({ definition, preparedSession, actionConfirmationTtlMs }))
   const session = resolveChatSession(initial.definition, initial.preparedSession)
   const sessionId = session.sessionId
@@ -46,6 +47,11 @@
     const action = resolveChoiceAction(frame, event.choiceId)
     if (action) void coordinator.propose(action).catch(error => { resolvedInstances.delete(event.instanceId); fail(error, 'Action proposal failed.') })
   }
+  function interactComponent(event: ComponentInteractionEvent) {
+    if (resolvedInstances.has(event.instanceId)) return
+    resolvedInstances.add(event.instanceId)
+    try { onComponentSelect?.(event) } catch (error) { fail(error, 'Component interaction callback failed.') }
+  }
   function approve(id: string) { const record = coordinator.getByToolCall(id); void (record ? coordinator.approve(record.token, sessionId) : currentStore!.approve(id)).catch(error => fail(error, 'Action approval failed.')) }
   function deny(id: string, reason?: string) { const record = coordinator.getByToolCall(id); void (record ? coordinator.reject(record.token, sessionId, reason) : currentStore!.deny(id, reason)).catch(error => fail(error, 'Action rejection failed.')) }
   function run(operation: Promise<void>) { actionError = undefined; void operation.catch(error => fail(error, 'Lifecycle operation failed.')) }
@@ -62,10 +68,13 @@
           {@const candidate = item.role === 'assistant' && isComponentFrameCandidate(item.content)}
           {@const decoded = candidate ? decodeComponentFrame(item.content) : undefined}
           {#if decoded?.ok}
-            {@const resolved = definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, definition.components)}
+            {@const resolved = definition.components === undefined ? undefined : resolveComponentFrame(decoded.frame, definition.components)}
             {#if resolved?.ok}
-              {#if choiceList}{@render choiceList(decoded.frame, definition.components!, resolvedInstances.has(decoded.frame.instanceId), event => selectComponent(event, decoded.frame))}
-              {:else}<ChoiceList frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />{/if}
+              {#if decoded.frame.componentKey === 'choice-list'}
+                {#if choiceList}{@render choiceList(decoded.frame, definition.components!, resolvedInstances.has(decoded.frame.instanceId), event => selectComponent(event, decoded.frame))}
+                {:else}<ChoiceList frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />{/if}
+              {:else if standardComponent}{@render standardComponent(decoded.frame, definition.components!, resolvedInstances.has(decoded.frame.instanceId), interactComponent)}
+              {:else}<StandardComponent frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />{/if}
             {:else}<p data-ak-component-fallback>{formatSemanticFallback(decoded.frame.fallback)}</p>{/if}
           {:else if decoded && !decoded.ok}<p role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
           {:else if message}{@render message(item)}

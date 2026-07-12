@@ -1,11 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common'
 import { Component, ContentChild, Input, OnChanges, SimpleChanges, TemplateRef, computed, inject, signal, type OnDestroy } from '@angular/core'
 import { AgentskitChat, ChatContainerComponent, InputBarComponent, MessageComponent, ThinkingIndicatorComponent, ToolConfirmationComponent } from '@agentskit/angular'
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
-import type { ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
+import { StandardComponentComponent } from './standard-component.js'
+
+export { StandardComponentComponent } from './standard-component.js'
 
 export type ChatCssVariables = Readonly<Record<`--ak-${string}`, string | number>>
 export const toChatCssVariables = (input?: ChatThemeInput): ChatCssVariables => {
@@ -40,7 +43,7 @@ export class ChoiceListComponent implements OnChanges {
 }
 
 interface MessagePresentation {
-  readonly kind: 'message' | 'choice' | 'fallback' | 'diagnostic'
+  readonly kind: 'message' | 'choice' | 'standard' | 'fallback' | 'diagnostic'
   readonly message: ChatMessage
   readonly frame?: ComponentRenderFrame
   readonly fallback?: string
@@ -50,13 +53,14 @@ interface MessagePresentation {
 
 @Component({
   selector: 'ak-agent-chat', standalone: true,
-  imports: [NgTemplateOutlet, ChatContainerComponent, MessageComponent, InputBarComponent, ThinkingIndicatorComponent, ToolConfirmationComponent, ChoiceListComponent],
+  imports: [NgTemplateOutlet, ChatContainerComponent, MessageComponent, InputBarComponent, ThinkingIndicatorComponent, ToolConfirmationComponent, ChoiceListComponent, StandardComponentComponent],
   providers: [AgentskitChat],
   template: `<section [attr.aria-label]="definition.id + ' chat'" data-ak-app-chat [style]="styleText()">
     <div aria-live="polite" aria-relevant="additions text" role="log"><ng-template #content>
       @for (message of chat()?.messages ?? []; track message.id) { @let view = present(message);
         @switch (view.kind) {
           @case ('choice') { @if (choiceListTemplate) { <ng-container [ngTemplateOutlet]="choiceListTemplate" [ngTemplateOutletContext]="choiceContext(view.frame!)" /> } @else { <ak-choice-list [frame]="view.frame" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onSelect]="selectFor(view.frame!)" /> } }
+          @case ('standard') { <ak-standard-component [frame]="view.frame!" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onInteract]="interact" /> }
           @case ('fallback') { <p data-ak-component-fallback>{{ view.fallback }}</p> }
           @case ('diagnostic') { <p role="alert" [attr.data-ak-component-diagnostic]="view.diagnosticCode">{{ view.diagnosticMessage }}</p> }
           @default { @if (messageTemplate) { <ng-container [ngTemplateOutlet]="messageTemplate" [ngTemplateOutletContext]="{ $implicit: message }" /> } @else { <ak-message [message]="message" /> } }
@@ -79,7 +83,7 @@ interface MessagePresentation {
 export class AgentChatComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) definition!: ChatDefinition
   @Input() placeholder?: string
-  @Input() onComponentSelect?: (event: ComponentSelectionEvent) => void
+  @Input() onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
   @Input() actionConfirmationTtlMs?: number
   @Input() session?: ChatSession
   @Input() theme?: ChatThemeInput
@@ -126,11 +130,12 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   readonly toolCalls = (): ToolCall[] => (this.chat()?.messages ?? []).flatMap(message => message.toolCalls ?? [])
   present(message: ChatMessage): MessagePresentation {
     const decoded = message.role === 'assistant' && isComponentFrameCandidate(message.content) ? decodeComponentFrame(message.content) : undefined
-    if (decoded?.ok) { const resolved = this.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, this.definition.components); return resolved?.ok ? { kind: 'choice', message, frame: decoded.frame } : { kind: 'fallback', message, fallback: formatSemanticFallback(decoded.frame.fallback) } }
+    if (decoded?.ok) { const resolved = this.definition.components === undefined ? undefined : resolveComponentFrame(decoded.frame, this.definition.components); return resolved?.ok ? { kind: decoded.frame.componentKey === 'choice-list' ? 'choice' : 'standard', message, frame: decoded.frame } : { kind: 'fallback', message, fallback: formatSemanticFallback(decoded.frame.fallback) } }
     if (decoded && !decoded.ok) return { kind: 'diagnostic', message, diagnosticCode: decoded.diagnostic.code, diagnosticMessage: decoded.diagnostic.message }
     return { kind: 'message', message }
   }
   readonly selectFor = (frame: ComponentRenderFrame) => (event: ComponentSelectionEvent): void => this.selectComponent(event, frame)
+  readonly interact = (event: ComponentInteractionEvent): void => { if (this.resolvedInstances().has(event.instanceId)) return; this.resolvedInstances.update(current => new Set(current).add(event.instanceId)); try { this.onComponentSelect?.(event) } catch (error) { this.fail(error, 'Component interaction callback failed.') } }
   private selectComponent(event: ComponentSelectionEvent, frame: ComponentRenderFrame): void {
     if (this.resolvedInstances().has(event.instanceId)) return
     this.error.set(null); this.resolvedInstances.update(current => new Set(current).add(event.instanceId))

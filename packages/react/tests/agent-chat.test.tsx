@@ -2,9 +2,9 @@ import { buildMessage, type AdapterFactory } from '@agentskit/core'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { AgentChat, ChoiceList, toChatCssVariables } from '../src/index.js'
-import { ChoiceListComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
-import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { AgentChat, ChoiceList, StandardComponent, toChatCssVariables } from '../src/index.js'
+import { ChoiceListComponent, StandardComponentCatalog, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 afterEach(() => {
   cleanup()
@@ -46,6 +46,19 @@ const adapter = (fail = false): AdapterFactory => ({
 })
 
 describe('AgentChat', () => {
+  it('renders the complete standard catalog and emits validated interactions', () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog)
+    const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const view = render(<StandardComponent frame={frame} manifest={manifest} onInteract={onInteract} />)
+      expect(view.container.querySelector(`[data-ak-component="${frame.componentKey}"]`)).toBeTruthy()
+      view.unmount()
+    }
+    const button = standardComponentFrameFixtures[0]
+    render(<StandardComponent frame={button} manifest={manifest} onInteract={onInteract} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+    expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ type: 'interact', event: 'select', value: 'save' }))
+  })
   it('maps semantic tokens to upstream CSS variables and accepts a native slot', () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({
       '--ak-color-button': '#663399', '--ak-color-bubble-user': '#663399', '--ak-radius-lg': '20px',

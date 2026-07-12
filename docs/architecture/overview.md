@@ -59,6 +59,8 @@ The Solid renderer uses upstream `useChat` and native signals, control flow, and
 
 The Angular renderer uses the upstream `AgentskitChat` signal service and standalone components. A component-scoped provider isolates every shell; Angular content templates customize application surfaces, and upstream `destroy()` owns active-stream cancellation.
 
+The closed standard catalog adds 12 application components through one generic native presentation per renderer, while ChoiceList retains its action-aware specialization. Schemas, declared intent events, accessibility metadata, capability declarations, semantic fallbacks, and generated parity remain framework-neutral ([ADR-0015](./adrs/0015-standard-component-catalog.md)).
+
 ### CLI
 
 Detects the host framework and runtime, scaffolds a complete vertical slice, adds semantic components, validates configuration, and diagnoses renderer parity.

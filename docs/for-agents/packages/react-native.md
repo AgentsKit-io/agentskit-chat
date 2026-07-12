@@ -1,6 +1,6 @@
 # React Native renderer
 
-- Owns only the native application shell and native `ChoiceList` presentation in `packages/react-native`.
+- Owns only the native application shell, specialized `ChoiceListNative`, and generic `StandardComponentNative` presentation in `packages/react-native`.
 - Resolve shared frames against the framework-neutral manifest before rendering; emit only shared selection events.
 - Delegate controller state and UI primitives to `@agentskit/react-native`.
 - Keep React Native as a peer dependency; native modules belong to the Expo app.

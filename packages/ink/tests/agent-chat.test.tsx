@@ -6,15 +6,24 @@ import React from 'react'
 import { describe, expect, it } from 'vitest'
 import { vi } from 'vitest'
 
-import { ChoiceListComponent, defineComponentManifest } from '@agentskit/chat'
-import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
-import { AgentChat, ChoiceList, SemanticFallback, toChatInkTheme } from '../src/index.js'
+import { ChoiceListComponent, StandardComponentCatalog, defineComponentManifest } from '@agentskit/chat'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { AgentChat, ChoiceList, SemanticFallback, StandardComponent, toChatInkTheme } from '../src/index.js'
 
 const adapter: AdapterFactory = {
   createSource: () => ({ async *stream() { yield { type: 'done' } }, abort() {} }),
 }
 
 describe('Ink application shell', () => {
+  it('renders the complete standard catalog and emits keyboard interactions', () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const view = render(<StandardComponent frame={frame} manifest={manifest} onInteract={onInteract} isActive={false} />)
+      expect(view.lastFrame()).toBeTruthy(); view.unmount()
+    }
+    const view = render(<StandardComponent frame={standardComponentFrameFixtures[0]} manifest={manifest} onInteract={onInteract} />)
+    view.stdin.write('\r'); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+  })
   it('maps semantic tokens to Ink capabilities and accepts a terminal slot', () => {
     expect(toChatInkTheme({ colors: { accent: '#0000ff', danger: '#ff0000' } })).toMatchObject({
       prompt: { active: '#0000ff' }, toolStatus: { error: { color: '#ff0000' } },

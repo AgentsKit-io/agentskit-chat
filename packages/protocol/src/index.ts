@@ -61,9 +61,20 @@ export const ComponentSelectionEventSchema = z.object({
   choiceId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
 }).readonly()
 
+export const ComponentInteractionEventSchema = z.object({
+  protocol: z.literal(COMPONENT_PROTOCOL),
+  version: z.literal(COMPONENT_PROTOCOL_VERSION),
+  type: z.literal('interact'),
+  componentKey: ComponentKeySchema,
+  instanceId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
+  event: z.string().regex(/^[a-z][a-z0-9-]{0,63}$/),
+  value: z.unknown().refine(isBoundedJsonValue).optional(),
+}).readonly()
+
 export type ComponentFallback = z.infer<typeof ComponentFallbackSchema>
 export type ComponentRenderFrame = z.infer<typeof ComponentRenderFrameSchema>
 export type ComponentSelectionEvent = z.infer<typeof ComponentSelectionEventSchema>
+export type ComponentInteractionEvent = z.infer<typeof ComponentInteractionEventSchema>
 
 export type ComponentDecodeCode =
   | 'COMPONENT_UNSUPPORTED_VERSION'
@@ -142,6 +153,17 @@ export const createSelectionEvent = (frame: ComponentRenderFrame, choiceId: stri
     componentKey: frame.componentKey,
     instanceId: frame.instanceId,
     choiceId,
+  })
+
+export const createInteractionEvent = (frame: ComponentRenderFrame, event: string, value?: unknown): ComponentInteractionEvent =>
+  ComponentInteractionEventSchema.parse({
+    protocol: COMPONENT_PROTOCOL,
+    version: COMPONENT_PROTOCOL_VERSION,
+    type: 'interact',
+    componentKey: frame.componentKey,
+    instanceId: frame.instanceId,
+    event,
+    ...(value === undefined ? {} : { value }),
   })
 
 export const TokenUsageSchema = z.object({

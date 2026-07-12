@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { invalidComponentFrameFixtures, invalidTurnEventFixtures, validChoiceListFrame, validTurnEventFixtures } from '../src/fixtures.js'
 import {
+  createInteractionEvent,
   createSelectionEvent,
   createSnapshotEvent,
   createTurnSnapshotCursor,
@@ -268,6 +269,14 @@ describe('v1 component protocol', () => {
       protocol: 'agentskit.chat.component', version: 1, type: 'select',
       componentKey: 'choice-list', instanceId: 'destination-choice', choiceId: 'docs',
     })
+  })
+
+  it('creates bounded generic interaction events', () => {
+    expect(createInteractionEvent({ ...validChoiceListFrame, componentKey: 'form' }, 'submit', { email: 'ada@example.com' })).toMatchObject({
+      type: 'interact', componentKey: 'form', event: 'submit', value: { email: 'ada@example.com' },
+    })
+    expect(() => createInteractionEvent(validChoiceListFrame, 'Bad Event')).toThrow()
+    expect(() => createInteractionEvent(validChoiceListFrame, 'select', { callback: () => undefined })).toThrow()
   })
 
   it('does not throw for invalid JSON or hostile objects', () => {

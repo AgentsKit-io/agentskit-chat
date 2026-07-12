@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ChatReturn } from '@agentskit/core'
-import { ChoiceListComponent, createChatSession, defineChat, defineComponentManifest, resumeChatSession } from '@agentskit/chat'
+import { ChoiceListComponent, StandardComponentCatalog, createChatSession, defineChat, defineComponentManifest, resumeChatSession } from '@agentskit/chat'
 import type { SessionSnapshot } from '@agentskit/chat-protocol'
 import { AgentChat } from '../../react/src/index.js'
-import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import type { ReactNode } from 'react'
 
 const stop = vi.fn()
@@ -37,6 +37,17 @@ describe('AgentChatNative', () => {
   beforeEach(() => {
     stop.mockReset()
     useChat.mockReturnValue({ messages: [], status: 'streaming', stop } as unknown as ChatReturn)
+  })
+
+  it('renders the complete standard catalog and emits interactions', async () => {
+    const { StandardComponentNative } = await import('../src/index')
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const view = render(<StandardComponentNative frame={frame} manifest={manifest} onInteract={onInteract} />)
+      expect(view.container.querySelector(`[data-testid="ak-${frame.componentKey}"]`)).toBeTruthy(); view.unmount()
+    }
+    render(<StandardComponentNative frame={standardComponentFrameFixtures[0]} manifest={manifest} onInteract={onInteract} />)
+    fireEvent.click(screen.getByText('Save')); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
   })
 
   it('delegates the shared definition to upstream useChat', async () => {

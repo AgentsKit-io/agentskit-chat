@@ -1,7 +1,7 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
-import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import {
   ChatContainer,
   InputBar,
@@ -10,7 +10,7 @@ import {
   ToolConfirmation,
   useChat,
 } from '@agentskit/react'
-import { useMemo, useRef, useState, type ComponentProps, type ComponentType, type CSSProperties, type ReactElement } from 'react'
+import { useMemo, useRef, useState, type ChangeEvent, type ComponentProps, type ComponentType, type CSSProperties, type ReactElement } from 'react'
 
 export type ChatCssVariables = CSSProperties & { readonly [key: `--ak-${string}`]: string | number }
 
@@ -50,16 +50,55 @@ export interface AgentChatSlots {
   readonly Thinking?: ComponentType<ComponentProps<typeof ThinkingIndicator>>
   readonly Confirmation?: ComponentType<ComponentProps<typeof ToolConfirmation>>
   readonly ChoiceList?: ComponentType<ChoiceListProps>
+  readonly StandardComponent?: ComponentType<StandardComponentProps>
 }
 
 export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
-  readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
   readonly slots?: AgentChatSlots
+}
+
+export interface StandardComponentProps {
+  readonly frame: ComponentRenderFrame
+  readonly manifest: ComponentManifest
+  readonly onInteract: (event: ComponentInteractionEvent) => void
+  readonly disabled?: boolean
+}
+
+const StandardForm = ({ frame, manifest, onInteract, disabled }: StandardComponentProps): ReactElement => {
+  const props = FormPropsSchema.parse(frame.props)
+  const [values, setValues] = useState<Readonly<Record<string, string | boolean>>>({})
+  return <form aria-label={props.title ?? 'Form'} data-ak-component="form" onSubmit={event => { event.preventDefault(); onInteract(createComponentInteraction(frame, manifest, 'submit', values)) }}>
+    {props.title ? <h3>{props.title}</h3> : null}
+    {props.fields.map(field => <label key={field.id}>{field.label}{field.type === 'select'
+      ? <select required={field.required} disabled={disabled} value={String(values[field.id] ?? '')} onChange={event => setValues(current => ({ ...current, [field.id]: event.target.value }))}><option value="">Select</option>{field.options?.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select>
+      : <input type={field.type} required={field.required} disabled={disabled} placeholder={field.placeholder} {...(field.type === 'checkbox' ? { checked: Boolean(values[field.id]), onChange: (event: ChangeEvent<HTMLInputElement>) => setValues(current => ({ ...current, [field.id]: event.target.checked })) } : { value: String(values[field.id] ?? ''), onChange: (event: ChangeEvent<HTMLInputElement>) => setValues(current => ({ ...current, [field.id]: event.target.value })) })} />}</label>)}
+    <button type="submit" disabled={disabled}>{props.submitLabel}</button>
+  </form>
+}
+
+export const StandardComponent = ({ frame, manifest, onInteract, disabled = false }: StandardComponentProps): ReactElement | null => {
+  if (!resolveComponentFrame(frame, manifest).ok || frame.componentKey === 'choice-list') return null
+  const emit = (event: string, value?: unknown): void => onInteract(createComponentInteraction(frame, manifest, event, value))
+  switch (frame.componentKey) {
+    case 'button-group': { const props = ButtonGroupPropsSchema.parse(frame.props); return <fieldset aria-label={props.label} data-ak-component="button-group"><legend>{props.label}</legend>{props.buttons.map(button => <button key={button.id} type="button" disabled={disabled || button.disabled} onClick={() => emit('select', button.id)}>{button.label}</button>)}</fieldset> }
+    case 'form': return <StandardForm frame={frame} manifest={manifest} onInteract={onInteract} disabled={disabled} />
+    case 'confirmation': { const props = ConfirmationPropsSchema.parse(frame.props); return <section aria-label={props.title} data-ak-component="confirmation"><h3>{props.title}</h3><p>{props.message}</p><button type="button" disabled={disabled} onClick={() => emit('confirm')}>{props.confirmLabel}</button><button type="button" disabled={disabled} onClick={() => emit('cancel')}>{props.cancelLabel}</button></section> }
+    case 'progress': { const props = ProgressPropsSchema.parse(frame.props); return <div data-ak-component="progress"><label>{props.label}<progress max={100} value={props.value} /></label>{props.status ? <p>{props.status}</p> : null}</div> }
+    case 'source-list': { const props = SourceListPropsSchema.parse(frame.props); return <section data-ak-component="source-list"><h3>{props.label}</h3><ul>{props.sources.map(source => <li key={source.id}>{source.url ? <a href={source.url} onClick={event => { event.preventDefault(); emit('open', source.id) }}>{source.title}</a> : source.title}{source.snippet ? <p>{source.snippet}</p> : null}</li>)}</ul></section> }
+    case 'link-card': { const props = LinkCardPropsSchema.parse(frame.props); return <a data-ak-component="link-card" href={props.href} onClick={event => { event.preventDefault(); emit('open', props.href) }}><strong>{props.title}</strong>{props.description ? <span>{props.description}</span> : null}{props.label ? <span>{props.label}</span> : null}</a> }
+    case 'error-notice': { const props = ErrorNoticePropsSchema.parse(frame.props); return <section role="alert" data-ak-component="error-notice"><strong>{props.title}</strong><p>{props.message}</p>{props.code ? <code>{props.code}</code> : null}{props.retryLabel ? <button type="button" disabled={disabled} onClick={() => emit('retry')}>{props.retryLabel}</button> : null}</section> }
+    case 'tool-call': { const props = ToolCallPropsSchema.parse(frame.props); return <section role="status" data-ak-component="tool-call"><strong>{props.name}</strong><span>{props.status}</span>{props.arguments ? <pre>{JSON.stringify(props.arguments, null, 2)}</pre> : null}{props.result === undefined ? null : <pre>{JSON.stringify(props.result, null, 2)}</pre>}</section> }
+    case 'approval-request': { const props = ApprovalRequestPropsSchema.parse(frame.props); return <section aria-label={props.title} data-ak-component="approval-request"><h3>{props.title}</h3><p>{props.description}</p><button type="button" disabled={disabled} onClick={() => emit('approve')}>{props.approveLabel}</button><button type="button" disabled={disabled} onClick={() => emit('deny')}>{props.denyLabel}</button></section> }
+    case 'table': { const props = TablePropsSchema.parse(frame.props); return <table data-ak-component="table"><caption>{props.caption}</caption><thead><tr>{props.columns.map(column => <th key={column.key} scope="col">{column.label}</th>)}</tr></thead><tbody>{props.rows.map((row, index) => <tr key={index}>{props.columns.map(column => <td key={column.key}>{String(row[column.key] ?? '')}</td>)}</tr>)}</tbody></table> }
+    case 'file-attachment': { const props = FileAttachmentPropsSchema.parse(frame.props); return <article data-ak-component="file-attachment"><strong>{props.name}</strong><span>{props.mimeType}</span>{props.sizeBytes === undefined ? null : <span>{props.sizeBytes} bytes</span>}{props.url ? <a href={props.url} onClick={event => { event.preventDefault(); emit('open', props.url) }}>Open</a> : null}</article> }
+    default: return null
+  }
 }
 
 export interface ChoiceListProps {
@@ -93,6 +132,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const ThinkingSlot = slots.Thinking ?? ThinkingIndicator
   const ConfirmationSlot = slots.Confirmation ?? ToolConfirmation
   const ChoiceListSlot = slots.ChoiceList ?? ChoiceList
+  const StandardComponentSlot = slots.StandardComponent ?? StandardComponent
   const [session] = useState(() => resolveChatSession(definition, preparedSession))
   const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
@@ -108,7 +148,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     approve: id => chatRef.current.approve(id),
     deny: (id, reason) => chatRef.current.deny(id, reason),
   } }))
-  const selectComponent = (event: ComponentSelectionEvent, frame: import('@agentskit/chat-protocol').ComponentRenderFrame): void => {
+  const selectComponent = (event: ComponentSelectionEvent, frame: ComponentRenderFrame): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     setActionError(undefined)
     resolvedInstancesRef.current.add(event.instanceId)
@@ -122,6 +162,11 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       setResolvedInstances(new Set(resolvedInstancesRef.current))
       setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
     })
+  }
+  const interactComponent = (event: ComponentInteractionEvent): void => {
+    if (resolvedInstancesRef.current.has(event.instanceId)) return
+    resolvedInstancesRef.current.add(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current))
+    try { onComponentSelect(event) } catch (error) { setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
   }
   const approve = (toolCallId: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
@@ -145,12 +190,12 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
             const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
             const decoded = candidate ? decodeComponentFrame(message.content) : undefined
             if (decoded?.ok) {
-              const resolved = definition.components === undefined
-                ? undefined
-                : resolveChoiceListFrame(decoded.frame, definition.components)
-              return resolved?.ok
-                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
-                : <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
+              const manifest = definition.components
+              const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
+              if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
+                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
+                : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />
+              return <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
             }
             if (decoded && !decoded.ok) return <p key={message.id} role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
             return <MessageSlot key={message.id} message={message} />

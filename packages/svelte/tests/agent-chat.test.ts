@@ -1,10 +1,11 @@
 import { buildMessage, type AdapterFactory } from '@agentskit/core'
-import { ChoiceListComponent, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
+import { ChoiceListComponent, StandardComponentCatalog, commandRoute, createChatSession, defineChat, defineComponentManifest } from '@agentskit/chat'
 import { fireEvent, render, waitFor } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { invalidComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import AgentChat from '../src/AgentChat.svelte'
 import ChoiceList from '../src/ChoiceList.svelte'
+import StandardComponent from '../src/StandardComponent.svelte'
 import { toChatCssVariables, toChatStyle } from '../src/index.js'
 import SlotsFixture from './SlotsFixture.svelte'
 
@@ -17,6 +18,15 @@ const adapter = (fail = false): AdapterFactory => ({ createSource: request => ({
 afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks() })
 
 describe('AgentChat Svelte', () => {
+  it('renders the complete standard catalog and emits interactions', async () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    for (const frame of standardComponentFrameFixtures.filter(item => item.componentKey !== 'choice-list')) {
+      const view = render(StandardComponent, { props: { frame, manifest, onInteract } })
+      expect(view.container.querySelector(`[data-ak-component="${frame.componentKey}"]`)).toBeTruthy(); view.unmount()
+    }
+    const view = render(StandardComponent, { props: { frame: standardComponentFrameFixtures[0], manifest, onInteract } })
+    await fireEvent.click(view.getByText('Save')); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+  })
   it('remounts when the prepared session identity changes', async () => {
     const definition = defineChat({ id: 'switch-session', chat: { adapter: adapter() } })
     const first = createChatSession(definition, { sessionId: 'customer-a' })

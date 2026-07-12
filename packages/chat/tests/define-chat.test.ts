@@ -1,20 +1,22 @@
 import { ConfigError, createChatController } from '@agentskit/core'
 import type { AdapterFactory, AdapterRequest, StreamChunk } from '@agentskit/core'
 import { describe, expect, it, vi } from 'vitest'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 import {
-  ChoiceListComponent, createActionConfirmation, createCapabilityPolicy,
+  ChoiceListComponent, STANDARD_COMPONENT_KEYS, StandardComponentCatalog, createActionConfirmation, createCapabilityPolicy, createComponentInteraction,
   commandRoute, createChatSession, defineChat, defineComponentManifest, formatSemanticFallback, parseSemanticFallback,
   resumeChatSession,
   resolveChatSession,
   resolveChoiceListFrame,
-  resolveComponentFrame,
+  resolveComponentFrame, resolveComponentFallback,
   resolveChatTheme,
   getLifecycleTargets,
   selectChoice, withActionPolicy,
   type TurnTrace,
 } from '../src/index.js'
-import { validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { standardComponentFrameFixtures, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 
 const adapter: AdapterFactory = {
   createSource: () => ({
@@ -102,6 +104,43 @@ describe('component manifest', () => {
     expect(() => selectChoice(validChoiceListFrame, 'missing')).toThrow(ConfigError)
     expect(() => selectChoice({ ...validChoiceListFrame, componentKey: 'other' }, 'docs')).toThrow(ConfigError)
     expect(() => defineComponentManifest([{ key: 'Invalid Key', propsSchema: ChoiceListComponent.propsSchema }])).toThrow(ConfigError)
+  })
+})
+
+describe('standard component catalog', () => {
+  const manifest = defineComponentManifest(StandardComponentCatalog)
+
+  it.each(standardComponentFrameFixtures)('resolves $componentKey with metadata and a stable fallback', frame => {
+    const resolved = resolveComponentFrame(frame, manifest)
+    expect(resolved.ok).toBe(true)
+    const definition = manifest[frame.componentKey]
+    expect(definition?.accessibility?.role).toBeTruthy()
+    expect(definition?.capabilities).toContain('display')
+    expect(resolveComponentFallback(frame, manifest)).toBeTruthy()
+  })
+
+  it('emits only declared interactions with the required value shape', () => {
+    const button = standardComponentFrameFixtures[0]
+    expect(createComponentInteraction(button, manifest, 'select', 'save')).toMatchObject({ type: 'interact', event: 'select', value: 'save' })
+    expect(() => createComponentInteraction(button, manifest, 'submit', {})).toThrow(ConfigError)
+    expect(() => createComponentInteraction(standardComponentFrameFixtures[4], manifest, 'select', 'x')).toThrow(ConfigError)
+  })
+
+  it('rejects invalid catalog props at runtime', () => {
+    for (const frame of standardComponentFrameFixtures) {
+      expect(resolveComponentFrame({ ...frame, props: null }, manifest).ok).toBe(false)
+    }
+    expect(resolveComponentFrame({ ...standardComponentFrameFixtures[6], props: { title: 'Unsafe', href: '//evil.example' } }, manifest).ok).toBe(false)
+    expect(resolveComponentFrame({ ...standardComponentFrameFixtures[11], props: { name: 'bad', mimeType: 'text/plain', url: 'javascript:alert(1)' } }, manifest).ok).toBe(false)
+  })
+
+  it('requires every native renderer to declare complete parity', async () => {
+    const report = await readFile(join(process.cwd(), '../../docs/components/catalog.generated.md'), 'utf8')
+    for (const renderer of ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']) {
+      const support = JSON.parse(await readFile(join(process.cwd(), `../${renderer}/catalog-support.json`), 'utf8')) as { components: string[] }
+      expect(support.components).toEqual(STANDARD_COMPONENT_KEYS)
+    }
+    for (const component of STANDARD_COMPONENT_KEYS) expect(report).toContain(`| ${component} | yes | yes | yes | yes | yes | yes | yes |`)
   })
 })
 

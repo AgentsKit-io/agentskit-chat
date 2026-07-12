@@ -1,10 +1,13 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
-import type { ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatRoot, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/vue'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
 import { defineComponent, Fragment, h, ref, watchEffect, type CSSProperties, type PropType, type Slots, type SlotsType, type VNode, type VNodeChild } from 'vue'
+import { StandardComponent, type StandardComponentProps } from './StandardComponent.js'
+
+export { StandardComponent, type StandardComponentProps } from './StandardComponent.js'
 
 export type ChatCssVariables = CSSProperties & { readonly [key: `--ak-${string}`]: string | number }
 
@@ -72,7 +75,7 @@ export const ChoiceList = defineComponent({
 export interface AgentChatProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
-  readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
+  readonly onComponentSelect?: (event: ComponentSelectionEvent | ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
   readonly session?: ChatSession
   readonly theme?: ChatThemeInput
@@ -85,6 +88,7 @@ export interface AgentChatSlots {
   readonly thinking?: (props: { readonly visible: boolean }) => VNode[]
   readonly confirmation?: (props: { readonly toolCall: ToolCall, readonly onApprove: (id: string) => void, readonly onDeny: (id: string, reason?: string) => void }) => VNode[]
   readonly choiceList?: (props: ChoiceListProps) => VNode[]
+  readonly standardComponent?: (props: StandardComponentProps) => VNode[]
 }
 
 const slot = (slots: Slots, name: string, props: Record<string, unknown>, fallback: () => VNodeChild): VNodeChild =>
@@ -93,7 +97,7 @@ const slot = (slots: Slots, name: string, props: Record<string, unknown>, fallba
 const agentChatProps = {
   definition: { type: Object as PropType<ChatDefinition>, required: true },
   placeholder: { type: String, default: undefined },
-  onComponentSelect: { type: Function as PropType<(event: ComponentSelectionEvent) => void>, default: undefined },
+  onComponentSelect: { type: Function as PropType<(event: ComponentSelectionEvent | ComponentInteractionEvent) => void>, default: undefined },
   actionConfirmationTtlMs: { type: Number, default: undefined },
   session: { type: Object as PropType<ChatSession>, default: undefined },
   theme: { type: Object as PropType<ChatThemeInput>, default: undefined },
@@ -160,6 +164,11 @@ const AgentChatSession = defineComponent({
       actionError.value = undefined
       void operation.catch(error => fail(error, 'Lifecycle operation failed.'))
     }
+    const interactComponent = (event: ComponentInteractionEvent): void => {
+      if (resolvedInstances.value.has(event.instanceId)) return
+      resolvedInstances.value.add(event.instanceId)
+      try { props.onComponentSelect?.(event) } catch (error) { fail(error, 'Component interaction callback failed.') }
+    }
 
     const renderChat = (chat: ChatReturn): VNodeChild => {
       currentChat = chat
@@ -169,9 +178,12 @@ const AgentChatSession = defineComponent({
         const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
         const decoded = candidate ? decodeComponentFrame(message.content) : undefined
         if (decoded?.ok) {
-          const resolved = props.definition.components === undefined ? undefined : resolveChoiceListFrame(decoded.frame, props.definition.components)
+          const manifest = props.definition.components
+          const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
           const rendered = resolved?.ok
-            ? slot(nativeSlots, 'choiceList', { frame: decoded.frame, manifest: props.definition.components, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: props.definition.components!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
+            ? decoded.frame.componentKey === 'choice-list'
+              ? slot(nativeSlots, 'choiceList', { frame: decoded.frame, manifest, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: manifest!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
+              : slot(nativeSlots, 'standardComponent', { frame: decoded.frame, manifest, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onInteract: interactComponent }, () => h(StandardComponent, { frame: decoded.frame, manifest: manifest!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onInteract: interactComponent }))
             : h('p', { 'data-ak-component-fallback': '' }, formatSemanticFallback(decoded.frame.fallback))
           return h(Fragment, { key: message.id }, [rendered])
         }

@@ -169,6 +169,26 @@ export const validChoiceListFrame = {
   fallback: { kind: 'choice-list', summary: 'Choose Documentation or Demo.' },
 } as const satisfies ComponentRenderFrame
 
+const catalogFrame = (componentKey: string, props: unknown, summary: string): ComponentRenderFrame => ({
+  protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey,
+  instanceId: `${componentKey}-fixture`, props, fallback: { kind: componentKey, summary },
+})
+
+export const standardComponentFrameFixtures = [
+  catalogFrame('button-group', { label: 'Actions', buttons: [{ id: 'save', label: 'Save' }] }, 'Choose Save.'),
+  validChoiceListFrame,
+  catalogFrame('form', { title: 'Contact', fields: [{ id: 'email', label: 'Email', type: 'email', required: true }], submitLabel: 'Send' }, 'Contact form.'),
+  catalogFrame('confirmation', { title: 'Delete?', message: 'This cannot be undone.', confirmLabel: 'Delete', cancelLabel: 'Cancel' }, 'Confirm deletion.'),
+  catalogFrame('progress', { label: 'Upload', value: 42, status: 'Uploading' }, 'Upload is 42% complete.'),
+  catalogFrame('source-list', { label: 'Sources', sources: [{ id: 'docs', title: 'Documentation', url: '/docs' }] }, 'Sources: Documentation.'),
+  catalogFrame('link-card', { title: 'Guide', description: 'Read the guide.', href: 'https://example.com/guide' }, 'Guide link.'),
+  catalogFrame('error-notice', { title: 'Failed', message: 'Try again.', code: 'E_TEST', retryLabel: 'Retry' }, 'Failed: Try again.'),
+  catalogFrame('tool-call', { name: 'Search', status: 'complete', arguments: { q: 'AgentsKit' }, result: 'Found' }, 'Search completed.'),
+  catalogFrame('approval-request', { title: 'Approve send?', description: 'Send the email.', approveLabel: 'Approve', denyLabel: 'Deny' }, 'Approval required.'),
+  catalogFrame('table', { caption: 'Users', columns: [{ key: 'name', label: 'Name' }], rows: [{ name: 'Ada' }] }, 'Users table with one row.'),
+  catalogFrame('file-attachment', { name: 'report.pdf', mimeType: 'application/pdf', sizeBytes: 1024, url: '/report.pdf' }, 'Attached report.pdf.'),
+] as const satisfies readonly ComponentRenderFrame[]
+
 export const invalidChoiceListPropsFrame = {
   ...validChoiceListFrame,
   props: { prompt: '', choices: [] },

@@ -2,7 +2,7 @@
 
 ## Ownership
 
-`packages/vue` owns only the Vue application shell, native scoped slots, semantic theme mapping, and `ChoiceList` presentation. It consumes `useChat`, `ChatRoot`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from `@agentskit/vue@0.4.4`.
+`packages/vue` owns only the Vue application shell, native scoped slots, semantic theme mapping, specialized `ChoiceList`, and generic `StandardComponent` presentation. It consumes `useChat`, `ChatRoot`, `Message`, `InputBar`, `ThinkingIndicator`, and `ToolConfirmation` from `@agentskit/vue@0.4.4`.
 
 Do not add another controller, reactive chat store, stream consumer, lifecycle implementation, confirmation engine, or renderer root. Generic Vue binding gaps belong upstream in `AgentsKit-io/agentskit` first.
 
