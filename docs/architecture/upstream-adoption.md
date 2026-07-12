@@ -181,3 +181,7 @@ Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@ag
 ## Deterministic onboarding adoption record (#23)
 
 Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `@agentskit/core@1.12.2`: `ChatConfig`, `AdapterFactory`, typed tools, authorization, confirmation, and official React, React Native, and Ink bindings. AgentsKit owns controller lifecycle, messages, streams, memory, cancellation, tool execution, and confirmation. AgentsKit Chat adds only application routes, Form/ChoiceList intents, guards, and parity evidence. No upstream state-machine primitive exists, no upstream behavior is copied, and no generic gap blocks #23.
+
+## Protected operations adoption record (#24)
+
+Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f`, specifically `packages/core/src/chat.ts`, `packages/core/src/tool-proposal-internal.ts`, `packages/core/src/tool-authorization-internal.ts`, and confirmation exports in `packages/react`, `packages/react-native`, and `packages/ink`, consumed through `@agentskit/core@1.12.2` and the published renderer packages. The reference adds only injected operations-domain behavior and a safe trace projection. No upstream primitive is copied and no generic gap blocks #24.

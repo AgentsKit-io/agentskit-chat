@@ -158,7 +158,7 @@
         },
         "example-react": {
           "path": "apps/example-react",
-          "purpose": "React surface of the support and deterministic onboarding references",
+          "purpose": "React surface of support, onboarding, and protected operations references",
           "agentDoc": "docs/for-agents/apps/example-react.md",
           "humanDoc": "examples/support-reference",
           "checks": [
@@ -168,7 +168,7 @@
         },
         "example-shared": {
           "path": "apps/example-shared",
-          "purpose": "Framework-neutral support and deterministic onboarding domains with injected host seams",
+          "purpose": "Framework-neutral support, onboarding, and protected operations domains with injected host seams",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
           "humanDoc": "examples/support-reference",
           "checks": [
@@ -178,7 +178,7 @@
         },
         "example-react-native": {
           "path": "apps/example-react-native",
-          "purpose": "Expo proof of shared-definition React Native parity",
+          "purpose": "Expo proof of support, onboarding, and protected operations parity",
           "agentDoc": "docs/for-agents/apps/example-react-native.md",
           "humanDoc": "examples/support-reference",
           "checks": [
@@ -188,12 +188,22 @@
         },
         "example-ink": {
           "path": "apps/example-ink",
-          "purpose": "Executable PTY proof of shared-definition Ink parity",
+          "purpose": "Executable PTY proof of support, onboarding, and protected operations parity",
           "agentDoc": "docs/for-agents/apps/example-ink.md",
           "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-ink build",
             "pnpm test:pty"
+          ]
+        },
+        "operations-reference": {
+          "path": "apps/example-shared",
+          "purpose": "Policy-protected operations domain, audit trace, and deployment recipe",
+          "agentDoc": "docs/for-agents/apps/example-shared.md",
+          "humanDoc": "examples/operations-reference",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-shared test",
+            "pnpm docs:bridge:gate"
           ]
         }
       }

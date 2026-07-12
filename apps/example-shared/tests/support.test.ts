@@ -1,7 +1,7 @@
 import { createActionConfirmation, createChatSession } from '@agentskit/chat'
 import { createChatController } from '@agentskit/core'
 import { describe, expect, it, vi } from 'vitest'
-import { createInMemoryTicketService, createOnboardingApplication, createSupportApplication, helloWorldChat, type SupportHostContext, type TicketService } from '../src/index.js'
+import { createInMemoryOperationsService, createInMemoryTicketService, createOnboardingApplication, createOperationsApplication, createSupportApplication, helloWorldChat, type OperationsService, type SupportHostContext, type TicketService } from '../src/index.js'
 
 const context: SupportHostContext = { sessionId: 'test-session', customerId: 'customer-1', capabilities: ['support.ticket.create'] }
 const ticketInput = { subject: 'Need help', priority: 'urgent' } as const
@@ -88,6 +88,61 @@ describe('support reference domain', () => {
   it('rejects malformed ticket input at the upstream validation boundary', async () => {
     const definition = createSupportApplication({ context, ticketService: createInMemoryTicketService() })
     await expect(createChatController(definition.chat).proposeToolCall({ id: 'invalid', name: 'create-support-ticket', args: { subject: '', priority: 'critical' } })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
+  })
+})
+
+describe('operations reference domain', () => {
+  const operator = (capabilities: readonly string[], service: OperationsService = createInMemoryOperationsService()) => createOperationsApplication({
+    context: { sessionId: `ops-${capabilities.join('-') || 'none'}`, customerId: 'operator-1', capabilities }, service,
+  })
+
+  it('enforces read and restart capabilities independently', async () => {
+    const readOnly = operator(['operations.read'])
+    await expect(createChatController(readOnly.definition.chat).proposeToolCall({ id: 'read', name: 'read-operation-status', args: { id: 'checkout-api' } })).resolves.toMatchObject({ status: 'requires_confirmation' })
+    await expect(createChatController(readOnly.definition.chat).proposeToolCall({ id: 'restart', name: 'restart-operation', args: { id: 'checkout-api' } })).rejects.toMatchObject({ code: 'AK_TOOL_FORBIDDEN' })
+    const restartOnly = operator(['operations.restart'])
+    await expect(createChatController(restartOnly.definition.chat).proposeToolCall({ id: 'forbidden-read', name: 'read-operation-status', args: { id: 'checkout-api' } })).rejects.toMatchObject({ code: 'AK_TOOL_FORBIDDEN' })
+    await expect(createChatController(restartOnly.definition.chat).proposeToolCall({ id: 'allowed-restart', name: 'restart-operation', args: { id: 'checkout-api' } })).resolves.toMatchObject({ status: 'requires_confirmation' })
+  })
+
+  it('executes an approved restart exactly once and captures a safe causal trace', async () => {
+    const service = createInMemoryOperationsService()
+    const application = operator(['operations.read', 'operations.restart'], service)
+    const controller = createChatController(application.definition.chat)
+    const confirmation = application.session.createConfirmation({ chat: controller, createId: () => 'restart', now: () => 0 })
+    const pending = await confirmation.propose({ name: 'restart-operation', input: { id: 'checkout-api' } })
+    expect(service.restarts).toHaveLength(0)
+    await Promise.all([confirmation.approve(pending.token, application.session.sessionId), confirmation.approve(pending.token, application.session.sessionId)])
+    expect(service.restarts).toEqual(['checkout-api'])
+    expect(application.traces().map(record => `${record.category}:${String(record.detail.status ?? record.detail.phase)}`)).toEqual([
+      'policy:propose', 'action:pending', 'action:approving', 'policy:execute', 'action:confirmed-execution', 'lifecycle:healthy', 'action:approved',
+    ])
+    expect(JSON.stringify(application.traces())).not.toMatch(/token|secret|credential/i)
+  })
+
+  it('keeps malformed, rejected, and cross-session proposals inert', async () => {
+    const service = createInMemoryOperationsService()
+    const application = operator(['operations.restart'], service)
+    const controller = createChatController(application.definition.chat)
+    await expect(controller.proposeToolCall({ id: 'malformed', name: 'restart-operation', args: { id: 'Checkout API', extra: true } })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
+    const confirmation = application.session.createConfirmation({ chat: controller, createId: () => 'reject', now: () => 0 })
+    const pending = await confirmation.propose({ name: 'restart-operation', input: { id: 'checkout-api' } })
+    await expect(confirmation.approve(pending.token, 'foreign-session')).rejects.toBeDefined()
+    await confirmation.reject(pending.token, application.session.sessionId)
+    expect(service.restarts).toHaveLength(0)
+    expect(application.traces().filter(record => record.category === 'action').map(record => record.detail.status)).toEqual(['pending', 'rejecting', 'rejected'])
+  })
+
+  it('surfaces service failure as an upstream tool error without tracing secrets', async () => {
+    const service: OperationsService = { readStatus: async () => { throw new Error('credential=private') }, restart: async () => { throw new TypeError('secret value') } }
+    const application = operator(['operations.restart'], service)
+    const controller = createChatController(application.definition.chat)
+    const confirmation = application.session.createConfirmation({ chat: controller, createId: () => 'failure', now: () => 0 })
+    const pending = await confirmation.propose({ name: 'restart-operation', input: { id: 'checkout-api' } })
+    await confirmation.approve(pending.token, application.session.sessionId)
+    const call = controller.getState().messages.flatMap(message => message.toolCalls ?? []).find(tool => tool.id === pending.toolCallId)
+    expect(call?.status).toBe('error')
+    expect(JSON.stringify(application.traces())).not.toContain('secret value')
   })
 })
 

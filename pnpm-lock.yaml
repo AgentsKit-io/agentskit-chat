@@ -137,6 +137,9 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../../packages/chat
+      '@agentskit/chat-devtools':
+        specifier: workspace:*
+        version: link:../../packages/devtools
       '@agentskit/chat-protocol':
         specifier: workspace:*
         version: link:../../packages/protocol

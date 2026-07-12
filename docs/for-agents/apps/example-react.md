@@ -2,7 +2,7 @@
 
 ## Ownership
 
-`apps/example-react` demonstrates one deterministic vertical slice. Its local adapter exists only to make the example and tests reproducible; production users pass any supported AgentsKit adapter through `ChatConfig`.
+`apps/example-react` hosts the shared support, onboarding, and protected operations references selected by query parameter. Domain behavior stays in `example-shared`.
 
 ## Checks
 

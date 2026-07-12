@@ -6,3 +6,5 @@ the native mobile shell. See [the support reference guide](../../docs/examples/s
 Use `pnpm --filter @agentskit/chat-example-react-native dev`.
 
 Open the web target with `?reference=onboarding` for the [deterministic onboarding reference](../../docs/examples/onboarding-reference.md).
+
+Use `?reference=operations` for the [policy-protected operations reference](../../docs/examples/operations-reference.md).
