@@ -1,19 +1,48 @@
 {
   "name": "@agentskit/chat-devtools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Replayable application traces and semantic renderer parity for AgentsKit Chat.",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git", "directory": "packages/devtools" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git",
+    "directory": "packages/devtools"
+  },
   "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
-  "bugs": { "url": "https://github.com/AgentsKit-io/agentskit-chat/issues" },
+  "bugs": {
+    "url": "https://github.com/AgentsKit-io/agentskit-chat/issues"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
-  "files": ["dist"],
-  "scripts": { "build": "tsup src/index.ts --format esm,cjs --dts --clean", "lint": "tsc --noEmit", "test": "vitest run --coverage" },
-  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/eval": "^0.4.19", "zod": "^4.3.6" },
-  "devDependencies": { "@agentskit/core": "^1.12.2", "@types/node": "^25.0.0", "tsup": "^8.5.1" },
-  "publishConfig": { "access": "public", "provenance": true }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "lint": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/eval": "^0.4.19",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@agentskit/core": "^1.12.2",
+    "@types/node": "^25.0.0",
+    "tsup": "^8.5.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }

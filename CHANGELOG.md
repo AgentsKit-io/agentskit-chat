@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 — 2026-07-13
+
+AgentsKit Chat now ships the trusted Ask backend vertical required by public
+Docs, Registry, and Playbook hosts.
+
+- Adds a versioned Ask request, trusted site configuration, grounded sources,
+  usage, CAS sessions, typed diagnostics, and privacy-safe metrics.
+- Validates deterministic escalation before any backend request and preserves
+  resumable session identity without allowing clients to select a corpus.
+- Adds injectable local and federated retrieval plus provider generation,
+  citation enforcement, deadlines, cancellation, rate limits, and safe errors.
+- Documents hosted and self-hosted deployments with executable tests for
+  authority, prompt injection, persistence, conflict, timeout, and streaming.
+- Preserves the fixed 12-package graph and all seven native renderer gates.
+
 ## 0.1.0 — 2026-07-13
 
 First stable v0 release of AgentsKit Chat.

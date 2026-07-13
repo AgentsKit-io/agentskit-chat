@@ -2,13 +2,13 @@
 
 Cross-framework application framework for building interactive agent experiences on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit).
 
-Version `0.1.0` lets teams define agent behavior once and deliver native chat
+Version `0.2.0` lets teams define agent behavior once and deliver native chat
 experiences across React, React Native, Ink, Vue, Svelte, Solid, and Angular.
 AgentsKit remains the controller/runtime substrate; this repository adds the
 opinionated application framework around it.
 
 ```bash
-pnpm dlx @agentskit/chat-cli@0.1.0 init my-chat --renderer react --yes
+pnpm dlx @agentskit/chat-cli@0.2.0 init my-chat --renderer react --yes
 ```
 
 ## Product promise
@@ -36,6 +36,7 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 - [Compatibility matrix](./docs/releases/compatibility.md)
 - [Stability and upgrades](./docs/releases/stability.md)
 - [Security policy](./SECURITY.md)
+- [v0.2.0 release notes](./docs/releases/v0.2.0.md)
 - [v0.1.0 release notes](./docs/releases/v0.1.0.md)
 - [Product requirements](./docs/product/PRD.md)
 - [Implementation roadmap](./docs/product/roadmap.md)

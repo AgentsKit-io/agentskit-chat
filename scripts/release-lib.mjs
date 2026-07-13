@@ -53,6 +53,7 @@ const requiredDocs = [
   'docs/releases/release-process.md',
   'docs/releases/stability.md',
   'docs/releases/v0.1.0.md',
+  'docs/releases/v0.2.0.md',
   'docs/server.md',
 ]
 

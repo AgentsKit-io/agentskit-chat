@@ -1,11 +1,17 @@
 {
   "name": "@agentskit/chat-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React application shell for AgentsKit Chat.",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git", "directory": "packages/react" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git",
+    "directory": "packages/react"
+  },
   "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
-  "bugs": { "url": "https://github.com/AgentsKit-io/agentskit-chat/issues" },
+  "bugs": {
+    "url": "https://github.com/AgentsKit-io/agentskit-chat/issues"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
