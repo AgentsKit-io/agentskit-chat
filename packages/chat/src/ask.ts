@@ -206,11 +206,7 @@ export function createAskAdapter(options: AskAdapterOptions = {}): AskAdapter {
           const decoder = new TextDecoder()
           let buffer = ''
           const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
-          let mode: 'unknown' | 'ndjson' | 'text' = contentType.includes('text/plain')
-            ? 'text'
-            : contentType.includes('ndjson')
-              ? 'ndjson'
-              : 'unknown'
+          let mode: 'unknown' | 'ndjson' | 'text' = contentType.includes('ndjson') ? 'ndjson' : 'unknown'
           let discardingOversizedLine = false
           while (true) {
             const result = await reader.read()

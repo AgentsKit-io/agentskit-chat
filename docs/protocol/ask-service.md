@@ -21,7 +21,7 @@ const definition = defineChat({
 })
 ```
 
-`@agentskit/chat-protocol` owns the v1 Ask event schema, bounds, and NDJSON decoder. The adapter consumes that runtime boundary, converts text and citations into one ordered canonical assistant-message string, and delegates message/controller behavior to AgentsKit. `answer` becomes text and `cite` becomes the standard `source-list` component. Unknown and malformed events are inert. If an endpoint returns plain text instead of NDJSON, it is safely encoded as text records.
+`@agentskit/chat-protocol` owns the v1 Ask event schema, bounds, and NDJSON decoder. The adapter consumes that runtime boundary, converts text and citations into one ordered canonical assistant-message string, and delegates message/controller behavior to AgentsKit. `answer` becomes text and `cite` becomes the standard `source-list` component. Unknown and malformed events are inert. The adapter recognizes valid Ask records even when an intermediary serves NDJSON as `text/plain`; a body that is not valid Ask NDJSON remains safely encoded as text records.
 
 The additive backend request is `agentskit.chat.ask` v1. It carries bounded
 projected messages, the application session ID when available, and only a
