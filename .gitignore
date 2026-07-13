@@ -1,8 +1,11 @@
 node_modules/
 dist/
+dist-release-*/
 coverage/
 playwright-report/
 test-results/
+artifacts/
+.svelte-kit/
 .env
 .env.*
 !.env.example

@@ -24,5 +24,5 @@ The Expo example in this repository keeps its deterministic shared fixture priva
 test infrastructure, not a published API.
 
 The renderer consumes `@agentskit/react-native` directly. The shared definition contains no DOM,
-React web, Expo, or React Native imports. Version `0.3.5` or newer is required so cancellation
-covers both native-screen unmount and asynchronous preparation before adapter source creation.
+React web, Expo, or React Native imports. Version `0.4.4` or newer is required; the release is
+tested against the published `0.4.x` line for cancellation, native accessibility, and bundle safety.

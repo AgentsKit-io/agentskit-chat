@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "packages": [
+    { "name": "@agentskit/chat-protocol", "directory": "protocol" },
+    { "name": "@agentskit/chat", "directory": "chat" },
+    { "name": "@agentskit/chat-server", "directory": "server" },
+    { "name": "@agentskit/chat-react", "directory": "react" },
+    { "name": "@agentskit/chat-react-native", "directory": "react-native" },
+    { "name": "@agentskit/chat-ink", "directory": "ink" },
+    { "name": "@agentskit/chat-vue", "directory": "vue" },
+    { "name": "@agentskit/chat-svelte", "directory": "svelte" },
+    { "name": "@agentskit/chat-solid", "directory": "solid" },
+    { "name": "@agentskit/chat-angular", "directory": "angular" },
+    { "name": "@agentskit/chat-cli", "directory": "cli" },
+    { "name": "@agentskit/chat-devtools", "directory": "devtools" }
+  ],
+  "renderers": [
+    { "id": "react", "package": "@agentskit/chat-react", "platform": "dom" },
+    { "id": "react-native", "package": "@agentskit/chat-react-native", "platform": "native-mobile" },
+    { "id": "ink", "package": "@agentskit/chat-ink", "platform": "terminal" },
+    { "id": "vue", "package": "@agentskit/chat-vue", "platform": "dom" },
+    { "id": "svelte", "package": "@agentskit/chat-svelte", "platform": "dom" },
+    { "id": "solid", "package": "@agentskit/chat-solid", "platform": "dom" },
+    { "id": "angular", "package": "@agentskit/chat-angular", "platform": "dom" }
+  ]
+}

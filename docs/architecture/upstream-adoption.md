@@ -230,3 +230,25 @@ Inspected the published `@agentskit/core@1.12.3` `AdapterFactory`, `AdapterReque
 AgentsKit Chat Protocol adds only versioned application schemas for site configuration, immutable local knowledge, answer provenance, citations, suggestions, confidence, escalation, and the canonical SHA-256 verification shared by producers and consumers. AgentsKit Chat adds only bounded normalized exact lookup, explicit choice resolution, projection into its existing ordered assistant-content and standard component protocols, and delegation to the injected upstream adapter. Artifact generation and caching remain host or Doc Bridge concerns. No controller, reducer, adapter lifecycle, retrieval engine, statechart, renderer primitive, upstream source, private source, or business data is copied or reimplemented. See accepted [ADR-0024](./adrs/0024-deterministic-answer-plane.md).
 
 The React Native release check also inspected the public `@agentskit/eval` replay exports used by devtools. A universal-bundle filesystem boundary was fixed upstream in AgentsKit [#1216](https://github.com/AgentsKit-io/agentskit/issues/1216), [PR #1217](https://github.com/AgentsKit-io/agentskit/pull/1217), and release `@agentskit/eval@0.4.19`. AgentsKit Chat consumes that release directly; it does not alias Node built-ins, copy replay behavior, or add a platform-specific fork.
+
+## Stable v0 release adoption record (#30)
+
+The release audit inspected public AgentsKit `main@0573aff1f442ba39200ea38600f295d63f5715ad`
+and the published package boundaries consumed by the fixed v0 graph:
+`@agentskit/core@1.12.3`, `@agentskit/memory@0.11.0`,
+`@agentskit/statechart@0.2.0`, `@agentskit/eval@0.4.19`,
+`@agentskit/react@0.7.4`, `@agentskit/react-native@0.4.5`,
+`@agentskit/ink@0.10.4`, `@agentskit/vue@0.4.5`,
+`@agentskit/svelte@0.4.5`, `@agentskit/solid@0.4.5`, and
+`@agentskit/angular@0.4.7`.
+
+The inspected public source modules include Core controller/chat/tool/memory and
+generative-UI exports, Memory Web Storage, statechart definition/instance/
+transition exports, Eval replay's universal and explicit IO entry points, and
+each framework binding's public hook/store/service plus native components.
+AgentsKit Chat continues to reuse those exports through declared package peers.
+The stable release adds only version alignment, package metadata, documentation,
+clean-install/provenance gates, and publishing automation. It introduces no
+controller, reducer, adapter lifecycle, statechart, memory, replay, tool,
+confirmation, RAG, or framework-binding implementation. No upstream gap was
+identified by release preparation.

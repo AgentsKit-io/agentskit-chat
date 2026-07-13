@@ -1,16 +1,21 @@
 # AgentsKit Chat
 
-External dogfood hosts use the immutable [alpha artifact channel](./docs/releases/alpha-dogfood.md). The stable v0 publication remains gated by the roadmap's dogfood and conformance milestones.
-
 Cross-framework application framework for building interactive agent experiences on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit).
 
-The project is currently in its architecture and planning phase. Its goal is to let teams define agent behavior once and deliver native chat experiences across React, Vue, Svelte, Solid, Angular, React Native, and Ink.
+Version `0.1.0` lets teams define agent behavior once and deliver native chat
+experiences across React, React Native, Ink, Vue, Svelte, Solid, and Angular.
+AgentsKit remains the controller/runtime substrate; this repository adds the
+opinionated application framework around it.
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.1.0 init my-chat --renderer react --yes
+```
 
 ## Product promise
 
 **One agent experience. Every interface.**
 
-AgentsKit Chat will provide an opinionated layer for:
+AgentsKit Chat provides an opinionated layer for:
 
 - typed chat definitions;
 - deterministic routes and conversational state machines;
@@ -24,6 +29,13 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 
 ## Documentation
 
+- [Get started in all seven renderers](./docs/getting-started/README.md)
+- [API reference](./docs/api-reference.md)
+- [Deployment modes](./docs/deployment.md)
+- [Compatibility matrix](./docs/releases/compatibility.md)
+- [Stability and upgrades](./docs/releases/stability.md)
+- [Security policy](./SECURITY.md)
+- [v0.1.0 release notes](./docs/releases/v0.1.0.md)
 - [Product requirements](./docs/product/PRD.md)
 - [Implementation roadmap](./docs/product/roadmap.md)
 - [Architecture overview](./docs/architecture/overview.md)
@@ -32,6 +44,10 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 - [ADR-0002: upstream-first and no reimplementation](./docs/architecture/adrs/0002-upstream-first-no-reimplementation.md)
 - [Deterministic answer protocol](./docs/protocol/deterministic-answers.md)
 - [Agent documentation index](./docs/for-agents/index.md)
+
+Existing external dogfood lockfiles may continue using the immutable
+[alpha artifact channel](./docs/releases/alpha-dogfood.md). New installations
+should use the stable npm package graph.
 
 ## Doc bridge
 

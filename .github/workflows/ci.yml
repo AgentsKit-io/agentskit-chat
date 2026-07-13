@@ -23,10 +23,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test:conformance
+      - run: pnpm exec changeset status
       - run: pnpm test
       - run: pnpm build
       - run: pnpm conformance:gate
       - run: pnpm docs:bridge:gate
+      - run: node scripts/release-gate.mjs
+      - run: node scripts/pack-release.mjs
 
   browser-e2e:
     runs-on: ubuntu-latest

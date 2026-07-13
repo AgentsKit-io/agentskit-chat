@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "18674d03361985bc1d3f14f64e0112ab6ef6f1f52ed2a98c4075b04dd07bdbb3",
+  "contentHash": "f8fc81962998b730aff0be662638adc566e30d16630e7561993d7e1d8e5590f3",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-13T18:21:01.736Z",
+  "generatedAt": "2026-07-13T19:58:16.504Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : fixed package graph, provenance, compatibility, and HITL publication. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "angular",
@@ -167,6 +167,14 @@
       "path": "docs/for-agents/product.md",
       "description": "- Human source: [`../product/PRD.md`](../product/PRD.md) - Delivery graph: [`../product/roadmap.md`](../product/roadmap.md) - Architecture: [`../architecture/overview.md`](../architecture/overview.md)",
       "body": "Product handoff Read first - Human source: - Delivery graph: - Architecture: Change route Use this ownership area for user stories, scope, release outcomes, positioning, and success criteria. Product changes that alter a public boundary require a corresponding architecture review and, after acceptance, a new ADR. Checks"
+    },
+    {
+      "id": "release",
+      "type": "agent-doc",
+      "title": "Stable release handoff",
+      "path": "docs/for-agents/release.md",
+      "description": "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
+      "body": "Stable release handoff Read first - - - - - Ownership release/manifest.json is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions. Do not publish from a developer machine. A stable tag contained in main starts the protected npm environment workflow. The one-time first publish may use only the documented short-lived bootstrap credential; subsequent releases use the configured npm trusted publisher and GitHub OIDC. Checks Do not close a release issue until npm provenance, clean npm installation, GitHub checksums, host smoke tests, and human launch review are linked publicly."
     }
   ],
   "handoffs": {
@@ -722,6 +730,37 @@
         "React Native application shell consuming @agentskit/react-native directly"
       ]
     },
+    "release": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "release",
+        "path": "packages/release"
+      },
+      "startHere": "docs/for-agents/release.md",
+      "readBeforeEditing": [
+        "docs/for-agents/release.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "packages/release"
+      ],
+      "checks": [
+        "pnpm --filter release test",
+        "pnpm --filter release lint"
+      ],
+      "bridge": {
+        "humanDoc": "missing",
+        "action": "ak-docs bootstrap agent-docs",
+        "bootstrap": "docs/for-agents/human/release.md"
+      },
+      "notes": [
+        "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
+        "Human guide missing for release. Run: ak-docs bootstrap agent-docs"
+      ]
+    },
     "server": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -778,6 +817,40 @@
       },
       "notes": [
         "Solid application shell consuming @agentskit/solid directly"
+      ]
+    },
+    "stable-release": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "stable-release",
+        "path": "release"
+      },
+      "startHere": "docs/for-agents/release.md",
+      "readBeforeEditing": [
+        "docs/for-agents/release.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "release"
+      ],
+      "checks": [
+        "pnpm lint",
+        "pnpm test",
+        "pnpm build",
+        "pnpm conformance:gate",
+        "pnpm docs:bridge:gate",
+        "pnpm release:gate",
+        "pnpm release:pack"
+      ],
+      "humanDoc": "releases/release-process",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication"
       ]
     },
     "svelte": {
@@ -860,8 +933,10 @@
       "rag-reference",
       "react",
       "react-native",
+      "release",
       "server",
       "solid",
+      "stable-release",
       "svelte",
       "vue"
     ],
@@ -1076,6 +1151,16 @@
         "humanDoc": "getting-started/react-native",
         "agentDoc": "docs/for-agents/packages/react-native.md"
       },
+      "release": {
+        "id": "release",
+        "path": "packages/release",
+        "checks": [
+          "pnpm --filter release test",
+          "pnpm --filter release lint"
+        ],
+        "purpose": "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
+        "agentDoc": "docs/for-agents/release.md"
+      },
       "server": {
         "id": "server",
         "path": "packages/server",
@@ -1097,6 +1182,22 @@
         "purpose": "Solid application shell consuming @agentskit/solid directly",
         "humanDoc": "getting-started/solid",
         "agentDoc": "docs/for-agents/packages/solid.md"
+      },
+      "stable-release": {
+        "id": "stable-release",
+        "path": "release",
+        "checks": [
+          "pnpm lint",
+          "pnpm test",
+          "pnpm build",
+          "pnpm conformance:gate",
+          "pnpm docs:bridge:gate",
+          "pnpm release:gate",
+          "pnpm release:pack"
+        ],
+        "purpose": "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication",
+        "humanDoc": "releases/release-process",
+        "agentDoc": "docs/for-agents/release.md"
       },
       "svelte": {
         "id": "svelte",

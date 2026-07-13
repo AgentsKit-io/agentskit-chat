@@ -1,8 +1,11 @@
 {
   "name": "@agentskit/chat-protocol",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0",
   "description": "Versioned turn protocol for AgentsKit Chat.",
   "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git", "directory": "packages/protocol" },
+  "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
+  "bugs": { "url": "https://github.com/AgentsKit-io/agentskit-chat/issues" },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -39,6 +42,7 @@
     "tsup": "^8.5.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }
