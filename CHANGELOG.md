@@ -13,6 +13,8 @@ Docs, Registry, and Playbook hosts.
   citation enforcement, deadlines, cancellation, rate limits, and safe errors.
 - Documents hosted and self-hosted deployments with executable tests for
   authority, prompt injection, persistence, conflict, timeout, and streaming.
+- Recognizes valid Ask NDJSON served with an incorrect `text/plain` content
+  type while preserving the safe fallback for ordinary text responses.
 - Preserves the fixed 12-package graph and all seven native renderer gates.
 
 ## 0.1.0 — 2026-07-13

@@ -1,4 +1,4 @@
-# v0.1 compatibility matrix
+# v0.2 compatibility matrix
 
 All AgentsKit Chat packages ship as the fixed `0.2.0` group. The peer ranges in
 the published manifests are authoritative; this table summarizes the supported

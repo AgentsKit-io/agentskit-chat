@@ -17,11 +17,12 @@ surface in the live host rather than a migration of a live Astro application.
 
 ## Shared boundary
 
-The live hosts pin the immutable `v0.1.0-alpha.2` tarballs for
-`@agentskit/chat`, `@agentskit/chat-protocol`, and `@agentskit/chat-react`.
-They compose supported `@agentskit/core` and `@agentskit/react` releases. The
-release assets include SHA-256 checksums and passed the clean-room ESM, CJS,
-Vite, tarball, and renderer verification in the release workflow.
+The live hosts first moved from immutable `v0.1.0-alpha.2` tarballs to the exact
+stable npm `0.1.0` graph for `@agentskit/chat`, `@agentskit/chat-protocol`, and
+`@agentskit/chat-react`. They pin one fixed stable graph per adoption round and
+compose supported `@agentskit/core` and `@agentskit/react` releases. Stable
+release assets include SHA-256 checksums and pass clean-room ESM, CJS, Vite,
+tarball, provenance, and renderer verification in the release workflow.
 
 AgentsKit owns controller lifecycle, messages, cancellation, retry, edit,
 regenerate, and the web-storage memory primitive. AgentsKit Chat Protocol owns
@@ -63,11 +64,11 @@ orphan Astro widget.
 ## Parity evidence
 
 Protocol and integration conformance now live once in the shared packages: the
-release ran 61 protocol tests and 81 chat tests, plus all seven renderer builds.
+release ran 92 protocol tests and 108 chat tests, plus all seven renderer builds.
 The consumer hosts retain strict typecheck and production-build evidence:
-Playbook generated 266 pages, Registry generated 365 routes, and Docs generated
-1,171 routes. Frozen lockfile installs prove that the hosts consume the
-published tarballs rather than workspace substitutions.
+Playbook generated 266 pages, Registry generated 389 routes, and Docs generated
+1,179 routes. Frozen lockfile installs prove that the hosts consume the
+published npm graph rather than workspace substitutions.
 
 Browser evidence covers 375, 768, 1280, and 1440 px. Panels remain inside the
 layout viewport, all measured panel controls are at least 44 by 44 px, the
@@ -82,6 +83,8 @@ Host records:
 - Docs migration: [AgentsKit #1184](https://github.com/AgentsKit-io/agentskit/pull/1184)
 - Registry and Docs production adoption: [AgentsKit #1190](https://github.com/AgentsKit-io/agentskit/pull/1190)
 - Playbook adoption: [Agents Playbook #12](https://github.com/AgentsKit-io/agents-playbook/pull/12)
+- Stable Docs and Registry npm adoption: [AgentsKit #1222](https://github.com/AgentsKit-io/agentskit/pull/1222)
+- Stable Playbook npm adoption: [Agents Playbook #15](https://github.com/AgentsKit-io/agents-playbook/pull/15)
 - Data-only Registry cleanup: [AgentsKit Registry #75](https://github.com/AgentsKit-io/agentskit-registry/pull/75)
 - Host documentation: `AgentsKit-io/agentskit/apps/registry/README.md` and
   `AgentsKit-io/agents-playbook/content/docs/agentskit-chat.md`
