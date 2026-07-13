@@ -16,7 +16,7 @@
   },
   "scripts": {
     "lint": "tsc --noEmit",
-    "test": "vitest run --coverage"
+    "test": "pnpm --filter @agentskit/chat-devtools build && vitest run --coverage"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.9",
