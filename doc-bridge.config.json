@@ -55,6 +55,18 @@
             "pnpm docs:bridge:gate"
           ]
         },
+        "alpha-release": {
+          "path": "docs/releases",
+          "purpose": "Immutable public prerelease artifacts for external dogfood hosts",
+          "agentDoc": "docs/for-agents/governance.md",
+          "humanDoc": "releases/alpha-dogfood",
+          "checks": [
+            "pnpm lint",
+            "pnpm test",
+            "pnpm build",
+            "pnpm docs:bridge:gate"
+          ]
+        },
         "chat": {
           "path": "packages/chat",
           "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",

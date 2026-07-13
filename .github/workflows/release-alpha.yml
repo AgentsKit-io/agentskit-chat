@@ -1,0 +1,42 @@
+name: Release alpha artifacts
+
+on:
+  push:
+    tags:
+      - 'v*-alpha.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify tag matches package graph
+        run: |
+          node -e "const fs=require('node:fs'); const expected=process.env.GITHUB_REF_NAME.slice(1); for (const name of ['protocol','chat','react','server']) { const actual=JSON.parse(fs.readFileSync('packages/'+name+'/package.json','utf8')).version; if (actual !== expected) throw new Error(name+' is '+actual+', expected '+expected) }"
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+      - name: Pack public Web graph
+        run: |
+          mkdir -p artifacts
+          pnpm --filter @agentskit/chat-protocol pack --pack-destination artifacts
+          pnpm --filter @agentskit/chat pack --pack-destination artifacts
+          pnpm --filter @agentskit/chat-react pack --pack-destination artifacts
+          pnpm --filter @agentskit/chat-server pack --pack-destination artifacts
+          cd artifacts
+          sha256sum *.tgz > SHA256SUMS
+      - name: Publish immutable prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease --generate-notes artifacts/*

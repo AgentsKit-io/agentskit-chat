@@ -200,7 +200,7 @@ describe('AgentChatNative', () => {
     useChat.mockReturnValue({ ...base, messages: [{ id: 'call', role: 'assistant', content: '', toolCalls: [call] }] } as unknown as ChatReturn)
     view.rerender(<AgentChatNative definition={{ ...definition, components: manifest }} />)
     fireEvent.click(screen.getByText('Approve'))
-    expect(approve).toHaveBeenCalledOnce()
+    await waitFor(() => expect(approve).toHaveBeenCalledOnce())
     expect(deny).not.toHaveBeenCalled()
   })
 })
