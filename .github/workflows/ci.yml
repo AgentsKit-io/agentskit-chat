@@ -25,7 +25,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test:conformance
-      - run: pnpm exec changeset status
+      - name: Verify Changesets against main
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git branch --force main origin/main
+          pnpm exec changeset status
       - run: pnpm test
       - run: pnpm build
       - run: pnpm conformance:gate
