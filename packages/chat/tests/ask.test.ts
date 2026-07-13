@@ -269,6 +269,25 @@ describe('Ask session memory', () => {
     expect(storage.getItem('legacy')).not.toBeNull()
   })
 
+  it('chunks a long legacy answer tool without replacing it with an empty message', async () => {
+    const storage = new MemoryStorage()
+    storage.values.set('legacy', JSON.stringify([{ role: 'assistant', parts: [
+      { kind: 'tool', id: 'answer', name: 'answer', args: { markdown: 'x'.repeat(20_000) } },
+    ] }]))
+    const memory = createAskSessionMemory({ key: 'canonical', legacyKeys: ['legacy'], getStorage: () => storage })
+    const loaded = await memory.load()
+    expect(loaded).toHaveLength(1)
+    expect(decodeAssistantContent(loaded[0]!.content)).toEqual({
+      ok: true,
+      complete: true,
+      parts: [
+        { kind: 'text', text: 'x'.repeat(16_384) },
+        { kind: 'text', text: 'x'.repeat(3_616) },
+      ],
+    })
+    expect(storage.getItem('legacy')).toBeNull()
+  })
+
   it('rejects corrupt canonical records and is SSR-safe without storage', async () => {
     const storage = new MemoryStorage()
     storage.values.set('canonical', '{bad}')

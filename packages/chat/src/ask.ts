@@ -291,14 +291,23 @@ const legacyContent = (record: Record<string, unknown>, projectTool?: AskToolPro
     } else if (part.kind === 'tool' && typeof part.id === 'string' && typeof part.name === 'string'
       && typeof part.args === 'object' && part.args !== null && !Array.isArray(part.args)) {
       const result = projectAskEvent({ type: 'tool', id: part.id, name: part.name, args: part.args as Record<string, unknown> }, projectTool)
-      if (result?.kind === 'text') projected = { kind: 'text', text: result.text }
+      if (result?.kind === 'text') {
+        for (let offset = 0; offset < result.text.length; offset += MAX_TEXT_CHARS) {
+          try {
+            encoded.push(encode({ kind: 'text', text: result.text.slice(offset, offset + MAX_TEXT_CHARS) }))
+          } catch {
+            return encoded.length > 0 ? encoded.join('') : undefined
+          }
+        }
+        continue
+      }
       if (result?.kind === 'component') projected = { kind: 'component', frame: result.frame }
     } else continue
     if (projected !== undefined) {
       try {
         encoded.push(encode(projected))
       } catch {
-        return encoded.join('')
+        return encoded.length > 0 ? encoded.join('') : undefined
       }
     }
   }
