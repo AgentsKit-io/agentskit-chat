@@ -18,6 +18,10 @@ AgentsKit owns adapters, model invocation, tools, memory, RAG, agent runtime, ch
 
 The concrete source-to-responsibility mapping lives in the [AgentsKit upstream adoption matrix](./upstream-adoption.md). It is revalidated by each implementation issue rather than treated as permanently current.
 
+Private-consumer dogfood follows a black-box, privacy-preserving extraction process: convert observations into independently specified public requirements, evolve generic mechanisms at their owning source, prove them with synthetic fixtures, and only then permit consumer adoption. The disclosure boundary is recorded in the [private-reference extraction guardrails](./private-reference-extraction.md), [public capability gap matrix](./public-capability-gap-matrix.md), and [ADR-0023](./adrs/0023-private-reference-extraction-guardrails.md).
+
+The first contract decisions are proposed in [ADR-0024](./adrs/0024-structured-turns-use-canonical-tool-loop.md), which keeps structured conversational repair inside the canonical Core tool loop, and [ADR-0025](./adrs/0025-advanced-interaction-machines-are-upstream-first.md), which blocks advanced persisted interaction machines on a released AgentsKit primitive.
+
 ## Containers
 
 ```text

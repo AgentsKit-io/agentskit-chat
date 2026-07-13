@@ -49,6 +49,16 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 
 Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
 
+## Advanced chat architecture (#28)
+
+Inspected the current AgentsKit `main` revision `f37fd01576c6baa1206df16739114b2eefbecab7`, published Core source at tag `@agentskit/core@1.12.3`, Runtime structured invocation from [PR #1051](https://github.com/AgentsKit-io/agentskit/pull/1051), and validator guards from [PR #835](https://github.com/AgentsKit-io/agentskit/pull/835).
+
+Structured application turns reuse Core `ChatConfig`, `ChatController`, `ToolDefinition`, `validateArgs`, canonical tool-error feedback, `maxToolIterations`, memory, cancellation, authorization, and observers. AgentsKit Chat proposes only a versioned application-turn schema, an internal no-product-side-effect submit tool, protocol projection, and semantic fallback. It will not invoke a second Runtime beside `ChatController`, parse provider-specific structured output, or implement another model/tool loop. See [ADR-0024](./adrs/0024-structured-turns-use-canonical-tool-loop.md).
+
+No published framework-neutral serializable interaction state machine was found. Core `ChatController` owns chat lifecycle; Runtime flow and durable APIs own work execution, not pure user-interaction transitions and restore. The generic gap is tracked upstream in [AgentsKit #1199](https://github.com/AgentsKit-io/agentskit/issues/1199), and advanced Chat support remains blocked until a supported release exists. See [ADR-0025](./adrs/0025-advanced-interaction-machines-are-upstream-first.md).
+
+Private consumers are black-box evidence only. Public artifacts contain no private repository identifiers, source references, business behavior, fixtures, or implementation details. No private source is copied or imported.
+
 ## Support reference application (#22)
 
 Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824`: `@agentskit/core@1.12.2` supplies `defineTool`, typed schema inference, `requiresConfirmation`, controller proposal/approve/deny, and `ChatConfig.validateArgs`; `@agentskit/validation@0.2.1` supplies `createAjvValidator`. The support example consumes those contracts and the released framework bindings directly. Local code adds only an injected ticket-service seam, trusted host context, support routes, native presentation, and executable examples. No upstream behavior is copied and no gap blocks the example.
