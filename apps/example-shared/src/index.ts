@@ -325,32 +325,54 @@ export const unauthorizedOperationsApplication = createOperationsApplication({ c
 
 export interface RagApplicationOptions {
   readonly rag: RAG
-  readonly answer?: (query: string, documents: readonly RetrievedDocument[]) => string
+  readonly answer?: (query: string, documents: readonly RetrievedDocument[]) => string | Promise<string> | AsyncIterable<string>
 }
 
 export const createRagApplication = ({ rag, answer = (query, documents) => `Grounded answer for “${query}”: ${documents[0]?.content ?? ''}` }: RagApplicationOptions) => {
+  let activeSources: { readonly instanceId: string; readonly props: ReturnType<typeof SourceListPropsSchema.parse> } | undefined
+  const resolveAnswer = async (value: string | Promise<string> | AsyncIterable<string>): Promise<string> => {
+    const resolved = await value
+    if (typeof resolved === 'string') return resolved.slice(0, 256)
+    let text = ''
+    for await (const chunk of resolved) text = `${text}${chunk}`.slice(0, 256)
+    return text
+  }
   const adapter: AdapterFactory = { createSource: request => ({
     async *stream() {
       const query = request.messages.filter(message => message.role === 'user').at(-1)?.content.trim() ?? ''
       try {
         const documents = await rag.retrieve({ query, messages: request.messages })
         if (documents.length === 0) { yield { type: 'text', content: 'No grounded sources were found for this question.' }; yield { type: 'done' }; return }
+        const sourceIds = new Set<string>()
         const sources = documents.slice(0, 50).flatMap(document => {
           const title = typeof document.metadata?.title === 'string' ? document.metadata.title.slice(0, 256) : (document.source ?? document.id).slice(0, 256)
           const rawUrl = typeof document.metadata?.url === 'string' ? document.metadata.url : document.source
           if (typeof rawUrl === 'string' && !/^https?:\/\//.test(rawUrl) && !rawUrl.startsWith('/')) return []
           const url = typeof rawUrl === 'string' ? rawUrl : undefined
           const source = { id: document.id.slice(0, 128), title, snippet: document.content.slice(0, 4_096), ...(url ? { url } : {}) }
-          return SourceListPropsSchema.safeParse({ label: 'Source', sources: [source] }).success ? [source] : []
+          if (sourceIds.has(source.id) || !SourceListPropsSchema.safeParse({ label: 'Source', sources: [source] }).success) return []
+          sourceIds.add(source.id)
+          return [source]
         })
         if (sources.length === 0) { yield { type: 'text', content: 'No safe grounded sources were found for this question.' }; yield { type: 'done' }; return }
-        const props = SourceListPropsSchema.parse({ label: answer(query, documents).slice(0, 256), sources })
-        yield { type: 'text', content: JSON.stringify({ protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey: 'source-list', instanceId: `rag-${request.messages.at(-1)?.id ?? 'answer'}`, props, fallback: { kind: 'source-list', summary: `${props.label} Sources: ${props.sources.map(source => source.title).join(', ')}.` } }) }
+        const props = SourceListPropsSchema.parse({ label: await resolveAnswer(answer(query, documents)), sources })
+        const instanceId = `rag-${request.messages.at(-1)?.id ?? 'answer'}`
+        activeSources = { instanceId, props }
+        const summary = `${props.label} Sources: ${props.sources.map(source => source.title).join(', ')}.`.slice(0, 4_096)
+        const frame = JSON.stringify({ protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey: 'source-list', instanceId, props, fallback: { kind: 'source-list', summary } })
+        for (let offset = 0; offset < frame.length; offset += 64) yield { type: 'text', content: frame.slice(offset, offset + 64) }
         yield { type: 'done' }
       } catch { yield { type: 'error', content: 'Grounded retrieval is temporarily unavailable.' } }
     }, abort() {},
   }) }
-  return defineChat({ id: 'rag-reference', components: defineComponentManifest([SourceListComponent]), chat: { adapter } })
+  const definition = defineChat({ id: 'rag-reference', components: defineComponentManifest([SourceListComponent]), chat: { adapter } })
+  return {
+    ...definition,
+    resolveSourceInteraction: (event: ComponentInteractionEvent): string | undefined => {
+      if (!activeSources || event.instanceId !== activeSources.instanceId || event.componentKey !== 'source-list' || !validateStandardComponentInteraction('source-list', activeSources.props, event.event, event.value)) return undefined
+      return activeSources.props.sources.find(source => source.id === event.value)?.url
+    },
+  }
 }
 
 const ragDocuments: RetrievedDocument[] = [{ id: 'agentskit-chat', content: 'AgentsKit Chat shares one definition across native framework renderers.', source: 'https://www.agentskit.io/docs/chat', score: 1, metadata: { title: 'AgentsKit Chat overview', url: 'https://www.agentskit.io/docs/chat' } }]

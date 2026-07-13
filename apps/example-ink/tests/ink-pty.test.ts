@@ -161,5 +161,7 @@ describe('Ink PTY host', () => {
     await submit(app.pty, 'How does AgentsKit Chat work?')
     await waitFor(app.output, 'AgentsKit Chat overview')
     await waitFor(app.output, 'Grounded answer')
+    app.pty.write('\r')
+    await waitFor(app.output, 'Source: https://www.agentskit.io/docs/chat')
   })
 })

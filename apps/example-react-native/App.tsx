@@ -3,7 +3,7 @@ import { createChatSession } from '@agentskit/chat'
 import { decodeTurnEvent, snapshotMessages } from '@agentskit/chat-protocol'
 import { validTurnEventFixtures } from '@agentskit/chat-protocol/fixtures'
 import { AgentChatNative } from '@agentskit/chat-react-native'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Linking, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 const completeSnapshot = decodeTurnEvent(validTurnEventFixtures[3].event)
 if (!completeSnapshot.ok || completeSnapshot.event.event !== 'server.turn.snapshot') {
@@ -28,7 +28,7 @@ export default function App() {
         <Text style={styles.lede}>{rag ? 'Ask a documentation question to retrieve a cited answer.' : operations ? 'Type /operations to inspect or restart a protected service.' : onboarding ? 'Type /onboarding to begin a deterministic, revisable setup.' : 'Ask a question, or type /support for a confirmed ticket.'}</Text>
       </View>
       {rag
-        ? <AgentChatNative definition={ragChat} session={ragSession} placeholder="Ask a grounded question" />
+        ? <AgentChatNative definition={ragChat} session={ragSession} onComponentInteract={event => { const url = ragChat.resolveSourceInteraction(event); if (url) void Linking.openURL(url) }} placeholder="Ask a grounded question" />
         : operations
         ? <AgentChatNative definition={operationsApp.definition} session={operationsApp.session} placeholder="Type /operations to begin" />
         : onboarding

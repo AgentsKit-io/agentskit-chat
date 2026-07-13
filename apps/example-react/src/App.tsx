@@ -14,7 +14,7 @@ export const App = () => (
       <p className="lede">{rag ? 'Ask a documentation question to retrieve a cited answer.' : operations ? <>Type <code>/operations</code> to inspect or restart a protected service.</> : onboarding ? <>Type <code>/onboarding</code> to begin a deterministic, revisable setup.</> : <>Ask a product question, or type <code>/support</code> to open a ticket through a confirmed, policy-protected action.</>}</p>
     </header>
     {rag
-      ? <AgentChat definition={ragChat} session={ragSession} placeholder="Ask a grounded question" />
+      ? <AgentChat definition={ragChat} session={ragSession} onComponentInteract={event => { const url = ragChat.resolveSourceInteraction(event); if (url) window.open(url, '_blank', 'noopener,noreferrer') }} placeholder="Ask a grounded question" />
       : operations
       ? <AgentChat definition={operationsApp.definition} session={operationsApp.session} placeholder="Type /operations to begin" />
       : onboarding

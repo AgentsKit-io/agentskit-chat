@@ -97,13 +97,26 @@ describe('cited RAG reference domain', () => {
     const stored: Array<{ id: string; content: string; metadata?: Record<string, unknown> }> = []
     const rag = createRAG({ embed: async () => [1], store: { store: documents => { stored.push(...documents) }, search: () => stored.map(document => ({ ...document, source: String(document.metadata?.source), score: 1 })) } })
     await rag.ingest([{ id: 'guide', content: 'One definition works across native renderers.', source: 'https://docs.example.dev/guide', metadata: { title: 'Native renderer guide', url: 'https://docs.example.dev/guide' } }])
-    const definition = createRagApplication({ rag, answer: () => 'Use one shared definition.' })
+    const definition = createRagApplication({ rag, answer: async function * () { yield 'Use one '; yield 'shared definition.' } })
     const controller = createChatController(definition.chat)
     await controller.send('How do renderers stay aligned?')
-    const frame = JSON.parse(controller.getState().messages.at(-1)?.content ?? '{}') as { componentKey?: string; props?: { label?: string; sources?: Array<{ title?: string; url?: string }> } }
+    const frame = JSON.parse(controller.getState().messages.at(-1)?.content ?? '{}') as { componentKey?: string; instanceId?: string; props?: { label?: string; sources?: Array<{ id?: string; title?: string; url?: string }> } }
     expect(frame.componentKey).toBe('source-list')
     expect(frame.props?.label).toBe('Use one shared definition.')
     expect(frame.props?.sources?.[0]).toMatchObject({ title: 'Native renderer guide', url: 'https://docs.example.dev/guide' })
+    expect(definition.resolveSourceInteraction({ protocol: 'agentskit.chat.component', version: 1, type: 'interact', componentKey: 'source-list', instanceId: frame.instanceId ?? '', event: 'open', value: frame.props?.sources?.[0]?.id })).toBe('https://docs.example.dev/guide')
+    expect(definition.resolveSourceInteraction({ protocol: 'agentskit.chat.component', version: 1, type: 'interact', componentKey: 'source-list', instanceId: frame.instanceId ?? '', event: 'open', value: 'forged' })).toBeUndefined()
+  })
+
+  it('deduplicates source ids and bounds the protocol fallback', async () => {
+    const documents = Array.from({ length: 50 }, (_, index) => ({ id: `source-${index}`, content: 'x', source: `/docs/${index}`, metadata: { title: 'T'.repeat(256) } }))
+    documents.push(documents[0]!)
+    const definition = createRagApplication({ rag: { ingest: async () => undefined, search: async () => [], retrieve: async () => documents } })
+    const controller = createChatController(definition.chat)
+    await controller.send('bounded')
+    const frame = JSON.parse(controller.getState().messages.at(-1)?.content ?? '{}') as { props?: { sources?: unknown[] }; fallback?: { summary?: string } }
+    expect(frame.props?.sources).toHaveLength(50)
+    expect(frame.fallback?.summary?.length).toBe(4_096)
   })
 
   it('does not fabricate citations for empty or unsafe retrieval results', async () => {

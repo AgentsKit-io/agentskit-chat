@@ -7,7 +7,7 @@ const onboarding = process.env.AK_EXAMPLE === 'onboarding'
 const operations = process.env.AK_EXAMPLE === 'operations'
 const rag = process.env.AK_EXAMPLE === 'rag'
 render(rag
-  ? <AgentChat definition={ragChat} session={ragSession} placeholder="Ask a grounded question" />
+  ? <AgentChat definition={ragChat} session={ragSession} onComponentInteract={event => { const url = ragChat.resolveSourceInteraction(event); if (url) process.stdout.write(`\nSource: ${url}\n`) }} placeholder="Ask a grounded question" />
   : operations
   ? <AgentChat definition={operationsApplication.definition} session={operationsApplication.session} placeholder="Type /operations to begin" />
   : onboarding
