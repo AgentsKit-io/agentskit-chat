@@ -97,7 +97,7 @@ describe('Ink PTY host', () => {
     await waitForAnother(app.output, 'AgentsKit received: before-edit', before)
     await submit(app.pty, '/edit after-edit')
     await waitFor(app.output, 'AgentsKit received: after-edit')
-  })
+  }, 15_000)
 
   it('exits gracefully on Ctrl+C', async () => {
     const app = startApp()

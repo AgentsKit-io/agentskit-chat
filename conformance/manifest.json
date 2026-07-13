@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "requirements": [
+    { "id": "turn-protocol", "label": "Shared turn protocol", "scope": "universal", "remediation": "Run and repair the renderer protocol-conformance suite." },
+    { "id": "standard-catalog", "label": "Standard component catalog", "scope": "universal", "remediation": "Render every standard component and exercise its declared events." },
+    { "id": "safe-diagnostics", "label": "Safe diagnostics and fallback", "scope": "universal", "remediation": "Test invalid frames and unknown components as inert, readable output." },
+    { "id": "lifecycle-controls", "label": "Lifecycle controls", "scope": "universal", "remediation": "Test stop, retry, regenerate, and edit behavior supported by the renderer." },
+    { "id": "dom-semantics", "label": "DOM roles, names, and announcements", "scope": "dom", "remediation": "Add automated assertions for native roles, accessible names, and error announcements." },
+    { "id": "dom-keyboard", "label": "DOM keyboard interaction", "scope": "dom", "remediation": "Add automated keyboard activation and focus behavior coverage." },
+    { "id": "native-semantics", "label": "Native roles, names, and state", "scope": "native-mobile", "remediation": "Assert React Native accessibilityRole, accessibilityLabel, and accessibilityState output." },
+    { "id": "native-touch", "label": "Native touch interaction", "scope": "native-mobile", "remediation": "Exercise Pressable and input interactions through the native renderer suite." },
+    { "id": "terminal-readable", "label": "Readable terminal output", "scope": "terminal", "remediation": "Assert complete catalog and semantic fallback text in terminal frames." },
+    { "id": "terminal-keyboard", "label": "Terminal keyboard flow", "scope": "terminal", "remediation": "Exercise selection and submission through the Ink PTY suite." },
+    { "id": "terminal-cancel", "label": "Escape cancellation", "scope": "terminal", "remediation": "Exercise Escape cancellation through the Ink PTY suite." },
+    { "id": "terminal-exit", "label": "Graceful process exit", "scope": "terminal", "remediation": "Assert Ctrl+C and normal PTY process termination." }
+  ],
+  "renderers": [
+    {
+      "id": "react", "platform": "dom", "supportFile": "packages/react/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/react/tests/protocol-conformance.test.tsx"] },
+        { "requirement": "standard-catalog", "files": ["packages/react/tests/agent-chat.test.tsx"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/react/tests/agent-chat.test.tsx"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/react/tests/agent-chat.test.tsx"] },
+        { "requirement": "dom-semantics", "files": ["packages/react/tests/agent-chat.test.tsx"] },
+        { "requirement": "dom-keyboard", "files": ["packages/react/tests/agent-chat.test.tsx"] }
+      ]
+    },
+    {
+      "id": "react-native", "platform": "native-mobile", "supportFile": "packages/react-native/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/react-native/tests/protocol-conformance.test.ts"] },
+        { "requirement": "standard-catalog", "files": ["packages/react-native/tests/agent-chat-native.test.tsx"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/react-native/tests/agent-chat-native.test.tsx"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/react-native/tests/agent-chat-native.test.tsx"] },
+        { "requirement": "native-semantics", "files": ["packages/react-native/tests/agent-chat-native.test.tsx"] },
+        { "requirement": "native-touch", "files": ["packages/react-native/tests/agent-chat-native.test.tsx"] }
+      ]
+    },
+    {
+      "id": "vue", "platform": "dom", "supportFile": "packages/vue/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/vue/tests/protocol-conformance.test.ts"] },
+        { "requirement": "standard-catalog", "files": ["packages/vue/tests/agent-chat.test.ts"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/vue/tests/agent-chat.test.ts"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/vue/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-semantics", "files": ["packages/vue/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-keyboard", "files": ["packages/vue/tests/agent-chat.test.ts"] }
+      ]
+    },
+    {
+      "id": "svelte", "platform": "dom", "supportFile": "packages/svelte/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/svelte/tests/protocol-conformance.test.ts"] },
+        { "requirement": "standard-catalog", "files": ["packages/svelte/tests/agent-chat.test.ts"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/svelte/tests/agent-chat.test.ts"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/svelte/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-semantics", "files": ["packages/svelte/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-keyboard", "files": ["packages/svelte/tests/agent-chat.test.ts"] }
+      ]
+    },
+    {
+      "id": "solid", "platform": "dom", "supportFile": "packages/solid/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/solid/tests/protocol-conformance.test.tsx"] },
+        { "requirement": "standard-catalog", "files": ["packages/solid/tests/agent-chat.test.tsx"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/solid/tests/agent-chat.test.tsx"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/solid/tests/agent-chat.test.tsx"] },
+        { "requirement": "dom-semantics", "files": ["packages/solid/tests/agent-chat.test.tsx"] },
+        { "requirement": "dom-keyboard", "files": ["packages/solid/tests/agent-chat.test.tsx"] }
+      ]
+    },
+    {
+      "id": "angular", "platform": "dom", "supportFile": "packages/angular/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/angular/tests/protocol-conformance.test.ts"] },
+        { "requirement": "standard-catalog", "files": ["packages/angular/tests/agent-chat.test.ts"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/angular/tests/agent-chat.test.ts"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/angular/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-semantics", "files": ["packages/angular/tests/agent-chat.test.ts"] },
+        { "requirement": "dom-keyboard", "files": ["packages/angular/tests/agent-chat.test.ts"] }
+      ]
+    },
+    {
+      "id": "ink", "platform": "terminal", "supportFile": "packages/ink/catalog-support.json",
+      "evidence": [
+        { "requirement": "turn-protocol", "files": ["packages/ink/tests/protocol-conformance.test.tsx"] },
+        { "requirement": "standard-catalog", "files": ["packages/ink/tests/agent-chat.test.tsx"] },
+        { "requirement": "safe-diagnostics", "files": ["packages/ink/tests/agent-chat.test.tsx"] },
+        { "requirement": "lifecycle-controls", "files": ["packages/ink/tests/agent-chat.test.tsx"] },
+        { "requirement": "terminal-readable", "files": ["packages/ink/tests/agent-chat.test.tsx"] },
+        { "requirement": "terminal-keyboard", "files": ["apps/example-ink/tests/ink-pty.test.ts"] },
+        { "requirement": "terminal-cancel", "files": ["apps/example-ink/tests/ink-pty.test.ts"] },
+        { "requirement": "terminal-exit", "files": ["apps/example-ink/tests/ink-pty.test.ts"] }
+      ]
+    }
+  ],
+  "exceptions": []
+}

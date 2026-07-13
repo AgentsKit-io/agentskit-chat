@@ -11,10 +11,10 @@ const stop = vi.fn()
 const useChat = vi.fn()
 
 vi.mock('react-native', () => ({
-  View: ({ children, testID, accessibilityLiveRegion }: { children?: ReactNode; testID?: string; accessibilityLiveRegion?: string }) => <div data-testid={testID} data-live={accessibilityLiveRegion}>{children}</div>,
+  View: ({ children, testID, accessibilityLiveRegion, accessibilityRole, accessibilityLabel }: { children?: ReactNode; testID?: string; accessibilityLiveRegion?: string; accessibilityRole?: string; accessibilityLabel?: string }) => <div data-testid={testID} data-live={accessibilityLiveRegion} data-role={accessibilityRole} aria-label={accessibilityLabel}>{children}</div>,
   Text: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
   TextInput: ({ value, onChangeText, testID }: { value: string; onChangeText: (value: string) => void; testID?: string }) => <input data-testid={testID} value={value} onChange={event => onChangeText(event.target.value)} />,
-  Pressable: ({ children, onPress, testID, disabled }: { children?: ReactNode; onPress?: () => void; testID?: string; disabled?: boolean }) => <button data-testid={testID} disabled={disabled} onClick={onPress}>{children}</button>,
+  Pressable: ({ children, onPress, testID, disabled, accessibilityRole, accessibilityLabel, accessibilityState }: { children?: ReactNode; onPress?: () => void; testID?: string; disabled?: boolean; accessibilityRole?: string; accessibilityLabel?: string; accessibilityState?: { checked?: boolean } }) => <button data-testid={testID} data-role={accessibilityRole} aria-label={accessibilityLabel} aria-checked={accessibilityState?.checked} disabled={disabled} onClick={onPress}>{children}</button>,
 }))
 
 vi.mock('@agentskit/react-native', () => ({
@@ -47,7 +47,10 @@ describe('AgentChatNative', () => {
       expect(view.container.querySelector(`[data-testid="ak-${frame.componentKey}"]`)).toBeTruthy(); view.unmount()
     }
     render(<StandardComponentNative frame={standardComponentFrameFixtures[0]} manifest={manifest} onInteract={onInteract} />)
-    fireEvent.click(screen.getByText('Save')); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
+    const save = screen.getByText('Save').closest('button')
+    expect(save?.getAttribute('data-role')).toBe('button')
+    expect(save?.getAttribute('aria-label')).toBe('Save')
+    fireEvent.click(save!); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
   })
 
   it('delegates the shared definition to upstream useChat', async () => {
