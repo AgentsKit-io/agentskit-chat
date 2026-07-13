@@ -1,8 +1,11 @@
 {
   "name": "@agentskit/chat-solid",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Solid application shell for AgentsKit Chat.",
   "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git", "directory": "packages/solid" },
+  "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
+  "bugs": { "url": "https://github.com/AgentsKit-io/agentskit-chat/issues" },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -17,5 +20,5 @@
   "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/chat-protocol": "workspace:*", "@agentskit/core": "^1.12.2" },
   "peerDependencies": { "@agentskit/solid": "^0.4.4", "solid-js": "^1.9.0" },
   "devDependencies": { "@agentskit/solid": "^0.4.4", "@solidjs/testing-library": "^0.8.10", "@types/node": "^25.0.0", "esbuild-plugin-solid": "^0.6.0", "happy-dom": "^20.10.3", "solid-js": "^1.9.14", "tsup": "^8.5.1", "vite-plugin-solid": "^2.11.12" },
-  "publishConfig": { "access": "public" }
+  "publishConfig": { "access": "public", "provenance": true }
 }

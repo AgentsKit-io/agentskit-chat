@@ -26,4 +26,4 @@ The gate fails closed if its manifest, support declaration, evidence path, gener
 
 An exception is a temporary release decision, not an implicit unsupported state. It must name one renderer and requirement, explain the reason, identify an owner, and have an ISO date expiry. Expired exceptions fail the gate. Permanent differences belong in a platform-specific requirement or an ADR.
 
-See [ADR-0024](../architecture/adrs/0024-release-conformance-evidence-gate.md) for the architectural boundary and [the generated matrix](./matrix.generated.md) for current evidence.
+See [ADR-0025](../architecture/adrs/0025-release-conformance-evidence-gate.md) for the architectural boundary and [the generated matrix](./matrix.generated.md) for current evidence.

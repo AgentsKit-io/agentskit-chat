@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
         with:
           version: 10.33.0
@@ -23,10 +25,17 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test:conformance
+      - name: Verify Changesets against main
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git branch --force main origin/main
+          pnpm exec changeset status
       - run: pnpm test
       - run: pnpm build
       - run: pnpm conformance:gate
       - run: pnpm docs:bridge:gate
+      - run: node scripts/release-gate.mjs
+      - run: node scripts/pack-release.mjs
 
   browser-e2e:
     runs-on: ubuntu-latest

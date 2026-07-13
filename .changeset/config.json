@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
+  "changelog": false,
+  "commit": false,
+  "fixed": [[
+    "@agentskit/chat-protocol",
+    "@agentskit/chat",
+    "@agentskit/chat-server",
+    "@agentskit/chat-react",
+    "@agentskit/chat-react-native",
+    "@agentskit/chat-ink",
+    "@agentskit/chat-vue",
+    "@agentskit/chat-svelte",
+    "@agentskit/chat-solid",
+    "@agentskit/chat-angular",
+    "@agentskit/chat-cli",
+    "@agentskit/chat-devtools"
+  ]],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}

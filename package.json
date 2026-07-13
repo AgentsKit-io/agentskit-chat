@@ -1,6 +1,6 @@
 {
   "name": "agentskit-chat",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Cross-framework application framework for interactive agent experiences, built on AgentsKit.",
   "license": "MIT",
@@ -13,15 +13,20 @@
     "test:conformance": "vitest run tests/conformance-gate.test.ts",
     "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
     "test:e2e": "playwright test",
+    "changeset": "changeset",
+    "version:packages": "changeset version",
     "docs:bridge:index": "ak-docs index",
     "docs:bridge:query": "ak-docs query",
     "docs:bridge:gate": "ak-docs gate run",
     "catalog:report": "pnpm --filter @agentskit/chat build && node scripts/generate-catalog-report.mjs",
     "conformance:gate": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --check",
-    "conformance:report": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --write"
+    "conformance:report": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --write",
+    "release:gate": "pnpm build && node scripts/release-gate.mjs",
+    "release:pack": "pnpm build && node scripts/pack-release.mjs"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.0.2",
+    "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.61.0",
     "@vitest/coverage-v8": "^4.1.9",
     "node-pty": "^1.1.0",
@@ -30,6 +35,8 @@
     "zod": "^4.3.6"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["node-pty"]
+    "onlyBuiltDependencies": [
+      "node-pty"
+    ]
   }
 }

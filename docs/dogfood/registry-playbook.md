@@ -79,8 +79,17 @@ fixed-panel overflow.
 
 Host records:
 
-- `AgentsKit-io/agentskit/apps/registry/README.md`
-- `AgentsKit-io/agents-playbook/content/docs/agentskit-chat.md`
+- Docs migration: [AgentsKit #1184](https://github.com/AgentsKit-io/agentskit/pull/1184)
+- Registry and Docs production adoption: [AgentsKit #1190](https://github.com/AgentsKit-io/agentskit/pull/1190)
+- Playbook adoption: [Agents Playbook #12](https://github.com/AgentsKit-io/agents-playbook/pull/12)
+- Data-only Registry cleanup: [AgentsKit Registry #75](https://github.com/AgentsKit-io/agentskit-registry/pull/75)
+- Host documentation: `AgentsKit-io/agentskit/apps/registry/README.md` and
+  `AgentsKit-io/agents-playbook/content/docs/agentskit-chat.md`
+
+Private-consumer validation remains confidential. Its public release evidence
+is limited to synthetic framework contracts, the seven-renderer conformance
+matrix, reference applications, and privacy review; no private behavior or
+business rule is part of this record.
 
 ## No-reimplementation check
 

@@ -1,4 +1,4 @@
-# ADR-0024: Release conformance is a versioned evidence gate
+# ADR-0025: Release conformance is a versioned evidence gate
 
 **Status:** Accepted
 

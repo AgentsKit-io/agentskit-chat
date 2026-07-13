@@ -1,0 +1,103 @@
+name: Release stable packages
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: stable-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - name: Verify stable tag and package graph
+        run: |
+          node -e "const fs=require('node:fs'); const release=JSON.parse(fs.readFileSync('release/manifest.json','utf8')); const tag=process.env.GITHUB_REF_NAME.slice(1); if(release.version!==tag) throw new Error('release manifest is '+release.version+', tag is '+tag); for(const item of release.packages){const pkg=JSON.parse(fs.readFileSync('packages/'+item.directory+'/package.json','utf8')); if(pkg.version!==tag) throw new Error(item.name+' is '+pkg.version+', expected '+tag)}"
+          git fetch origin main
+          git branch --force main origin/main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+      - run: pnpm lint
+      - run: pnpm test:conformance
+      - run: pnpm exec changeset status
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm conformance:gate
+      - run: pnpm docs:bridge:gate
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - run: pnpm test:pty
+      - name: Verify Expo production bundles
+        run: |
+          pnpm --filter @agentskit/chat-example-react-native exec expo export --platform web --output-dir dist-release-web
+          pnpm --filter @agentskit/chat-example-react-native exec expo export --platform ios --output-dir dist-release-ios
+      - run: node scripts/release-gate.mjs
+      - run: node scripts/pack-release.mjs
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --global npm@11
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: node scripts/release-gate.mjs
+      - run: node scripts/pack-release.mjs
+      - name: Create or refresh draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --generate-notes
+          gh release upload "$GITHUB_REF_NAME" artifacts/* --repo "$GITHUB_REPOSITORY" --clobber
+      - name: Publish npm package graph with provenance
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "${NPM_TOKEN:-}" ]; then export NODE_AUTH_TOKEN="$NPM_TOKEN"; fi
+          for package in protocol chat server react react-native ink vue svelte solid angular cli devtools; do
+            name=$(node -p "require('./packages/$package/package.json').name")
+            version=$(node -p "require('./packages/$package/package.json').version")
+            base="${name#@}"
+            artifact="artifacts/${base/\//-}-$version.tgz"
+            if npm view "$name@$version" version 2>/dev/null | grep -Fx "$version"; then
+              echo "$name@$version already published; verified and skipped"
+            else
+              npm publish "$artifact" --access public --provenance
+            fi
+          done
+      - name: Publish immutable GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest
