@@ -69,7 +69,7 @@ describe('generated projects', () => {
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
     await run('pnpm', ['install', '--lockfile=false'], workspace)
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
-  })
+  }, 120_000)
 
   it.each(['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular'] as const)('installs, type-checks, and tests %s', async renderer => {
     const root = path.join(workspace, 'apps', `cli-fixture-${renderer}-${randomUUID()}`); roots.push(root)
