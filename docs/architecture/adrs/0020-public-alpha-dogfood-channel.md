@@ -17,7 +17,7 @@ AgentsKit Chat publishes `v0.1.0-alpha.0` as an immutable GitHub prerelease cont
 - `@agentskit/chat-react`;
 - `@agentskit/chat-server`.
 
-All four manifests carry the same prerelease version, and pnpm rewrites their `workspace:*` edges to that version when packing. The workflow rejects a tag commit that is not contained in `main`. Release assets are built from that reviewed commit, accompanied by SHA-256 checksums, and installed by external dogfood hosts through pinned public asset URLs plus lockfile integrity. A clean-room ESM/CJS import and production Vite build prove that no workspace path is required. GitHub Immutable Releases is enabled for the repository so the published tag and assets cannot be altered after release.
+All four manifests carry the same prerelease version, and pnpm rewrites their `workspace:*` edges to that version when packing. Until stable npm publication, external consumers declare the required asset URLs and override the internal `@agentskit/chat-protocol` and `@agentskit/chat` semver edges to those same assets. The workflow rejects a tag commit that is not contained in `main`. Release assets are built from that reviewed commit, accompanied by SHA-256 checksums, and installed through the documented override graph plus lockfile integrity. A clean-room ESM/CJS import and production Vite build prove that no workspace path is required. GitHub Immutable Releases is enabled for the repository so the published tag and assets cannot be altered after release.
 
 This channel is supported for dogfood compatibility only. Issue #30 still owns the complete renderer matrix, npm provenance/trusted publishing, stable compatibility policy, public v0 documentation, and stable tags.
 
