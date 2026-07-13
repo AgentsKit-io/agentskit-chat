@@ -6,7 +6,7 @@ Actionable choices use `createActionConfirmation`, which delegates validation, c
 
 Use `createCapabilityPolicy` and `withActionPolicy` to default-deny actions from trusted session capabilities while keeping enforcement in AgentsKit.
 
-The package also provides session-scoped deterministic routes and explicit conversation-state projections while unresolved turns stay on the upstream AgentsKit controller.
+The package also provides session-scoped deterministic routes and explicit conversation-state projections while unresolved turns stay on the upstream AgentsKit controller. Conversation definitions compile to published `@agentskit/statechart`; this package retains application routing and session composition rather than implementing another transition engine.
 
 ```ts
 const definition = defineChat({ id: 'support', chat: agentskitChatConfig })

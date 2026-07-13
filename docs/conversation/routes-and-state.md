@@ -27,6 +27,8 @@ Routes run in declaration order before the model adapter. A route can run only w
 
 The session records deterministic decisions against upstream user-message identities. Retry and regenerate replay the same deterministic response; the next dispatch after an edit or truncation recomputes progress from retained history and removes stale decisions. Editing without regeneration does not itself transition the application machine. A failing matcher or response becomes a controller-owned error stream and does not advance state. Trace callbacks are observability-only and never block a turn.
 
+Conversation definitions compile to the published `@agentskit/statechart` contract. AgentsKit owns reusable definition validation, immutable state instances, and transition execution; AgentsKit Chat owns input routes, adapter fallback, trace projection, application actions, and session decision replay. Existing chat definitions and session snapshots do not expose a second statechart API.
+
 `createChatSession(definition)` exposes the derived `chat` configuration and `getConversationSnapshot()`. The snapshot contains only the current state and its allowed events/actions. Create one session per user or mounted renderer; the built-in renderers do this automatically.
 
 Use `onTrace` to observe decisions. Trace kinds distinguish `deterministic`, `agentic`, `repaired`, and `fallback` turns without copying prompt content into telemetry.

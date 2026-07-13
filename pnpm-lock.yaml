@@ -223,6 +223,9 @@ importers:
       '@agentskit/memory':
         specifier: ^0.11.0
         version: 0.11.0
+      '@agentskit/statechart':
+        specifier: ^0.2.0
+        version: 0.2.0
       zod:
         specifier: ^4.3.6
         version: 4.4.3
@@ -577,6 +580,9 @@ packages:
     resolution: {integrity: sha512-NIdOTqhRyZcp4y4Me3UoI8rYiqFUUL9qvjVmKrh+TQ9oyN9Yxk1E72xNJJfsEsNq+gk/gjL5fez7caYLnvOnfw==}
     peerDependencies:
       solid-js: ^1.8.0
+
+  '@agentskit/statechart@0.2.0':
+    resolution: {integrity: sha512-P1wn2s5tcKe/WvtJWySm7/Pu1tKAKbet6vqocJuQUTlzRgdQeGq9l8DEj1mqR6duYSaQJW2Kb0w2zPLFUNLosQ==}
 
   '@agentskit/svelte@0.4.4':
     resolution: {integrity: sha512-6sMNXZ5p5PC6rlNvtlsLpzb469GNxI8MlEJkYgUlW6pAd3rfPDceLZpkndJL/aiEXBChPPYR5vuCSy64PB5fCQ==}
@@ -4620,6 +4626,8 @@ snapshots:
     dependencies:
       '@agentskit/core': 1.12.2
       solid-js: 1.9.14
+
+  '@agentskit/statechart@0.2.0': {}
 
   '@agentskit/svelte@0.4.4(svelte@5.56.4)':
     dependencies:

@@ -679,6 +679,45 @@ describe('deterministic conversation session', () => {
     expect(await read(resumed.chat.adapter.createSource(request('/start', 'user-1')))).toContainEqual({ type: 'text', content: 'started' })
   })
 
+  it('rejects persisted decisions that cannot be replayed through the upstream statechart', async () => {
+    const definition = defineChat({
+      id: 'statechart-resume',
+      chat: { adapter },
+      conversation: {
+        initial: 'idle',
+        states: { idle: { on: { start: 'active' } }, active: {} },
+        routes: [{ id: 'start', event: 'start', match: input => input === '/start', response: () => 'started' }],
+      },
+    })
+    const incompatible = {
+      protocol: 'agentskit.chat.session',
+      version: 1,
+      sessionId: 'shared',
+      definitionId: 'statechart-resume',
+      definitionRevision: 1,
+      updatedAt: '2026-07-13T00:00:00.000Z',
+      cursor: 1,
+      conversation: {
+        state: 'active',
+        decisions: [{
+          messageId: 'user-1',
+          input: '/start',
+          routeId: 'start',
+          kind: 'deterministic',
+          content: 'started',
+          fromState: 'active',
+          toState: 'active',
+        }],
+      },
+      confirmations: [],
+    }
+
+    await expect(resumeChatSession(definition, {
+      sessionId: 'shared',
+      storage: { load: () => incompatible, save: () => true },
+    })).rejects.toThrow('incompatible')
+  })
+
   it('persists decision removal when an edited turn becomes agentic', async () => {
     let stored: import('../../protocol/src/index.js').SessionSnapshot | undefined
     const storage = {

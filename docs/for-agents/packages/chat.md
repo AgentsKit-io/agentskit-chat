@@ -15,10 +15,13 @@
 - [`../../conversation/routes-and-state.md`](../../conversation/routes-and-state.md)
 - [`../../protocol/ask-service.md`](../../protocol/ask-service.md)
 - [`../../architecture/adrs/0022-shared-ask-service-integration.md`](../../architecture/adrs/0022-shared-ask-service-integration.md)
+- [`../../architecture/adrs/0023-conversation-transitions-use-agentskit-statechart.md`](../../architecture/adrs/0023-conversation-transitions-use-agentskit-statechart.md)
 
 ## Conversation boundary
 
 `createChatSession` may wrap only the upstream adapter boundary. It must not consume streams, mutate controller state, execute tools, or persist messages. Route precedence is declaration order; transition targets come from the active state definition. Every renderer creates a fresh session per definition mount.
+
+Conversation declarations compile to `@agentskit/statechart`. Use its published definition, immutable instance, and transition contracts; do not recreate generic state validation or transition assignment locally. This package retains only application route matching, adapter fallback, actions, traces, decision replay, and the existing session projection.
 
 `resumeChatSession` persists only the application envelope described by ADR-0011. Canonical messages must remain in upstream `ChatMemory`. Validate stored snapshots before hydration, bind them to session + definition revision, and keep terminal confirmations terminal.
 

@@ -1,5 +1,7 @@
 import { ConfigError, ErrorCodes } from '@agentskit/core'
 import type { AdapterRequest, ChatConfig, ChatReturn, Message, StreamSource, ToolAuthorizer, ToolCall } from '@agentskit/core'
+import { createStatechartInstance, defineStatechart, StatechartError, transitionStatechart } from '@agentskit/statechart'
+import type { JsonObject, StatechartDefinition, StatechartEvent, StatechartInstance, StatechartState, StatechartTransition } from '@agentskit/statechart'
 import {
   ComponentFallbackSchema,
   ComponentKeySchema,
@@ -572,17 +574,18 @@ const invalidConversation = (message: string): never => {
   })
 }
 
-const validateConversation = (conversation: ConversationDefinition): void => {
+type ConversationMachineEvent = StatechartEvent<string>
+type ConversationMachine = StatechartDefinition<JsonObject, ConversationMachineEvent, string>
+type ConversationMachineInstance = StatechartInstance<JsonObject, string>
+type ConversationMachineState = StatechartState<JsonObject, ConversationMachineEvent, string>
+type ConversationMachineTransition = StatechartTransition<JsonObject, ConversationMachineEvent, string>
+
+const compileConversation = (
+  definitionId: string,
+  revision: number,
+  conversation: ConversationDefinition,
+): ConversationMachine => {
   const stateNames = new Set(Object.keys(conversation.states))
-  if (!stateNames.has(conversation.initial)) invalidConversation('Conversation initial state is unknown.')
-
-  for (const [stateName, state] of Object.entries(conversation.states)) {
-    if (stateName.length === 0) invalidConversation('Conversation state names cannot be empty.')
-    for (const target of Object.values(state.on ?? {})) {
-      if (!stateNames.has(target)) invalidConversation('Conversation transition target is unknown.')
-    }
-  }
-
   const routeIds = new Set<string>()
   for (const route of conversation.routes) {
     if (route.id.length === 0 || route.event.length === 0) invalidConversation('Conversation route identity is invalid.')
@@ -591,6 +594,31 @@ const validateConversation = (conversation: ConversationDefinition): void => {
     for (const state of route.states ?? []) {
       if (!stateNames.has(state)) invalidConversation('Conversation route state is unknown.')
     }
+  }
+
+  const states: Record<string, ConversationMachineState> = {}
+  for (const [stateName, state] of Object.entries(conversation.states)) {
+    const on: Record<string, ConversationMachineTransition> = {}
+    for (const [event, target] of Object.entries(state.on ?? {})) on[event] = { target }
+    states[stateName] = Object.keys(on).length > 0 ? { on } : {}
+  }
+
+  try {
+    return defineStatechart<JsonObject, ConversationMachineEvent, string>({
+      id: `${definitionId}.conversation`,
+      version: String(revision),
+      initial: conversation.initial,
+      parseContext: input => {
+        if (input === null || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).length > 0) {
+          throw new TypeError('Conversation statechart context must be empty.')
+        }
+        return {}
+      },
+      states,
+    })
+  } catch (error) {
+    if (error instanceof StatechartError) invalidConversation(error.message)
+    return invalidConversation('Conversation statechart definition is invalid.')
   }
 }
 
@@ -638,22 +666,47 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   let terminalTurns: readonly { readonly turnId: string; readonly outcome: 'completed' | 'indeterminate' }[] = restored?.terminalTurns ?? []
   let persistQueue = Promise.resolve()
   const conversation = definition.conversation
-  if (conversation) {
-    validateConversation(conversation)
-    if (restored?.conversation) {
-      const states = new Set(Object.keys(conversation.states))
-      const routes = new Set(conversation.routes.map(route => route.id))
-      if (!states.has(restored.conversation.state) || restored.conversation.decisions.some(decision =>
-        !states.has(decision.fromState) || !states.has(decision.toState) || !routes.has(decision.routeId)
-      )) invalidConversation('Session conversation metadata is incompatible with this chat definition.')
-    }
-  } else if (restored?.conversation) invalidConversation('Session conversation metadata is incompatible with this chat definition.')
-
-  let currentState = restored?.conversation?.state ?? conversation?.initial ?? ''
+  const machine = conversation ? compileConversation(definition.id, revision, conversation) : undefined
+  if (!conversation && restored?.conversation) invalidConversation('Session conversation metadata is incompatible with this chat definition.')
   const decisions = new Map<string, RouteDecision>()
   for (const decision of restored?.conversation?.decisions ?? []) {
     decisions.set(decision.messageId, decision)
   }
+  const statechartNow = (): string => (options.now?.() ?? new Date()).toISOString()
+  const createInitialMachineInstance = (): ConversationMachineInstance | undefined => {
+    if (!machine) return undefined
+    try {
+      return createStatechartInstance(machine, {}, { instanceId: sessionId, now: statechartNow() })
+    } catch (error) {
+      if (error instanceof StatechartError) invalidConversation(error.message)
+      return invalidConversation('Conversation statechart instance is invalid.')
+    }
+  }
+  const transitionDecision = (
+    instance: ConversationMachineInstance,
+    decision: Pick<RouteDecision, 'routeId' | 'fromState' | 'toState'>,
+  ): ConversationMachineInstance | undefined => {
+    if (!conversation || !machine || decision.fromState !== instance.state) return undefined
+    const route = conversation.routes.find(candidate => candidate.id === decision.routeId)
+    if (!route || (route.states !== undefined && !route.states.includes(instance.state))) return undefined
+    const result = transitionStatechart(machine, instance, { type: route.event }, { now: statechartNow() })
+    return result.status === 'accepted' && result.to === decision.toState ? result.instance : undefined
+  }
+  let machineInstance = createInitialMachineInstance()
+  if (machineInstance && restored?.conversation) {
+    let restoredInstance = machineInstance
+    for (const decision of restored.conversation.decisions) {
+      const next = transitionDecision(restoredInstance, decision)
+        ?? invalidConversation('Session conversation metadata is incompatible with this chat definition.')
+      restoredInstance = next
+    }
+    if (restoredInstance.state !== restored.conversation.state) {
+      invalidConversation('Session conversation metadata is incompatible with this chat definition.')
+    }
+    machineInstance = restoredInstance
+  }
+  const getMachineInstance = (): ConversationMachineInstance =>
+    machineInstance ?? invalidConversation('Conversation statechart instance is missing.')
   const buildSnapshot = (nextCursor: number): SessionSnapshot => SessionSnapshotSchema.parse({
     protocol: SESSION_PROTOCOL,
     version: SESSION_PROTOCOL_VERSION,
@@ -666,7 +719,7 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     ...(terminalTurns.length > 0 ? { terminalTurns } : {}),
     ...(conversation ? {
       conversation: {
-        state: currentState,
+        state: getMachineInstance().state,
         decisions: [...decisions].map(([messageId, decision]) => ({ messageId, ...decision })),
       },
     } : {}),
@@ -727,6 +780,8 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     claimTurn,
     releaseTurn,
   }
+  const conversationMachine = machine ?? invalidConversation('Conversation statechart instance is missing.')
+  machineInstance ??= invalidConversation('Conversation statechart instance is missing.')
   const emitTrace = (trace: TurnTrace): void => {
     try {
       void Promise.resolve(conversation.onTrace?.(trace)).catch(() => undefined)
@@ -735,19 +790,22 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     }
   }
   const rebuildState = (messages: readonly Message[]): void => {
-    currentState = conversation.initial
+    let rebuilt = createInitialMachineInstance()
+      ?? invalidConversation('Conversation statechart instance is missing.')
     for (const message of messages) {
       if (message.role !== 'user') continue
       const decision = decisions.get(message.id)
-      if (decision?.input === message.content && decision.fromState === currentState) {
-        currentState = decision.toState
-      }
+      if (decision?.input !== message.content) continue
+      const next = transitionDecision(rebuilt, decision)
+      if (next) rebuilt = next
     }
+    machineInstance = rebuilt
   }
   const getConversationSnapshot = (): ConversationSnapshot => {
-    const state = conversation.states[currentState]!
+    const instance = getMachineInstance()
+    const state = conversation.states[instance.state]!
     return {
-      state: currentState,
+      state: instance.state,
       events: Object.keys(state.on ?? {}),
       actions: [...(state.actions ?? [])],
     }
@@ -765,15 +823,22 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
           rebuildState(userMessages.slice(0, -1))
 
           const replay = userMessage === undefined ? undefined : decisions.get(userMessage.id)
-          if (replay?.input === input && replay.fromState === currentState) {
-            currentState = replay.toState
+          if (userMessage !== undefined && replay?.input === input && replay.fromState === getMachineInstance().state) {
+            const next = transitionDecision(getMachineInstance(), replay)
+            if (!next) {
+              decisions.delete(userMessage.id)
+              schedulePersist()
+              return routeErrorSource()
+            }
+            machineInstance = next
             emitTrace({ kind: replay.kind, routeId: replay.routeId, fromState: replay.fromState, toState: replay.toState })
             schedulePersist()
             return deterministicSource(replay.content)
           }
           if (userMessage !== undefined) decisions.delete(userMessage.id)
 
-          const state = conversation.states[currentState]!
+          const currentState = getMachineInstance().state
+          const state = conversationMachine.states[currentState]!
           let route: DeterministicRoute | undefined
           try {
             route = conversation.routes.find(candidate =>
@@ -793,7 +858,6 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
           }
 
           const fromState = currentState
-          const toState = state.on![route.event]!
           let content: string
           try {
             content = route.response(input, { sessionId, ...(userMessage ? { messageId: userMessage.id } : {}) })
@@ -801,16 +865,21 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
             schedulePersist()
             return routeErrorSource()
           }
-          currentState = toState
+          const transition = transitionStatechart(conversationMachine, getMachineInstance(), { type: route.event }, { now: statechartNow() })
+          if (transition.status !== 'accepted') {
+            schedulePersist()
+            return routeErrorSource()
+          }
+          machineInstance = transition.instance
           const kind = route.traceKind ?? 'deterministic'
           if (userMessage !== undefined) decisions.set(userMessage.id, {
-            input, routeId: route.id, kind, content, fromState, toState,
+            input, routeId: route.id, kind, content, fromState, toState: transition.to,
           })
           emitTrace({
             kind,
             routeId: route.id,
             fromState,
-            toState: currentState,
+            toState: transition.to,
           })
           schedulePersist()
           return deterministicSource(content)
