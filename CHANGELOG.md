@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 — 2026-07-13
+
+- Adds a Web-standard trusted Ask backend contract for hosted and self-hosted
+  deployments, with session-aware requests, deterministic escalation,
+  validated retrieval boundaries, persistence, diagnostics, cancellation,
+  rate-limit composition, and privacy-safe metrics.
+- Keeps AgentsKit as the controller and lifecycle substrate while the shared
+  adapter projects backend events into the canonical AgentsKit Chat model.
+- Recognizes valid Ask NDJSON served with an incorrect `text/plain` content
+  type without changing the safe fallback for ordinary text responses.
+- Preserves the fixed 12-package graph and seven-renderer conformance gates.
+
+See the [0.2 release notes](./docs/releases/v0.2.0.md) and
+[0.1 migration guide](./docs/releases/migration-to-0.2.md).
+
 ## 0.1.0 — 2026-07-13
 
 First stable v0 release of AgentsKit Chat.

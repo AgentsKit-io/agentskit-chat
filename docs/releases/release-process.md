@@ -42,7 +42,7 @@ See npm's official guidance for
 
 ## Verify
 
-Confirm all 12 npm pages show `0.1.0` and provenance, install the package graph
+Confirm all 12 npm pages show the tagged version and provenance, install the package graph
 from npm in a clean directory, run `npm audit signatures`, verify GitHub assets
 against `SHA256SUMS`, and smoke the Docs, Registry, and Playbook hosts. Record
 links and results on issue #30 before closing the milestone.

@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-example-react-native",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "main": "expo/AppEntry.js",
   "scripts": {
