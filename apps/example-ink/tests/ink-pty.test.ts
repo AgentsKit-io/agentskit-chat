@@ -20,7 +20,7 @@ const startApp = (example?: string): { readonly pty: IPty; readonly output: () =
     cwd: appDirectory,
     cols: 100,
     rows: 30,
-    env: { ...process.env, TERM: 'xterm-256color', ...(example ? { AK_EXAMPLE: example } : {}) },
+    env: { ...process.env, CI: 'false', CONTINUOUS_INTEGRATION: 'false', TERM: 'xterm-256color', ...(example ? { AK_EXAMPLE: example } : {}) },
   })
   pty.onData(data => { buffer += data })
   processes.push(pty)
