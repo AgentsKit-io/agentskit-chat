@@ -2,7 +2,7 @@
 
 ## Ownership
 
-`apps/example-react` hosts the shared support, onboarding, and protected operations references selected by query parameter. Domain behavior stays in `example-shared`.
+`apps/example-react` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`.
 
 ## Checks
 

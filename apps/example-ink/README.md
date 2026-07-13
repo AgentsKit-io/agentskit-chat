@@ -14,3 +14,5 @@ Run `pnpm --filter @agentskit/chat-example-ink build` and `pnpm --filter @agents
 Set `AK_EXAMPLE=onboarding` for the [deterministic onboarding reference](../../docs/examples/onboarding-reference.md).
 
 Set `AK_EXAMPLE=operations` for the [policy-protected operations reference](../../docs/examples/operations-reference.md).
+
+Set `AK_EXAMPLE=rag` for the [cited RAG reference](../../docs/examples/rag-reference.md).

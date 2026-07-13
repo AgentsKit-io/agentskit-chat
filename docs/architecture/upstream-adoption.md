@@ -185,3 +185,7 @@ Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `@ag
 ## Protected operations adoption record (#24)
 
 Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f`, specifically `packages/core/src/chat.ts`, `packages/core/src/tool-proposal-internal.ts`, `packages/core/src/tool-authorization-internal.ts`, and confirmation exports in `packages/react`, `packages/react-native`, and `packages/ink`, consumed through `@agentskit/core@1.12.2` and the published renderer packages. The reference adds only injected operations-domain behavior and a safe trace projection. No upstream primitive is copied and no generic gap blocks #24.
+
+## Cited RAG adoption record (#25)
+
+Inspected AgentsKit revisions `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `edb77757d2f2ca095733392657cafd8b7dd59a78`, `@agentskit/rag@0.4.12`, and `packages/rag/src/index.ts`, `rag.ts`, `types.ts`, `chunker.ts`, and `loaders.ts`. The example directly consumes `createRAG`, `RAG`, `RetrievedDocument`, and `VectorMemory`. Dogfooding found the optional S3 peer browser-bundle gap, fixed at the source in [AgentsKit #1180](https://github.com/AgentsKit-io/agentskit/issues/1180), [PR #1181](https://github.com/AgentsKit-io/agentskit/pull/1181), and release [PR #1182](https://github.com/AgentsKit-io/agentskit/pull/1182) before local integration. AgentsKit Chat adds only bounded SourceList projection, safe-link interaction resolution, and native/fallback evidence. No retrieval, chunking, embedding, storage-search, or reranking behavior is copied.

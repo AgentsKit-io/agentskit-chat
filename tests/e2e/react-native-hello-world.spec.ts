@@ -48,3 +48,11 @@ test('confirms a protected operation through native controls', async ({ page }) 
   await page.getByRole('button', { name: 'Approve' }).click()
   await expect(page.getByText(/checkout-api restarted/)).toBeVisible()
 })
+
+test('renders a grounded RAG source through native controls', async ({ page }) => {
+  await page.goto('/?reference=rag')
+  const input = page.getByPlaceholder('Ask a grounded question')
+  await input.fill('How does AgentsKit Chat work?')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await expect(page.getByText('AgentsKit Chat overview')).toBeVisible()
+})
