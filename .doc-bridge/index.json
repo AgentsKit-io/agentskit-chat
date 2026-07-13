@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "d42341d6ee72b17e69cf8e9fa723a2342b452ce584acc5acb31ae7d1aa295b65",
+  "contentHash": "4f56d2c36e7484fbec28c3e0bdcf672e83b12954a1d5089864e9dbf5fc563dae",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-12T03:22:52.890Z",
+  "generatedAt": "2026-07-13T00:36:49.377Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -13,32 +13,32 @@
       "type": "agent-doc",
       "title": "Ink example handoff",
       "path": "docs/for-agents/apps/example-ink.md",
-      "description": "`apps/example-ink` is the executable terminal proof for unchanged support, onboarding, and protected operations definitions. It owns only Ink process startup and PTY verification.",
-      "body": "Ink example handoff apps/example-ink is the executable terminal proof for unchanged support, onboarding, and protected operations definitions. It owns only Ink process startup and PTY verification. The PTY suite must prove the confirmed ticket flow, deterministic response output, Escape cancellation without process termination, and graceful Ctrl+C exit."
+      "description": "`apps/example-ink` is the executable terminal proof for unchanged support, onboarding, protected operations, and cited RAG definitions. It owns only Ink process startup and PTY verification.",
+      "body": "Ink example handoff apps/example-ink is the executable terminal proof for unchanged support, onboarding, protected operations, and cited RAG definitions. It owns only Ink process startup and PTY verification. The PTY suite must prove the confirmed ticket flow, deterministic response output, Escape cancellation without process termination, and graceful Ctrl+C exit."
     },
     {
       "id": "example-react-native",
       "type": "agent-doc",
       "title": "React Native example",
       "path": "docs/for-agents/apps/example-react-native.md",
-      "description": "Expo dogfood app for unchanged support, onboarding, and protected operations definitions. It proves native send, confirmation, cancellation, forms, and policy denial. App-specific native dependencies live here.",
-      "body": "React Native example Expo dogfood app for unchanged support, onboarding, and protected operations definitions. It proves native send, confirmation, cancellation, forms, and policy denial. App-specific native dependencies live here."
+      "description": "Expo dogfood app for unchanged support, onboarding, protected operations, and cited RAG definitions. It proves native lifecycle, forms, policy denial, and source presentation. App-specific native dependencies live here.",
+      "body": "React Native example Expo dogfood app for unchanged support, onboarding, protected operations, and cited RAG definitions. It proves native lifecycle, forms, policy denial, and source presentation. App-specific native dependencies live here."
     },
     {
       "id": "example-react",
       "type": "agent-doc",
       "title": "React example handoff",
       "path": "docs/for-agents/apps/example-react.md",
-      "description": "`apps/example-react` hosts the shared support, onboarding, and protected operations references selected by query parameter. Domain behavior stays in `example-shared`.",
-      "body": "React example handoff Ownership apps/example-react hosts the shared support, onboarding, and protected operations references selected by query parameter. Domain behavior stays in example-shared . Checks"
+      "description": "`apps/example-react` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`.",
+      "body": "React example handoff Ownership apps/example-react hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in example-shared . Checks"
     },
     {
       "id": "example-shared",
       "type": "agent-doc",
       "title": "Shared example definition",
       "path": "docs/for-agents/apps/example-shared.md",
-      "description": "Owns support, onboarding, and policy-protected operations definitions used unchanged by React, React Native, and Ink, plus injectable domain and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
-      "body": "Shared example definition Owns support, onboarding, and policy-protected operations definitions used unchanged by React, React Native, and Ink, plus injectable domain and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
+      "description": "Owns support, onboarding, protected operations, and cited RAG definitions used unchanged by React, React Native, and Ink, plus injectable domain, retrieval, and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction.",
+      "body": "Shared example definition Owns support, onboarding, protected operations, and cited RAG definitions used unchanged by React, React Native, and Ink, plus injectable domain, retrieval, and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
     },
     {
       "id": "architecture",
@@ -573,6 +573,35 @@
         "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures"
       ]
     },
+    "rag-reference": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "rag-reference",
+        "path": "apps/example-shared"
+      },
+      "startHere": "docs/for-agents/apps/example-shared.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-shared.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-shared"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-shared test",
+        "pnpm test:e2e"
+      ],
+      "humanDoc": "examples/rag-reference",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Provider-agnostic cited RAG application and SourceList projection recipe"
+      ]
+    },
     "react": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -764,6 +793,7 @@
       "operations-reference",
       "product",
       "protocol",
+      "rag-reference",
       "react",
       "react-native",
       "server",
@@ -922,6 +952,17 @@
         "purpose": "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures",
         "humanDoc": "protocol/v1",
         "agentDoc": "docs/for-agents/packages/protocol.md"
+      },
+      "rag-reference": {
+        "id": "rag-reference",
+        "path": "apps/example-shared",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-shared test",
+          "pnpm test:e2e"
+        ],
+        "purpose": "Provider-agnostic cited RAG application and SourceList projection recipe",
+        "humanDoc": "examples/rag-reference",
+        "agentDoc": "docs/for-agents/apps/example-shared.md"
       },
       "react": {
         "id": "react",

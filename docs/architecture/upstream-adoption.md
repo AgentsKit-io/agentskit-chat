@@ -185,3 +185,7 @@ Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `@ag
 ## Protected operations adoption record (#24)
 
 Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f`, specifically `packages/core/src/chat.ts`, `packages/core/src/tool-proposal-internal.ts`, `packages/core/src/tool-authorization-internal.ts`, and confirmation exports in `packages/react`, `packages/react-native`, and `packages/ink`, consumed through `@agentskit/core@1.12.2` and the published renderer packages. The reference adds only injected operations-domain behavior and a safe trace projection. No upstream primitive is copied and no generic gap blocks #24.
+
+## Cited RAG adoption record (#25)
+
+Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f`, `@agentskit/rag@0.4.1`, and `packages/rag/src/index.ts`, `rag.ts`, `types.ts`, and `chunker.ts`. The example directly consumes `createRAG`, `RAG`, `Retriever`, `RetrievedDocument`, `EmbedFn`, and `VectorMemory`. AgentsKit Chat adds only bounded SourceList projection, safe-link validation, and native/fallback evidence. No retrieval, chunking, embedding, storage-search, or reranking behavior is copied.

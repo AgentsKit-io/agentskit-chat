@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@agentskit/doc-bridge':
         specifier: 1.0.2
-        version: 1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)
+        version: 1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/rag@0.4.12)(react@19.2.7)
       '@playwright/test':
         specifier: ^1.61.0
         version: 1.61.1
@@ -146,6 +146,9 @@ importers:
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
+      '@agentskit/rag':
+        specifier: ^0.4.12
+        version: 0.4.12
       '@agentskit/validation':
         specifier: ^0.2.1
         version: 0.2.11
@@ -545,6 +548,9 @@ packages:
     resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
     peerDependencies:
       react: '>=18.0.0'
+
+  '@agentskit/rag@0.4.12':
+    resolution: {integrity: sha512-hceZxEVEMo0mw4WAa2e8HjWsyFSF0CbugBqwQg3jVSBHPPrvKgNNYHwD9lAc0tXszZpku+ASMU6rGAnAB0AOGw==}
 
   '@agentskit/react-native@0.4.4':
     resolution: {integrity: sha512-zdFpQL8M8LpIRV3XTpGPXf1eNMIsw36Fel/6ICtB6aFEE4jExb2b4ro8fWNIJQjNRSwUG0JBpg3Qyb4W+ZfLng==}
@@ -4546,12 +4552,13 @@ snapshots:
 
   '@agentskit/core@1.12.2': {}
 
-  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(react@19.2.7)':
+  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/rag@0.4.12)(react@19.2.7)':
     dependencies:
       zod: 3.25.76
     optionalDependencies:
       '@agentskit/core': 1.12.2
       '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      '@agentskit/rag': 0.4.12
       react: 19.2.7
 
   '@agentskit/eval@0.4.17':
@@ -4570,6 +4577,10 @@ snapshots:
       - bufferutil
       - react-devtools-core
       - utf-8-validate
+
+  '@agentskit/rag@0.4.12':
+    dependencies:
+      '@agentskit/core': 1.12.2
 
   '@agentskit/react-native@0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)':
     dependencies:

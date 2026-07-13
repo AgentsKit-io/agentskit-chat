@@ -67,3 +67,15 @@ test('denies an unauthorized operations proposal', async ({ page }) => {
   await expect(page.getByRole('alert')).toBeVisible()
   await expect(page.getByText(/restarted/)).toHaveCount(0)
 })
+
+test('renders grounded RAG sources and a deterministic no-results state', async ({ page }) => {
+  await page.goto('/?reference=rag')
+  const input = page.getByPlaceholder('Ask a grounded question')
+  await input.fill('How does AgentsKit Chat work?')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await expect(page.getByText('AgentsKit Chat overview')).toBeVisible()
+  await expect(page.getByRole('link', { name: 'AgentsKit Chat overview' })).toHaveAttribute('href', 'https://www.agentskit.io/docs/chat')
+  await input.fill('unknown topic')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  await expect(page.getByText('No grounded sources were found for this question.')).toBeVisible()
+})

@@ -205,6 +205,16 @@
             "pnpm --filter @agentskit/chat-example-shared test",
             "pnpm docs:bridge:gate"
           ]
+        },
+        "rag-reference": {
+          "path": "apps/example-shared",
+          "purpose": "Provider-agnostic cited RAG application and SourceList projection recipe",
+          "agentDoc": "docs/for-agents/apps/example-shared.md",
+          "humanDoc": "examples/rag-reference",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-shared test",
+            "pnpm test:e2e"
+          ]
         }
       }
     }

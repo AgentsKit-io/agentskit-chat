@@ -8,3 +8,5 @@ Use `pnpm --filter @agentskit/chat-example-react-native dev`.
 Open the web target with `?reference=onboarding` for the [deterministic onboarding reference](../../docs/examples/onboarding-reference.md).
 
 Use `?reference=operations` for the [policy-protected operations reference](../../docs/examples/operations-reference.md).
+
+Use `?reference=rag` for the [cited RAG reference](../../docs/examples/rag-reference.md).

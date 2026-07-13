@@ -131,6 +131,7 @@ describe('Ink PTY host', () => {
     await submit(app.pty, '/recommend')
     await waitFor(app.output, 'engineering starter')
     app.pty.write('\r')
+    await new Promise(resolve => setTimeout(resolve, 200))
     await submit(app.pty, '/accept')
     await waitFor(app.output, 'Complete onboarding')
     app.pty.write('\r')
@@ -153,4 +154,12 @@ describe('Ink PTY host', () => {
     app.pty.write('1')
     await waitFor(app.output, 'checkout-api restarted')
   }, 15_000)
+
+  it('renders a grounded answer and source fallback', async () => {
+    const app = startApp('rag')
+    await waitFor(app.output, 'Ask a grounded question')
+    await submit(app.pty, 'How does AgentsKit Chat work?')
+    await waitFor(app.output, 'AgentsKit Chat overview')
+    await waitFor(app.output, 'Grounded answer')
+  })
 })

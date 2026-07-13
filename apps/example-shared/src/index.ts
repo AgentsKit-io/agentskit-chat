@@ -1,8 +1,10 @@
-import { ChoiceListComponent, FormComponent, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, validateStandardComponentInteraction, withActionPolicy, type DeterministicRoute } from '@agentskit/chat'
+import { ChoiceListComponent, FormComponent, SourceListComponent, SourceListPropsSchema, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, validateStandardComponentInteraction, withActionPolicy, type DeterministicRoute } from '@agentskit/chat'
 import type { ComponentInteractionEvent, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { captureActionPolicyTrace, captureActionTrace, createTraceCapture } from '@agentskit/chat-devtools'
 import { defineTool, type AdapterFactory, type ToolDefinition } from '@agentskit/core'
 import { createAjvValidator } from '@agentskit/validation'
+import { createRAG, type RAG } from '@agentskit/rag'
+import type { RetrievedDocument, VectorMemory } from '@agentskit/core'
 
 const deterministicAdapter: AdapterFactory = {
   createSource: request => {
@@ -320,3 +322,39 @@ export const createOperationsApplication = ({ context, service }: OperationsAppl
 const operationsContext: SupportHostContext = Object.freeze({ sessionId: 'operations-demo', customerId: 'operator-demo', capabilities: ['operations.read', 'operations.restart'] })
 export const operationsApplication = createOperationsApplication({ context: operationsContext, service: createInMemoryOperationsService() })
 export const unauthorizedOperationsApplication = createOperationsApplication({ context: { ...operationsContext, sessionId: 'operations-unauthorized', capabilities: [] }, service: createInMemoryOperationsService() })
+
+export interface RagApplicationOptions {
+  readonly rag: RAG
+  readonly answer?: (query: string, documents: readonly RetrievedDocument[]) => string
+}
+
+export const createRagApplication = ({ rag, answer = (query, documents) => `Grounded answer for “${query}”: ${documents[0]?.content ?? ''}` }: RagApplicationOptions) => {
+  const adapter: AdapterFactory = { createSource: request => ({
+    async *stream() {
+      const query = request.messages.filter(message => message.role === 'user').at(-1)?.content.trim() ?? ''
+      try {
+        const documents = await rag.retrieve({ query, messages: request.messages })
+        if (documents.length === 0) { yield { type: 'text', content: 'No grounded sources were found for this question.' }; yield { type: 'done' }; return }
+        const sources = documents.slice(0, 50).flatMap(document => {
+          const title = typeof document.metadata?.title === 'string' ? document.metadata.title.slice(0, 256) : (document.source ?? document.id).slice(0, 256)
+          const rawUrl = typeof document.metadata?.url === 'string' ? document.metadata.url : document.source
+          if (typeof rawUrl === 'string' && !/^https?:\/\//.test(rawUrl) && !rawUrl.startsWith('/')) return []
+          const url = typeof rawUrl === 'string' ? rawUrl : undefined
+          const source = { id: document.id.slice(0, 128), title, snippet: document.content.slice(0, 4_096), ...(url ? { url } : {}) }
+          return SourceListPropsSchema.safeParse({ label: 'Source', sources: [source] }).success ? [source] : []
+        })
+        if (sources.length === 0) { yield { type: 'text', content: 'No safe grounded sources were found for this question.' }; yield { type: 'done' }; return }
+        const props = SourceListPropsSchema.parse({ label: answer(query, documents).slice(0, 256), sources })
+        yield { type: 'text', content: JSON.stringify({ protocol: 'agentskit.chat.component', version: 1, type: 'render', componentKey: 'source-list', instanceId: `rag-${request.messages.at(-1)?.id ?? 'answer'}`, props, fallback: { kind: 'source-list', summary: `${props.label} Sources: ${props.sources.map(source => source.title).join(', ')}.` } }) }
+        yield { type: 'done' }
+      } catch { yield { type: 'error', content: 'Grounded retrieval is temporarily unavailable.' } }
+    }, abort() {},
+  }) }
+  return defineChat({ id: 'rag-reference', components: defineComponentManifest([SourceListComponent]), chat: { adapter } })
+}
+
+const ragDocuments: RetrievedDocument[] = [{ id: 'agentskit-chat', content: 'AgentsKit Chat shares one definition across native framework renderers.', source: 'https://www.agentskit.io/docs/chat', score: 1, metadata: { title: 'AgentsKit Chat overview', url: 'https://www.agentskit.io/docs/chat' } }]
+const ragStore: VectorMemory = { store: () => undefined, search: embedding => embedding[0] === 0 ? [] : ragDocuments }
+const demoRag = createRAG({ embed: async text => [text.toLowerCase().includes('unknown') ? 0 : 1], store: ragStore })
+export const ragChat = createRagApplication({ rag: demoRag })
+export const ragSession = createChatSession(ragChat, { sessionId: 'rag-demo' })
