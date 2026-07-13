@@ -170,6 +170,9 @@ export const inspectRelease = async root => {
   if (!releaseWorkflow.includes('test -f "$artifact"')) {
     diagnostics.push('release workflow must verify each tarball exists before npm publish')
   }
+  if (!releaseWorkflow.includes('registry-url: https://registry.npmjs.org')) {
+    diagnostics.push('release workflow must configure npm registry authentication')
+  }
 
   return { diagnostics, release }
 }
