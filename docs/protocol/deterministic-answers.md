@@ -2,7 +2,7 @@
 
 The deterministic answer plane resolves declared exact facts before the backend. It is intentionally small: commands, package identities, navigation, contribution links, ecosystem relationships, restricted FAQs, and document titles may be local. Reasoning, comparisons, recommendations, unknown input, and multi-cause diagnosis escalate.
 
-> This v1 contract is proposed in [ADR-0024](../architecture/adrs/0024-deterministic-answer-plane.md) and requires human approval before merge.
+> This v1 contract is accepted in [ADR-0024](../architecture/adrs/0024-deterministic-answer-plane.md), with HITL approval recorded on 2026-07-13.
 
 ## Host integration
 

@@ -1,6 +1,6 @@
 # ADR-0024: Deterministic answers precede backend adapters
 
-**Status:** Proposed — requires human approval before merge
+**Status:** Accepted — HITL approved 2026-07-13
 
 **Date:** 2026-07-13
 
