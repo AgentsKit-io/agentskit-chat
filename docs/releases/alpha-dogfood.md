@@ -1,21 +1,21 @@
 # Alpha dogfood channel
 
-`v0.1.0-alpha.0` is the public artifact channel used by the external Docs, Registry, and Playbook migrations before stable v0.
+`v0.1.0-alpha.1` is the current public artifact channel used by the external Docs, Registry, and Playbook migrations before stable v0. It adds the ordered assistant-content protocol required for streamed grounded answers followed by portable citations.
 
 The GitHub prerelease contains npm-compatible tarballs and `SHA256SUMS` for `@agentskit/chat-protocol`, `@agentskit/chat`, `@agentskit/chat-react`, and `@agentskit/chat-server`. Consumers pin all required release asset URLs in their package manifest and lockfile. Because pnpm correctly rewrites `workspace:*` edges to the alpha semver while that semver is intentionally absent from npm, consumers must also redirect the two internal graph roots with `pnpm.overrides`:
 
 ```json
 {
   "dependencies": {
-    "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-protocol-0.1.0-alpha.0.tgz",
-    "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-0.1.0-alpha.0.tgz",
-    "@agentskit/chat-react": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-react-0.1.0-alpha.0.tgz",
-    "@agentskit/chat-server": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-server-0.1.0-alpha.0.tgz"
+    "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-protocol-0.1.0-alpha.1.tgz",
+    "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-0.1.0-alpha.1.tgz",
+    "@agentskit/chat-react": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-react-0.1.0-alpha.1.tgz",
+    "@agentskit/chat-server": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-server-0.1.0-alpha.1.tgz"
   },
   "pnpm": {
     "overrides": {
-      "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-protocol-0.1.0-alpha.0.tgz",
-      "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.0/agentskit-chat-0.1.0-alpha.0.tgz"
+      "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-protocol-0.1.0-alpha.1.tgz",
+      "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.1/agentskit-chat-0.1.0-alpha.1.tgz"
     }
   }
 }

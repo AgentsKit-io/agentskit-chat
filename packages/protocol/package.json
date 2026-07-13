@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-protocol",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Versioned turn protocol for AgentsKit Chat.",
   "license": "MIT",
   "type": "module",
