@@ -197,3 +197,22 @@ Inspected AgentsKit revision `4d66eb192d636b53d0c7bec39894250dc71cde5f`, specifi
 ## Cited RAG adoption record (#25)
 
 Inspected AgentsKit revisions `4d66eb192d636b53d0c7bec39894250dc71cde5f` and `edb77757d2f2ca095733392657cafd8b7dd59a78`, `@agentskit/rag@0.4.12`, and `packages/rag/src/index.ts`, `rag.ts`, `types.ts`, `chunker.ts`, and `loaders.ts`. The example directly consumes `createRAG`, `RAG`, `RetrievedDocument`, and `VectorMemory`. Dogfooding found the optional S3 peer browser-bundle gap, fixed at the source in [AgentsKit #1180](https://github.com/AgentsKit-io/agentskit/issues/1180), [PR #1181](https://github.com/AgentsKit-io/agentskit/pull/1181), and release [PR #1182](https://github.com/AgentsKit-io/agentskit/pull/1182) before local integration. AgentsKit Chat adds only bounded SourceList projection, safe-link interaction resolution, and native/fallback evidence. No retrieval, chunking, embedding, storage-search, or reranking behavior is copied.
+
+## Registry and Playbook dogfood adoption record (#27)
+
+Inspected `@agentskit/core@1.12.3`, `@agentskit/react@0.7.4`, and the memory
+package before host migration. Dogfooding found the reusable browser-storage
+gap and fixed it in AgentsKit [#1191](https://github.com/AgentsKit-io/agentskit/issues/1191),
+[PR #1192](https://github.com/AgentsKit-io/agentskit/pull/1192), and release
+[PR #1194](https://github.com/AgentsKit-io/agentskit/pull/1194) as
+`@agentskit/memory@0.11.0`. It also found three host copies of the Ask wire and
+transport boundary; those moved to the shared protocol and chat packages in
+[#66](https://github.com/AgentsKit-io/agentskit-chat/issues/66) and
+[PR #67](https://github.com/AgentsKit-io/agentskit-chat/pull/67), released as
+`v0.1.0-alpha.2`.
+
+Hosts now own only endpoint/corpus configuration, storage identities, branding,
+native presentation slots, and optional presentation-only tool projection. No
+controller, reducer, stream lifecycle, decoder, memory engine, renderer, or
+component protocol is copied or reimplemented. Full evidence is in the
+[Registry/Playbook dogfood record](../dogfood/registry-playbook.md).

@@ -101,6 +101,15 @@ input
   -> native renderer and persistence
 ```
 
+## External dogfood hosts
+
+The public alpha is consumed by Docs, Registry, and Playbook through immutable
+release assets. Host repositories keep corpus configuration and native styling;
+they do not own chat reducers, lifecycle, memory, cancellation, or a second
+component protocol. The Registry/Playbook ownership correction and parity
+evidence are recorded in
+[the dogfood migration record](../dogfood/registry-playbook.md).
+
 ## Initial architecture proof
 
 The first shared example must run from one unchanged chat definition in React, React Native, and Ink. These targets exercise DOM, native mobile, and terminal constraints. Vue, Svelte, Solid, and Angular follow once the universal contract survives those three environments.
