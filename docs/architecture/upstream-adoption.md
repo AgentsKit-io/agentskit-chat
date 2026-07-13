@@ -36,7 +36,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
 | `@agentskit/memory` | 0.11.0 | Persistent `ChatMemory` implementations, including validated injectable Web Storage. |
-| `@agentskit/eval` | 0.4.7 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting. |
+| `@agentskit/eval` | 0.4.19 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting, and universal replay boundaries. |
 | `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
 | `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
 | `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
@@ -47,7 +47,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 
 ## Replayable application traces (#21)
 
-Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
+The replay integration was initially inspected at AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`; the currently consumed release is `@agentskit/eval@0.4.19`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, filesystem boundaries, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
 
 ## Support reference application (#22)
 
@@ -222,3 +222,5 @@ component protocol is copied or reimplemented. Full evidence is in the
 Inspected the public `@agentskit/statechart@0.2.0` release and its exported `defineStatechart`, `createStatechartInstance`, `transitionStatechart`, immutable instance, event, definition, result, and diagnostic contracts. The generic gap recorded by the original conversation design was resolved in AgentsKit [#1199](https://github.com/AgentsKit-io/agentskit/issues/1199), [PR #1210](https://github.com/AgentsKit-io/agentskit/pull/1210), and the `0.2.0` release before downstream adoption.
 
 AgentsKit Chat compiles its existing application conversation declaration into the upstream definition and uses upstream transitions for initial validation, dispatch, resume validation, and history rebuild. It adds only route matching and precedence, adapter fallback, application actions/traces, retained decisions, and the existing session projection. No statechart validator, transition engine, upstream source, private source, or business behavior is copied or reimplemented. See [ADR-0023](./adrs/0023-conversation-transitions-use-agentskit-statechart.md).
+
+The React Native release check also inspected the public `@agentskit/eval` replay exports used by devtools. A universal-bundle filesystem boundary was fixed upstream in AgentsKit [#1216](https://github.com/AgentsKit-io/agentskit/issues/1216), [PR #1217](https://github.com/AgentsKit-io/agentskit/pull/1217), and release `@agentskit/eval@0.4.19`. AgentsKit Chat consumes that release directly; it does not alias Node built-ins, copy replay behavior, or add a platform-specific fork.

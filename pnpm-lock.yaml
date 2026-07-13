@@ -262,8 +262,8 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/eval':
-        specifier: ^0.4.17
-        version: 0.4.17
+        specifier: ^0.4.19
+        version: 0.4.19
       zod:
         specifier: ^4.3.6
         version: 4.4.3
@@ -550,8 +550,8 @@ packages:
       react:
         optional: true
 
-  '@agentskit/eval@0.4.17':
-    resolution: {integrity: sha512-4hpj6UMmantcZZGeEgG5/66CZ3I4h3q+iAY2AK4lsTkZze6GH2tNtXJ2wXHG+P8i3GcFBJ7ZH/NkdHQoiFS+bA==}
+  '@agentskit/eval@0.4.19':
+    resolution: {integrity: sha512-DYjEa6bgzP/rVqTZBuguXjn+JuoPG9NfVUa/ogubm5hPlVKL0SVD1ThTDfuhTqrMqOgqHIBwIHv5yFbjnqheDg==}
 
   '@agentskit/ink@0.10.1':
     resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
@@ -4579,9 +4579,9 @@ snapshots:
       '@agentskit/rag': 0.4.14
       react: 19.2.7
 
-  '@agentskit/eval@0.4.17':
+  '@agentskit/eval@0.4.19':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.12.3
 
   '@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:
