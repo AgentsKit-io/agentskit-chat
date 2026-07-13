@@ -35,7 +35,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/core` | 1.12.2 | Controller, chat contracts, messages, tools, cancellable memory, serialization and validation, generative UI, HITL, events, errors. |
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
-| `@agentskit/memory` | 0.10.2 | Persistent `ChatMemory` implementations. |
+| `@agentskit/memory` | 0.11.0 | Persistent `ChatMemory` implementations, including validated injectable Web Storage. |
 | `@agentskit/eval` | 0.4.7 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting. |
 | `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
 | `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
@@ -105,6 +105,10 @@ The React binding passes `definition.chat` to `useChat` from `@agentskit/react`.
 ### Ordered assistant content
 
 Inspected AgentsKit Core canonical `Message` and `StreamChunk` contracts plus the official framework bindings. AgentsKit Chat keeps the single canonical string message and upstream stream reducer, and adds only a bounded application-level record envelope for ordering text with its closed registered components. Text records are host-encoded and inert; component records reuse `ComponentRenderFrame` validation and manifest resolution. No upstream message, controller, stream, persistence, or generative-UI primitive is copied. See [ADR-0021](./adrs/0021-ordered-assistant-content-records.md).
+
+### Shared Ask service integration
+
+Docs, Registry, and Playbook use one Ask application-protocol adapter from `@agentskit/chat`. The reusable browser-memory gap was resolved first in AgentsKit [#1191](https://github.com/AgentsKit-io/agentskit/issues/1191), [PR #1192](https://github.com/AgentsKit-io/agentskit/pull/1192), and released as `@agentskit/memory@0.11.0`. AgentsKit Chat Protocol owns the versioned bounded event decoder; AgentsKit Chat composes the public `createWebStorageMemory` seam and adds only wire projection, safe citations, transport behavior, and host presentation composition. See [ADR-0022](./adrs/0022-shared-ask-service-integration.md).
 
 Fields are added to `ChatDefinition` only when a vertical issue demonstrates application-layer behavior not represented by `ChatConfig`. This avoids mirroring upstream configuration and reduces compatibility work.
 

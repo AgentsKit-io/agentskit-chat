@@ -20,6 +20,7 @@ import { z } from 'zod'
 import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, STANDARD_COMPONENT_KEYS, StandardComponentCatalog, validateStandardComponentInteraction, type ChoiceAction, type ChoiceListProps, type ComponentDefinition } from './catalog.js'
 
 export * from './catalog.js'
+export * from './ask.js'
 
 const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
