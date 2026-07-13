@@ -140,6 +140,22 @@ describe('Ask adapter', () => {
     })
   })
 
+  it('sniffs valid Ask NDJSON when the endpoint serves it as text/plain', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => response([
+      '{"type":"text","delta":"Hello "}\n',
+      '{"type":"text","delta":"world"}\n{"type":"done"}\n',
+    ], 200, { 'content-type': 'text/plain; charset=utf-8' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true, complete: true, parts: [
+        { kind: 'text', text: 'Hello ' },
+        { kind: 'text', text: 'world' },
+      ],
+    })
+    expect(chunks.at(-1)).toEqual({ type: 'done' })
+  })
+
   it('falls back to text for an untyped JSON-shaped body that is not an Ask event', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'])))
     const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
