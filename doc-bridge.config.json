@@ -291,10 +291,6 @@
       {
         "id": "registry",
         "llmsTxt": "https://registry.agentskit.io/llms.txt"
-      },
-      {
-        "id": "akos",
-        "llmsTxt": "https://akos.agentskit.io/llms.txt"
       }
     ]
   }

@@ -58,7 +58,7 @@ flowchart TD
 
   I25 --> I26["#26 AgentsKit Docs dogfood"]
   I26 --> I27["#27 Registry + Playbook dogfood"]
-  I6 --> I28["#28 AKOS extraction"]
+  I6 --> I28["#28 Private-reference extraction"]
   I9 --> I28
   I13 --> I28
   I21 --> I28
@@ -121,7 +121,7 @@ The diagram highlights the critical path. Individual issue bodies are authoritat
 
 - [#26 AgentsKit Docs migration](https://github.com/AgentsKit-io/agentskit-chat/issues/26)
 - [#27 Registry and Playbook migration](https://github.com/AgentsKit-io/agentskit-chat/issues/27)
-- [#28 AKOS generic copilot extraction](https://github.com/AgentsKit-io/agentskit-chat/issues/28) — HITL
+- [#28 Private-reference capability extraction](https://github.com/AgentsKit-io/agentskit-chat/issues/28) — HITL
 - [#29 Accessibility and platform-conformance gates](https://github.com/AgentsKit-io/agentskit-chat/issues/29)
 - [#30 v0 documentation and release](https://github.com/AgentsKit-io/agentskit-chat/issues/30) — HITL
 
