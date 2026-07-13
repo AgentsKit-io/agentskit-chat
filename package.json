@@ -10,12 +10,15 @@
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
     "lint": "pnpm -r --if-present lint",
     "test": "pnpm -r --workspace-concurrency=1 --if-present test",
+    "test:conformance": "vitest run tests/conformance-gate.test.ts",
     "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
     "test:e2e": "playwright test",
     "docs:bridge:index": "ak-docs index",
     "docs:bridge:query": "ak-docs query",
     "docs:bridge:gate": "ak-docs gate run",
-    "catalog:report": "pnpm --filter @agentskit/chat build && node scripts/generate-catalog-report.mjs"
+    "catalog:report": "pnpm --filter @agentskit/chat build && node scripts/generate-catalog-report.mjs",
+    "conformance:gate": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --check",
+    "conformance:report": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --write"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.0.2",
@@ -23,7 +26,8 @@
     "@vitest/coverage-v8": "^4.1.9",
     "node-pty": "^1.1.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "zod": "^4.3.6"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["node-pty"]

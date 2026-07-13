@@ -4,8 +4,8 @@ import { resolve } from 'node:path'
 const renderers = ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']
 const support = await Promise.all(renderers.map(async renderer => ({ renderer, ...JSON.parse(await readFile(resolve(`packages/${renderer}/catalog-support.json`), 'utf8')) })))
 const { StandardComponentCatalog } = await import('../packages/chat/dist/index.js')
-const components = support[0].components
-const rows = components.map(component => `| ${component} | ${support.map(item => item.components.includes(component) ? 'yes' : 'no').join(' | ')} |`)
+const components = Object.keys(support[0].components)
+const rows = components.map(component => `| ${component} | ${support.map(item => item.components[component] === undefined ? 'no' : 'yes').join(' | ')} |`)
 const definitions = StandardComponentCatalog.map(component => {
   const props = component.propsSchema.shape === undefined ? 'schema-defined' : Object.keys(component.propsSchema.shape).join(', ')
   const events = component.events.length === 0 ? 'none' : component.events.map(event => `${event.name} (${event.value})`).join(', ')

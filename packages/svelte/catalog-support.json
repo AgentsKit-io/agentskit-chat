@@ -1,3 +1,3 @@
 {
-  "components": ["button-group", "choice-list", "form", "confirmation", "progress", "source-list", "link-card", "error-notice", "tool-call", "approval-request", "table", "file-attachment"]
+  "components": { "button-group": ["select"], "choice-list": ["select"], "form": ["submit"], "confirmation": ["confirm", "cancel"], "progress": [], "source-list": ["open"], "link-card": ["open"], "error-notice": ["retry"], "tool-call": [], "approval-request": ["approve", "deny"], "table": [], "file-attachment": ["open"] }
 }

@@ -153,9 +153,10 @@ describe('standard component catalog', () => {
 
   it('requires every native renderer to declare complete parity', async () => {
     const report = await readFile(join(process.cwd(), '../../docs/components/catalog.generated.md'), 'utf8')
+    const expected = Object.fromEntries(StandardComponentCatalog.map(component => [component.key, component.events?.map(event => event.name) ?? []]))
     for (const renderer of ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']) {
-      const support = JSON.parse(await readFile(join(process.cwd(), `../${renderer}/catalog-support.json`), 'utf8')) as { components: string[] }
-      expect(support.components).toEqual(STANDARD_COMPONENT_KEYS)
+      const support = JSON.parse(await readFile(join(process.cwd(), `../${renderer}/catalog-support.json`), 'utf8')) as { components: Record<string, string[]> }
+      expect(support.components).toEqual(expected)
     }
     for (const component of STANDARD_COMPONENT_KEYS) expect(report).toContain(`| ${component} | yes | yes | yes | yes | yes | yes | yes |`)
   })

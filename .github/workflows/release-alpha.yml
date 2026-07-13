@@ -30,8 +30,13 @@ jobs:
           git fetch origin main
           git merge-base --is-ancestor "$GITHUB_SHA" origin/main
       - run: pnpm lint
+      - run: pnpm test:conformance
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm conformance:gate
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - run: pnpm test:pty
       - run: pnpm docs:bridge:gate
       - name: Pack public Web graph
         run: |
