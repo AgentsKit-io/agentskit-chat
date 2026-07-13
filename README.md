@@ -1,5 +1,7 @@
 # AgentsKit Chat
 
+External dogfood hosts use the immutable [alpha artifact channel](./docs/releases/alpha-dogfood.md). The stable v0 publication remains gated by the roadmap's dogfood and conformance milestones.
+
 Cross-framework application framework for building interactive agent experiences on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit).
 
 The project is currently in its architecture and planning phase. Its goal is to let teams define agent behavior once and deliver native chat experiences across React, Vue, Svelte, Solid, Angular, React Native, and Ink.

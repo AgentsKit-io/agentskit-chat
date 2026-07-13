@@ -9,7 +9,7 @@
     "build": "pnpm -r --if-present build",
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
     "lint": "pnpm -r --if-present lint",
-    "test": "pnpm -r --if-present test",
+    "test": "pnpm -r --workspace-concurrency=1 --if-present test",
     "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
     "test:e2e": "playwright test",
     "docs:bridge:index": "ak-docs index",

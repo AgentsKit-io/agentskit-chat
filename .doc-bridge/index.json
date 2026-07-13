@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "4f56d2c36e7484fbec28c3e0bdcf672e83b12954a1d5089864e9dbf5fc563dae",
+  "contentHash": "2b85b03857c9ca27b67fd0092e9edc60add4c270bf1400ec6734f8f9114191b0",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-13T00:36:49.377Z",
+  "generatedAt": "2026-07-13T00:48:06.826Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -170,6 +170,37 @@
     }
   ],
   "handoffs": {
+    "alpha-release": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "alpha-release",
+        "path": "docs/releases"
+      },
+      "startHere": "docs/for-agents/governance.md",
+      "readBeforeEditing": [
+        "docs/for-agents/governance.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "docs/releases"
+      ],
+      "checks": [
+        "pnpm lint",
+        "pnpm test",
+        "pnpm build",
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "releases/alpha-dogfood",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Immutable public prerelease artifacts for external dogfood hosts"
+      ]
+    },
     "angular": {
       "type": "agent-handoff",
       "schemaVersion": 1,
@@ -779,6 +810,7 @@
   },
   "lookup": {
     "packages": [
+      "alpha-release",
       "angular",
       "architecture",
       "chat",
@@ -802,6 +834,19 @@
       "vue"
     ],
     "ownership": {
+      "alpha-release": {
+        "id": "alpha-release",
+        "path": "docs/releases",
+        "checks": [
+          "pnpm lint",
+          "pnpm test",
+          "pnpm build",
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "Immutable public prerelease artifacts for external dogfood hosts",
+        "humanDoc": "releases/alpha-dogfood",
+        "agentDoc": "docs/for-agents/governance.md"
+      },
       "angular": {
         "id": "angular",
         "path": "packages/angular",
