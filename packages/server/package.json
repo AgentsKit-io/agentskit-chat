@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-server",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "Web-standard server handler for AgentsKit Chat applications.",
   "license": "MIT",
   "type": "module",

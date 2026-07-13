@@ -1,21 +1,21 @@
 # Alpha dogfood channel
 
-`v0.1.0-alpha.2` is the current public artifact channel used by the external Docs, Registry, and Playbook migrations before stable v0. It adds the shared Ask-service integration on top of the ordered assistant-content protocol introduced in `alpha.1`.
+`v0.1.0-alpha.3` is the current public artifact channel used by the external Docs, Registry, and Playbook migrations before stable v0. It adds the accepted deterministic answer plane and unified v1 response protocol on top of the shared Ask-service integration introduced in `alpha.2`.
 
 The GitHub prerelease contains npm-compatible tarballs and `SHA256SUMS` for `@agentskit/chat-protocol`, `@agentskit/chat`, `@agentskit/chat-react`, and `@agentskit/chat-server`. Consumers pin all required release asset URLs in their package manifest and lockfile. Because pnpm correctly rewrites `workspace:*` edges to the alpha semver while that semver is intentionally absent from npm, consumers must also redirect the two internal graph roots with `pnpm.overrides`:
 
 ```json
 {
   "dependencies": {
-    "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-protocol-0.1.0-alpha.2.tgz",
-    "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-0.1.0-alpha.2.tgz",
-    "@agentskit/chat-react": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-react-0.1.0-alpha.2.tgz",
-    "@agentskit/chat-server": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-server-0.1.0-alpha.2.tgz"
+    "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-protocol-0.1.0-alpha.3.tgz",
+    "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-0.1.0-alpha.3.tgz",
+    "@agentskit/chat-react": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-react-0.1.0-alpha.3.tgz",
+    "@agentskit/chat-server": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-server-0.1.0-alpha.3.tgz"
   },
   "pnpm": {
     "overrides": {
-      "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-protocol-0.1.0-alpha.2.tgz",
-      "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.2/agentskit-chat-0.1.0-alpha.2.tgz"
+      "@agentskit/chat-protocol": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-protocol-0.1.0-alpha.3.tgz",
+      "@agentskit/chat": "https://github.com/AgentsKit-io/agentskit-chat/releases/download/v0.1.0-alpha.3/agentskit-chat-0.1.0-alpha.3.tgz"
     }
   }
 }
