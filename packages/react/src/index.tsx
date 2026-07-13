@@ -2,6 +2,7 @@ import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSc
 import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
 import { decodeAssistantContent, decodeComponentFrame, isAssistantContentCandidate, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { AssistantContentPart } from '@agentskit/chat-protocol'
 import {
   ChatContainer,
   InputBar,
@@ -69,6 +70,16 @@ export interface StandardComponentProps {
   readonly manifest: ComponentManifest
   readonly onInteract: (event: ComponentInteractionEvent) => void
   readonly disabled?: boolean
+}
+
+const coalesceTextParts = (parts: readonly AssistantContentPart[]): readonly AssistantContentPart[] => {
+  const result: AssistantContentPart[] = []
+  for (const part of parts) {
+    const previous = result.at(-1)
+    if (part.kind === 'text' && previous?.kind === 'text') result[result.length - 1] = { kind: 'text', text: previous.text + part.text }
+    else result.push(part)
+  }
+  return result
 }
 
 const StandardForm = ({ frame, manifest, onInteract, disabled }: StandardComponentProps): ReactElement => {
@@ -201,7 +212,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
           {chat.messages.map(message => {
             const contentCandidate = message.role === 'assistant' && isAssistantContentCandidate(message.content)
             const content = contentCandidate ? decodeAssistantContent(message.content) : undefined
-            if (content?.ok) return <div key={message.id} data-ak-assistant-content="">{content.parts.map((part, index) => part.kind === 'text'
+            if (content?.ok) return <div key={message.id} data-ak-assistant-content="">{coalesceTextParts(content.parts).map((part, index) => part.kind === 'text'
               ? <MessageSlot key={`${message.id}:text:${index}`} message={{ ...message, content: part.text }} />
               : renderFrame(part.frame, `${message.id}:component:${index}`))}</div>
             if (content && !content.ok) return <p key={message.id} role="alert" data-ak-component-diagnostic={content.diagnostic.code}>{content.diagnostic.message}</p>

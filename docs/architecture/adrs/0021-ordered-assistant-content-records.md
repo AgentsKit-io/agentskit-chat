@@ -14,7 +14,7 @@ The composition boundary must remain incremental, inert under untrusted model te
 
 `@agentskit/chat-protocol` defines `agentskit.chat.content/1`, an ordered record stream stored inside one canonical AgentsKit assistant-message string. The stream starts with a reserved record-separator prefix. Each following newline-delimited JSON record is either bounded text, encoded by the host through `createAssistantContentEncoder`, or an existing fully validated `ComponentRenderFrame`.
 
-The encoder JSON-escapes text, so newlines, JSON, and protocol-like values from a model remain inert. The decoder exposes only complete records while a trailing record is still streaming, coalesces adjacent text for native message rendering, and enforces total-byte, record-count, text, props, fallback, and frame bounds. Malformed complete records and unsupported versions produce fixed safe diagnostics. Renderers resolve every component through the existing closed manifest and semantic fallback rules.
+The encoder JSON-escapes text, so newlines, JSON, and protocol-like values from a model remain inert. The decoder exposes only complete records while a trailing record is still streaming and enforces UTF-8 total-byte, record-count, text, props, fallback, and frame bounds. Renderers may coalesce adjacent validated text records for native message presentation. Malformed complete records and unsupported versions produce fixed safe diagnostics. Renderers resolve every component through the existing closed manifest and semantic fallback rules.
 
 Plain strings and whole-message component frames keep their existing behavior. The protocol does not replace AgentsKit messages, adapter chunks, controller state, cancellation, persistence, or transport.
 

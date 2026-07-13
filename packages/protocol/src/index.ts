@@ -154,7 +154,7 @@ export const decodeAssistantContent = (input: unknown): DecodeAssistantContentRe
   if (!input.startsWith(ASSISTANT_CONTENT_PREFIX)) {
     return assistantContentFailure('ASSISTANT_CONTENT_UNSUPPORTED_VERSION', 'Assistant content envelope uses an unsupported version.')
   }
-  if (input.length > ASSISTANT_CONTENT_MAX_BYTES) {
+  if (new TextEncoder().encode(input).byteLength > ASSISTANT_CONTENT_MAX_BYTES) {
     return assistantContentFailure('ASSISTANT_CONTENT_LIMIT_EXCEEDED', 'Assistant content envelope exceeds its safety limit.')
   }
 
@@ -173,12 +173,7 @@ export const decodeAssistantContent = (input: unknown): DecodeAssistantContentRe
       if (record === '') return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content record is invalid.')
       const parsed = AssistantContentPartSchema.safeParse(JSON.parse(record) as unknown)
       if (!parsed.success) return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content record is invalid.')
-      const previous = parts.at(-1)
-      if (previous?.kind === 'text' && parsed.data.kind === 'text') {
-        parts[parts.length - 1] = { kind: 'text', text: previous.text + parsed.data.text }
-      } else {
-        parts.push(parsed.data)
-      }
+      parts.push(parsed.data)
     }
     return { ok: true, parts: Object.freeze(parts), complete }
   } catch {
