@@ -3,6 +3,8 @@ import type { MemoryRecord, Message, TokenUsage } from '@agentskit/core'
 import { validateMemoryRecord } from '@agentskit/core/memory-validation'
 import { z } from 'zod'
 
+export * from './ask.js'
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
@@ -39,8 +41,8 @@ export const ASSISTANT_CONTENT_PROTOCOL = 'agentskit.chat.content' as const
 export const ASSISTANT_CONTENT_PROTOCOL_VERSION = 1 as const
 export const ASSISTANT_CONTENT_PREFIX = `\u001e${ASSISTANT_CONTENT_PROTOCOL}/${ASSISTANT_CONTENT_PROTOCOL_VERSION}\n` as const
 const ASSISTANT_CONTENT_PREFIX_ROOT = `\u001e${ASSISTANT_CONTENT_PROTOCOL}/`
-const ASSISTANT_CONTENT_MAX_BYTES = 262_144
-const ASSISTANT_CONTENT_MAX_RECORDS = 512
+export const ASSISTANT_CONTENT_MAX_BYTES = 262_144
+export const ASSISTANT_CONTENT_MAX_RECORDS = 512
 export const ComponentKeySchema = z.string().regex(/^[a-z][a-z0-9-]{0,63}$/)
 
 export const ComponentFallbackSchema = z.object({

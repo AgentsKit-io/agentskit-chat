@@ -108,7 +108,7 @@ Inspected AgentsKit Core canonical `Message` and `StreamChunk` contracts plus th
 
 ### Shared Ask service integration
 
-Docs, Registry, and Playbook use one Ask application-protocol adapter from `@agentskit/chat`. The reusable browser-memory gap was resolved first in AgentsKit [#1191](https://github.com/AgentsKit-io/agentskit/issues/1191), [PR #1192](https://github.com/AgentsKit-io/agentskit/pull/1192), and released as `@agentskit/memory@0.11.0`. AgentsKit Chat composes that public `createWebStorageMemory` seam and adds only bounded Ask event decoding, wire projection, safe citations, and host presentation composition. See [ADR-0022](./adrs/0022-shared-ask-service-integration.md).
+Docs, Registry, and Playbook use one Ask application-protocol adapter from `@agentskit/chat`. The reusable browser-memory gap was resolved first in AgentsKit [#1191](https://github.com/AgentsKit-io/agentskit/issues/1191), [PR #1192](https://github.com/AgentsKit-io/agentskit/pull/1192), and released as `@agentskit/memory@0.11.0`. AgentsKit Chat Protocol owns the versioned bounded event decoder; AgentsKit Chat composes the public `createWebStorageMemory` seam and adds only wire projection, safe citations, transport behavior, and host presentation composition. See [ADR-0022](./adrs/0022-shared-ask-service-integration.md).
 
 Fields are added to `ChatDefinition` only when a vertical issue demonstrates application-layer behavior not represented by `ChatConfig`. This avoids mirroring upstream configuration and reduces compatibility work.
 

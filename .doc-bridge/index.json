@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "5452a12e80c86fe7f455abd4f2ee989cdd8b3fb2c99bbdc4285214413a1a6618",
+  "contentHash": "42e209f398c233cde7aa3e562ae772e46e42bfcb8c6d572c8f19c5142ff6bbb4",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-13T13:39:48.572Z",
+  "generatedAt": "2026-07-13T13:58:13.895Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -110,7 +110,7 @@
       "title": "Protocol package handoff",
       "path": "docs/for-agents/packages/protocol.md",
       "description": "`packages/protocol` owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus.",
-      "body": "Protocol package handoff Ownership packages/protocol owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. It owns the application-session envelope schema and compatibility decoder, but not its storage implementation. The session envelope must never contain canonical messages; those remain in upstream ChatMemory . Read first - - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
+      "body": "Protocol package handoff Ownership packages/protocol owns the versioned turn and component wire envelopes, Zod schemas, encode/decode functions, safe diagnostics, bounded JSON validation, compatibility policy, and shared fixture corpus. It does not own the AgentsKit controller, StreamChunk , AgentEvent , a lifecycle reducer, transport, persistence, or renderer state. It owns the application-session envelope schema and compatibility decoder, but not its storage implementation. The session envelope must never contain canonical messages; those remain in upstream ChatMemory . It also owns the external Ask service v1 event schema, NDJSON bounds, and decoder. The fetch adapter, citation projection, and browser-memory composition remain in packages/chat . Read first - - - - - Compatibility guardrail Optional additive v1 fields are compatible. Required-field or semantic changes need v2, migration fixtures, and a new ADR. Never silently coerce versions or expose raw validator diagnostics. Delegate message-record validation to @agentskit/core/memory-validation . Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first. Checks"
     },
     {
       "id": "react-native",

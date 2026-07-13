@@ -1,30 +1,24 @@
 import type { AdapterFactory, ChatMemory, Message, StreamChunk } from '@agentskit/core'
 import { createWebStorageMemory, type WebStorageLike } from '@agentskit/memory/web-storage'
 import {
+  ASK_EVENT_MAX_BYTES,
+  ASSISTANT_CONTENT_MAX_BYTES,
+  ASSISTANT_CONTENT_MAX_RECORDS,
+  AskEventSchema,
   ComponentRenderFrameSchema,
   createAssistantContentEncoder,
+  decodeAskEvents,
   decodeAssistantContent,
   type AssistantContentPart,
+  type AskEvent,
+  type AskToolEvent,
   type ComponentRenderFrame,
 } from '@agentskit/chat-protocol'
-import { z } from 'zod'
 
-const MAX_NDJSON_BYTES = 1_048_576
 const MAX_TEXT_CHARS = 16_384
 const DEFAULT_CONNECTION_TIMEOUT_MS = 30_000
 const DEFAULT_ENDPOINT = 'https://ask.agentskit.io/v1/ask'
 
-const AskArgsSchema = z.record(z.string().max(128), z.unknown())
-
-export const AskEventSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('text'), delta: z.string().max(MAX_NDJSON_BYTES) }).strict(),
-  z.object({ type: z.literal('tool'), id: z.string().max(256), name: z.string().max(128), args: AskArgsSchema }).strict(),
-  z.object({ type: z.literal('done'), model: z.string().max(256).optional() }).strict(),
-  z.object({ type: z.literal('error'), message: z.string().min(1).max(4_096) }).strict(),
-])
-
-export type AskEvent = z.infer<typeof AskEventSchema>
-export type AskToolEvent = Extract<AskEvent, { readonly type: 'tool' }>
 export type AskToolProjector = (event: AskToolEvent) => ComponentRenderFrame | undefined
 
 export type AskProjection =
@@ -49,25 +43,7 @@ export interface AskMemoryOptions {
   readonly projectTool?: AskToolProjector
 }
 
-const byteLength = (value: string): number => new TextEncoder().encode(value).byteLength
-
-/** Decodes complete, runtime-validated Ask NDJSON records and retains one partial line. */
-export function decodeAskEvents(buffer: string): { readonly events: readonly AskEvent[]; readonly rest: string } {
-  if (byteLength(buffer) > MAX_NDJSON_BYTES) return { events: Object.freeze([]), rest: '' }
-  const lines = buffer.split('\n')
-  const rest = lines.pop() ?? ''
-  const events = lines.flatMap((line): AskEvent[] => {
-    const candidate = line.trim()
-    if (candidate === '' || byteLength(candidate) > MAX_NDJSON_BYTES) return []
-    try {
-      const parsed = AskEventSchema.safeParse(JSON.parse(candidate) as unknown)
-      return parsed.success ? [parsed.data] : []
-    } catch {
-      return []
-    }
-  })
-  return { events: Object.freeze(events), rest }
-}
+export { AskEventSchema, decodeAskEvents, type AskEvent, type AskToolEvent } from '@agentskit/chat-protocol'
 
 const safeId = (value: string, fallback: string): string => {
   const normalized = value.replace(/[^A-Za-z0-9._:-]/g, '-').slice(0, 128)
@@ -76,8 +52,10 @@ const safeId = (value: string, fallback: string): string => {
 
 const safeHref = (path: string, anchor?: string): string | undefined => {
   const fragment = anchor?.replace(/^#/, '')
-  if (/^\/(?!\/)/.test(path)) {
-    const url = new URL(path, 'https://agentskit.invalid')
+  const hasScheme = /^[A-Za-z][A-Za-z0-9+.-]*:/.test(path)
+  if (!hasScheme && !path.startsWith('//')) {
+    const url = new URL(path.startsWith('/') ? path : `/${path}`, 'https://agentskit.invalid')
+    if (url.origin !== 'https://agentskit.invalid') return undefined
     if (fragment !== undefined) url.hash = fragment
     const href = `${url.pathname}${url.search}${url.hash}`
     return href.length <= 2_048 ? href : undefined
@@ -164,9 +142,26 @@ const endpointWithParams = ({ endpoint = DEFAULT_ENDPOINT, corpus, persona }: As
   return relative ? `${url.pathname}${url.search}${url.hash}` : url.toString()
 }
 
-const encodeText = function* (encoder: ReturnType<typeof createAssistantContentEncoder>, text: string): Generator<StreamChunk> {
+type EncodeAssistantPart = (part: AssistantContentPart) => string
+
+const createBoundedAssistantEncoder = (): EncodeAssistantPart => {
+  const encoder = createAssistantContentEncoder()
+  let bytes = 0
+  let records = 0
+  return part => {
+    if (records >= ASSISTANT_CONTENT_MAX_RECORDS) throw new Error('Ask response exceeded the assistant content record limit.')
+    const encoded = encoder.encode(part)
+    const nextBytes = bytes + new TextEncoder().encode(encoded).byteLength
+    if (nextBytes > ASSISTANT_CONTENT_MAX_BYTES) throw new Error('Ask response exceeded the assistant content byte limit.')
+    bytes = nextBytes
+    records += 1
+    return encoded
+  }
+}
+
+const encodeText = function* (encode: EncodeAssistantPart, text: string): Generator<StreamChunk> {
   for (let offset = 0; offset < text.length; offset += MAX_TEXT_CHARS) {
-    yield { type: 'text', content: encoder.encode({ kind: 'text', text: text.slice(offset, offset + MAX_TEXT_CHARS) }) }
+    yield { type: 'text', content: encode({ kind: 'text', text: text.slice(offset, offset + MAX_TEXT_CHARS) }) }
   }
 }
 
@@ -179,7 +174,7 @@ export function createAskAdapter(options: AskAdapterOptions = {}): AdapterFactor
       return {
         abort: () => controller.abort(),
         async *stream(): AsyncIterableIterator<StreamChunk> {
-          const encoder = createAssistantContentEncoder()
+          const encode = createBoundedAssistantEncoder()
           try {
             const connection = new AbortController()
             const timeout = setTimeout(() => connection.abort(), DEFAULT_CONNECTION_TIMEOUT_MS)
@@ -199,20 +194,49 @@ export function createAskAdapter(options: AskAdapterOptions = {}): AdapterFactor
             const reader = response.body.getReader()
             const decoder = new TextDecoder()
             let buffer = ''
-            let mode: 'unknown' | 'ndjson' | 'text' = 'unknown'
+            const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+            let mode: 'unknown' | 'ndjson' | 'text' = contentType.includes('text/plain')
+              ? 'text'
+              : contentType.includes('ndjson')
+                ? 'ndjson'
+                : 'unknown'
+            let discardingOversizedLine = false
             while (true) {
               const result = await reader.read()
-              buffer += decoder.decode(result.value, { stream: !result.done })
-              if (byteLength(buffer) > MAX_NDJSON_BYTES) throw new Error('Ask response exceeded its safety limit.')
-              if (mode === 'unknown' && buffer.trimStart() !== '') mode = buffer.trimStart().startsWith('{') ? 'ndjson' : 'text'
+              let incoming = decoder.decode(result.value, { stream: !result.done })
+              if (discardingOversizedLine) {
+                const lineEnd = incoming.indexOf('\n')
+                if (lineEnd < 0) {
+                  if (result.done) break
+                  continue
+                }
+                incoming = incoming.slice(lineEnd + 1)
+                discardingOversizedLine = false
+              }
+              buffer += incoming
+              if (mode === 'unknown' && buffer.trimStart() !== '') {
+                if (!buffer.trimStart().startsWith('{')) mode = 'text'
+                else {
+                  const lineEnd = buffer.indexOf('\n')
+                  if (lineEnd >= 0 || result.done) {
+                    const firstLine = lineEnd >= 0 ? buffer.slice(0, lineEnd + 1) : `${buffer}\n`
+                    mode = decodeAskEvents(firstLine).events.length > 0 ? 'ndjson' : 'text'
+                  } else if (new TextEncoder().encode(buffer).byteLength > ASK_EVENT_MAX_BYTES) {
+                    buffer = ''
+                    discardingOversizedLine = true
+                  }
+                }
+              }
+              if (mode === 'unknown' && !result.done) continue
               if (mode === 'text') {
-                yield* encodeText(encoder, buffer)
+                yield* encodeText(encode, buffer)
                 buffer = ''
                 if (result.done) break
                 continue
               }
               const decoded = decodeAskEvents(result.done ? `${buffer}\n` : buffer)
               buffer = decoded.rest
+              discardingOversizedLine = decoded.discardedPartial
               for (const event of decoded.events) {
                 const projected = projectAskEvent(event, options.projectTool)
                 if (projected?.kind === 'error') {
@@ -225,9 +249,9 @@ export function createAskAdapter(options: AskAdapterOptions = {}): AdapterFactor
                   yield { type: 'done' }
                   return
                 }
-                if (projected?.kind === 'text') yield* encodeText(encoder, projected.text)
+                if (projected?.kind === 'text') yield* encodeText(encode, projected.text)
                 if (projected?.kind === 'component') {
-                  yield { type: 'text', content: encoder.encode({ kind: 'component', frame: projected.frame }) }
+                  yield { type: 'text', content: encode({ kind: 'component', frame: projected.frame }) }
                 }
               }
               if (result.done) break
@@ -248,16 +272,20 @@ const legacyContent = (record: Record<string, unknown>, projectTool?: AskToolPro
   const direct = typeof record.content === 'string' ? record.content : typeof record.text === 'string' ? record.text : undefined
   if (direct !== undefined) return direct
   if (record.role !== 'assistant' || !Array.isArray(record.parts)) return undefined
-  const encoder = createAssistantContentEncoder()
+  const encode = createBoundedAssistantEncoder()
   const encoded: string[] = []
   for (const candidate of record.parts) {
-    if (typeof candidate !== 'object' || candidate === null || Array.isArray(candidate)) return undefined
+    if (typeof candidate !== 'object' || candidate === null || Array.isArray(candidate)) continue
     const part = candidate as Record<string, unknown>
     let projected: AssistantContentPart | undefined
     if (part.kind === 'text' && typeof part.text === 'string') {
       if (part.text === '') continue
       for (let offset = 0; offset < part.text.length; offset += MAX_TEXT_CHARS) {
-        encoded.push(encoder.encode({ kind: 'text', text: part.text.slice(offset, offset + MAX_TEXT_CHARS) }))
+        try {
+          encoded.push(encode({ kind: 'text', text: part.text.slice(offset, offset + MAX_TEXT_CHARS) }))
+        } catch {
+          return encoded.join('')
+        }
       }
       continue
     } else if (part.kind === 'tool' && typeof part.id === 'string' && typeof part.name === 'string'
@@ -265,23 +293,27 @@ const legacyContent = (record: Record<string, unknown>, projectTool?: AskToolPro
       const result = projectAskEvent({ type: 'tool', id: part.id, name: part.name, args: part.args as Record<string, unknown> }, projectTool)
       if (result?.kind === 'text') projected = { kind: 'text', text: result.text }
       if (result?.kind === 'component') projected = { kind: 'component', frame: result.frame }
-    } else {
-      return undefined
+    } else continue
+    if (projected !== undefined) {
+      try {
+        encoded.push(encode(projected))
+      } catch {
+        return encoded.join('')
+      }
     }
-    if (projected !== undefined) encoded.push(encoder.encode(projected))
   }
-  return encoded.join('')
+  return encoded.length > 0 || record.parts.length === 0 ? encoded.join('') : undefined
 }
 
 const migrateLegacyMessages = (value: unknown, projectTool?: AskToolProjector): readonly Message[] | undefined => {
   if (!Array.isArray(value)) return undefined
   const messages: Message[] = []
   for (const [index, candidate] of value.entries()) {
-    if (typeof candidate !== 'object' || candidate === null || Array.isArray(candidate)) return undefined
+    if (typeof candidate !== 'object' || candidate === null || Array.isArray(candidate)) continue
     const record = candidate as Record<string, unknown>
-    if (record.role !== 'user' && record.role !== 'assistant') return undefined
+    if (record.role !== 'user' && record.role !== 'assistant') continue
     const content = legacyContent(record, projectTool)
-    if (content === undefined) return undefined
+    if (content === undefined) continue
     messages.push({
       id: safeId(typeof record.id === 'string' ? record.id : '', `legacy-${index + 1}`),
       role: record.role,
@@ -290,7 +322,7 @@ const migrateLegacyMessages = (value: unknown, projectTool?: AskToolProjector): 
       createdAt: new Date(index),
     })
   }
-  return messages
+  return messages.length > 0 || value.length === 0 ? messages : undefined
 }
 
 /** Composes Ask legacy migration over the released, validated Web Storage ChatMemory. */
@@ -298,7 +330,7 @@ export function createAskSessionMemory({
   key,
   legacyKeys = [],
   maxMessages = 20,
-  maxRecordBytes = MAX_NDJSON_BYTES,
+  maxRecordBytes = ASK_EVENT_MAX_BYTES,
   getStorage = () => {
     try {
       return typeof globalThis.sessionStorage === 'undefined' ? undefined : globalThis.sessionStorage

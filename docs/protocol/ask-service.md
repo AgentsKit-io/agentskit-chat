@@ -21,7 +21,9 @@ const definition = defineChat({
 })
 ```
 
-The adapter validates bounded NDJSON records at runtime, converts text and citations into one ordered canonical assistant-message string, and delegates message/controller behavior to AgentsKit. `answer` becomes text and `cite` becomes the standard `source-list` component. Unknown and malformed events are inert. If an endpoint returns plain text instead of NDJSON, it is safely encoded as text records.
+`@agentskit/chat-protocol` owns the v1 Ask event schema, bounds, and NDJSON decoder. The adapter consumes that runtime boundary, converts text and citations into one ordered canonical assistant-message string, and delegates message/controller behavior to AgentsKit. `answer` becomes text and `cite` becomes the standard `source-list` component. Unknown and malformed events are inert. If an endpoint returns plain text instead of NDJSON, it is safely encoded as text records.
+
+Transport chunk boundaries do not affect decoding: limits apply to individual Ask records, the retained partial line, and a fixed per-decode record budget. An oversized partial line is discarded through its next newline so its suffix cannot become a separate event. The resulting assistant message also enforces the ordered-content byte and record limits before emitting a chunk, so a long service response cannot create canonical content that its renderers or memory reject.
 
 `endpoint`, `corpus`, and `persona` are the transport configuration seam. Relative endpoints remain relative for same-origin proxies. The 30-second deadline covers connection establishment only; after headers arrive, the stream continues until completion or the host calls the upstream stop/abort lifecycle.
 

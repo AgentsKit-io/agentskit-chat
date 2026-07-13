@@ -12,9 +12,8 @@ The Ask wire protocol is application-specific, so it does not belong in AgentsKi
 
 ## Decision
 
-`@agentskit/chat` owns one public Ask integration composed of:
+`@agentskit/chat-protocol` owns the versioned, bounded Ask event schema and NDJSON decoder. `@agentskit/chat` owns one public integration composed of:
 
-- a bounded, runtime-validated Ask event/NDJSON boundary;
 - an `AdapterFactory` that maps Ask events into the ordered assistant-content protocol;
 - safe `cite` projection into the standard `source-list` component;
 - a validated callback for host-specific presentation tools;
@@ -42,4 +41,4 @@ The connection deadline is cleared as soon as response headers arrive. A healthy
 
 ## Upstream adoption
 
-AgentsKit Core continues to own `AdapterFactory`, `StreamSource`, `Message`, ordered controller reduction, and `ChatMemory`. AgentsKit Memory owns validated Web Storage persistence. AgentsKit Chat adds only the Ask application protocol and projection required by its dogfood hosts. No generic upstream primitive is copied.
+AgentsKit Core continues to own `AdapterFactory`, `StreamSource`, `Message`, ordered controller reduction, and `ChatMemory`. AgentsKit Memory owns validated Web Storage persistence. AgentsKit Chat Protocol owns versioned wire validation; AgentsKit Chat adds only the Ask integration and projection required by its dogfood hosts. No generic upstream primitive is copied.

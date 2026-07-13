@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   createAskAdapter,
   createAskSessionMemory,
-  decodeAskEvents,
   projectAskEvent,
   projectAskMessages,
   type AskToolProjector,
@@ -21,13 +20,13 @@ const read = async (source: ReturnType<AdapterFactory['createSource']>): Promise
   return chunks
 }
 
-const response = (chunks: readonly string[], status = 200): Response => new Response(new ReadableStream({
+const response = (chunks: readonly string[], status = 200, headers?: HeadersInit): Response => new Response(new ReadableStream({
   start(controller) {
     const encoder = new TextEncoder()
     for (const chunk of chunks) controller.enqueue(encoder.encode(chunk))
     controller.close()
   },
-}), { status })
+}), { status, headers })
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -36,24 +35,12 @@ afterEach(() => {
 })
 
 describe('Ask event boundary', () => {
-  it('decodes only complete, valid and bounded records', () => {
-    const decoded = decodeAskEvents([
-      JSON.stringify({ type: 'text', delta: 'hello' }),
-      '{bad}',
-      JSON.stringify({ type: 'future', value: true }),
-      JSON.stringify({ type: 'done', model: 'test' }),
-      '{"type":"text"',
-    ].join('\n'))
-    expect(decoded.events).toEqual([{ type: 'text', delta: 'hello' }, { type: 'done', model: 'test' }])
-    expect(decoded.rest).toBe('{"type":"text"')
-    expect(decodeAskEvents('x'.repeat(1_048_577))).toEqual({ events: [], rest: '' })
-  })
-
   it('projects ordered text and safe source-list frames', () => {
     expect(projectAskEvent({ type: 'text', delta: 'Answer' })).toEqual({ kind: 'text', text: 'Answer' })
     expect(projectAskEvent({ type: 'tool', id: 'cite/1', name: 'cite', args: { sources: [
       { title: 'Guide', path: '/docs/guide', anchor: 'first step' },
       { title: 'External', path: 'https://example.com/docs' },
+      { title: 'Bare path', path: 'docs/bare' },
       { title: 'Protocol relative', path: '//evil.example' },
       { title: 'Script', path: 'javascript:alert(1)' },
       { title: '', path: '/empty' },
@@ -66,6 +53,7 @@ describe('Ask event boundary', () => {
         props: { label: 'Sources', sources: [
           { id: 'source-1', title: 'Guide', url: '/docs/guide#first%20step' },
           { id: 'source-2', title: 'External', url: 'https://example.com/docs' },
+          { id: 'source-3', title: 'Bare path', url: '/docs/bare' },
         ] },
       }),
     })
@@ -120,6 +108,66 @@ describe('Ask adapter', () => {
     expect(chunks.at(-1)).toEqual({ type: 'done' })
   })
 
+  it('uses a declared plain-text content type when the body begins with JSON syntax', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'], 200, { 'content-type': 'text/plain' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
+    })
+  })
+
+  it('falls back to text for an untyped JSON-shaped body that is not an Ask event', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'])))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
+    })
+  })
+
+  it('falls back to text for application/json that is not an Ask event', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'], 200, { 'content-type': 'application/json' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
+    })
+  })
+
+  it('discards the remainder of an oversized NDJSON line across transport chunks', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => response([
+      'x'.repeat(1_048_577),
+      '{"type":"text","delta":"injected"}\n',
+      '{"type":"text","delta":"safe"}\n{"type":"done"}\n',
+    ], 200, { 'content-type': 'application/x-ndjson' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true, complete: true, parts: [{ kind: 'text', text: 'safe' }],
+    })
+  })
+
+  it('stops before producing an invalid oversized assistant-content envelope', async () => {
+    const records = Array.from({ length: 40 }, () => JSON.stringify({ type: 'text', delta: 'x'.repeat(8_192) })).join('\n')
+    vi.stubGlobal('fetch', vi.fn(async () => response([`${records}\n`], 200, { 'content-type': 'application/x-ndjson' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    expect(chunks.at(-1)).toEqual({ type: 'error', content: 'Ask response exceeded the assistant content byte limit.' })
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    expect(decodeAssistantContent(content).ok).toBe(true)
+    expect(new TextEncoder().encode(content).byteLength).toBeLessThanOrEqual(262_144)
+  })
+
+  it('enforces the cumulative assistant-content record limit', async () => {
+    const records = `${JSON.stringify({ type: 'text', delta: 'x' })}\n`.repeat(513)
+    vi.stubGlobal('fetch', vi.fn(async () => response([records], 200, { 'content-type': 'application/x-ndjson' })))
+    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    expect(chunks.at(-1)).toEqual({ type: 'error', content: 'Ask response exceeded the assistant content record limit.' })
+    const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
+    const decoded = decodeAssistantContent(content)
+    expect(decoded.ok && decoded.parts).toHaveLength(512)
+  })
+
   it('clears the connection deadline after headers while a healthy stream continues', async () => {
     vi.useFakeTimers()
     vi.stubGlobal('fetch', vi.fn(async () => new Response(new ReadableStream({
@@ -148,14 +196,10 @@ describe('Ask adapter', () => {
     await expect(reading).resolves.toEqual([])
   })
 
-  it('reports HTTP and bounded-response failures as error chunks', async () => {
+  it('reports HTTP failures as error chunks', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['failure'], 503)))
     await expect(read(createAskAdapter().createSource({ messages: [] }))).resolves.toEqual([
       { type: 'error', content: 'Ask request failed (503).' },
-    ])
-    vi.stubGlobal('fetch', vi.fn(async () => response(['x'.repeat(1_048_577)])))
-    await expect(read(createAskAdapter().createSource({ messages: [] }))).resolves.toEqual([
-      { type: 'error', content: 'Ask response exceeded its safety limit.' },
     ])
   })
 
@@ -191,11 +235,14 @@ describe('Ask session memory', () => {
       { id: 'u/1', role: 'user', text: 'Question' },
       { role: 'assistant', parts: [
         { kind: 'text', text: 'Answer' },
+        { kind: 'future', value: true },
         { kind: 'text', text: 'x'.repeat(20_000) },
         { kind: 'tool', id: 'cite', name: 'cite', args: { sources: [{ title: 'Docs', path: '/docs' }] } },
       ] },
       { role: 'user', content: 'Again' },
       { role: 'assistant', content: 'Done' },
+      { role: 'assistant', parts: [{ kind: 'future', value: true }] },
+      { role: 'future', content: 'Ignore me' },
     ]))
     const memory = createAskSessionMemory({ key: 'canonical-v2', legacyKeys: ['legacy'], getStorage: () => storage })
     const loaded = await memory.load()
