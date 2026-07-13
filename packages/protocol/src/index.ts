@@ -4,6 +4,7 @@ import { validateMemoryRecord } from '@agentskit/core/memory-validation'
 import { z } from 'zod'
 
 export * from './ask.js'
+export * from './backend.js'
 export * from './deterministic.js'
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

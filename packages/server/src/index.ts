@@ -5,6 +5,10 @@ import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
 import { createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TurnEventSchema } from '@agentskit/chat-protocol'
 import type { TurnDiagnostic } from '@agentskit/chat-protocol'
 
+import { readBoundedJson, withAbort } from './internal.js'
+
+export * from './ask-service.js'
+
 export type ChatHandler = (request: Request) => Promise<Response>
 export type AuthenticationResult<TContext> = { readonly ok: true; readonly context: TContext } | { readonly ok: false; readonly response: Response }
 
@@ -29,7 +33,6 @@ export class ChatHandlerError extends Error {
 }
 
 const encoder = new TextEncoder()
-const decoder = new TextDecoder()
 const json = (diagnostic: TurnDiagnostic, status: number): Response => new Response(JSON.stringify({ error: diagnostic }), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
 })
@@ -39,39 +42,8 @@ const safeError = (error: unknown): { readonly status: number; readonly diagnost
     ? { status: 409, diagnostic: { version: 1, code: 'SESSION_CONFLICT', message: 'Another turn is active for this session.', retryable: true } }
     : { status: 500, diagnostic: { version: 1, code: 'SERVER_INTERNAL', message: 'The chat request failed.', retryable: true } }
 const fail = (status: number, code: string, message: string, retryable = false): never => { throw new ChatHandlerError({ status, code, message, retryable }) }
-const withSignal = async <T>(operation: Promise<T> | T, signal: AbortSignal): Promise<T> => {
-  if (signal.aborted) throw signal.reason
-  let rejectAbort: ((reason?: unknown) => void) | undefined
-  const abort = (): void => rejectAbort?.(signal.reason)
-  const aborted = new Promise<never>((_resolve, reject) => { rejectAbort = reject })
-  signal.addEventListener('abort', abort, { once: true })
-  try { return await Promise.race([Promise.resolve(operation), aborted]) }
-  finally { signal.removeEventListener('abort', abort) }
-}
-
 const readBody = async (request: Request, maxBodyBytes: number, signal: AbortSignal): Promise<unknown> => {
-  const declared = Number(request.headers.get('content-length'))
-  if (Number.isFinite(declared) && declared > maxBodyBytes) fail(413, 'REQUEST_TOO_LARGE', 'Request body is too large.')
-  const reader = request.body?.getReader()
-  if (!reader) return fail(400, 'REQUEST_INVALID_JSON', 'Request body is not valid JSON.')
-  const chunks: Uint8Array[] = []
-  let size = 0
-  try {
-    while (true) {
-      const result = await withSignal(reader.read(), signal)
-      if (result.done) break
-      size += result.value.byteLength
-      if (size > maxBodyBytes) {
-        await reader.cancel()
-        return fail(413, 'REQUEST_TOO_LARGE', 'Request body is too large.')
-      }
-      chunks.push(result.value)
-    }
-  } finally { reader.releaseLock() }
-  const bytes = new Uint8Array(size)
-  let offset = 0
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
-  try { return JSON.parse(decoder.decode(bytes)) as unknown } catch { return fail(400, 'REQUEST_INVALID_JSON', 'Request body is not valid JSON.') }
+  return readBoundedJson(request, maxBodyBytes, signal, fail)
 }
 
 const snapshotStatus = (state: ChatState): 'idle' | 'streaming' | 'complete' | 'error' =>
@@ -94,20 +66,20 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) fail(415, 'REQUEST_UNSUPPORTED_MEDIA_TYPE', 'Content-Type must be application/json.')
       let context: TContext | undefined
       if (options.authenticate) {
-        const authenticated = await withSignal(options.authenticate(request, signal), signal)
+        const authenticated = await withAbort(options.authenticate(request, signal), signal)
         if (!authenticated.ok) return authenticated.response
         context = authenticated.context
       }
       const decoded = decodeTurnEvent(await readBody(request, maxBodyBytes, signal))
       if (!decoded.ok || decoded.event.event !== 'client.turn.submit') return fail(400, 'REQUEST_INVALID_EVENT', 'Request body must be a valid turn submission.')
       const submission = decoded.event
-      const definition = await withSignal(options.resolveDefinition(context, submission.sessionId, signal), signal)
+      const definition = await withAbort(options.resolveDefinition(context, submission.sessionId, signal), signal)
       const storage = options.sessionStorage(context, signal)
-      const session = await withSignal(resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal, ...(options.now ? { now: options.now } : {}) }), signal)
-      if (!(await withSignal(session.claimTurn(submission.turnId, leaseMs, signal), signal))) return json({ version: 1, code: 'SESSION_BUSY', message: 'Another turn is active for this session.', retryable: true }, 409)
+      const session = await withAbort(resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal, ...(options.now ? { now: options.now } : {}) }), signal)
+      if (!(await withAbort(session.claimTurn(submission.turnId, leaseMs, signal), signal))) return json({ version: 1, code: 'SESSION_BUSY', message: 'Another turn is active for this session.', retryable: true }, 409)
 
       const memory = definition.chat.memory
-      const loaded = memory ? await withSignal(memory.load({ signal }), signal) : definition.chat.initialMessages ?? []
+      const loaded = memory ? await withAbort(memory.load({ signal }), signal) : definition.chat.initialMessages ?? []
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
       const controller = createChatController(session.updateChat({ ...chat, initialMessages: [...messages] }))
@@ -132,14 +104,14 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         unsubscribe(); signal.removeEventListener('abort', abort)
         if (stop && !signal.aborted) controller.stop()
         const settleSignal = AbortSignal.timeout(cleanupTimeoutMs)
-        await withSignal(send.catch(() => undefined), settleSignal).catch(() => undefined)
+        await withAbort(send.catch(() => undefined), settleSignal).catch(() => undefined)
         const saveSignal = AbortSignal.timeout(cleanupTimeoutMs)
         let outcome: 'completed' | 'indeterminate' = 'completed'
-        try { await withSignal(memory?.save(controller.getState().messages, { signal: saveSignal }), saveSignal) }
+        try { await withAbort(memory?.save(controller.getState().messages, { signal: saveSignal }), saveSignal) }
         catch (error) { outcome = 'indeterminate'; throw error }
         finally {
           const releaseSignal = AbortSignal.timeout(cleanupTimeoutMs)
-          await withSignal(session.releaseTurn(submission.turnId, outcome, releaseSignal), releaseSignal)
+          await withAbort(session.releaseTurn(submission.turnId, outcome, releaseSignal), releaseSignal)
         }
       }
       const diagnosticLine = (code: string, message: string): Uint8Array => {
@@ -163,7 +135,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
             }
             if (pending) {
               const state = pending; pending = undefined
-              await withSignal(session.persist(signal), signal)
+              await withAbort(session.persist(signal), signal)
               const event = createSnapshotEvent({
                 eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId, sequence: session.getCursor(), emittedAt: (options.now?.() ?? new Date()).toISOString(),
                 messages: state.messages, status: snapshotStatus(state), usage: state.usage, lineage: { operation: 'submit' },

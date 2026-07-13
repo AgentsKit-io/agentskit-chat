@@ -47,6 +47,12 @@ Mounts chat definitions onto Web-standard handlers and provides context, authent
 
 The first server slice is `@agentskit/chat-server`: a Web `Request`/`Response` handler that authenticates before parsing, drives the upstream controller, and streams versioned full snapshots as NDJSON. Framework HTTP adapters remain thin host bridges.
 
+The trusted Ask vertical composes deterministic escalation with authenticated
+site configuration, injected local/federated AgentsKit retrieval, cited Ask
+events, CAS persistence, cancellation, and privacy-safe baseline metrics. The
+same public contracts run hosted or self-hosted
+([ADR-0026](./adrs/0026-trusted-ask-backend-vertical.md)).
+
 ### Native renderers
 
 React, Vue, Svelte, Solid, Angular, React Native, and Ink renderers consume the protocol and the matching AgentsKit package. Custom visual implementations are platform-specific; component identity, props schema, actions, and fallback behavior are shared.

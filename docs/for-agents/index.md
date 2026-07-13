@@ -11,6 +11,7 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Registry/Playbook dogfood](../dogfood/registry-playbook.md): live-host ownership correction, migration boundary, and parity evidence.
 - [Chat package](./packages/chat.md): minimal framework-neutral `defineChat` contract.
 - [Protocol package](./packages/protocol.md): versioned turn events, compatibility, and conformance fixtures.
+- [Trusted Ask backend](../backend.md): hosted/self-hosted site policy, cited retrieval, persistence, and metrics.
 - [React package](./packages/react.md): native React shell over `@agentskit/react`.
 - [Vue package](./packages/vue.md): native Vue shell over `@agentskit/vue`.
 - [Angular package](./packages/angular.md): standalone Angular shell over `@agentskit/angular`.
