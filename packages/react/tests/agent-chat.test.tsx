@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AgentChat, ChoiceList, StandardComponent, toChatCssVariables } from '../src/index.js'
 import { ChoiceListComponent, StandardComponentCatalog, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, withActionPolicy } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { ASSISTANT_CONTENT_PREFIX, createAssistantContentEncoder } from '../../protocol/src/index.js'
 
 afterEach(() => {
   cleanup()
@@ -46,6 +47,53 @@ const adapter = (fail = false): AdapterFactory => ({
 })
 
 describe('AgentChat', () => {
+  it('renders streamed text and a SourceList in order with stable interaction identity', async () => {
+    const sourceFrame = standardComponentFrameFixtures.find(frame => frame.componentKey === 'source-list')!
+    const onInteract = vi.fn()
+    const composite: AdapterFactory = {
+      createSource: () => {
+        const encoder = createAssistantContentEncoder()
+        return {
+          async *stream() {
+            yield { type: 'text' as const, content: encoder.encode({ kind: 'text', text: 'Grounded ' }) }
+            yield { type: 'text' as const, content: encoder.encode({ kind: 'text', text: 'answer.' }) }
+            yield { type: 'text' as const, content: encoder.encode({ kind: 'component', frame: sourceFrame }) }
+            yield { type: 'done' as const }
+          },
+          abort() {},
+        }
+      },
+    }
+    render(<AgentChat definition={defineChat({ id: 'composite', chat: { adapter: composite }, components: defineComponentManifest(StandardComponentCatalog) })} onComponentInteract={onInteract} />)
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { target: { value: 'sources' } })
+    fireEvent.submit(input.closest('form')!)
+    expect(await screen.findByText('Grounded answer.')).toBeTruthy()
+    const link = await screen.findByRole('link')
+    expect(screen.getByText('Grounded answer.').compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    fireEvent.click(link)
+    expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ type: 'interact', instanceId: sourceFrame.instanceId, event: 'open' }))
+  })
+
+  it('hides partial transport and diagnoses malformed composite records accessibly', () => {
+    const initialMessages = [
+      buildMessage({ role: 'assistant', content: '\u001eagentskit.chat.con' }),
+      buildMessage({ role: 'assistant', content: `${ASSISTANT_CONTENT_PREFIX}{bad}\n` }),
+    ]
+    render(<AgentChat definition={{ id: 'partial-composite', chat: { adapter: adapter(), initialMessages } }} />)
+    expect(screen.queryByText(/agentskit\.chat\.con/)).toBeNull()
+    expect(screen.getByRole('alert').textContent).toBe('Assistant content record is invalid.')
+  })
+
+  it('uses semantic fallback for an unknown composite component', () => {
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'component', frame: unknownComponentFrame })
+    render(<AgentChat definition={{
+      id: 'unknown-composite', components: defineComponentManifest([ChoiceListComponent]),
+      chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content })] },
+    }} />)
+    expect(screen.getByText('[unsupported visual: choice-list] Choose Documentation or Demo.')).toBeTruthy()
+  })
   it('renders the complete standard catalog and emits validated interactions', () => {
     const manifest = defineComponentManifest(StandardComponentCatalog)
     const onInteract = vi.fn()

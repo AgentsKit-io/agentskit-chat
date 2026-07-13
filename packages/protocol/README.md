@@ -10,3 +10,5 @@ if (!result.ok) return result.diagnostic
 ```
 
 The package transports snapshots of canonical AgentsKit state. It does not implement a controller, stream reducer, transport, or persistence layer.
+
+For one canonical assistant message containing both streamed prose and registered application components, use `createAssistantContentEncoder` and decode with `decodeAssistantContent`. Every text chunk must pass through the encoder; raw model output must never be appended to the envelope. See the [v1 protocol guide](../../docs/protocol/v1.md#ordered-assistant-content).

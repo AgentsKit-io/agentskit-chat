@@ -3,11 +3,15 @@ import { describe, expect, it } from 'vitest'
 
 import { invalidComponentFrameFixtures, invalidTurnEventFixtures, validChoiceListFrame, validTurnEventFixtures } from '../src/fixtures.js'
 import {
+  ASSISTANT_CONTENT_PREFIX,
+  AssistantContentPartSchema,
+  createAssistantContentEncoder,
   createInteractionEvent,
   createSelectionEvent,
   createSnapshotEvent,
   createTurnSnapshotCursor,
   decodeComponentFrame,
+  decodeAssistantContent,
   decodeSessionSnapshot,
   decodeTurnEvent,
   encodeTurnEvent,
@@ -313,5 +317,78 @@ describe('v1 component protocol', () => {
       ...validChoiceListFrame,
       fallback: { kind: 'choice-list', summary: 'x'.repeat(4_097) },
     }).ok).toBe(false)
+  })
+})
+
+describe('v1 assistant content protocol', () => {
+  it('round-trips ordered text and component parts while keeping text inert', () => {
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'text', text: `Hello\n${ASSISTANT_CONTENT_PREFIX}{"kind":"component"}` })
+      + encoder.encode({ kind: 'component', frame: validChoiceListFrame })
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true,
+      complete: true,
+      parts: [
+        { kind: 'text', text: `Hello\n${ASSISTANT_CONTENT_PREFIX}{"kind":"component"}` },
+        { kind: 'component', frame: validChoiceListFrame },
+      ],
+    })
+  })
+
+  it('preserves completed text records and ignores an incomplete trailing record', () => {
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'text', text: 'Grounded ' })
+      + encoder.encode({ kind: 'text', text: 'answer.' })
+      + '{"kind":"component"'
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: true,
+      complete: false,
+      parts: [{ kind: 'text', text: 'Grounded ' }, { kind: 'text', text: 'answer.' }],
+    })
+  })
+
+  it.each(['\u001e', '\u001eagentskit.chat.con', '\u001eagentskit.chat.content/1'])('keeps a partial prefix inert', (content) => {
+    expect(decodeAssistantContent(content)).toEqual({ ok: true, parts: [], complete: false })
+  })
+
+  it('returns safe diagnostics for invalid, unsupported, and bounded envelopes', () => {
+    expect(decodeAssistantContent(`${ASSISTANT_CONTENT_PREFIX}{bad}\n`)).toEqual({
+      ok: false,
+      diagnostic: { code: 'ASSISTANT_CONTENT_INVALID_RECORD', message: 'Assistant content record is invalid.', retryable: false },
+    })
+    expect(decodeAssistantContent(`\u001eagentskit.chat.content/2\n`)).toEqual({
+      ok: false,
+      diagnostic: { code: 'ASSISTANT_CONTENT_UNSUPPORTED_VERSION', message: 'Assistant content envelope uses an unsupported version.', retryable: false },
+    })
+    expect(decodeAssistantContent(ASSISTANT_CONTENT_PREFIX + 'x'.repeat(262_145))).toEqual({
+      ok: false,
+      diagnostic: { code: 'ASSISTANT_CONTENT_LIMIT_EXCEEDED', message: 'Assistant content envelope exceeds its safety limit.', retryable: false },
+    })
+  })
+
+  it('enforces the total limit in UTF-8 bytes', () => {
+    const encoder = createAssistantContentEncoder()
+    let content = ''
+    for (let index = 0; index < 9; index += 1) content += encoder.encode({ kind: 'text', text: '😀'.repeat(8_192) })
+    expect(content.length).toBeLessThan(262_144)
+    expect(decodeAssistantContent(content)).toEqual({
+      ok: false,
+      diagnostic: { code: 'ASSISTANT_CONTENT_LIMIT_EXCEEDED', message: 'Assistant content envelope exceeds its safety limit.', retryable: false },
+    })
+  })
+
+  it('returns only parts that still satisfy the exported part schema', () => {
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'text', text: 'a'.repeat(16_384) })
+      + encoder.encode({ kind: 'text', text: 'b'.repeat(16_384) })
+    const decoded = decodeAssistantContent(content)
+    expect(decoded.ok).toBe(true)
+    if (decoded.ok) expect(decoded.parts.every(part => AssistantContentPartSchema.safeParse(part).success)).toBe(true)
+  })
+
+  it('rejects invalid parts at the encoder boundary', () => {
+    const encoder = createAssistantContentEncoder()
+    expect(() => encoder.encode({ kind: 'text', text: '' })).toThrow()
+    expect(() => encoder.encode({ kind: 'component', frame: { ...validChoiceListFrame, version: 2 } })).toThrow()
   })
 })

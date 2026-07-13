@@ -102,6 +102,10 @@ export const defineChat = <const T extends ChatDefinition>(definition: T): T => 
 
 The React binding passes `definition.chat` to `useChat` from `@agentskit/react`. It does not instantiate a custom controller, translate lifecycle states, wrap the adapter protocol, or copy upstream components.
 
+### Ordered assistant content
+
+Inspected AgentsKit Core canonical `Message` and `StreamChunk` contracts plus the official framework bindings. AgentsKit Chat keeps the single canonical string message and upstream stream reducer, and adds only a bounded application-level record envelope for ordering text with its closed registered components. Text records are host-encoded and inert; component records reuse `ComponentRenderFrame` validation and manifest resolution. No upstream message, controller, stream, persistence, or generative-UI primitive is copied. See [ADR-0021](./adrs/0021-ordered-assistant-content-records.md).
+
 Fields are added to `ChatDefinition` only when a vertical issue demonstrates application-layer behavior not represented by `ChatConfig`. This avoids mirroring upstream configuration and reduces compatibility work.
 
 ## Planned application-only extensions

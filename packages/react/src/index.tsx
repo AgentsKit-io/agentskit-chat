@@ -1,7 +1,8 @@
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, STANDARD_COMPONENT_KEYS, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
+import { decodeAssistantContent, decodeComponentFrame, isAssistantContentCandidate, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { AssistantContentPart } from '@agentskit/chat-protocol'
 import {
   ChatContainer,
   InputBar,
@@ -69,6 +70,16 @@ export interface StandardComponentProps {
   readonly manifest: ComponentManifest
   readonly onInteract: (event: ComponentInteractionEvent) => void
   readonly disabled?: boolean
+}
+
+const coalesceTextParts = (parts: readonly AssistantContentPart[]): readonly AssistantContentPart[] => {
+  const result: AssistantContentPart[] = []
+  for (const part of parts) {
+    const previous = result.at(-1)
+    if (part.kind === 'text' && previous?.kind === 'text') result[result.length - 1] = { kind: 'text', text: previous.text + part.text }
+    else result.push(part)
+  }
+  return result
 }
 
 const StandardForm = ({ frame, manifest, onInteract, disabled }: StandardComponentProps): ReactElement => {
@@ -182,22 +193,33 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     setActionError(undefined)
     void operation.catch(error => setActionError(error instanceof Error ? error : new Error('Lifecycle operation failed.')))
   }
+  const renderFrame = (frame: ComponentRenderFrame, key: string): ReactElement => {
+    const manifest = definition.components
+    const resolved = manifest === undefined ? undefined : resolveComponentFrame(frame, manifest)
+    if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) {
+      return <p key={key} data-ak-component-fallback="">{formatSemanticFallback(frame.fallback)}</p>
+    }
+    if (resolved?.ok) return frame.componentKey === 'choice-list'
+      ? <ChoiceListSlot key={key} frame={frame} manifest={manifest!} disabled={resolvedInstances.has(frame.instanceId)} onSelect={event => selectComponent(event, frame)} />
+      : <StandardComponentSlot key={key} frame={frame} manifest={manifest!} disabled={resolvedInstances.has(frame.instanceId)} onInteract={interactComponent} />
+    return <p key={key} data-ak-component-fallback="">{formatSemanticFallback(frame.fallback)}</p>
+  }
 
   return (
     <section aria-label={`${definition.id} chat`} data-ak-app-chat="" style={themeInput === undefined ? undefined : toChatCssVariables(theme)}>
       <div aria-live="polite" aria-relevant="additions text" role="log">
         <ContainerSlot>
           {chat.messages.map(message => {
+            const contentCandidate = message.role === 'assistant' && isAssistantContentCandidate(message.content)
+            const content = contentCandidate ? decodeAssistantContent(message.content) : undefined
+            if (content?.ok) return <div key={message.id} data-ak-assistant-content="">{coalesceTextParts(content.parts).map((part, index) => part.kind === 'text'
+              ? <MessageSlot key={`${message.id}:text:${index}`} message={{ ...message, content: part.text }} />
+              : renderFrame(part.frame, `${message.id}:component:${index}`))}</div>
+            if (content && !content.ok) return <p key={message.id} role="alert" data-ak-component-diagnostic={content.diagnostic.code}>{content.diagnostic.message}</p>
             const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
             const decoded = candidate ? decodeComponentFrame(message.content) : undefined
             if (decoded?.ok) {
-              const manifest = definition.components
-              const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
-              if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
-              if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
-                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />
-                : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />
-              return <p key={message.id} data-ak-component-fallback="">{formatSemanticFallback(decoded.frame.fallback)}</p>
+              return renderFrame(decoded.frame, message.id)
             }
             if (decoded && !decoded.ok) return <p key={message.id} role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
             return <MessageSlot key={message.id} message={message} />
