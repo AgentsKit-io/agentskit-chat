@@ -35,6 +35,12 @@ export const TURN_PROTOCOL_VERSION = 1 as const
 
 export const COMPONENT_PROTOCOL = 'agentskit.chat.component' as const
 export const COMPONENT_PROTOCOL_VERSION = 1 as const
+export const ASSISTANT_CONTENT_PROTOCOL = 'agentskit.chat.content' as const
+export const ASSISTANT_CONTENT_PROTOCOL_VERSION = 1 as const
+export const ASSISTANT_CONTENT_PREFIX = `\u001e${ASSISTANT_CONTENT_PROTOCOL}/${ASSISTANT_CONTENT_PROTOCOL_VERSION}\n` as const
+const ASSISTANT_CONTENT_PREFIX_ROOT = `\u001e${ASSISTANT_CONTENT_PROTOCOL}/`
+const ASSISTANT_CONTENT_MAX_BYTES = 262_144
+const ASSISTANT_CONTENT_MAX_RECORDS = 512
 export const ComponentKeySchema = z.string().regex(/^[a-z][a-z0-9-]{0,63}$/)
 
 export const ComponentFallbackSchema = z.object({
@@ -75,6 +81,110 @@ export type ComponentFallback = z.infer<typeof ComponentFallbackSchema>
 export type ComponentRenderFrame = z.infer<typeof ComponentRenderFrameSchema>
 export type ComponentSelectionEvent = z.infer<typeof ComponentSelectionEventSchema>
 export type ComponentInteractionEvent = z.infer<typeof ComponentInteractionEventSchema>
+
+export const AssistantTextPartSchema = z.object({
+  kind: z.literal('text'),
+  text: z.string().min(1).max(16_384),
+}).readonly()
+
+export const AssistantComponentPartSchema = z.object({
+  kind: z.literal('component'),
+  frame: ComponentRenderFrameSchema,
+}).readonly()
+
+export const AssistantContentPartSchema = z.discriminatedUnion('kind', [AssistantTextPartSchema, AssistantComponentPartSchema])
+
+export type AssistantTextPart = z.infer<typeof AssistantTextPartSchema>
+export type AssistantComponentPart = z.infer<typeof AssistantComponentPartSchema>
+export type AssistantContentPart = z.infer<typeof AssistantContentPartSchema>
+
+export interface AssistantContentEncoder {
+  readonly encode: (part: AssistantContentPart) => string
+}
+
+export const createAssistantContentEncoder = (): AssistantContentEncoder => {
+  let started = false
+  return {
+    encode: part => {
+      const parsed = AssistantContentPartSchema.parse(part)
+      const prefix = started ? '' : ASSISTANT_CONTENT_PREFIX
+      started = true
+      return `${prefix}${JSON.stringify(parsed)}\n`
+    },
+  }
+}
+
+export type AssistantContentDecodeCode =
+  | 'ASSISTANT_CONTENT_UNSUPPORTED_VERSION'
+  | 'ASSISTANT_CONTENT_INVALID_RECORD'
+  | 'ASSISTANT_CONTENT_LIMIT_EXCEEDED'
+
+export type DecodeAssistantContentResult =
+  | { readonly ok: true; readonly parts: readonly AssistantContentPart[]; readonly complete: boolean }
+  | {
+      readonly ok: false
+      readonly diagnostic: {
+        readonly code: AssistantContentDecodeCode
+        readonly message: string
+        readonly retryable: false
+      }
+    }
+
+const assistantContentFailure = (code: AssistantContentDecodeCode, message: string): DecodeAssistantContentResult => ({
+  ok: false,
+  diagnostic: { code, message, retryable: false },
+})
+
+export const isAssistantContentCandidate = (input: unknown): input is string =>
+  typeof input === 'string' && input.startsWith('\u001e')
+
+export const decodeAssistantContent = (input: unknown): DecodeAssistantContentResult => {
+  if (typeof input !== 'string' || !input.startsWith('\u001e')) {
+    return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content envelope is invalid.')
+  }
+  if (!input.startsWith(ASSISTANT_CONTENT_PREFIX_ROOT) && ASSISTANT_CONTENT_PREFIX_ROOT.startsWith(input)) {
+    return { ok: true, parts: [], complete: false }
+  }
+  if (!input.startsWith(ASSISTANT_CONTENT_PREFIX_ROOT)) {
+    return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content envelope is invalid.')
+  }
+  if (ASSISTANT_CONTENT_PREFIX.startsWith(input)) {
+    return { ok: true, parts: [], complete: false }
+  }
+  if (!input.startsWith(ASSISTANT_CONTENT_PREFIX)) {
+    return assistantContentFailure('ASSISTANT_CONTENT_UNSUPPORTED_VERSION', 'Assistant content envelope uses an unsupported version.')
+  }
+  if (input.length > ASSISTANT_CONTENT_MAX_BYTES) {
+    return assistantContentFailure('ASSISTANT_CONTENT_LIMIT_EXCEEDED', 'Assistant content envelope exceeds its safety limit.')
+  }
+
+  const payload = input.slice(ASSISTANT_CONTENT_PREFIX.length)
+  const complete = payload.endsWith('\n')
+  const records = payload.split('\n')
+  if (!complete) records.pop()
+  else records.pop()
+  if (records.length > ASSISTANT_CONTENT_MAX_RECORDS) {
+    return assistantContentFailure('ASSISTANT_CONTENT_LIMIT_EXCEEDED', 'Assistant content envelope exceeds its record limit.')
+  }
+
+  const parts: AssistantContentPart[] = []
+  try {
+    for (const record of records) {
+      if (record === '') return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content record is invalid.')
+      const parsed = AssistantContentPartSchema.safeParse(JSON.parse(record) as unknown)
+      if (!parsed.success) return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content record is invalid.')
+      const previous = parts.at(-1)
+      if (previous?.kind === 'text' && parsed.data.kind === 'text') {
+        parts[parts.length - 1] = { kind: 'text', text: previous.text + parsed.data.text }
+      } else {
+        parts.push(parsed.data)
+      }
+    }
+    return { ok: true, parts: Object.freeze(parts), complete }
+  } catch {
+    return assistantContentFailure('ASSISTANT_CONTENT_INVALID_RECORD', 'Assistant content record is invalid.')
+  }
+}
 
 export type ComponentDecodeCode =
   | 'COMPONENT_UNSUPPORTED_VERSION'
