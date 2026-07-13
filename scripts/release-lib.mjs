@@ -163,6 +163,14 @@ export const inspectRelease = async root => {
   const changelog = await readFile(join(root, 'CHANGELOG.md'), 'utf8').catch(() => '')
   if (!changelog.includes(`## ${release.version}`)) diagnostics.push(`CHANGELOG.md has no ${release.version} entry`)
 
+  const releaseWorkflow = await readFile(join(root, '.github/workflows/release.yml'), 'utf8').catch(() => '')
+  if (!releaseWorkflow.includes('artifact="./artifacts/${base/\\//-}-$version.tgz"')) {
+    diagnostics.push('release workflow must publish an explicit local tarball path')
+  }
+  if (!releaseWorkflow.includes('test -f "$artifact"')) {
+    diagnostics.push('release workflow must verify each tarball exists before npm publish')
+  }
+
   return { diagnostics, release }
 }
 

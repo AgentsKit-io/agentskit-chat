@@ -90,7 +90,8 @@ jobs:
             name=$(node -p "require('./packages/$package/package.json').name")
             version=$(node -p "require('./packages/$package/package.json').version")
             base="${name#@}"
-            artifact="artifacts/${base/\//-}-$version.tgz"
+            artifact="./artifacts/${base/\//-}-$version.tgz"
+            test -f "$artifact"
             if npm view "$name@$version" version 2>/dev/null | grep -Fx "$version"; then
               echo "$name@$version already published; verified and skipped"
             else
