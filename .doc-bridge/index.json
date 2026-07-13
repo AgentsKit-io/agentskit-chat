@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "42e209f398c233cde7aa3e562ae772e46e42bfcb8c6d572c8f19c5142ff6bbb4",
+  "contentHash": "55ab425ea5a7743c81b3fb704e46eeb4d67e0253c65515f5c7a5ac7522ae19a8",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-13T13:58:13.895Z",
+  "generatedAt": "2026-07-13T14:24:48.103Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -62,7 +62,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "angular",
@@ -343,6 +343,37 @@
       },
       "notes": [
         "Replayable application traces and semantic renderer parity composed with AgentsKit eval"
+      ]
+    },
+    "dogfood-hosts": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "dogfood-hosts",
+        "path": "docs/dogfood"
+      },
+      "startHere": "docs/for-agents/architecture.md",
+      "readBeforeEditing": [
+        "docs/for-agents/architecture.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "docs/dogfood"
+      ],
+      "checks": [
+        "pnpm lint",
+        "pnpm test",
+        "pnpm build",
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "dogfood/registry-playbook",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "External live-host migrations, ownership corrections, parity, and no-reimplementation evidence"
       ]
     },
     "example-ink": {
@@ -816,6 +847,7 @@
       "chat",
       "cli",
       "devtools",
+      "dogfood-hosts",
       "example-ink",
       "example-react",
       "example-react-native",
@@ -900,6 +932,19 @@
         "purpose": "Replayable application traces and semantic renderer parity composed with AgentsKit eval",
         "humanDoc": "devtools",
         "agentDoc": "docs/for-agents/packages/devtools.md"
+      },
+      "dogfood-hosts": {
+        "id": "dogfood-hosts",
+        "path": "docs/dogfood",
+        "checks": [
+          "pnpm lint",
+          "pnpm test",
+          "pnpm build",
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "External live-host migrations, ownership corrections, parity, and no-reimplementation evidence",
+        "humanDoc": "dogfood/registry-playbook",
+        "agentDoc": "docs/for-agents/architecture.md"
       },
       "example-ink": {
         "id": "example-ink",

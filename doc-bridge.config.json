@@ -67,6 +67,18 @@
             "pnpm docs:bridge:gate"
           ]
         },
+        "dogfood-hosts": {
+          "path": "docs/dogfood",
+          "purpose": "External live-host migrations, ownership corrections, parity, and no-reimplementation evidence",
+          "agentDoc": "docs/for-agents/architecture.md",
+          "humanDoc": "dogfood/registry-playbook",
+          "checks": [
+            "pnpm lint",
+            "pnpm test",
+            "pnpm build",
+            "pnpm docs:bridge:gate"
+          ]
+        },
         "chat": {
           "path": "packages/chat",
           "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
