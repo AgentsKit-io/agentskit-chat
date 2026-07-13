@@ -16,5 +16,6 @@ AgentsKit Chat follows SemVer as a fixed package group.
 
 Applications should pin a minor line (`^0.2.0` for this release), commit their
 lockfile, run renderer conformance and host E2E before upgrades, and review both
-the changelog and migration guide. Alpha GitHub tarball consumers should follow
-[the alpha migration](./migration-from-alpha.md).
+the changelog and migration guide. Stable `0.1.x` consumers should follow the
+[0.2 migration](./migration-to-0.2.md). Alpha GitHub tarball consumers should
+follow [the alpha migration](./migration-from-alpha.md).
