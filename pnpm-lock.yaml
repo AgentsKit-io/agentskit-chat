@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@agentskit/doc-bridge':
         specifier: 1.0.2
-        version: 1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/rag@0.4.12)(react@19.2.7)
+        version: 1.0.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.12)(react@19.2.7)
       '@playwright/test':
         specifier: ^1.61.0
         version: 1.61.1
@@ -220,13 +220,16 @@ importers:
       '@agentskit/chat-protocol':
         specifier: workspace:*
         version: link:../protocol
+      '@agentskit/memory':
+        specifier: ^0.11.0
+        version: 0.11.0
       zod:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.2
+        specifier: ^1.12.3
+        version: 1.12.3
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
@@ -516,6 +519,9 @@ packages:
   '@agentskit/core@1.12.2':
     resolution: {integrity: sha512-QujFUgjJhzSleWpYjaGzWI1d1V7NIZDKVKIbX1YExOxY/n1laazBNVUK/Jc94dyNOM4oRu/urzeztScY2qMDPg==}
 
+  '@agentskit/core@1.12.3':
+    resolution: {integrity: sha512-fNHrzpEoCaWHDK2fwk/BIhcPseN6zCdy3N0WjzdelnmRuh7zy9/Ki0zcukesK5ZAAmXdz2+Dj8FI7AM32JyOKw==}
+
   '@agentskit/doc-bridge@1.0.2':
     resolution: {integrity: sha512-kE5oKKvmFOZliMm9Rfr8N+G1RWaBoDabOK3Vqjz7IJLHyTSyYnHxiE08O6HYKudtAbyV8x0o2R/IEsWNohyLVw==}
     engines: {node: '>=22'}
@@ -548,6 +554,9 @@ packages:
     resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
     peerDependencies:
       react: '>=18.0.0'
+
+  '@agentskit/memory@0.11.0':
+    resolution: {integrity: sha512-sTAVVmaHIKLUYH3nFfbjmWwm3zfQ1Ljy1ct4mVhOlrvqfequ+sekrA+dzStX4PrQEtGob3MEy3qZlwwA+oxsqw==}
 
   '@agentskit/rag@0.4.12':
     resolution: {integrity: sha512-hceZxEVEMo0mw4WAa2e8HjWsyFSF0CbugBqwQg3jVSBHPPrvKgNNYHwD9lAc0tXszZpku+ASMU6rGAnAB0AOGw==}
@@ -4552,12 +4561,15 @@ snapshots:
 
   '@agentskit/core@1.12.2': {}
 
-  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.12.2)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/rag@0.4.12)(react@19.2.7)':
+  '@agentskit/core@1.12.3': {}
+
+  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.12)(react@19.2.7)':
     dependencies:
       zod: 3.25.76
     optionalDependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.12.3
       '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      '@agentskit/memory': 0.11.0
       '@agentskit/rag': 0.4.12
       react: 19.2.7
 
@@ -4577,6 +4589,10 @@ snapshots:
       - bufferutil
       - react-devtools-core
       - utf-8-validate
+
+  '@agentskit/memory@0.11.0':
+    dependencies:
+      '@agentskit/core': 1.12.3
 
   '@agentskit/rag@0.4.12':
     dependencies:

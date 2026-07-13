@@ -13,6 +13,8 @@
 - [`../../architecture/adrs/0007-closed-application-component-manifest.md`](../../architecture/adrs/0007-closed-application-component-manifest.md)
 - [`../../components/choice-list.md`](../../components/choice-list.md)
 - [`../../conversation/routes-and-state.md`](../../conversation/routes-and-state.md)
+- [`../../protocol/ask-service.md`](../../protocol/ask-service.md)
+- [`../../architecture/adrs/0022-shared-ask-service-integration.md`](../../architecture/adrs/0022-shared-ask-service-integration.md)
 
 ## Conversation boundary
 
@@ -31,6 +33,10 @@ The standard application catalog is defined in `src/catalog.ts`. Every entry mus
 Actionable choices use `createActionConfirmation` and the released upstream `ChatReturn.proposeToolCall`. Never validate or execute tools locally. Confirmation handles bind application-session metadata; authentication and durable audit remain outside this package.
 
 Authorization uses `createCapabilityPolicy` + `withActionPolicy`. Trusted context must come from a host closure, never a protocol frame or message. AgentsKit owns enforcement through `authorizeToolCall`; this package owns only capability composition and trace projection.
+
+## Ask service boundary
+
+Docs, Registry, and Playbook must consume `createAskAdapter` and `createAskSessionMemory`. Do not recreate the Ask schema, NDJSON decoder, fetch loop, citation projection, or browser message store in a host. Host-specific visual tools may use `projectTool`, but the returned component frame remains runtime validated. Use a new canonical storage key and pass prior formats through `legacyKeys`.
 
 ## Checks
 

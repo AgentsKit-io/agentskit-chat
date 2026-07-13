@@ -25,3 +25,5 @@ formatSemanticFallback(fallback)
 ```
 
 Custom application UI is declared through `defineComponentManifest`. The first schema-backed component is `ChoiceListComponent`; untrusted frames must pass `resolveComponentFrame` before rendering.
+
+Shared Ask-service hosts use `createAskAdapter` and `createAskSessionMemory`. The adapter owns the validated NDJSON boundary and ordered text/source projection; memory composes `@agentskit/memory/web-storage` rather than implementing another message store. See [`docs/protocol/ask-service.md`](../../docs/protocol/ask-service.md).
