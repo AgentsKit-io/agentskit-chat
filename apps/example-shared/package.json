@@ -11,7 +11,7 @@
     "@agentskit/chat-devtools": "workspace:*",
     "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.12.2",
-    "@agentskit/rag": "^0.4.12",
+    "@agentskit/rag": "^0.4.14",
     "@agentskit/validation": "^0.2.1"
   },
   "scripts": {
