@@ -231,6 +231,24 @@ AgentsKit Chat Protocol adds only versioned application schemas for site configu
 
 The React Native release check also inspected the public `@agentskit/eval` replay exports used by devtools. A universal-bundle filesystem boundary was fixed upstream in AgentsKit [#1216](https://github.com/AgentsKit-io/agentskit/issues/1216), [PR #1217](https://github.com/AgentsKit-io/agentskit/pull/1217), and release `@agentskit/eval@0.4.19`. AgentsKit Chat consumes that release directly; it does not alias Node built-ins, copy replay behavior, or add a platform-specific fork.
 
+## Trusted Ask backend adoption record (#70)
+
+Inspected the published AgentsKit Core adapter, controller, cancellation,
+message, token-usage, and observer contracts; AgentsKit RAG `createRAG`, `RAG`,
+`Retriever`, and `RetrievedDocument`; and the existing AgentsKit Chat Ask,
+deterministic escalation, session-aware adapter, Web handler, CAS session, and
+SourceList contracts. These already own provider execution, retrieval,
+streaming lifecycle, canonical messages, cancellation, usage, and rendering.
+
+The backend vertical consumes those seams through injected retriever and
+generator adapters. It adds only runtime-validated server-side site policy,
+browser-hint equality checks, bounded cited projection, CAS coordination,
+deadlines/rate-limit composition, and privacy-safe numeric observations. It
+copies no controller, adapter lifecycle, model transport, RAG, embeddings,
+ranking, vector storage, memory engine, authentication, rate limiter,
+telemetry backend, or renderer behavior. See accepted
+[ADR-0026](./adrs/0026-trusted-ask-backend-vertical.md).
+
 ## Stable v0 release adoption record (#30)
 
 The release audit inspected public AgentsKit `main@0573aff1f442ba39200ea38600f295d63f5715ad`

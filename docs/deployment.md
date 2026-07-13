@@ -10,6 +10,11 @@ Web `Request`, `Response`, `ReadableStream`, and `AbortSignal`. Authenticate
 before resolving a definition or parsing untrusted input. Keep provider keys,
 authorization, tenant context, durable storage, and audit sinks on the server.
 
+Mount `createAskServiceHandler` beside it when deterministic misses need cited
+semantic retrieval. Hosted routes and self-hosted Node bridges import the same
+factory; only the thin HTTP bridge varies. See the
+[Ask backend deployment guide](./backend.md).
+
 ## Direct trusted runtime
 
 A server process, desktop main process, or controlled terminal may inject an
@@ -45,5 +50,5 @@ model. Unknown input delegates to the injected AgentsKit adapter when policy
 allows. Configure explicit offline/escalation behavior; never silently invent
 an answer when a required backend is unavailable.
 
-See [server details](./server.md), [sessions](./sessions.md), and the
+See [server details](./server.md), [Ask backend](./backend.md), [sessions](./sessions.md), and the
 [security policy](../SECURITY.md).

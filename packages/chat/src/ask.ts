@@ -1,7 +1,8 @@
-import type { AdapterFactory, ChatMemory, Message, StreamChunk } from '@agentskit/core'
+import type { AdapterFactory, AdapterRequest, ChatMemory, Message, StreamChunk, StreamSource } from '@agentskit/core'
 import { createWebStorageMemory, type WebStorageLike } from '@agentskit/memory/web-storage'
 import {
   ASK_EVENT_MAX_BYTES,
+  AnswerResponseSchema,
   ASSISTANT_CONTENT_MAX_BYTES,
   ASSISTANT_CONTENT_MAX_RECORDS,
   AskEventSchema,
@@ -41,6 +42,10 @@ export interface AskMemoryOptions {
   readonly maxRecordBytes?: number
   readonly getStorage?: () => WebStorageLike | undefined
   readonly projectTool?: AskToolProjector
+}
+
+export interface AskAdapter extends AdapterFactory {
+  readonly createSourceForSession: (request: AdapterRequest, sessionId: string) => StreamSource
 }
 
 export { AskEventSchema, decodeAskEvents, type AskEvent, type AskToolEvent } from '@agentskit/chat-protocol'
@@ -166,105 +171,115 @@ const encodeText = function* (encode: EncodeAssistantPart, text: string): Genera
 }
 
 /** Creates the shared Ask adapter without replacing the AgentsKit controller or message model. */
-export function createAskAdapter(options: AskAdapterOptions = {}): AdapterFactory {
-  return {
-    capabilities: { streaming: true, structuredOutput: true },
-    createSource(request) {
-      const controller = new AbortController()
-      return {
-        abort: () => controller.abort(),
-        async *stream(): AsyncIterableIterator<StreamChunk> {
-          const encode = createBoundedAssistantEncoder()
+export function createAskAdapter(options: AskAdapterOptions = {}): AskAdapter {
+  const createSourceForSession = (request: AdapterRequest, sessionId: string): StreamSource => {
+    const controller = new AbortController()
+    const escalation = AnswerResponseSchema.safeParse(request.context?.metadata?.['agentskit.chat.escalation'])
+    const deterministic = escalation.success && escalation.data.outcome === 'escalation' ? escalation.data : undefined
+    return {
+      abort: () => controller.abort(),
+      async *stream(): AsyncIterableIterator<StreamChunk> {
+        const encode = createBoundedAssistantEncoder()
+        try {
+          const connection = new AbortController()
+          const timeout = setTimeout(() => connection.abort(), DEFAULT_CONNECTION_TIMEOUT_MS)
+          let response: Response
           try {
-            const connection = new AbortController()
-            const timeout = setTimeout(() => connection.abort(), DEFAULT_CONNECTION_TIMEOUT_MS)
-            let response: Response
-            try {
-              response = await fetch(endpointWithParams(options), {
-                method: 'POST',
-                signal: AbortSignal.any([controller.signal, connection.signal]),
-                headers: { 'content-type': 'application/json' },
-                body: JSON.stringify({ messages: projectAskMessages(request.messages) }),
-              })
-            } finally {
-              clearTimeout(timeout)
-            }
-            if (!response.ok || response.body === null) throw new Error(`Ask request failed (${response.status}).`)
+            response = await fetch(endpointWithParams(options), {
+              method: 'POST',
+              signal: AbortSignal.any([controller.signal, connection.signal]),
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({
+                protocol: 'agentskit.chat.ask',
+                version: 1,
+                ...(sessionId === 'unscoped' ? {} : { sessionId }),
+                messages: projectAskMessages(request.messages),
+                ...(deterministic === undefined ? {} : { deterministic }),
+              }),
+            })
+          } finally {
+            clearTimeout(timeout)
+          }
+          if (!response.ok || response.body === null) throw new Error(`Ask request failed (${response.status}).`)
 
-            const reader = response.body.getReader()
-            const decoder = new TextDecoder()
-            let buffer = ''
-            const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
-            let mode: 'unknown' | 'ndjson' | 'text' = contentType.includes('text/plain')
-              ? 'text'
-              : contentType.includes('ndjson')
-                ? 'ndjson'
-                : 'unknown'
-            let discardingOversizedLine = false
-            while (true) {
-              const result = await reader.read()
-              let incoming = decoder.decode(result.value, { stream: !result.done })
-              if (discardingOversizedLine) {
-                const lineEnd = incoming.indexOf('\n')
-                if (lineEnd < 0) {
-                  if (result.done) break
-                  continue
-                }
-                incoming = incoming.slice(lineEnd + 1)
-                discardingOversizedLine = false
-              }
-              buffer += incoming
-              if (mode === 'unknown' && buffer.trimStart() !== '') {
-                if (!buffer.trimStart().startsWith('{')) mode = 'text'
-                else {
-                  const lineEnd = buffer.indexOf('\n')
-                  if (lineEnd >= 0 || result.done) {
-                    const firstLine = lineEnd >= 0 ? buffer.slice(0, lineEnd + 1) : `${buffer}\n`
-                    mode = decodeAskEvents(firstLine).events.length > 0 ? 'ndjson' : 'text'
-                  } else if (new TextEncoder().encode(buffer).byteLength > ASK_EVENT_MAX_BYTES) {
-                    buffer = ''
-                    discardingOversizedLine = true
-                  }
-                }
-              }
-              if (mode === 'unknown' && !result.done) continue
-              if (mode === 'text') {
-                yield* encodeText(encode, buffer)
-                buffer = ''
+          const reader = response.body.getReader()
+          const decoder = new TextDecoder()
+          let buffer = ''
+          const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+          let mode: 'unknown' | 'ndjson' | 'text' = contentType.includes('text/plain')
+            ? 'text'
+            : contentType.includes('ndjson')
+              ? 'ndjson'
+              : 'unknown'
+          let discardingOversizedLine = false
+          while (true) {
+            const result = await reader.read()
+            let incoming = decoder.decode(result.value, { stream: !result.done })
+            if (discardingOversizedLine) {
+              const lineEnd = incoming.indexOf('\n')
+              if (lineEnd < 0) {
                 if (result.done) break
                 continue
               }
-              const decoded = decodeAskEvents(result.done ? `${buffer}\n` : buffer)
-              buffer = decoded.rest
-              discardingOversizedLine = decoded.discardedPartial
-              for (const event of decoded.events) {
-                const projected = projectAskEvent(event, options.projectTool)
-                if (projected?.kind === 'error') {
-                  void reader.cancel().catch(() => undefined)
-                  yield { type: 'error', content: projected.message }
-                  return
-                }
-                if (projected?.kind === 'done') {
-                  void reader.cancel().catch(() => undefined)
-                  yield { type: 'done' }
-                  return
-                }
-                if (projected?.kind === 'text') yield* encodeText(encode, projected.text)
-                if (projected?.kind === 'component') {
-                  yield { type: 'text', content: encode({ kind: 'component', frame: projected.frame }) }
+              incoming = incoming.slice(lineEnd + 1)
+              discardingOversizedLine = false
+            }
+            buffer += incoming
+            if (mode === 'unknown' && buffer.trimStart() !== '') {
+              if (!buffer.trimStart().startsWith('{')) mode = 'text'
+              else {
+                const lineEnd = buffer.indexOf('\n')
+                if (lineEnd >= 0 || result.done) {
+                  const firstLine = lineEnd >= 0 ? buffer.slice(0, lineEnd + 1) : `${buffer}\n`
+                  mode = decodeAskEvents(firstLine).events.length > 0 ? 'ndjson' : 'text'
+                } else if (new TextEncoder().encode(buffer).byteLength > ASK_EVENT_MAX_BYTES) {
+                  buffer = ''
+                  discardingOversizedLine = true
                 }
               }
+            }
+            if (mode === 'unknown' && !result.done) continue
+            if (mode === 'text') {
+              yield* encodeText(encode, buffer)
+              buffer = ''
               if (result.done) break
+              continue
             }
-            yield { type: 'done' }
-          } catch (cause) {
-            if (!controller.signal.aborted) {
-              yield { type: 'error', content: cause instanceof Error ? cause.message : 'Ask request failed.' }
+            const decoded = decodeAskEvents(result.done ? `${buffer}\n` : buffer)
+            buffer = decoded.rest
+            discardingOversizedLine = decoded.discardedPartial
+            for (const event of decoded.events) {
+              const projected = projectAskEvent(event, options.projectTool)
+              if (projected?.kind === 'error') {
+                void reader.cancel().catch(() => undefined)
+                yield { type: 'error', content: projected.message }
+                return
+              }
+              if (projected?.kind === 'done') {
+                void reader.cancel().catch(() => undefined)
+                yield { type: 'done' }
+                return
+              }
+              if (projected?.kind === 'text') yield* encodeText(encode, projected.text)
+              if (projected?.kind === 'component') {
+                yield { type: 'text', content: encode({ kind: 'component', frame: projected.frame }) }
+              }
             }
+            if (result.done) break
           }
-        },
-      }
-    },
+          yield { type: 'done' }
+        } catch (cause) {
+          if (!controller.signal.aborted) {
+            yield { type: 'error', content: cause instanceof Error ? cause.message : 'Ask request failed.' }
+          }
+        }
+      },
+    }
+  }
+  return {
+    capabilities: { streaming: true, structuredOutput: true },
+    createSource: request => createSourceForSession(request, 'unscoped'),
+    createSourceForSession,
   }
 }
 

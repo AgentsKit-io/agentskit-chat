@@ -10,7 +10,12 @@ export const AskEventSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('text'), delta: z.string().max(ASK_EVENT_MAX_BYTES) }).strict(),
   z.object({ type: z.literal('tool'), id: z.string().max(256), name: z.string().max(128), args: AskArgsSchema }).strict(),
   z.object({ type: z.literal('done'), model: z.string().max(256).optional() }).strict(),
-  z.object({ type: z.literal('error'), message: z.string().min(1).max(4_096) }).strict(),
+  z.object({
+    type: z.literal('error'),
+    message: z.string().min(1).max(4_096),
+    code: z.string().regex(/^[A-Z][A-Z0-9_]{0,127}$/).optional(),
+    retryable: z.boolean().optional(),
+  }).strict(),
 ])
 
 export type AskEvent = z.infer<typeof AskEventSchema>

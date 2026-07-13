@@ -85,7 +85,10 @@ describe('Ask adapter', () => {
 
     const chunks = await read(source)
     expect(fetchMock).toHaveBeenCalledWith('/api/ask?corpus=registry&persona=guide', expect.objectContaining({
-      method: 'POST', body: JSON.stringify({ messages: [{ role: 'user', content: 'Question' }] }),
+      method: 'POST', body: JSON.stringify({
+        protocol: 'agentskit.chat.ask', version: 1,
+        messages: [{ role: 'user', content: 'Question' }],
+      }),
     }))
     expect(chunks.at(-1)).toEqual({ type: 'done' })
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
@@ -96,6 +99,26 @@ describe('Ask adapter', () => {
         { kind: 'text', text: 'Hello ' },
         { kind: 'component', frame: expect.objectContaining({ componentKey: 'source-list' }) },
       ],
+    })
+  })
+
+  it('forwards the application session and validated deterministic escalation', async () => {
+    const fetchMock = vi.fn(async () => response(['{"type":"done"}\n']))
+    vi.stubGlobal('fetch', fetchMock)
+    const escalation = {
+      protocol: 'agentskit.chat.answer' as const, version: 1 as const, outcome: 'escalation' as const,
+      query: 'recommend an agent', normalizedQuery: 'recommend an agent',
+      message: 'A backend answer is required.', reason: 'miss' as const,
+      confidence: { level: 'low' as const, basis: 'miss' as const },
+    }
+    await read(createAskAdapter({ endpoint: '/api/ask' }).createSourceForSession({
+      messages: [message('user', 'recommend an agent')],
+      context: { metadata: { 'agentskit.chat.escalation': escalation } },
+    }, 'registry:session-1'))
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit
+    expect(JSON.parse(String(init.body))).toEqual({
+      protocol: 'agentskit.chat.ask', version: 1, sessionId: 'registry:session-1',
+      messages: [{ role: 'user', content: 'recommend an agent' }], deterministic: escalation,
     })
   })
 

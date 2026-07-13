@@ -2,6 +2,12 @@
 
 `createChatHandler` mounts one shared chat definition behind the platform `Request`, `Response`, `ReadableStream`, and `AbortSignal` APIs.
 
+For deterministic misses that need cited semantic retrieval, use the sibling
+[`createAskServiceHandler`](./backend.md). Both handlers use Web standards;
+the Ask vertical additionally resolves a complete trusted site policy and
+shares one public request/configuration contract across hosted and self-hosted
+deployments.
+
 ```ts
 const handleChat = createChatHandler({
   authenticate: async request => {
@@ -31,3 +37,15 @@ The default body limit is 64 KiB and deadline is 30 seconds. Method, media type,
 - Next/Remix/SvelteKit/edge: export the returned handler directly where Web handlers are supported.
 - Node HTTP: translate the incoming request to `Request` and pipe the returned `Response.body`; the package test contains a reference bridge.
 - Express/Hono adapters should remain thin and must forward disconnect cancellation.
+
+## Semantic Ask backend
+
+`createAskServiceHandler` authenticates and resolves site identity before body
+parsing, treats client corpus/persona parameters only as equality-checked
+compatibility hints, and injects the trusted site policy into local or
+federated AgentsKit retrieval. A successful answer always includes at least one
+safe citation. Rate limiting, provider generation, CAS storage, and telemetry
+are host adapters rather than bundled infrastructure.
+
+See the [complete backend guide](./backend.md) and
+[ADR-0026](./architecture/adrs/0026-trusted-ask-backend-vertical.md).

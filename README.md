@@ -32,6 +32,7 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 - [Get started in all seven renderers](./docs/getting-started/README.md)
 - [API reference](./docs/api-reference.md)
 - [Deployment modes](./docs/deployment.md)
+- [Hosted and self-hosted Ask backend](./docs/backend.md)
 - [Compatibility matrix](./docs/releases/compatibility.md)
 - [Stability and upgrades](./docs/releases/stability.md)
 - [Security policy](./SECURITY.md)
@@ -43,6 +44,7 @@ AgentsKit remains the substrate for adapters, models, tools, memory, RAG, runtim
 - [AgentsKit upstream adoption matrix](./docs/architecture/upstream-adoption.md)
 - [ADR-0002: upstream-first and no reimplementation](./docs/architecture/adrs/0002-upstream-first-no-reimplementation.md)
 - [Deterministic answer protocol](./docs/protocol/deterministic-answers.md)
+- [Trusted Ask backend ADR](./docs/architecture/adrs/0026-trusted-ask-backend-vertical.md)
 - [Agent documentation index](./docs/for-agents/index.md)
 
 Existing external dogfood lockfiles may continue using the immutable
