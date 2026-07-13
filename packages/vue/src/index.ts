@@ -1,6 +1,5 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatRoot, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/vue'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
@@ -153,6 +152,27 @@ const AgentChatSession = defineComponent({
         resolvedInstances.value.delete(event.instanceId)
         fail(error, 'Action proposal failed.')
       })
+      else {
+        let submission
+        try { submission = props.definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+          resolvedInstances.value.delete(event.instanceId)
+          fail(error, 'Choice submission authorization failed.')
+          return
+        }
+        if (submission && 'unavailable' in submission) {
+          resolvedInstances.value.delete(event.instanceId)
+          fail(new Error('This deterministic choice expired. Ask the question again.'), 'Choice unavailable.')
+          return
+        }
+        if (submission) void currentChat!.send(submission.value).then(
+          () => { try { submission.commit() } catch (error) { fail(error, 'Choice submission settlement failed.') } },
+          error => {
+            try { submission.release() } catch { /* settlement isolation */ }
+            finally { resolvedInstances.value.delete(event.instanceId) }
+            fail(error, 'Choice submission failed.')
+          },
+        )
+      }
     }
     const approve = (toolCallId: string): void => {
       const record = confirmation.getByToolCall(toolCallId)
@@ -176,24 +196,22 @@ const AgentChatSession = defineComponent({
       currentChat = chat
       const nativeSlots = slots as unknown as Slots
       const targets = getLifecycleTargets(chat.messages)
-      const messages = chat.messages.map(message => {
-        const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
-        const decoded = candidate ? decodeComponentFrame(message.content) : undefined
-        if (decoded?.ok) {
+      const messages = chat.messages.flatMap(message => presentChatMessage(message).map((presentation, index) => {
+        if (presentation.kind === 'component') {
           const manifest = props.definition.components
-          const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
+          const resolved = manifest === undefined ? undefined : resolveComponentFrame(presentation.frame, manifest)
           const rendered = resolved?.ok
-            ? decoded.frame.componentKey === 'choice-list'
-              ? slot(nativeSlots, 'choiceList', { frame: decoded.frame, manifest, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }, () => h(ChoiceList, { frame: decoded.frame, manifest: manifest!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }))
-              : slot(nativeSlots, 'standardComponent', { frame: decoded.frame, manifest, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onInteract: interactComponent }, () => h(StandardComponent, { frame: decoded.frame, manifest: manifest!, disabled: resolvedInstances.value.has(decoded.frame.instanceId), onInteract: interactComponent }))
-            : h('p', { 'data-ak-component-fallback': '' }, formatSemanticFallback(decoded.frame.fallback))
-          return h(Fragment, { key: message.id }, [rendered])
+            ? presentation.frame.componentKey === 'choice-list'
+              ? slot(nativeSlots, 'choiceList', { frame: presentation.frame, manifest, disabled: resolvedInstances.value.has(presentation.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, presentation.frame) }, () => h(ChoiceList, { frame: presentation.frame, manifest: manifest!, disabled: resolvedInstances.value.has(presentation.frame.instanceId), onSelect: (event: ComponentSelectionEvent) => selectComponent(event, presentation.frame) }))
+              : slot(nativeSlots, 'standardComponent', { frame: presentation.frame, manifest, disabled: resolvedInstances.value.has(presentation.frame.instanceId), onInteract: interactComponent }, () => h(StandardComponent, { frame: presentation.frame, manifest: manifest!, disabled: resolvedInstances.value.has(presentation.frame.instanceId), onInteract: interactComponent }))
+            : h('p', { 'data-ak-component-fallback': '' }, formatSemanticFallback(presentation.frame.fallback))
+          return h(Fragment, { key: `${message.id}:${index}` }, [rendered])
         }
-        const rendered = decoded && !decoded.ok
-          ? h('p', { role: 'alert', 'data-ak-component-diagnostic': decoded.diagnostic.code }, decoded.diagnostic.message)
-          : slot(nativeSlots, 'message', { message }, () => h(Message, { message }))
-        return h(Fragment, { key: message.id }, [rendered])
-      })
+        const rendered = presentation.kind === 'diagnostic'
+          ? h('p', { role: 'alert', 'data-ak-component-diagnostic': presentation.code }, presentation.message)
+          : slot(nativeSlots, 'message', { message: presentation.message }, () => h(Message, { message: presentation.message }))
+        return h(Fragment, { key: `${message.id}:${index}` }, [rendered])
+      }))
       const confirmations = chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall =>
         h(Fragment, { key: toolCall.id }, [slot(nativeSlots, 'confirmation', { toolCall, onApprove: approve, onDeny: deny }, () => h(ToolConfirmation, { toolCall, onApprove: approve, onDeny: deny }))]))
       const content = [...messages, ...confirmations, slot(nativeSlots, 'thinking', { visible: chat.status === 'streaming' }, () => h(ThinkingIndicator, { visible: chat.status === 'streaming' }))]

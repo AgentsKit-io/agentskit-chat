@@ -1,6 +1,5 @@
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/solid'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
@@ -74,6 +73,27 @@ function AgentChatSession(props: AgentChatProps): JSX.Element {
     try { props.onComponentSelect?.(event) } catch (error) { fail(error, 'Component selection callback failed.') }
     const action = resolveChoiceAction(frame, event.choiceId)
     if (action) void coordinator.propose(action).catch(error => { setResolvedInstances(current => { const next = new Set(current); next.delete(event.instanceId); return next }); fail(error, 'Action proposal failed.') })
+    else {
+      let submission
+      try { submission = props.definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+        setResolvedInstances(current => { const next = new Set(current); next.delete(event.instanceId); return next })
+        fail(error, 'Choice submission authorization failed.')
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        setResolvedInstances(current => { const next = new Set(current); next.delete(event.instanceId); return next })
+        fail(new Error('This deterministic choice expired. Ask the question again.'), 'Choice unavailable.')
+        return
+      }
+      if (submission) void currentChat!.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { fail(error, 'Choice submission settlement failed.') } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { setResolvedInstances(current => { const next = new Set(current); next.delete(event.instanceId); return next }) }
+          fail(error, 'Choice submission failed.')
+        },
+      )
+    }
   }
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstances().has(event.instanceId)) return
@@ -85,24 +105,22 @@ function AgentChatSession(props: AgentChatProps): JSX.Element {
   const run = (operation: Promise<void>): void => { setActionError(); void operation.catch(error => fail(error, 'Lifecycle operation failed.')) }
 
   const renderMessage = (item: ChatMessage): JSX.Element => {
-    const rendered = createMemo<JSX.Element>(() => {
-      const candidate = item.role === 'assistant' && isComponentFrameCandidate(item.content)
-      const decoded = candidate ? decodeComponentFrame(item.content) : undefined
-      if (decoded?.ok) {
-        const resolved = props.definition.components === undefined ? undefined : resolveComponentFrame(decoded.frame, props.definition.components)
+    const rendered = createMemo<JSX.Element>(() => <For each={presentChatMessage(item)}>{presentation => {
+      if (presentation.kind === 'component') {
+        const resolved = props.definition.components === undefined ? undefined : resolveComponentFrame(presentation.frame, props.definition.components)
         if (resolved?.ok) {
-          if (decoded.frame.componentKey === 'choice-list') {
-            const choiceProps: ChoiceListProps = { frame: decoded.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(decoded.frame.instanceId) }, onSelect: (event: ComponentSelectionEvent) => selectComponent(event, decoded.frame) }
-            return props.choiceList?.(choiceProps) ?? <ChoiceList frame={choiceProps.frame} manifest={choiceProps.manifest} disabled={resolvedInstances().has(decoded.frame.instanceId)} onSelect={choiceProps.onSelect} />
+          if (presentation.frame.componentKey === 'choice-list') {
+            const choiceProps: ChoiceListProps = { frame: presentation.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(presentation.frame.instanceId) }, onSelect: (event: ComponentSelectionEvent) => selectComponent(event, presentation.frame) }
+            return props.choiceList?.(choiceProps) ?? <ChoiceList frame={choiceProps.frame} manifest={choiceProps.manifest} disabled={resolvedInstances().has(presentation.frame.instanceId)} onSelect={choiceProps.onSelect} />
           }
-          const standardProps: StandardComponentProps = { frame: decoded.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(decoded.frame.instanceId) }, onInteract: interactComponent }
+          const standardProps: StandardComponentProps = { frame: presentation.frame, manifest: props.definition.components!, get disabled() { return resolvedInstances().has(presentation.frame.instanceId) }, onInteract: interactComponent }
           return props.standardComponent?.(standardProps) ?? <StandardComponent {...standardProps} />
         }
-        return <p data-ak-component-fallback>{formatSemanticFallback(decoded.frame.fallback)}</p>
+        return <p data-ak-component-fallback>{formatSemanticFallback(presentation.frame.fallback)}</p>
       }
-      if (decoded && !decoded.ok) return <p role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
-      return props.message?.(item) ?? <Message message={item} />
-    })
+      if (presentation.kind === 'diagnostic') return <p role="alert" data-ak-component-diagnostic={presentation.code}>{presentation.message}</p>
+      return props.message?.(presentation.message) ?? <Message message={presentation.message} />
+    }}</For>)
     return rendered as unknown as JSX.Element
   }
 

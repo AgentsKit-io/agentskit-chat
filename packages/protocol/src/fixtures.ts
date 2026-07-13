@@ -1,4 +1,13 @@
-import type { ComponentDecodeCode, ComponentRenderFrame, ProtocolDecodeCode, SessionSnapshot, TurnEvent } from './index.js'
+import type {
+  AnswerResponse,
+  ComponentDecodeCode,
+  ComponentRenderFrame,
+  DeterministicSiteConfig,
+  LocalKnowledgeArtifact,
+  ProtocolDecodeCode,
+  SessionSnapshot,
+  TurnEvent,
+} from './index.js'
 
 export interface TurnEventFixture {
   readonly name: string
@@ -211,3 +220,85 @@ export const persistentSessionFixture = {
   conversation: { state: 'complete', decisions: [] },
   confirmations: [],
 } as const satisfies SessionSnapshot
+
+export const deterministicContentHashFixture = 'sha256:d1b98e69dcb00985dc5fdad4a8475f926168e6485e85716758ad5e0f35cd4906' as const
+
+export const deterministicSiteConfigFixture = {
+  protocol: 'agentskit.chat.site', version: 1, siteId: 'agentskit-docs',
+  artifact: { href: '/agentskit-chat.knowledge.json', contentHash: deterministicContentHashFixture },
+  fallback: { mode: 'backend' },
+} as const satisfies DeterministicSiteConfig
+
+export const localKnowledgeArtifactFixture = {
+  protocol: 'agentskit.chat.knowledge', version: 1, artifactId: 'agentskit-docs-2026-07-13', siteId: 'agentskit-docs',
+  contentHash: deterministicContentHashFixture, generatedAt: '2026-07-13T00:00:00.000Z', expiresAt: '2026-07-14T00:00:00.000Z',
+  entries: [
+    {
+      id: 'install-cli', kind: 'command', label: 'Install the CLI', match: { type: 'exact', values: ['install cli', 'npm install agentskit'] },
+      answer: { markdown: 'Run `npm install agentskit`.', citations: [{ id: 'quickstart', title: 'Quickstart', href: '/docs/quickstart' }] },
+    },
+    {
+      id: 'docs-agentskit', kind: 'document', label: 'AgentsKit documentation', match: { type: 'exact', values: ['docs', 'agentskit docs'] },
+      answer: { markdown: 'Open the AgentsKit documentation.', citations: [{ id: 'agentskit-docs', title: 'AgentsKit docs', href: 'https://agentskit.io/docs' }] },
+    },
+    {
+      id: 'docs-registry', kind: 'document', label: 'Registry documentation', match: { type: 'exact', values: ['docs', 'registry docs'] },
+      answer: { markdown: 'Open the Registry documentation.', citations: [{ id: 'registry-docs', title: 'Registry docs', href: 'https://registry.agentskit.io' }] },
+    },
+  ],
+} as const satisfies LocalKnowledgeArtifact
+
+export const staleLocalKnowledgeArtifactFixture = {
+  ...localKnowledgeArtifactFixture,
+  artifactId: 'agentskit-docs-stale',
+  contentHash: 'sha256:c48a310e9497d1588e408bf7eb72ca64c04f25431ef8d17cd351b1d3bab3a3e9',
+  generatedAt: '2026-07-11T00:00:00.000Z',
+  expiresAt: '2026-07-12T00:00:00.000Z',
+} as const satisfies LocalKnowledgeArtifact
+
+export const deterministicAnswerFixtures = {
+  local: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'answer', query: 'Install CLI', normalizedQuery: 'install cli',
+    answer: localKnowledgeArtifactFixture.entries[0].answer,
+    provenance: { source: 'local', artifactId: localKnowledgeArtifactFixture.artifactId, contentHash: deterministicContentHashFixture, entryIds: ['install-cli'] },
+    confidence: { level: 'high', basis: 'exact' },
+  },
+  backend: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'answer', query: 'Compare runtimes', normalizedQuery: 'compare runtimes',
+    answer: { markdown: 'The backend can answer open-ended comparisons.', citations: [] },
+    provenance: { source: 'backend', provider: 'ask', model: 'configured-by-host' },
+    confidence: { level: 'high', basis: 'backend' },
+  },
+  ambiguous: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'choices', query: 'docs', normalizedQuery: 'docs',
+    message: 'More than one exact local answer matches. Choose one to continue.',
+    suggestions: [
+      { id: 'docs-agentskit', label: 'AgentsKit documentation', value: 'agentskit docs' },
+      { id: 'docs-registry', label: 'Registry documentation', value: 'registry docs' },
+    ],
+    provenance: { source: 'local', artifactId: localKnowledgeArtifactFixture.artifactId, contentHash: deterministicContentHashFixture, entryIds: ['docs-agentskit', 'docs-registry'] },
+    confidence: { level: 'medium', basis: 'ambiguous' },
+  },
+  miss: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'escalation', query: 'Why?', normalizedQuery: 'why?',
+    message: 'No exact local answer was found. A backend answer is required.', reason: 'miss', confidence: { level: 'low', basis: 'miss' },
+  },
+  stale: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'escalation', query: 'install cli', normalizedQuery: 'install cli',
+    message: 'Local knowledge is stale. A backend answer is required.', reason: 'stale', confidence: { level: 'low', basis: 'stale' },
+  },
+  corrupt: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'escalation', query: 'install cli', normalizedQuery: 'install cli',
+    message: 'Local knowledge is corrupt. A backend answer is required.', reason: 'corrupt', confidence: { level: 'low', basis: 'corrupt' },
+  },
+  offline: {
+    protocol: 'agentskit.chat.answer', version: 1, outcome: 'escalation', query: 'Why?', normalizedQuery: 'why?',
+    message: 'This question needs the backend, which is not available.', reason: 'offline', confidence: { level: 'low', basis: 'offline' },
+  },
+} as const satisfies Readonly<Record<string, AnswerResponse>>
+
+export const invalidDeterministicArtifactFixtures = [
+  { name: 'unsupported version', artifact: { ...localKnowledgeArtifactFixture, version: 2 }, code: 'DETERMINISTIC_UNSUPPORTED_VERSION' },
+  { name: 'corrupt artifact', artifact: { ...localKnowledgeArtifactFixture, entries: [{ unexpected: true }] }, code: 'DETERMINISTIC_INVALID_PAYLOAD' },
+  { name: 'hash mismatch', artifact: localKnowledgeArtifactFixture, expectedContentHash: `sha256:${'b'.repeat(64)}`, code: 'DETERMINISTIC_HASH_MISMATCH' },
+] as const

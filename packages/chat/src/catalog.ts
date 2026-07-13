@@ -7,6 +7,7 @@ const TextSchema = z.string().min(1).max(4_096)
 const LabelSchema = z.string().min(1).max(256)
 const JsonRecordSchema = z.record(z.string().max(128), z.json())
 const isPortableUrl = (value: string): boolean => {
+  if (/[\u0000-\u001F\u007F\\]/u.test(value)) return false
   if (/^\/(?!\/)/.test(value)) return true
   try { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) && url.username === '' && url.password === '' } catch { return false }
 }

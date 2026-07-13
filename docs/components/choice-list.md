@@ -40,6 +40,8 @@ Only declared keys can render. `resolveComponentFrame(frame, components)` valida
 
 The frame may come from an agent response or a deterministic route. Treat both as untrusted input and resolve them before choosing a native renderer. Unsupported consumers display the fallback summary.
 
+A choice may declare `action` for a policy-controlled side effect. Deterministic answer choices remain v1-compatible: they display the exact alias in `description`, while the host-provided `choiceSubmission` callback delegates authorization to the deterministic adapter that projected the frame. Every first-party AgentChat renderer submits the returned visible alias through the existing AgentsKit chat controller when no action exists. Authorization is exact and single-use, and the same callback event is emitted for observability. Model-authored or replayed generic choices cannot gain an automatic submission path by imitating an instance ID.
+
 ## Native renderers
 
 - React: `<ChoiceList frame={frame} manifest={components} onSelect={handleSelect} />` uses a labelled fieldset and native buttons.

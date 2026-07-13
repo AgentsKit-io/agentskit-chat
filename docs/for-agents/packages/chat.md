@@ -16,6 +16,8 @@
 - [`../../protocol/ask-service.md`](../../protocol/ask-service.md)
 - [`../../architecture/adrs/0022-shared-ask-service-integration.md`](../../architecture/adrs/0022-shared-ask-service-integration.md)
 - [`../../architecture/adrs/0023-conversation-transitions-use-agentskit-statechart.md`](../../architecture/adrs/0023-conversation-transitions-use-agentskit-statechart.md)
+- [`../../protocol/deterministic-answers.md`](../../protocol/deterministic-answers.md)
+- [`../../architecture/adrs/0024-deterministic-answer-plane.md`](../../architecture/adrs/0024-deterministic-answer-plane.md)
 
 ## Conversation boundary
 
@@ -40,6 +42,10 @@ Authorization uses `createCapabilityPolicy` + `withActionPolicy`. Trusted contex
 ## Ask service boundary
 
 Docs, Registry, and Playbook must consume `createAskAdapter` and `createAskSessionMemory`. Do not recreate the Ask schema, NDJSON decoder, fetch loop, citation projection, or browser message store in a host. Host-specific visual tools may use `projectTool`, but the returned component frame remains runtime validated. Use a new canonical storage key and pass prior formats through `legacyKeys`.
+
+## Deterministic answer boundary
+
+`createDeterministicAnswerResolver` performs only normalized whole-query equality over a bounded artifact and resolves an explicit ambiguous choice by entry ID. Do not add fuzzy, prefix, semantic, embedding, or model matching. `createDeterministicAnswerAdapter` may decide locally or delegate to an injected upstream `AdapterFactory`; it preserves streaming latency and cancellation while observing bounded output only to attach the unified backend envelope. Corrupt artifacts escalate without crashing startup, stale artifacts escalate, `fallback.mode` is enforced, and missing fallback becomes an offline response. The public contract is accepted by ADR-0024 with HITL approval recorded on 2026-07-13.
 
 ## Checks
 

@@ -10,6 +10,8 @@ It owns the application-session envelope schema and compatibility decoder, but n
 
 It also owns the external Ask service v1 event schema, NDJSON bounds, and decoder. The fetch adapter, citation projection, and browser-memory composition remain in `packages/chat`.
 
+It owns the accepted deterministic site-config, local-knowledge artifact, and unified-answer v1 envelopes, canonical SHA-256 serialization/verification, safe decoders, normalization rule, bounds, diagnostics, and conformance fixtures. Artifact generation, fetching, and caching remain host/Doc Bridge concerns; lookup and fallback composition remain in `packages/chat`.
+
 ## Read first
 
 - [`../../architecture/adrs/0004-snapshot-first-turn-protocol.md`](../../architecture/adrs/0004-snapshot-first-turn-protocol.md)
@@ -17,6 +19,8 @@ It also owns the external Ask service v1 event schema, NDJSON bounds, and decode
 - [`../../architecture/adrs/0007-closed-application-component-manifest.md`](../../architecture/adrs/0007-closed-application-component-manifest.md)
 - [`../../protocol/v1.md`](../../protocol/v1.md)
 - [`../../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../../architecture/adrs/0002-upstream-first-no-reimplementation.md)
+- [`../../protocol/deterministic-answers.md`](../../protocol/deterministic-answers.md)
+- [`../../architecture/adrs/0024-deterministic-answer-plane.md`](../../architecture/adrs/0024-deterministic-answer-plane.md)
 
 ## Compatibility guardrail
 

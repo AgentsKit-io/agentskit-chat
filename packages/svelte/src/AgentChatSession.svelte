@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, type SvelteChatStore } from '@agentskit/svelte'
-  import { decodeComponentFrame, isComponentFrameCandidate, type ComponentInteractionEvent, type ComponentRenderFrame, type ComponentSelectionEvent } from '@agentskit/chat-protocol'
-  import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveComponentFrame } from '@agentskit/chat'
+  import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+  import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveComponentFrame } from '@agentskit/chat'
   import type { ChatState, Message as ChatMessage } from '@agentskit/core'
   import type { AgentChatProps } from './types.js'
   import ChatBinding from './ChatBinding.svelte'
@@ -46,6 +46,27 @@
     try { onComponentSelect?.(event) } catch (error) { fail(error, 'Component selection callback failed.') }
     const action = resolveChoiceAction(frame, event.choiceId)
     if (action) void coordinator.propose(action).catch(error => { resolvedInstances.delete(event.instanceId); fail(error, 'Action proposal failed.') })
+    else {
+      let submission
+      try { submission = definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+        resolvedInstances.delete(event.instanceId)
+        fail(error, 'Choice submission authorization failed.')
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        resolvedInstances.delete(event.instanceId)
+        fail(new Error('This deterministic choice expired. Ask the question again.'), 'Choice unavailable.')
+        return
+      }
+      if (submission) void currentStore!.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { fail(error, 'Choice submission settlement failed.') } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { resolvedInstances.delete(event.instanceId) }
+          fail(error, 'Choice submission failed.')
+        },
+      )
+    }
   }
   function interactComponent(event: ComponentInteractionEvent) {
     if (resolvedInstances.has(event.instanceId)) return
@@ -65,20 +86,20 @@
       {@const targets = getLifecycleTargets(state.messages)}
       {#snippet content()}
         {#each state.messages as item (item.id)}
-          {@const candidate = item.role === 'assistant' && isComponentFrameCandidate(item.content)}
-          {@const decoded = candidate ? decodeComponentFrame(item.content) : undefined}
-          {#if decoded?.ok}
-            {@const resolved = definition.components === undefined ? undefined : resolveComponentFrame(decoded.frame, definition.components)}
-            {#if resolved?.ok}
-              {#if decoded.frame.componentKey === 'choice-list'}
-                {#if choiceList}{@render choiceList(decoded.frame, definition.components!, resolvedInstances.has(decoded.frame.instanceId), event => selectComponent(event, decoded.frame))}
-                {:else}<ChoiceList frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} />{/if}
-              {:else if standardComponent}{@render standardComponent(decoded.frame, definition.components!, resolvedInstances.has(decoded.frame.instanceId), interactComponent)}
-              {:else}<StandardComponent frame={decoded.frame} manifest={definition.components!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />{/if}
-            {:else}<p data-ak-component-fallback>{formatSemanticFallback(decoded.frame.fallback)}</p>{/if}
-          {:else if decoded && !decoded.ok}<p role="alert" data-ak-component-diagnostic={decoded.diagnostic.code}>{decoded.diagnostic.message}</p>
-          {:else if message}{@render message(item)}
-          {:else}<Message message={item} />{/if}
+          {#each presentChatMessage(item) as presentation, index (`${item.id}:${index}`)}
+            {#if presentation.kind === 'component'}
+              {@const resolved = definition.components === undefined ? undefined : resolveComponentFrame(presentation.frame, definition.components)}
+              {#if resolved?.ok}
+                {#if presentation.frame.componentKey === 'choice-list'}
+                  {#if choiceList}{@render choiceList(presentation.frame, definition.components!, resolvedInstances.has(presentation.frame.instanceId), event => selectComponent(event, presentation.frame))}
+                  {:else}<ChoiceList frame={presentation.frame} manifest={definition.components!} disabled={resolvedInstances.has(presentation.frame.instanceId)} onSelect={event => selectComponent(event, presentation.frame)} />{/if}
+                {:else if standardComponent}{@render standardComponent(presentation.frame, definition.components!, resolvedInstances.has(presentation.frame.instanceId), interactComponent)}
+                {:else}<StandardComponent frame={presentation.frame} manifest={definition.components!} disabled={resolvedInstances.has(presentation.frame.instanceId)} onInteract={interactComponent} />{/if}
+              {:else}<p data-ak-component-fallback>{formatSemanticFallback(presentation.frame.fallback)}</p>{/if}
+            {:else if presentation.kind === 'diagnostic'}<p role="alert" data-ak-component-diagnostic={presentation.code}>{presentation.message}</p>
+            {:else if message}{@render message(presentation.message)}
+            {:else}<Message message={presentation.message} />{/if}
+          {/each}
         {/each}
         {#each state.messages.flatMap(item => item.toolCalls ?? []) as toolCall (toolCall.id)}
           {#if confirmationSnippet}{@render confirmationSnippet(toolCall, approve, deny)}{:else}<ToolConfirmation {toolCall} onApprove={approve} onDeny={deny} />{/if}

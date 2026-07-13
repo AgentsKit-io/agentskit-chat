@@ -1,9 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common'
 import { Component, ContentChild, Input, OnChanges, SimpleChanges, TemplateRef, computed, inject, signal, type OnDestroy } from '@angular/core'
 import { AgentskitChat, ChatContainerComponent, InputBarComponent, MessageComponent, ThinkingIndicatorComponent, ToolConfirmationComponent } from '@agentskit/angular'
-import { formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
 import { StandardComponentComponent } from './standard-component.js'
@@ -57,15 +56,15 @@ interface MessagePresentation {
   providers: [AgentskitChat],
   template: `<section [attr.aria-label]="definition.id + ' chat'" data-ak-app-chat [style]="styleText()">
     <div aria-live="polite" aria-relevant="additions text" role="log"><ng-template #content>
-      @for (message of chat()?.messages ?? []; track message.id) { @let view = present(message);
+      @for (message of chat()?.messages ?? []; track message.id) { @for (view of presentations(message); track $index) {
         @switch (view.kind) {
           @case ('choice') { @if (choiceListTemplate) { <ng-container [ngTemplateOutlet]="choiceListTemplate" [ngTemplateOutletContext]="choiceContext(view.frame!)" /> } @else { <ak-choice-list [frame]="view.frame" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onSelect]="selectFor(view.frame!)" /> } }
           @case ('standard') { @if (standardComponentTemplate) { <ng-container [ngTemplateOutlet]="standardComponentTemplate" [ngTemplateOutletContext]="standardContext(view.frame!)" /> } @else { <ak-standard-component [frame]="view.frame!" [manifest]="definition.components!" [disabled]="resolvedInstances().has(view.frame!.instanceId)" [onInteract]="interact" /> } }
           @case ('fallback') { <p data-ak-component-fallback>{{ view.fallback }}</p> }
           @case ('diagnostic') { <p role="alert" [attr.data-ak-component-diagnostic]="view.diagnosticCode">{{ view.diagnosticMessage }}</p> }
-          @default { @if (messageTemplate) { <ng-container [ngTemplateOutlet]="messageTemplate" [ngTemplateOutletContext]="{ $implicit: message }" /> } @else { <ak-message [message]="message" /> } }
+          @default { @if (messageTemplate) { <ng-container [ngTemplateOutlet]="messageTemplate" [ngTemplateOutletContext]="{ $implicit: view.message }" /> } @else { <ak-message [message]="view.message!" /> } }
         }
-      }
+      } }
       @for (toolCall of toolCalls(); track toolCall.id) { @if (confirmationTemplate) { <ng-container [ngTemplateOutlet]="confirmationTemplate" [ngTemplateOutletContext]="confirmationContext(toolCall)" /> } @else { <ak-tool-confirmation [toolCall]="toolCall" [onApprove]="approve" [onDeny]="deny" /> } }
       @if (thinkingTemplate) { <ng-container [ngTemplateOutlet]="thinkingTemplate" [ngTemplateOutletContext]="{ $implicit: chat()?.status === 'streaming' }" /> } @else { <ak-thinking-indicator [visible]="chat()?.status === 'streaming'" /> }
     </ng-template>@if (containerTemplate) { <ng-container [ngTemplateOutlet]="containerTemplate" [ngTemplateOutletContext]="{ $implicit: content, content: content }" /> } @else { <ak-chat-container><ng-container [ngTemplateOutlet]="content" /></ak-chat-container> }</div>
@@ -130,11 +129,15 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
   readonly dangerColor = (): string => resolveChatTheme(this.theme).colors.danger
   readonly targets = () => getLifecycleTargets(this.chat()?.messages ?? [])
   readonly toolCalls = (): ToolCall[] => (this.chat()?.messages ?? []).flatMap(message => message.toolCalls ?? [])
-  present(message: ChatMessage): MessagePresentation {
-    const decoded = message.role === 'assistant' && isComponentFrameCandidate(message.content) ? decodeComponentFrame(message.content) : undefined
-    if (decoded?.ok) { const resolved = this.definition.components === undefined ? undefined : resolveComponentFrame(decoded.frame, this.definition.components); return resolved?.ok ? { kind: decoded.frame.componentKey === 'choice-list' ? 'choice' : 'standard', message, frame: decoded.frame } : { kind: 'fallback', message, fallback: formatSemanticFallback(decoded.frame.fallback) } }
-    if (decoded && !decoded.ok) return { kind: 'diagnostic', message, diagnosticCode: decoded.diagnostic.code, diagnosticMessage: decoded.diagnostic.message }
-    return { kind: 'message', message }
+  presentations(message: ChatMessage): readonly MessagePresentation[] {
+    return presentChatMessage(message).map(presentation => {
+      if (presentation.kind === 'message') return { kind: 'message', message: presentation.message }
+      if (presentation.kind === 'diagnostic') return { kind: 'diagnostic', message, diagnosticCode: presentation.code, diagnosticMessage: presentation.message }
+      const resolved = this.definition.components === undefined ? undefined : resolveComponentFrame(presentation.frame, this.definition.components)
+      return resolved?.ok
+        ? { kind: presentation.frame.componentKey === 'choice-list' ? 'choice' : 'standard', message, frame: presentation.frame }
+        : { kind: 'fallback', message, fallback: formatSemanticFallback(presentation.frame.fallback) }
+    })
   }
   readonly selectFor = (frame: ComponentRenderFrame) => (event: ComponentSelectionEvent): void => this.selectComponent(event, frame)
   readonly interact = (event: ComponentInteractionEvent): void => { if (this.resolvedInstances().has(event.instanceId)) return; this.resolvedInstances.update(current => new Set(current).add(event.instanceId)); try { this.onComponentInteract?.(event) } catch (error) { this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next }); this.fail(error, 'Component interaction callback failed.') } }
@@ -144,6 +147,27 @@ export class AgentChatComponent implements OnChanges, OnDestroy {
     try { this.onComponentSelect?.(event) } catch (error) { this.fail(error, 'Component selection callback failed.') }
     const action = resolveChoiceAction(frame, event.choiceId)
     if (action) void this.confirmation!.propose(action).catch(error => { this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next }); this.fail(error, 'Action proposal failed.') })
+    else {
+      let submission
+      try { submission = this.definition.choiceSubmission?.(frame, event.choiceId, { sessionId: this.currentSession!.sessionId }) } catch (error) {
+        this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next })
+        this.fail(error, 'Choice submission authorization failed.')
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next })
+        this.fail(new Error('This deterministic choice expired. Ask the question again.'), 'Choice unavailable.')
+        return
+      }
+      if (submission) void this.chat()!.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { this.fail(error, 'Choice submission settlement failed.') } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { this.resolvedInstances.update(current => { const next = new Set(current); next.delete(event.instanceId); return next }) }
+          this.fail(error, 'Choice submission failed.')
+        },
+      )
+    }
   }
   readonly approve = (id: string): void => { const record = this.confirmation?.getByToolCall(id); void (record ? this.confirmation!.approve(record.token, this.currentSession!.sessionId) : this.chat()!.approve(id)).catch(error => this.fail(error, 'Action approval failed.')) }
   readonly deny = (id: string, reason?: string): void => { const record = this.confirmation?.getByToolCall(id); void (record ? this.confirmation!.reject(record.token, this.currentSession!.sessionId, reason) : this.chat()!.deny(id, reason)).catch(error => this.fail(error, 'Action rejection failed.')) }

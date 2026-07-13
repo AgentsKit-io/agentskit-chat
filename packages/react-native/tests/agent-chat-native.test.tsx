@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ChatReturn } from '@agentskit/core'
 import { ChoiceListComponent, StandardComponentCatalog, createChatSession, defineChat, defineComponentManifest, resumeChatSession } from '@agentskit/chat'
-import type { SessionSnapshot } from '@agentskit/chat-protocol'
+import { createAssistantContentEncoder, type SessionSnapshot } from '@agentskit/chat-protocol'
 import { AgentChat } from '../../react/src/index.js'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import type { ReactNode } from 'react'
@@ -54,7 +54,10 @@ describe('AgentChatNative', () => {
     const { AgentChatNative } = await import('../src/index')
     render(<AgentChatNative definition={definition} />)
 
-    expect(useChat).toHaveBeenCalledWith(definition.chat)
+    expect(useChat).toHaveBeenCalledWith(expect.objectContaining({
+      ...definition.chat,
+      adapter: expect.objectContaining({ createSource: expect.any(Function) }),
+    }))
     expect(screen.getByText('Thinking')).toBeTruthy()
     expect(document.querySelector('[data-live="polite"]')).toBeTruthy()
   })
@@ -152,6 +155,51 @@ describe('AgentChatNative', () => {
     cleanup()
     render(<ChoiceListNative frame={invalidChoiceListPropsFrame} manifest={manifest} onSelect={onSelect} />)
     expect(screen.queryByTestId('ak-choice-list')).toBeNull()
+  })
+
+  it('submits a side-effect-free native choice through the upstream chat controller', async () => {
+    const { AgentChatNative } = await import('../src/index')
+    const send = vi.fn().mockResolvedValue(undefined)
+    const frame = {
+      ...validChoiceListFrame,
+      instanceId: 'deterministic-choices-native',
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => (
+        choice.id === 'docs' ? { ...choice, description: 'agentskit docs' } : choice
+      )) },
+    }
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'text', text: 'Choose a documentation site.' })
+      + encoder.encode({ kind: 'component', frame })
+    useChat.mockReturnValue({
+      messages: [{ id: 'choice', role: 'assistant', content }], status: 'idle', stop, send,
+    } as unknown as ChatReturn)
+    render(<AgentChatNative definition={{
+      ...definition,
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: (candidate, choiceId) => candidate.instanceId === frame.instanceId && choiceId === 'docs'
+        ? { value: 'agentskit docs', commit() {}, release() {} }
+        : undefined,
+    }} />)
+    fireEvent.click(screen.getByTestId('ak-choice-docs'))
+    expect(send).toHaveBeenCalledWith('agentskit docs')
+  })
+
+  it('restores a native choice when send and release both fail', async () => {
+    const { AgentChatNative } = await import('../src/index')
+    const send = vi.fn().mockRejectedValue(new Error('send failed'))
+    useChat.mockReturnValue({
+      messages: [{ id: 'choice', role: 'assistant', content: JSON.stringify(validChoiceListFrame) }], status: 'idle', stop, send,
+    } as unknown as ChatReturn)
+    render(<AgentChatNative definition={{
+      ...definition,
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: () => ({ value: 'agentskit docs', commit() {}, release() { throw new Error('release failed') } }),
+    }} />)
+    const choice = screen.getByTestId('ak-choice-docs') as HTMLButtonElement
+    fireEvent.click(choice)
+    await waitFor(() => expect(send).toHaveBeenCalledOnce())
+    await waitFor(() => expect(choice.disabled).toBe(false))
+    expect(screen.getByText('send failed')).toBeTruthy()
   })
 
   it('renders an agent frame through the native chat shell and falls back for an unknown component', async () => {

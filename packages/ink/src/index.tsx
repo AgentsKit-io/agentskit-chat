@@ -1,6 +1,5 @@
-import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import { ChatContainer, defaultInkTheme, InkThemeProvider, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat, useInkTheme } from '@agentskit/ink'
 import type { InkTheme } from '@agentskit/ink'
@@ -146,15 +145,16 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     approve: id => chatRef.current.approve(id),
     deny: (id, reason) => chatRef.current.deny(id, reason),
   } }))
-  const activeComponentId = [...chat.messages].reverse().find(message => {
-    if (message.role !== 'assistant' || definition.components === undefined || !isComponentFrameCandidate(message.content)) return false
-    const decoded = decodeComponentFrame(message.content)
-    const resolved = decoded.ok ? resolveComponentFrame(decoded.frame, definition.components) : undefined
-    return decoded.ok
-      && resolved?.ok === true
-      && (definition.components[decoded.frame.componentKey]?.events?.length ?? 0) > 0
-      && !resolvedInstances.has(decoded.frame.instanceId)
-  })?.id
+  const activePresentation = [...chat.messages].reverse().flatMap(message =>
+    [...presentChatMessage(message)].reverse(),
+  ).find(presentation => {
+    if (presentation.kind !== 'component' || definition.components === undefined) return false
+    const resolved = resolveComponentFrame(presentation.frame, definition.components)
+    return resolved.ok
+      && (definition.components[presentation.frame.componentKey]?.events?.length ?? 0) > 0
+      && !resolvedInstances.has(presentation.frame.instanceId)
+  })
+  const activeComponentInstanceId = activePresentation?.kind === 'component' ? activePresentation.frame.instanceId : undefined
   const handleComponentSelect = (event: ComponentSelectionEvent, frame: ComponentRenderFrame): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     resolvedInstancesRef.current.add(event.instanceId)
@@ -168,6 +168,29 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       setResolvedInstances(new Set(resolvedInstancesRef.current))
       setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
     })
+    else {
+      let submission
+      try { submission = definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(error instanceof Error ? error : new Error('Choice submission authorization failed.'))
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(new Error('This deterministic choice expired. Ask the question again.'))
+        return
+      }
+      if (submission) void chatRef.current.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { setActionError(error instanceof Error ? error : new Error('Choice submission settlement failed.')) } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)) }
+          setActionError(error instanceof Error ? error : new Error('Choice submission failed.'))
+        },
+      )
+    }
   }
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
@@ -198,28 +221,27 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   return (
     <Box flexDirection="column" gap={1}>
       <ContainerSlot>
-        {chat.messages.map(message => {
-          const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
-          const decoded = candidate ? decodeComponentFrame(message.content) : undefined
-          if (decoded?.ok) {
+        {chat.messages.flatMap(message => presentChatMessage(message).map((presentation, index) => {
+          const key = `${message.id}:${index}`
+          if (presentation.kind === 'component') {
             const manifest = definition.components
-            const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
-            if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
-            if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
-              ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} onSelect={event => handleComponentSelect(event, decoded.frame)} isActive={message.id === activeComponentId} />
-              : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} onInteract={interactComponent} isActive={message.id === activeComponentId} />
-            return <SemanticFallback key={message.id} fallback={decoded.frame.fallback} />
+            const resolved = manifest === undefined ? undefined : resolveComponentFrame(presentation.frame, manifest)
+            if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(presentation.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={key}>{formatSemanticFallback(presentation.frame.fallback)}</Text>
+            if (resolved?.ok) return presentation.frame.componentKey === 'choice-list'
+              ? <ChoiceListSlot key={key} frame={presentation.frame} manifest={manifest!} onSelect={event => handleComponentSelect(event, presentation.frame)} isActive={presentation.frame.instanceId === activeComponentInstanceId} />
+              : <StandardComponentSlot key={key} frame={presentation.frame} manifest={manifest!} onInteract={interactComponent} isActive={presentation.frame.instanceId === activeComponentInstanceId} />
+            return <SemanticFallback key={key} fallback={presentation.frame.fallback} />
           }
-          if (decoded && !decoded.ok) return <Text key={message.id} color={theme.toolStatus.error.color}>{decoded.diagnostic.message}</Text>
-          return <MessageSlot key={message.id} message={message} />
-        })}
+          if (presentation.kind === 'diagnostic') return <Text key={key} color={theme.toolStatus.error.color}>{presentation.message}</Text>
+          return <MessageSlot key={key} message={presentation.message} />
+        }))}
         {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
           <ConfirmationSlot key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
         ))}
         <ThinkingSlot visible={chat.status === 'streaming'} />
       </ContainerSlot>
       {chat.error || actionError ? <Text color={theme.toolStatus.error.color}>{chat.error?.message ?? actionError?.message}</Text> : null}
-      <InputSlot chat={chat} disabled={activeComponentId !== undefined} onSubmitInput={handleLifecycleCommand} {...(placeholder === undefined ? {} : { placeholder })} />
+      <InputSlot chat={chat} disabled={activeComponentInstanceId !== undefined} onSubmitInput={handleLifecycleCommand} {...(placeholder === undefined ? {} : { placeholder })} />
       <Text dimColor>/retry · /regenerate · /edit &lt;message&gt; · Esc stop</Text>
     </Box>
   )
