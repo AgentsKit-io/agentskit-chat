@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   deterministicAnswerFixtures,
@@ -8,19 +8,57 @@ import {
 } from '../src/fixtures.js'
 import {
   AnswerResponseSchema,
+  computeLocalKnowledgeArtifactContentHash,
   decodeAnswerResponse,
   decodeDeterministicSiteConfig,
   decodeLocalKnowledgeArtifact,
   DETERMINISTIC_ARTIFACT_MAX_BYTES,
   normalizeKnowledgeKey,
+  verifyLocalKnowledgeArtifact,
 } from '../src/index.js'
 
 describe('deterministic answer protocol v1', () => {
-  it('decodes the site config and verifies the configured artifact hash', () => {
+  it('decodes the site config and cryptographically verifies the configured artifact hash', async () => {
     expect(decodeDeterministicSiteConfig(JSON.stringify(deterministicSiteConfigFixture))).toEqual({ ok: true, value: deterministicSiteConfigFixture })
-    expect(decodeLocalKnowledgeArtifact(localKnowledgeArtifactFixture, {
+    expect(await computeLocalKnowledgeArtifactContentHash(localKnowledgeArtifactFixture)).toBe(localKnowledgeArtifactFixture.contentHash)
+    expect(await verifyLocalKnowledgeArtifact(localKnowledgeArtifactFixture, {
       expectedContentHash: deterministicSiteConfigFixture.artifact.contentHash,
+      expectedSiteId: deterministicSiteConfigFixture.siteId,
     })).toEqual({ ok: true, value: localKnowledgeArtifactFixture })
+  })
+
+  it('rejects content tampering even when the self-declared and configured hashes still agree', async () => {
+    const decoded = await verifyLocalKnowledgeArtifact({
+      ...localKnowledgeArtifactFixture,
+      entries: localKnowledgeArtifactFixture.entries.map((entry, index) => index === 0
+        ? { ...entry, answer: { ...entry.answer, markdown: 'Tampered content.' } }
+        : entry),
+    }, { expectedContentHash: localKnowledgeArtifactFixture.contentHash, expectedSiteId: localKnowledgeArtifactFixture.siteId })
+    expect(decoded.ok).toBe(false)
+    if (!decoded.ok) expect(decoded.diagnostic.code).toBe('DETERMINISTIC_HASH_MISMATCH')
+  })
+
+  it('lets producers calculate the first hash without a circular contentHash placeholder', async () => {
+    const { contentHash: _contentHash, ...artifactWithoutHash } = localKnowledgeArtifactFixture
+    expect(await computeLocalKnowledgeArtifactContentHash(artifactWithoutHash)).toBe(localKnowledgeArtifactFixture.contentHash)
+  })
+
+  it('verifies SHA-256 without depending on a Web Crypto global', async () => {
+    vi.stubGlobal('crypto', undefined)
+    try {
+      expect(await verifyLocalKnowledgeArtifact(localKnowledgeArtifactFixture, {
+        expectedContentHash: localKnowledgeArtifactFixture.contentHash,
+        expectedSiteId: localKnowledgeArtifactFixture.siteId,
+      })).toEqual({ ok: true, value: localKnowledgeArtifactFixture })
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('requires trusted hash and site anchors at runtime, not only in TypeScript', async () => {
+    const decoded = await verifyLocalKnowledgeArtifact(localKnowledgeArtifactFixture, {} as never)
+    expect(decoded.ok).toBe(false)
+    if (!decoded.ok) expect(decoded.diagnostic.code).toBe('DETERMINISTIC_INVALID_PAYLOAD')
   })
 
   it('strips additive v1 fields for forward-compatible producers', () => {
@@ -63,6 +101,27 @@ describe('deterministic answer protocol v1', () => {
     if (!decoded.ok) expect(decoded.diagnostic.code).toBe('DETERMINISTIC_LIMIT_EXCEEDED')
   })
 
+  it('requires a unique exact alias for every ambiguous entry', () => {
+    const entries = localKnowledgeArtifactFixture.entries.slice(1).map(entry => ({
+      ...entry,
+      match: { type: 'exact' as const, values: ['docs'] },
+    }))
+    const decoded = decodeLocalKnowledgeArtifact({ ...localKnowledgeArtifactFixture, entries })
+    expect(decoded.ok).toBe(false)
+    if (!decoded.ok) expect(decoded.diagnostic.code).toBe('DETERMINISTIC_INVALID_PAYLOAD')
+  })
+
+  it('rejects declared aliases whose normalized form exceeds the query limit', () => {
+    const decoded = decodeLocalKnowledgeArtifact({
+      ...localKnowledgeArtifactFixture,
+      entries: [{
+        ...localKnowledgeArtifactFixture.entries[0],
+        match: { type: 'exact', values: ['\uFDFA'.repeat(100)] },
+      }],
+    })
+    expect(decoded.ok).toBe(false)
+  })
+
   it('rejects cyclic programmatic input without throwing or leaking it', () => {
     const cyclic: Record<string, unknown> = { secret: 'do-not-leak' }
     cyclic.self = cyclic
@@ -72,7 +131,7 @@ describe('deterministic answer protocol v1', () => {
     })
   })
 
-  it.each(['javascript:alert(1)', '//evil.example/path', 'https://user:pass@example.com'])('rejects unsafe links', href => {
+  it.each(['javascript:alert(1)', '//evil.example/path', '/\\evil.example/path', 'https://user:pass@example.com'])('rejects unsafe links', href => {
     const decoded = decodeDeterministicSiteConfig({
       ...deterministicSiteConfigFixture,
       artifact: { ...deterministicSiteConfigFixture.artifact, href },
@@ -88,6 +147,13 @@ describe('deterministic answer protocol v1', () => {
     expect(AnswerResponseSchema.safeParse({
       ...deterministicAnswerFixtures.local,
       confidence: { level: 'low', basis: 'miss' },
+    }).success).toBe(false)
+  })
+
+  it('rejects a response whose normalized query contradicts its query', () => {
+    expect(AnswerResponseSchema.safeParse({
+      ...deterministicAnswerFixtures.local,
+      normalizedQuery: 'different',
     }).success).toBe(false)
   })
 })

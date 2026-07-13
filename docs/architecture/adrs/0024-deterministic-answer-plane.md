@@ -10,7 +10,7 @@ AgentsKit Docs, Registry, Playbook, and future ecosystem sites need to answer ex
 
 If each host invents matching, confidence, artifact, and escalation rules, the same question can produce incompatible behavior across the ecosystem. If AgentsKit Chat implements another controller, adapter lifecycle, retrieval engine, or message model, it duplicates AgentsKit.
 
-## Proposed decision
+## Decision
 
 `@agentskit/chat-protocol` owns three public v1 runtime boundaries:
 
@@ -25,9 +25,9 @@ Artifacts accept only `command`, `package`, `navigation`, `contribution`, `ecosy
 1. one exact entry returns a high-confidence local answer;
 2. multiple exact entries return medium-confidence choices;
 3. miss, stale, corrupt, or offline state returns low-confidence escalation; and
-4. when a backend exists, the original request, lifecycle, stream, and cancellation remain owned by that adapter. The escalation envelope is added only to `AdapterRequest.context.metadata`.
+4. when a backend exists, the original request, lifecycle, streaming latency, and cancellation remain owned by that adapter. The escalation envelope is added to `AdapterRequest.context.metadata`, while bounded streamed text is observed only to attach the unified backend-answer envelope to the final chunk.
 
-Artifact production, cache policy, fetching, content hashing, and backend operation remain host responsibilities. Doc Bridge may generate artifacts, but AgentsKit Chat does not depend on its implementation. Existing ordered assistant content and standard `source-list`/`choice-list` components project local decisions without a new renderer protocol.
+Artifact production, cache policy, fetching, and backend operation remain host responsibilities. The protocol package owns canonical serialization and SHA-256 verification so producers and consumers cannot drift. Doc Bridge may generate artifacts, but AgentsKit Chat does not depend on its implementation. Existing ordered assistant content and standard `source-list`/`choice-list` components project local decisions without a new renderer protocol. Deterministic choices reuse the visible `description` field. The host wires the adapter-owned submission resolver into the chat definition; the session wrapper supplies identity through an optional adapter extension while preserving the upstream request, and the resolver creates an exact, session-scoped reservation that commits after successful send or releases on failure. Generic frames cannot authorize themselves, retries remain functional, and sessions cannot consume each other's choices. Authorization state is bounded per session and globally with claimed reservations protected from eviction; headless hosts can explicitly release abandoned sessions. Headless consumers may resolve an offered entry ID against its original ambiguous query.
 
 ## Alternatives considered
 
@@ -37,14 +37,15 @@ Artifact production, cache policy, fetching, content hashing, and backend operat
 4. Add another controller or stream reducer — rejected by ADR-0002; the published AgentsKit adapter boundary already composes this behavior.
 5. Couple the runtime to Doc Bridge — rejected because artifact consumers must remain framework- and generator-neutral.
 
-## Proposed consequences
+## Consequences
 
 - Exact ecosystem facts can resolve synchronously and offline.
 - Ambiguity is visible instead of silently selecting an answer.
 - Unknown or untrusted input never becomes a high-confidence local answer.
-- Hosts must decode and hash-check artifacts before constructing the adapter.
+- Hosts must cryptographically verify artifacts before constructing the adapter; corrupt programmatic input remains an inert escalation rather than a startup failure.
+- `fallback.mode` is enforced by the adapter, even if a backend factory is accidentally supplied while disabled.
 - Required fields or semantic changes require v2, compatibility fixtures, and a new ADR.
-- This ADR and its public contract must not be merged until the human approval gate in issue #69 is satisfied.
+- The human approval gate in issue #69 was satisfied on 2026-07-13 before this contract was marked ready.
 
 ## Upstream adoption record
 

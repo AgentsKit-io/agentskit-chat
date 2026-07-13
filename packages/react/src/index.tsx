@@ -174,6 +174,29 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
       setResolvedInstances(new Set(resolvedInstancesRef.current))
       setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
     })
+    else {
+      let submission
+      try { submission = definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(error instanceof Error ? error : new Error('Choice submission authorization failed.'))
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(new Error('This deterministic choice expired. Select it again after asking the question once more.'))
+        return
+      }
+      if (submission) void chatRef.current.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { setActionError(error instanceof Error ? error : new Error('Choice submission settlement failed.')) } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)) }
+          setActionError(error instanceof Error ? error : new Error('Choice submission failed.'))
+        },
+      )
+    }
   }
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return

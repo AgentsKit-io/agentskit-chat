@@ -1,3 +1,5 @@
+import { sha256 } from '@noble/hashes/sha2.js'
+import { bytesToHex } from '@noble/hashes/utils.js'
 import { z } from 'zod'
 
 export const DETERMINISTIC_SITE_PROTOCOL = 'agentskit.chat.site' as const
@@ -19,6 +21,7 @@ const ContentHashSchema = z.string().regex(/^sha256:[a-f0-9]{64}$/)
 const DateTimeSchema = z.string().datetime({ offset: true })
 
 const isSafeHref = (value: string): boolean => {
+  if (/[\u0000-\u001F\u007F\\]/u.test(value)) return false
   if (value.startsWith('//')) return false
   if (!/^[A-Za-z][A-Za-z0-9+.-]*:/.test(value)) {
     return /^\/(?!\/)/.test(value)
@@ -66,6 +69,9 @@ export const DeterministicKnowledgeEntrySchema = z.object({
         const seen = new Set<string>()
         values.forEach((value, index) => {
           const normalized = normalizeKnowledgeKey(value)
+          if (normalized.length > DETERMINISTIC_QUERY_MAX_CHARS) {
+            context.addIssue({ code: 'custom', path: [index], message: 'Normalized match values must fit the deterministic query limit.' })
+          }
           if (seen.has(normalized)) context.addIssue({ code: 'custom', path: [index], message: 'Match values must be unique after normalization.' })
           seen.add(normalized)
         })
@@ -88,9 +94,21 @@ export const LocalKnowledgeArtifactSchema = z.object({
   entries: z.array(DeterministicKnowledgeEntrySchema).max(DETERMINISTIC_ARTIFACT_MAX_ENTRIES).readonly(),
 }).superRefine((artifact, context) => {
   const ids = new Set<string>()
+  const aliases = new Map<string, Set<string>>()
   artifact.entries.forEach((entry, index) => {
     if (ids.has(entry.id)) context.addIssue({ code: 'custom', path: ['entries', index, 'id'], message: 'Entry ids must be unique.' })
     ids.add(entry.id)
+    for (const value of entry.match.values) {
+      const key = normalizeKnowledgeKey(value)
+      const entryIds = aliases.get(key) ?? new Set<string>()
+      entryIds.add(entry.id)
+      aliases.set(key, entryIds)
+    }
+  })
+  artifact.entries.forEach((entry, index) => {
+    if (!entry.match.values.some(value => aliases.get(normalizeKnowledgeKey(value))?.size === 1)) {
+      context.addIssue({ code: 'custom', path: ['entries', index, 'match', 'values'], message: 'Every entry must have at least one globally unique exact alias.' })
+    }
   })
   if (artifact.expiresAt !== undefined && Date.parse(artifact.expiresAt) <= Date.parse(artifact.generatedAt)) {
     context.addIssue({ code: 'custom', path: ['expiresAt'], message: 'Expiration must be after generation.' })
@@ -146,6 +164,9 @@ export const AnswerResponseSchema = z.discriminatedUnion('outcome', [
     confidence: AnswerConfidenceSchema,
   }).readonly(),
 ]).superRefine((response, context) => {
+  if (response.normalizedQuery !== normalizeKnowledgeKey(response.query).slice(0, DETERMINISTIC_QUERY_MAX_CHARS)) {
+    context.addIssue({ code: 'custom', path: ['normalizedQuery'], message: 'Normalized query must match the canonical normalization rule.' })
+  }
   if (response.outcome === 'answer') {
     const validLocal = response.provenance.source === 'local'
       && response.confidence.level === 'high' && response.confidence.basis === 'exact'
@@ -219,7 +240,7 @@ const parseBoundedInput = <T>(input: unknown, schema: z.ZodType<T>, protocol: st
 export const decodeDeterministicSiteConfig = (input: unknown): DeterministicDecodeResult<DeterministicSiteConfig> =>
   parseBoundedInput(input, DeterministicSiteConfigSchema, DETERMINISTIC_SITE_PROTOCOL, DETERMINISTIC_SITE_PROTOCOL_VERSION, 16_384)
 
-export interface DecodeLocalKnowledgeArtifactOptions { readonly expectedContentHash?: string }
+export interface DecodeLocalKnowledgeArtifactOptions { readonly expectedContentHash?: string; readonly expectedSiteId?: string }
 
 export const decodeLocalKnowledgeArtifact = (input: unknown, options: DecodeLocalKnowledgeArtifactOptions = {}): DeterministicDecodeResult<LocalKnowledgeArtifact> => {
   const decoded = parseBoundedInput(input, LocalKnowledgeArtifactSchema, DETERMINISTIC_KNOWLEDGE_PROTOCOL, DETERMINISTIC_KNOWLEDGE_PROTOCOL_VERSION, DETERMINISTIC_ARTIFACT_MAX_BYTES)
@@ -227,8 +248,83 @@ export const decodeLocalKnowledgeArtifact = (input: unknown, options: DecodeLoca
   if (options.expectedContentHash !== undefined && decoded.value.contentHash !== options.expectedContentHash) {
     return failure('DETERMINISTIC_HASH_MISMATCH', 'Deterministic artifact does not match the configured content hash.')
   }
+  if (options.expectedSiteId !== undefined && decoded.value.siteId !== options.expectedSiteId) {
+    return failure('DETERMINISTIC_INVALID_PAYLOAD', 'Deterministic artifact belongs to a different site.')
+  }
   return decoded
 }
+
+declare const verifiedArtifact: unique symbol
+export type VerifiedLocalKnowledgeArtifact = LocalKnowledgeArtifact & { readonly [verifiedArtifact]: true }
+export type LocalKnowledgeArtifactHashInput = Omit<LocalKnowledgeArtifact, 'contentHash'> & { readonly contentHash?: string }
+
+/** Serializes the accepted v1 fields in a fixed order; contentHash is excluded to avoid self-reference. */
+export const canonicalizeLocalKnowledgeArtifact = (artifact: LocalKnowledgeArtifactHashInput): string => JSON.stringify({
+  protocol: artifact.protocol,
+  version: artifact.version,
+  artifactId: artifact.artifactId,
+  siteId: artifact.siteId,
+  generatedAt: artifact.generatedAt,
+  ...(artifact.expiresAt === undefined ? {} : { expiresAt: artifact.expiresAt }),
+  entries: artifact.entries.map(entry => ({
+    id: entry.id,
+    kind: entry.kind,
+    label: entry.label,
+    match: { type: entry.match.type, values: [...entry.match.values] },
+    answer: {
+      markdown: entry.answer.markdown,
+      citations: entry.answer.citations.map(citation => ({ id: citation.id, title: citation.title, href: citation.href })),
+    },
+  })),
+})
+
+const HASH_PLACEHOLDER = `sha256:${'0'.repeat(64)}`
+
+const calculateLocalKnowledgeArtifactContentHash = (artifactInput: LocalKnowledgeArtifactHashInput): string => {
+  const decoded = decodeLocalKnowledgeArtifact({ ...artifactInput, contentHash: HASH_PLACEHOLDER })
+  if (!decoded.ok) throw new TypeError(decoded.diagnostic.message)
+  const digest = sha256(new TextEncoder().encode(canonicalizeLocalKnowledgeArtifact(decoded.value)))
+  return `sha256:${bytesToHex(digest)}`
+}
+
+export const computeLocalKnowledgeArtifactContentHash = async (artifactInput: LocalKnowledgeArtifactHashInput): Promise<string> =>
+  calculateLocalKnowledgeArtifactContentHash(artifactInput)
+
+export interface VerifyLocalKnowledgeArtifactOptions extends DecodeLocalKnowledgeArtifactOptions {
+  readonly expectedContentHash: string
+  readonly expectedSiteId: string
+}
+
+const TrustedArtifactOptionsSchema = z.object({
+  expectedContentHash: ContentHashSchema,
+  expectedSiteId: SafeIdentifierSchema,
+}).readonly()
+
+export const verifyLocalKnowledgeArtifactSync = (
+  input: unknown,
+  options: VerifyLocalKnowledgeArtifactOptions,
+): DeterministicDecodeResult<VerifiedLocalKnowledgeArtifact> => {
+  const trusted = TrustedArtifactOptionsSchema.safeParse(options)
+  if (!trusted.success) return failure('DETERMINISTIC_INVALID_PAYLOAD', 'Trusted deterministic artifact configuration is invalid.')
+  const decoded = decodeLocalKnowledgeArtifact(input, trusted.data)
+  if (!decoded.ok) return decoded
+  try {
+    const actual = calculateLocalKnowledgeArtifactContentHash(decoded.value)
+    if (actual !== decoded.value.contentHash) {
+      return failure('DETERMINISTIC_HASH_MISMATCH', 'Deterministic artifact content does not match its SHA-256 hash.')
+    }
+    return { ok: true, value: decoded.value as VerifiedLocalKnowledgeArtifact }
+  } catch {
+    return failure('DETERMINISTIC_INVALID_PAYLOAD', 'Deterministic artifact integrity could not be verified.')
+  }
+}
+
+/** Validates bounds/schema/site and verifies both trusted and self-declared SHA-256 values. */
+export const verifyLocalKnowledgeArtifact = async (
+  input: unknown,
+  options: VerifyLocalKnowledgeArtifactOptions,
+): Promise<DeterministicDecodeResult<VerifiedLocalKnowledgeArtifact>> =>
+  verifyLocalKnowledgeArtifactSync(input, options)
 
 export const decodeAnswerResponse = (input: unknown): DeterministicDecodeResult<AnswerResponse> =>
   parseBoundedInput(input, AnswerResponseSchema, ANSWER_PROTOCOL, ANSWER_PROTOCOL_VERSION, 262_144)

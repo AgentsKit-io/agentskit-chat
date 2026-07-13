@@ -221,7 +221,7 @@ export const persistentSessionFixture = {
   confirmations: [],
 } as const satisfies SessionSnapshot
 
-export const deterministicContentHashFixture = `sha256:${'a'.repeat(64)}` as const
+export const deterministicContentHashFixture = 'sha256:d1b98e69dcb00985dc5fdad4a8475f926168e6485e85716758ad5e0f35cd4906' as const
 
 export const deterministicSiteConfigFixture = {
   protocol: 'agentskit.chat.site', version: 1, siteId: 'agentskit-docs',
@@ -238,11 +238,11 @@ export const localKnowledgeArtifactFixture = {
       answer: { markdown: 'Run `npm install agentskit`.', citations: [{ id: 'quickstart', title: 'Quickstart', href: '/docs/quickstart' }] },
     },
     {
-      id: 'docs-agentskit', kind: 'document', label: 'AgentsKit documentation', match: { type: 'exact', values: ['docs'] },
+      id: 'docs-agentskit', kind: 'document', label: 'AgentsKit documentation', match: { type: 'exact', values: ['docs', 'agentskit docs'] },
       answer: { markdown: 'Open the AgentsKit documentation.', citations: [{ id: 'agentskit-docs', title: 'AgentsKit docs', href: 'https://agentskit.io/docs' }] },
     },
     {
-      id: 'docs-registry', kind: 'document', label: 'Registry documentation', match: { type: 'exact', values: ['docs'] },
+      id: 'docs-registry', kind: 'document', label: 'Registry documentation', match: { type: 'exact', values: ['docs', 'registry docs'] },
       answer: { markdown: 'Open the Registry documentation.', citations: [{ id: 'registry-docs', title: 'Registry docs', href: 'https://registry.agentskit.io' }] },
     },
   ],
@@ -251,6 +251,7 @@ export const localKnowledgeArtifactFixture = {
 export const staleLocalKnowledgeArtifactFixture = {
   ...localKnowledgeArtifactFixture,
   artifactId: 'agentskit-docs-stale',
+  contentHash: 'sha256:c48a310e9497d1588e408bf7eb72ca64c04f25431ef8d17cd351b1d3bab3a3e9',
   generatedAt: '2026-07-11T00:00:00.000Z',
   expiresAt: '2026-07-12T00:00:00.000Z',
 } as const satisfies LocalKnowledgeArtifact
@@ -272,8 +273,8 @@ export const deterministicAnswerFixtures = {
     protocol: 'agentskit.chat.answer', version: 1, outcome: 'choices', query: 'docs', normalizedQuery: 'docs',
     message: 'More than one exact local answer matches. Choose one to continue.',
     suggestions: [
-      { id: 'docs-agentskit', label: 'AgentsKit documentation', value: 'docs' },
-      { id: 'docs-registry', label: 'Registry documentation', value: 'docs' },
+      { id: 'docs-agentskit', label: 'AgentsKit documentation', value: 'agentskit docs' },
+      { id: 'docs-registry', label: 'Registry documentation', value: 'registry docs' },
     ],
     provenance: { source: 'local', artifactId: localKnowledgeArtifactFixture.artifactId, contentHash: deterministicContentHashFixture, entryIds: ['docs-agentskit', 'docs-registry'] },
     confidence: { level: 'medium', basis: 'ambiguous' },

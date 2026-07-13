@@ -8,6 +8,7 @@ import { vi } from 'vitest'
 
 import { ChoiceListComponent, StandardComponentCatalog, defineComponentManifest } from '@agentskit/chat'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
+import { createAssistantContentEncoder } from '../../protocol/src/index.js'
 import { AgentChat, ChoiceList, SemanticFallback, StandardComponent, toChatInkTheme } from '../src/index.js'
 
 const adapter: AdapterFactory = {
@@ -96,9 +97,12 @@ describe('Ink application shell', () => {
     const countingAdapter: AdapterFactory = {
       createSource: () => { agentCalls += 1; return { async *stream() { yield { type: 'done' } }, abort() {} } },
     }
+    const encoder = createAssistantContentEncoder()
+    const orderedChoice = encoder.encode({ kind: 'text', text: 'Choose a destination.' })
+      + encoder.encode({ kind: 'component', frame: validChoiceListFrame })
     const view = render(<AgentChat definition={{
       id: 'choice-agent', components: manifest,
-      chat: { adapter: countingAdapter, initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(validChoiceListFrame) })] },
+      chat: { adapter: countingAdapter, initialMessages: [buildMessage({ role: 'assistant', content: orderedChoice })] },
     }} onComponentSelect={onSelect} />)
     expect(view.lastFrame()).toContain('Where should we go?')
     view.stdin.write('1')
@@ -134,6 +138,25 @@ describe('Ink application shell', () => {
     view.stdin.write('\r')
     view.stdin.write('n')
     expect(view.lastFrame()).toContain('n')
+    view.unmount()
+  })
+
+  it('activates only the last unresolved interactive frame in one ordered message', () => {
+    const manifest = defineComponentManifest([ChoiceListComponent])
+    const first = { ...validChoiceListFrame, instanceId: 'first-choice' }
+    const second = { ...validChoiceListFrame, instanceId: 'second-choice' }
+    const encoder = createAssistantContentEncoder()
+    const content = encoder.encode({ kind: 'component', frame: first })
+      + encoder.encode({ kind: 'text', text: 'Then choose again.' })
+      + encoder.encode({ kind: 'component', frame: second })
+    const onSelect = vi.fn()
+    const view = render(<AgentChat definition={{
+      id: 'ordered-focus', components: manifest,
+      chat: { adapter, initialMessages: [buildMessage({ role: 'assistant', content })] },
+    }} onComponentSelect={onSelect} />)
+    view.stdin.write('\r')
+    expect(onSelect).toHaveBeenCalledOnce()
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ instanceId: 'second-choice' }))
     view.unmount()
   })
 

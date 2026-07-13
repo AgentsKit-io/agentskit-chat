@@ -10,7 +10,7 @@ It owns the application-session envelope schema and compatibility decoder, but n
 
 It also owns the external Ask service v1 event schema, NDJSON bounds, and decoder. The fetch adapter, citation projection, and browser-memory composition remain in `packages/chat`.
 
-It owns the proposed deterministic site-config, local-knowledge artifact, and unified-answer v1 envelopes, safe decoders, normalization rule, bounds, diagnostics, and conformance fixtures. Artifact generation, fetching, caching, and hashing remain host/Doc Bridge concerns; lookup and fallback composition remain in `packages/chat`.
+It owns the accepted deterministic site-config, local-knowledge artifact, and unified-answer v1 envelopes, canonical SHA-256 serialization/verification, safe decoders, normalization rule, bounds, diagnostics, and conformance fixtures. Artifact generation, fetching, and caching remain host/Doc Bridge concerns; lookup and fallback composition remain in `packages/chat`.
 
 ## Read first
 

@@ -1,6 +1,5 @@
-import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat-protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
 import {
   ChatContainer,
@@ -145,6 +144,29 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
       setResolvedInstances(new Set(resolvedInstancesRef.current))
       setActionError(error instanceof Error ? error : new Error('Action proposal failed.'))
     })
+    else {
+      let submission
+      try { submission = definition.choiceSubmission?.(frame, event.choiceId, { sessionId }) } catch (error) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(error instanceof Error ? error : new Error('Choice submission authorization failed.'))
+        return
+      }
+      if (submission && 'unavailable' in submission) {
+        resolvedInstancesRef.current.delete(event.instanceId)
+        setResolvedInstances(new Set(resolvedInstancesRef.current))
+        setActionError(new Error('This deterministic choice expired. Ask the question again.'))
+        return
+      }
+      if (submission) void chatRef.current.send(submission.value).then(
+        () => { try { submission.commit() } catch (error) { setActionError(error instanceof Error ? error : new Error('Choice submission settlement failed.')) } },
+        error => {
+          try { submission.release() } catch { /* settlement isolation */ }
+          finally { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)) }
+          setActionError(error instanceof Error ? error : new Error('Choice submission failed.'))
+        },
+      )
+    }
   }
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
@@ -169,26 +191,25 @@ const AgentChatNativeSession = ({ definition, placeholder, onComponentSelect = (
     <View testID="ak-app-chat" accessibilityLabel={`${definition.id} chat`} style={styles.root}>
       <View accessibilityLiveRegion="polite">
         <ContainerSlot style={styles.container}>
-          {chat.messages.map(message => {
-            const candidate = message.role === 'assistant' && isComponentFrameCandidate(message.content)
-            const decoded = candidate ? decodeComponentFrame(message.content) : undefined
-            if (decoded?.ok) {
+          {chat.messages.flatMap(message => presentChatMessage(message).map((presentation, index) => {
+            const key = `${message.id}:${index}`
+            if (presentation.kind === 'component') {
               const manifest = definition.components
-              const resolved = manifest === undefined ? undefined : resolveComponentFrame(decoded.frame, manifest)
-              if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(decoded.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={message.id}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
-              if (resolved?.ok) return decoded.frame.componentKey === 'choice-list'
-                ? <ChoiceListSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onSelect={event => selectComponent(event, decoded.frame)} styles={styles} />
-                : <StandardComponentSlot key={message.id} frame={decoded.frame} manifest={manifest!} disabled={resolvedInstances.has(decoded.frame.instanceId)} onInteract={interactComponent} />
-              return <Text key={message.id} style={styles.assistantMessageText}>{formatSemanticFallback(decoded.frame.fallback)}</Text>
+              const resolved = manifest === undefined ? undefined : resolveComponentFrame(presentation.frame, manifest)
+              if (resolved?.ok && slots.StandardComponent === undefined && !STANDARD_COMPONENT_KEYS.includes(presentation.frame.componentKey as typeof STANDARD_COMPONENT_KEYS[number])) return <Text key={key}>{formatSemanticFallback(presentation.frame.fallback)}</Text>
+              if (resolved?.ok) return presentation.frame.componentKey === 'choice-list'
+                ? <ChoiceListSlot key={key} frame={presentation.frame} manifest={manifest!} disabled={resolvedInstances.has(presentation.frame.instanceId)} onSelect={event => selectComponent(event, presentation.frame)} styles={styles} />
+                : <StandardComponentSlot key={key} frame={presentation.frame} manifest={manifest!} disabled={resolvedInstances.has(presentation.frame.instanceId)} onInteract={interactComponent} />
+              return <Text key={key} style={styles.assistantMessageText}>{formatSemanticFallback(presentation.frame.fallback)}</Text>
             }
-            if (decoded && !decoded.ok) return <Text key={message.id} accessibilityRole="alert" style={styles.dangerText}>{decoded.diagnostic.message}</Text>
+            if (presentation.kind === 'diagnostic') return <Text key={key} accessibilityRole="alert" style={styles.dangerText}>{presentation.message}</Text>
             return <MessageSlot
-              key={message.id}
-              message={message}
-              style={message.role === 'user' ? styles.userMessage : styles.assistantMessage}
-              contentStyle={message.role === 'user' ? styles.userMessageText : styles.assistantMessageText}
+              key={key}
+              message={presentation.message}
+              style={presentation.message.role === 'user' ? styles.userMessage : styles.assistantMessage}
+              contentStyle={presentation.message.role === 'user' ? styles.userMessageText : styles.assistantMessageText}
             />
-          })}
+          }))}
           {chat.messages.flatMap(message => message.toolCalls ?? []).map(toolCall => (
             <ConfirmationSlot key={toolCall.id} toolCall={toolCall} onApprove={approve} onDeny={deny} />
           ))}

@@ -125,6 +125,68 @@ describe('AgentChat', () => {
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ type: 'select', choiceId: 'docs' }))
   })
 
+  it('submits a side-effect-free choice value through the upstream chat controller', async () => {
+    const frame = {
+      ...validChoiceListFrame,
+      instanceId: 'deterministic-choices-react',
+      props: { ...validChoiceListFrame.props, choices: validChoiceListFrame.props.choices.map(choice => (
+        choice.id === 'docs' ? { ...choice, description: 'agentskit docs' } : choice
+      )) },
+    }
+    const createSource = vi.fn(adapter().createSource)
+    render(<AgentChat definition={defineChat({
+      id: 'submittable-choice',
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: (candidate, choiceId) => candidate.instanceId === frame.instanceId && choiceId === 'docs'
+        ? { value: 'agentskit docs', commit() {}, release() {} }
+        : undefined,
+      chat: { adapter: { createSource }, initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(frame) })] },
+    })} />)
+    fireEvent.click(screen.getByRole('button', { name: /Documentation/ }))
+    await waitFor(() => expect(createSource).toHaveBeenCalledWith(expect.objectContaining({
+      messages: expect.arrayContaining([expect.objectContaining({ role: 'user', content: 'agentskit docs' })]),
+    })))
+  })
+
+  it('keeps the choice usable when submission authorization throws', async () => {
+    render(<AgentChat definition={defineChat({
+      id: 'authorization-error',
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: () => { throw new Error('authorization unavailable') },
+      chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(validChoiceListFrame) })] },
+    })} />)
+    const choice = screen.getByRole('button', { name: /Documentation/ })
+    fireEvent.click(choice)
+    expect((await screen.findByRole('alert')).textContent).toContain('authorization unavailable')
+    expect((choice as HTMLButtonElement).disabled).toBe(false)
+  })
+
+  it('reports an expired deterministic choice without leaving it disabled', async () => {
+    render(<AgentChat definition={defineChat({
+      id: 'expired-authorization',
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: () => ({ unavailable: true }),
+      chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(validChoiceListFrame) })] },
+    })} />)
+    const choice = screen.getByRole('button', { name: /Documentation/ })
+    fireEvent.click(choice)
+    expect((await screen.findByRole('alert')).textContent).toContain('expired')
+    expect((choice as HTMLButtonElement).disabled).toBe(false)
+  })
+
+  it('isolates a commit failure after a successful choice send', async () => {
+    render(<AgentChat definition={defineChat({
+      id: 'commit-error',
+      components: defineComponentManifest([ChoiceListComponent]),
+      choiceSubmission: () => ({ value: 'agentskit docs', commit() { throw new Error('commit failed') }, release() {} }),
+      chat: { adapter: adapter(), initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(validChoiceListFrame) })] },
+    })} />)
+    const choice = screen.getByRole('button', { name: /Documentation/ })
+    fireEvent.click(choice)
+    expect((await screen.findByRole('alert')).textContent).toContain('commit failed')
+    expect((choice as HTMLButtonElement).disabled).toBe(true)
+  })
+
   it('renders a deterministic-route frame inside the chat shell', async () => {
     const onComponentSelect = vi.fn()
     render(<AgentChat definition={defineChat({

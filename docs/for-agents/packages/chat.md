@@ -45,7 +45,7 @@ Docs, Registry, and Playbook must consume `createAskAdapter` and `createAskSessi
 
 ## Deterministic answer boundary
 
-`createDeterministicAnswerResolver` performs only normalized whole-query equality over a validated artifact. Do not add fuzzy, prefix, semantic, embedding, or model matching. `createDeterministicAnswerAdapter` may decide locally or delegate to an injected upstream `AdapterFactory`; it must not consume the backend stream, replace cancellation, or implement another controller. Corrupt artifacts are rejected at the protocol boundary, stale artifacts escalate, and missing fallback becomes an offline response. The public contract is accepted by ADR-0024 with HITL approval recorded on 2026-07-13.
+`createDeterministicAnswerResolver` performs only normalized whole-query equality over a bounded artifact and resolves an explicit ambiguous choice by entry ID. Do not add fuzzy, prefix, semantic, embedding, or model matching. `createDeterministicAnswerAdapter` may decide locally or delegate to an injected upstream `AdapterFactory`; it preserves streaming latency and cancellation while observing bounded output only to attach the unified backend envelope. Corrupt artifacts escalate without crashing startup, stale artifacts escalate, `fallback.mode` is enforced, and missing fallback becomes an offline response. The public contract is accepted by ADR-0024 with HITL approval recorded on 2026-07-13.
 
 ## Checks
 

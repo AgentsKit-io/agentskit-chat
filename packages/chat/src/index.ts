@@ -24,6 +24,7 @@ import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, STANDARD_COMPONENT_KE
 export * from './catalog.js'
 export * from './ask.js'
 export * from './deterministic.js'
+export * from './presentation.js'
 
 const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)
@@ -517,6 +518,21 @@ export interface ChatDefinition {
   readonly chat: ChatConfig
   readonly conversation?: ConversationDefinition
   readonly components?: ComponentManifest
+  readonly choiceSubmission?: (
+    frame: ComponentRenderFrame,
+    choiceId: string,
+    context: { readonly sessionId: string },
+  ) => ChoiceSubmissionReservation | ChoiceSubmissionUnavailable | undefined
+}
+
+export interface ChoiceSubmissionReservation {
+  readonly value: string
+  readonly commit: () => void
+  readonly release: () => void
+}
+
+export interface ChoiceSubmissionUnavailable {
+  readonly unavailable: true
 }
 
 export const defineChat = <const T extends ChatDefinition>(definition: T): T => definition
@@ -754,6 +770,15 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
         try { await persist(); const observed = Object.freeze(confirmations.map(record => Object.freeze({ ...record, sessionId }))); try { void Promise.resolve(options.onConfirmationChange?.(observed)).catch(() => undefined) } catch { /* observer isolation */ }; return true } catch (error) { confirmations = previous; throw error }
       } } : {}),
     })
+  const scopeAdapter = (adapter: ChatConfig['adapter']): ChatConfig['adapter'] => {
+    const sessionAware = adapter as ChatConfig['adapter'] & {
+      readonly createSourceForSession?: (request: AdapterRequest, sessionId: string) => StreamSource
+    }
+    return {
+      ...adapter,
+      createSource: request => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request),
+    }
+  }
   const claimTurn = async (turnId: string, leaseMs: number, signal?: AbortSignal): Promise<boolean> => {
     if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(turnId) || !Number.isSafeInteger(leaseMs) || leaseMs <= 0) invalidConversation('Turn claim is invalid.')
     const now = (options.now?.() ?? new Date()).getTime()
@@ -772,8 +797,8 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     sessionId,
     definitionId: definition.id,
     definitionRevision: revision,
-    chat: definition.chat,
-    updateChat: chat => chat,
+    chat: { ...definition.chat, adapter: scopeAdapter(definition.chat.adapter) },
+    updateChat: chat => ({ ...chat, adapter: scopeAdapter(chat.adapter) }),
     getConversationSnapshot: () => undefined,
     createConfirmation,
     persist,
@@ -887,7 +912,8 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   }
   const updateChat = (chat: ChatConfig): ChatConfig => {
     const adapter = wrappedAdapters.get(chat.adapter) ?? chat.adapter
-    const wrapped = { ...adapter, createSource: (request: AdapterRequest) => createSource(adapter, request) }
+    const scoped = scopeAdapter(adapter)
+    const wrapped = { ...adapter, createSource: (request: AdapterRequest) => createSource(scoped, request) }
     wrappedAdapters.set(wrapped, adapter)
     return { ...chat, adapter: wrapped }
   }
