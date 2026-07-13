@@ -10,7 +10,7 @@
   "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
   "files": ["dist"],
   "scripts": { "build": "tsup src/index.ts --format esm,cjs --dts --clean", "lint": "tsc --noEmit", "test": "vitest run --coverage" },
-  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/eval": "^0.4.17", "zod": "^4.3.6" },
+  "dependencies": { "@agentskit/chat": "workspace:*", "@agentskit/eval": "^0.4.19", "zod": "^4.3.6" },
   "devDependencies": { "@agentskit/core": "^1.12.2", "@types/node": "^25.0.0", "tsup": "^8.5.1" },
   "publishConfig": { "access": "public" }
 }

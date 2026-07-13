@@ -33,7 +33,7 @@ The initial architecture proof delivers one unchanged shared chat definition thr
 19. As a framework maintainer, I want ownership and documentation discoverable through doc-bridge so that agents edit the correct module.
 20. As an AgentsKit maintainer, I want real applications to exercise every UI binding so that interoperability gaps are discovered upstream.
 21. As an ecosystem user, I want complete support, onboarding, operations, and RAG examples so that the framework is not perceived as documentation-only.
-22. As an AKOS maintainer, I want to migrate generic copilot mechanisms to the framework so that AKOS retains only product-specific behavior.
+22. As a framework maintainer, I want black-box consumer requirements validated through synthetic public examples so hosts retain only product-specific behavior.
 23. As an AgentsKit site maintainer, I want to migrate the existing Ask experience so that public dogfood uses the released framework.
 24. As a Playbook or Registry maintainer, I want the shared framework widget and runtime so that duplicated chat implementations disappear.
 
@@ -70,4 +70,3 @@ The initial architecture proof delivers one unchanged shared chat definition thr
 ## Further notes
 
 The product position is: **One agent experience. Every interface.** The framework is an opinionated application layer for interactive agent experiences, not a competing low-level agent framework.
-
