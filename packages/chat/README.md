@@ -27,3 +27,5 @@ formatSemanticFallback(fallback)
 Custom application UI is declared through `defineComponentManifest`. The first schema-backed component is `ChoiceListComponent`; untrusted frames must pass `resolveComponentFrame` before rendering.
 
 Shared Ask-service hosts use `createAskAdapter` and `createAskSessionMemory`. The adapter owns the validated NDJSON boundary and ordered text/source projection; memory composes `@agentskit/memory/web-storage` rather than implementing another message store. See [`docs/protocol/ask-service.md`](../../docs/protocol/ask-service.md).
+
+To answer exact local facts before Ask or another backend, compose `createDeterministicAnswerAdapter({ artifact, fallback })`. One exact match renders locally, ambiguity renders choices, and misses delegate to the unchanged upstream adapter. The contract remains proposed pending ADR-0024 approval; see [`docs/protocol/deterministic-answers.md`](../../docs/protocol/deterministic-answers.md).
