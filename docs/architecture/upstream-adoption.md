@@ -216,3 +216,9 @@ native presentation slots, and optional presentation-only tool projection. No
 controller, reducer, stream lifecycle, decoder, memory engine, renderer, or
 component protocol is copied or reimplemented. Full evidence is in the
 [Registry/Playbook dogfood record](../dogfood/registry-playbook.md).
+
+## Conversation statechart adoption record (#28)
+
+Inspected the public `@agentskit/statechart@0.2.0` release and its exported `defineStatechart`, `createStatechartInstance`, `transitionStatechart`, immutable instance, event, definition, result, and diagnostic contracts. The generic gap recorded by the original conversation design was resolved in AgentsKit [#1199](https://github.com/AgentsKit-io/agentskit/issues/1199), [PR #1210](https://github.com/AgentsKit-io/agentskit/pull/1210), and the `0.2.0` release before downstream adoption.
+
+AgentsKit Chat compiles its existing application conversation declaration into the upstream definition and uses upstream transitions for initial validation, dispatch, resume validation, and history rebuild. It adds only route matching and precedence, adapter fallback, application actions/traces, retained decisions, and the existing session projection. No statechart validator, transition engine, upstream source, private source, or business behavior is copied or reimplemented. See [ADR-0023](./adrs/0023-conversation-transitions-use-agentskit-statechart.md).

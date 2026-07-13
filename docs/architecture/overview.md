@@ -35,6 +35,8 @@ Application
 
 Defines chats that compile to or derive AgentsKit `ChatConfig`, plus deterministic application routes, component manifests, conversation machines, and policy composition. It does not implement another controller, tool loop, confirmation engine, or model runtime.
 
+Conversation machines compile to the published `@agentskit/statechart` primitive. The Chat layer retains only application route matching, adapter composition, actions, traces, and session decision replay ([ADR-0023](./adrs/0023-conversation-transitions-use-agentskit-statechart.md)).
+
 ### Protocol
 
 Owns application-specific client-server events, runtime schemas, serialization, resumption, compatibility fixtures, and semantic fallbacks. Existing AgentsKit lifecycle and UI semantics are transported without being renamed or reimplemented.
