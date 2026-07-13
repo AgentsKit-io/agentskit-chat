@@ -36,7 +36,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 | `@agentskit/runtime` | 0.9.1 | Autonomous agent execution and shared runtime context. |
 | `@agentskit/validation` | 0.2.1 | AJV-backed tool argument validation. |
 | `@agentskit/memory` | 0.11.0 | Persistent `ChatMemory` implementations, including validated injectable Web Storage. |
-| `@agentskit/eval` | 0.4.7 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting. |
+| `@agentskit/eval` | 0.4.19 | Eval runner, recording/replay adapters, cassettes, snapshots, diffs, CI reporting, and universal replay boundaries. |
 | `@agentskit/react` | 0.7.1 | React hook, headless chat components, CSS variables, and data attributes. |
 | `@agentskit/react-native` | 0.4.4 | React Native hook, wrapper/content/input style pass-throughs, and testIDs. |
 | `@agentskit/ink` | 0.10.1 | Ink hook, terminal components, theme provider, progress observer, and Escape stream cancellation. |
@@ -47,7 +47,7 @@ The missing generic cancellation seam for message IO was added upstream in [Agen
 
 ## Replayable application traces (#21)
 
-Inspected AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
+The replay integration was initially inspected at AgentsKit revision `978ce3d77be7bbf76094b5919d240e50091bc824` and `@agentskit/eval@0.4.17`; the currently consumed release is `@agentskit/eval@0.4.19`. AgentsKit Chat consumes `createRecordingAdapter`, `createReplayAdapter`, `Cassette`, `serializeCassette`, and `parseCassette` from `@agentskit/eval/replay`. Upstream remains the sole owner of adapter recording, request fingerprints, cassettes, playback, time travel, filesystem boundaries, and eval reporting. `@agentskit/chat-devtools` adds only bounded/redacted application decisions and semantic cross-renderer comparison. No upstream gap or reimplementation exists.
 
 ## Support reference application (#22)
 
