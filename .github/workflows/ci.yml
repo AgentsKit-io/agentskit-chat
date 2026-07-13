@@ -28,7 +28,7 @@ jobs:
       - name: Verify Changesets against main
         run: |
           git fetch origin main:refs/remotes/origin/main
-          git branch --force main origin/main
+          if [ "$(git branch --show-current)" != "main" ]; then git branch --force main origin/main; fi
           pnpm exec changeset status
       - run: pnpm test
       - run: pnpm build
