@@ -94,6 +94,19 @@
             "pnpm docs:bridge:gate"
           ]
         },
+        "docs-app": {
+          "path": "apps/docs",
+          "purpose": "Fumadocs portal and full public framework dogfood over the canonical docs corpus",
+          "agentDoc": "docs/for-agents/apps/docs.md",
+          "humanDoc": "architecture/adrs/0027-fumadocs-framework-dogfood",
+          "checks": [
+            "pnpm --filter @agentskit/chat-docs lint",
+            "pnpm --filter @agentskit/chat-docs test",
+            "pnpm --filter @agentskit/chat-docs build",
+            "pnpm --filter @agentskit/chat-docs test:e2e",
+            "pnpm docs:bridge:gate"
+          ]
+        },
         "chat": {
           "path": "packages/chat",
           "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
