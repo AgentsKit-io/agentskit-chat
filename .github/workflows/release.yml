@@ -45,10 +45,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - run: pnpm test:pty
-      - name: Verify Expo production bundles
-        run: |
-          pnpm --filter @agentskit/chat-example-react-native exec expo export --platform web --output-dir dist-release-web
-          pnpm --filter @agentskit/chat-example-react-native exec expo export --platform ios --output-dir dist-release-ios
+      - run: pnpm test:expo
       - run: node scripts/release-gate.mjs
       - run: node scripts/pack-release.mjs
 
