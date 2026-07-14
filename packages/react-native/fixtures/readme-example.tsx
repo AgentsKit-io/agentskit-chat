@@ -1,1 +1,1 @@
-import { AgentChat } from '@agentskit/chat-react-native'
+import { AgentChatNative } from '@agentskit/chat-react-native'

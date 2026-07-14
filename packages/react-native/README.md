@@ -20,7 +20,7 @@ npm install @agentskit/chat-react-native @agentskit/chat @agentskit/react-native
 
 <!-- readme-example:import-react-native -->
 ```tsx
-import { AgentChat } from '@agentskit/chat-react-native'
+import { AgentChatNative } from '@agentskit/chat-react-native'
 ```
 
 `ChoiceListNative` renders a validated shared frame with native accessibility roles and labels. Use `theme` and `slots` with `toChatNativeStyles` for semantic styling. See [theming and composition](../../docs/theming-and-composition.md).

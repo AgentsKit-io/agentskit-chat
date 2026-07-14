@@ -15,7 +15,7 @@ const claims = {
       id: 'public-packages',
       value: stats.publicPackages,
       noun: 'public npm packages',
-      evidence: { type: 'repository-derivation', path: 'packages/*/package.json', summary: 'Published workspace packages with public publishConfig.' },
+      evidence: { type: 'repository-derivation', path: 'packages/*/package.json', summary: 'Non-private workspace packages with public publishConfig.' },
     },
     {
       id: 'renderers',
@@ -51,13 +51,13 @@ const claims = {
       id: 'architecture-adrs',
       value: stats.architectureAdrs,
       noun: 'architecture ADRs',
-      evidence: { type: 'repository-derivation', path: 'docs/architecture/adrs', summary: 'Accepted public contract decisions.' },
+      evidence: { type: 'repository-derivation', path: 'docs/architecture/adrs', summary: 'Public architecture decision records.' },
     },
     {
       id: 'agent-handoffs',
       value: stats.agentHandoffs,
       noun: 'agent handoffs',
-      evidence: { type: 'repository-derivation', path: '.doc-bridge/index.json', summary: 'Doc Bridge knowledge entries for agent routing.' },
+      evidence: { type: 'repository-derivation', path: '.doc-bridge/index.json#/handoffs', summary: 'Doc Bridge agent-handoff entries for ownership routing.' },
     },
   ],
 }

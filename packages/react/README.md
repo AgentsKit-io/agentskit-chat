@@ -22,8 +22,10 @@ npm install @agentskit/chat-react @agentskit/chat @agentskit/react
 <!-- readme-example:agent-chat -->
 ```tsx
 import { AgentChat } from '@agentskit/chat-react'
+import type { ChatDefinition } from '@agentskit/chat'
 
-export const App = () => <AgentChat definition={definition} placeholder="Ask a question" />
+export const App = ({ definition }: { readonly definition: ChatDefinition }) =>
+  <AgentChat definition={definition} placeholder="Ask a question" />
 ```
 
 Use `theme` for semantic tokens and `slots` for native React composition. `toChatCssVariables` exposes the upstream CSS-variable mapping. See [theming and composition](../../docs/theming-and-composition.md).

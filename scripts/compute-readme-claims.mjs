@@ -11,7 +11,7 @@ export function computeReadmeClaims() {
   )
   const publicPackages = packageDirs.filter(dir => {
     const manifest = readJson(`packages/${dir}/package.json`)
-    return manifest.private !== true
+    return manifest.private !== true && manifest.publishConfig?.access === 'public'
   })
   const renderers = ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']
   const rendererPackages = publicPackages.filter(dir => renderers.includes(dir))
@@ -23,10 +23,14 @@ export function computeReadmeClaims() {
     .length
   const gettingStartedGuides = readdirSync(join(REPO_ROOT, 'docs/getting-started'))
     .filter(file => file.endsWith('.md') && file !== 'README.md').length
-  const exampleApps = readdirSync(join(REPO_ROOT, 'apps')).filter(dir => dir.startsWith('example-')).length
+  const exampleApps = readdirSync(join(REPO_ROOT, 'apps')).filter(dir => {
+    if (!dir.startsWith('example-') || !existsSync(join(REPO_ROOT, 'apps', dir, 'package.json'))) return false
+    const scripts = readJson(`apps/${dir}/package.json`).scripts ?? {}
+    return ['dev', 'start', 'build'].some(script => typeof scripts[script] === 'string')
+  }).length
   const architectureAdrs = readdirSync(join(REPO_ROOT, 'docs/architecture/adrs')).filter(file => file.endsWith('.md')).length
   const docBridgeIndex = readJson('.doc-bridge/index.json')
-  const agentHandoffs = docBridgeIndex.knowledge?.length ?? 0
+  const agentHandoffs = Object.keys(docBridgeIndex.handoffs ?? {}).length
 
   return {
     publicPackages: publicPackages.length,

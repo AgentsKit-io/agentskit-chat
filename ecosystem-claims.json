@@ -10,7 +10,7 @@
       "evidence": {
         "type": "repository-derivation",
         "path": "packages/*/package.json",
-        "summary": "Published workspace packages with public publishConfig."
+        "summary": "Non-private workspace packages with public publishConfig."
       }
     },
     {
@@ -55,7 +55,7 @@
     },
     {
       "id": "example-apps",
-      "value": 7,
+      "value": 6,
       "noun": "example applications",
       "evidence": {
         "type": "repository-derivation",
@@ -70,17 +70,17 @@
       "evidence": {
         "type": "repository-derivation",
         "path": "docs/architecture/adrs",
-        "summary": "Accepted public contract decisions."
+        "summary": "Public architecture decision records."
       }
     },
     {
       "id": "agent-handoffs",
-      "value": 24,
+      "value": 27,
       "noun": "agent handoffs",
       "evidence": {
         "type": "repository-derivation",
-        "path": ".doc-bridge/index.json",
-        "summary": "Doc Bridge knowledge entries for agent routing."
+        "path": ".doc-bridge/index.json#/handoffs",
+        "summary": "Doc Bridge agent-handoff entries for ownership routing."
       }
     }
   ]

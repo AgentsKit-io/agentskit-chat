@@ -30,10 +30,12 @@ const architectureVisual = {
   darkMode: 'neutral',
 }
 
-const sharedTest = {
+const exampleTest = {
   test: 'scripts/readme-standard.test.mjs',
   testCommand: 'pnpm test:readme-standard',
 }
+
+const commandTest = test => ({ test, testCommand: 'pnpm test' })
 
 const surfaces = [
   {
@@ -56,14 +58,14 @@ const surfaces = [
       architectureVisual,
     ],
     commands: [
-      { id: 'verify-readme', command: 'node examples/verify-readme.mjs', ...sharedTest },
-      { id: 'init-react', command: 'pnpm dlx @agentskit/chat-cli@0.2.0 init my-chat --renderer react --yes', ...sharedTest },
+      { id: 'verify-readme', command: 'node examples/verify-readme.mjs', test: 'examples/verify-readme.mjs', testCommand: 'pnpm test:readme-standard' },
+      { id: 'init-react', command: 'pnpm dlx @agentskit/chat-cli@0.2.0 init my-chat --renderer react --yes', ...commandTest('packages/cli/tests/init.test.ts') },
     ],
-    examples: [{ id: 'init-react', fixture: 'examples/init-react.sh', ...sharedTest }],
+    examples: [{ id: 'init-react', fixture: 'examples/init-react.sh', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-10-12',
-      sources: ['README.md', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'docs/releases/stability.md', 'docs/releases/compatibility.md'],
+      sources: ['README.md', 'package.json', 'release/manifest.json', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'scripts/compute-readme-claims.mjs', 'scripts/gen-ecosystem-claims.mjs', 'scripts/lib/readme-claims.mjs', 'docs/releases/stability.md', 'docs/releases/compatibility.md', '.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/release-alpha.yml'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -84,12 +86,12 @@ const surfaces = [
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit', 'registry.agentskit.io'],
     },
     visuals: [architectureVisual],
-    commands: [{ id: 'install-chat', command: 'npm install @agentskit/chat @agentskit/core', ...sharedTest }],
-    examples: [{ id: 'define-chat', fixture: 'packages/chat/fixtures/readme-example.ts', ...sharedTest }],
+    commands: [{ id: 'install-chat', command: 'npm install @agentskit/chat @agentskit/core', ...commandTest('packages/chat/tests/define-chat.test.ts') }],
+    examples: [{ id: 'define-chat', fixture: 'packages/chat/fixtures/readme-example.ts', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/chat/README.md', 'packages/chat/fixtures/readme-example.ts', 'docs/components/catalog.generated.md'],
+      sources: ['packages/chat/README.md', 'packages/chat/package.json', 'packages/chat/fixtures/readme-example.ts', 'docs/components/catalog.generated.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -110,12 +112,12 @@ const surfaces = [
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
     },
     visuals: [architectureVisual],
-    commands: [{ id: 'install-protocol', command: 'npm install @agentskit/chat-protocol', ...sharedTest }],
-    examples: [{ id: 'decode-turn', fixture: 'packages/protocol/fixtures/readme-example.ts', ...sharedTest }],
+    commands: [{ id: 'install-protocol', command: 'npm install @agentskit/chat-protocol', ...commandTest('packages/protocol/tests/protocol.test.ts') }],
+    examples: [{ id: 'decode-turn', fixture: 'packages/protocol/fixtures/readme-example.ts', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/protocol/README.md', 'packages/protocol/fixtures/readme-example.ts', 'docs/protocol/v1.md'],
+      sources: ['packages/protocol/README.md', 'packages/protocol/package.json', 'packages/protocol/fixtures/readme-example.ts', 'docs/protocol/v1.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -136,12 +138,12 @@ const surfaces = [
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
     },
     visuals: [architectureVisual],
-    commands: [{ id: 'install-server', command: 'npm install @agentskit/chat-server @agentskit/chat @agentskit/core', ...sharedTest }],
-    examples: [{ id: 'chat-handler', fixture: 'packages/server/fixtures/readme-example.ts', ...sharedTest }],
+    commands: [{ id: 'install-server', command: 'npm install @agentskit/chat-server @agentskit/chat @agentskit/core', ...commandTest('packages/server/tests/handler.test.ts') }],
+    examples: [{ id: 'chat-handler', fixture: 'packages/server/fixtures/readme-example.ts', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/server/README.md', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.md'],
+      sources: ['packages/server/README.md', 'packages/server/package.json', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -162,12 +164,12 @@ const surfaces = [
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
     },
     visuals: [architectureVisual],
-    commands: [{ id: 'init-chat', command: 'agentskit-chat init my-chat --renderer react --yes', ...sharedTest }],
-    examples: [{ id: 'renderers', fixture: 'packages/cli/fixtures/readme-example.mjs', ...sharedTest }],
+    commands: [{ id: 'init-chat', command: 'agentskit-chat init my-chat --renderer react --yes', ...commandTest('packages/cli/tests/init.test.ts') }],
+    examples: [{ id: 'renderers', fixture: 'packages/cli/fixtures/readme-example.mjs', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/cli/README.md', 'packages/cli/fixtures/readme-example.mjs', 'docs/cli.md'],
+      sources: ['packages/cli/README.md', 'packages/cli/package.json', 'packages/cli/fixtures/readme-example.mjs', 'docs/cli.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -188,12 +190,12 @@ const surfaces = [
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
     },
     visuals: [architectureVisual],
-    commands: [{ id: 'install-react', command: 'npm install @agentskit/chat-react @agentskit/chat @agentskit/react', ...sharedTest }],
-    examples: [{ id: 'agent-chat', fixture: 'packages/react/fixtures/readme-example.tsx', ...sharedTest }],
+    commands: [{ id: 'install-react', command: 'npm install @agentskit/chat-react @agentskit/chat @agentskit/react', ...commandTest('packages/react/tests/agent-chat.test.tsx') }],
+    examples: [{ id: 'agent-chat', fixture: 'packages/react/fixtures/readme-example.tsx', ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/react/README.md', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.md'],
+      sources: ['packages/react/README.md', 'packages/react/package.json', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -201,13 +203,13 @@ const surfaces = [
 ]
 
 const concisePackages = [
-  { dir: 'vue', exampleId: 'import-vue', commandId: 'install-vue', command: 'npm install @agentskit/chat-vue @agentskit/chat @agentskit/vue', promise: 'Native Vue 3 application shell', compatibility: ['Vue 3.4+', 'TypeScript strict mode'], guide: 'docs/getting-started/vue.md' },
-  { dir: 'svelte', exampleId: 'import-svelte', commandId: 'install-svelte', command: 'npm install @agentskit/chat-svelte @agentskit/chat @agentskit/svelte', promise: 'Svelte 5 application shell', compatibility: ['Svelte 5+', 'SSR evidence in CI'], guide: 'docs/getting-started/svelte.md' },
-  { dir: 'solid', exampleId: 'import-solid', commandId: 'install-solid', command: 'npm install @agentskit/chat-solid @agentskit/chat @agentskit/solid', promise: 'Solid application shell', compatibility: ['Solid 1.9+', 'TypeScript strict mode'], guide: 'docs/getting-started/solid.md' },
-  { dir: 'angular', exampleId: 'import-angular', commandId: 'install-angular', command: 'npm install @agentskit/chat-angular @agentskit/chat @agentskit/angular', promise: 'Native Angular application shell', compatibility: ['Angular 18.1–21', 'Partial-Ivy AOT package test in CI'], guide: 'docs/getting-started/angular.md' },
-  { dir: 'react-native', exampleId: 'import-react-native', commandId: 'install-react-native', command: 'npm install @agentskit/chat-react-native @agentskit/chat @agentskit/react-native', promise: 'React Native application shell', compatibility: ['React 18+', 'Native accessibility roles in CI'], guide: 'docs/getting-started/react-native.md' },
-  { dir: 'ink', exampleId: 'import-ink', commandId: 'install-ink', command: 'npm install @agentskit/chat-ink @agentskit/chat @agentskit/ink', promise: 'Opinionated Ink shell', compatibility: ['Ink 7.1+', 'Terminal keyboard flow and graceful process exit verified'], guide: 'docs/getting-started/ink.md' },
-  { dir: 'devtools', exampleId: 'import-devtools', commandId: 'install-devtools', command: 'npm install @agentskit/chat-devtools @agentskit/eval', promise: 'Application trace capture', compatibility: ['Node.js 22+', 'Composes upstream replay'], guide: 'docs/devtools.md' },
+  { dir: 'vue', exampleId: 'import-vue', commandId: 'install-vue', command: 'npm install @agentskit/chat-vue @agentskit/chat @agentskit/vue', promise: 'Native Vue 3 application shell', compatibility: ['Vue 3.4+', 'TypeScript strict mode'], guide: 'docs/getting-started/vue.md', test: 'packages/vue/tests/agent-chat.test.ts' },
+  { dir: 'svelte', exampleId: 'import-svelte', commandId: 'install-svelte', command: 'npm install @agentskit/chat-svelte @agentskit/chat @agentskit/svelte', promise: 'Svelte 5 application shell', compatibility: ['Svelte 5+', 'SSR evidence in CI'], guide: 'docs/getting-started/svelte.md', test: 'packages/svelte/tests/agent-chat.test.ts' },
+  { dir: 'solid', exampleId: 'import-solid', commandId: 'install-solid', command: 'npm install @agentskit/chat-solid @agentskit/chat @agentskit/solid', promise: 'Solid application shell', compatibility: ['Solid 1.9+', 'TypeScript strict mode'], guide: 'docs/getting-started/solid.md', test: 'packages/solid/tests/agent-chat.test.tsx' },
+  { dir: 'angular', exampleId: 'import-angular', commandId: 'install-angular', command: 'npm install @agentskit/chat-angular @agentskit/chat @agentskit/angular', promise: 'Native Angular application shell', compatibility: ['Angular 18.1–21', 'Partial-Ivy AOT package test in CI'], guide: 'docs/getting-started/angular.md', test: 'packages/angular/tests/agent-chat.test.ts' },
+  { dir: 'react-native', exampleId: 'import-react-native', commandId: 'install-react-native', command: 'npm install @agentskit/chat-react-native @agentskit/chat @agentskit/react-native', promise: 'React Native application shell', compatibility: ['React 18+', 'Native accessibility roles in CI'], guide: 'docs/getting-started/react-native.md', test: 'packages/react-native/tests/agent-chat-native.test.tsx' },
+  { dir: 'ink', exampleId: 'import-ink', commandId: 'install-ink', command: 'npm install @agentskit/chat-ink @agentskit/chat @agentskit/ink', promise: 'Opinionated Ink shell', compatibility: ['Ink 7.1+', 'Terminal keyboard flow and graceful process exit verified'], guide: 'docs/getting-started/ink.md', test: 'packages/ink/tests/agent-chat.test.tsx' },
+  { dir: 'devtools', exampleId: 'import-devtools', commandId: 'install-devtools', command: 'npm install @agentskit/chat-devtools @agentskit/eval', promise: 'Application trace capture', compatibility: ['Node.js 22+', 'Composes upstream replay'], guide: 'docs/devtools.md', test: 'packages/devtools/tests/devtools.test.ts' },
 ]
 
 for (const pkg of concisePackages) {
@@ -228,12 +230,12 @@ for (const pkg of concisePackages) {
       ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
     },
     visuals: [],
-    commands: [{ id: pkg.commandId, command: pkg.command, ...sharedTest }],
-    examples: [{ id: pkg.exampleId, fixture: `packages/${pkg.dir}/fixtures/readme-example.${ext}`, ...sharedTest }],
+    commands: [{ id: pkg.commandId, command: pkg.command, ...commandTest(pkg.test) }],
+    examples: [{ id: pkg.exampleId, fixture: `packages/${pkg.dir}/fixtures/readme-example.${ext}`, ...exampleTest }],
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2027-01-10',
-      sources: [`packages/${pkg.dir}/README.md`, `packages/${pkg.dir}/fixtures/readme-example.${ext}`, pkg.guide],
+      sources: [`packages/${pkg.dir}/README.md`, `packages/${pkg.dir}/package.json`, `packages/${pkg.dir}/fixtures/readme-example.${ext}`, pkg.guide],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [visualException],

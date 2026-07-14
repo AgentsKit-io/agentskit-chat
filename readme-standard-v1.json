@@ -178,14 +178,14 @@
         {
           "id": "verify-readme",
           "command": "node examples/verify-readme.mjs",
-          "test": "scripts/readme-standard.test.mjs",
+          "test": "examples/verify-readme.mjs",
           "testCommand": "pnpm test:readme-standard"
         },
         {
           "id": "init-react",
           "command": "pnpm dlx @agentskit/chat-cli@0.2.0 init my-chat --renderer react --yes",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/cli/tests/init.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -201,13 +201,21 @@
         "reviewDueOn": "2026-10-12",
         "sources": [
           "README.md",
+          "package.json",
+          "release/manifest.json",
           "ecosystem-claims.json",
           "examples/verify-readme.mjs",
           "examples/init-react.sh",
+          "scripts/compute-readme-claims.mjs",
+          "scripts/gen-ecosystem-claims.mjs",
+          "scripts/lib/readme-claims.mjs",
           "docs/releases/stability.md",
-          "docs/releases/compatibility.md"
+          "docs/releases/compatibility.md",
+          ".github/workflows/ci.yml",
+          ".github/workflows/release.yml",
+          ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:09390a477b0c735bf1cb9aa7b7d5004028336a0beaa2be76dfe7fc6515801988"
+        "sourceHash": "sha256:b6fa56213a01cc8f1b2286d5422cb5de08b30af244e4046f2331de2342cf54e7"
       },
       "exceptions": []
     },
@@ -264,8 +272,8 @@
         {
           "id": "install-chat",
           "command": "npm install @agentskit/chat @agentskit/core",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/chat/tests/define-chat.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -281,10 +289,11 @@
         "reviewDueOn": "2026-11-11",
         "sources": [
           "packages/chat/README.md",
+          "packages/chat/package.json",
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:a24c2ce79ea67b3b97a64c4405acc808205787646bce0a44ffc811416bd3892c"
+        "sourceHash": "sha256:324bdf36de20dd22a3a12ed9be72d1b7f3e10978f611fd4138b6c7a4df01475d"
       },
       "exceptions": []
     },
@@ -340,8 +349,8 @@
         {
           "id": "install-protocol",
           "command": "npm install @agentskit/chat-protocol",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/protocol/tests/protocol.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -357,10 +366,11 @@
         "reviewDueOn": "2026-11-11",
         "sources": [
           "packages/protocol/README.md",
+          "packages/protocol/package.json",
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:59d7900aaee355887039a7986d41aeda94cf3784b1f0e546afc6f818233bd3e1"
+        "sourceHash": "sha256:2c0b1ea7732d420bb6801cbb3dc7aefde513725addc5af72cda17c9962b52b77"
       },
       "exceptions": []
     },
@@ -416,8 +426,8 @@
         {
           "id": "install-server",
           "command": "npm install @agentskit/chat-server @agentskit/chat @agentskit/core",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/server/tests/handler.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -433,10 +443,11 @@
         "reviewDueOn": "2026-11-11",
         "sources": [
           "packages/server/README.md",
+          "packages/server/package.json",
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.md"
         ],
-        "sourceHash": "sha256:d8cdb5be58647db8e0e939ab851a5f2861c9bdbf816fdea2f1dee3ca8c24e0f0"
+        "sourceHash": "sha256:2c353cbe1fbb0cd4ef36a27ef2a183b31364062afc5e19ae64be72efb468c6d7"
       },
       "exceptions": []
     },
@@ -492,8 +503,8 @@
         {
           "id": "init-chat",
           "command": "agentskit-chat init my-chat --renderer react --yes",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/cli/tests/init.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -509,10 +520,11 @@
         "reviewDueOn": "2026-11-11",
         "sources": [
           "packages/cli/README.md",
+          "packages/cli/package.json",
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.md"
         ],
-        "sourceHash": "sha256:46abeb2d0b5b4ac1864c65317bc12a8c50a33c588aa740edcbdf6fb6eb4673b1"
+        "sourceHash": "sha256:dff234e843e1ced468da4decade9e761f23d356988aa87e9d130a3a352a91e55"
       },
       "exceptions": []
     },
@@ -568,8 +580,8 @@
         {
           "id": "install-react",
           "command": "npm install @agentskit/chat-react @agentskit/chat @agentskit/react",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/react/tests/agent-chat.test.tsx",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -585,10 +597,11 @@
         "reviewDueOn": "2026-11-11",
         "sources": [
           "packages/react/README.md",
+          "packages/react/package.json",
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.md"
         ],
-        "sourceHash": "sha256:cc5939a7e7bbe87ec1ccdd5ed6e1124cc10701cabce462a6c32cabd3d6ce493c"
+        "sourceHash": "sha256:6728b47cf1de1c0d068b33ba5018d060bb81271e72740576946179d32fa7358d"
       },
       "exceptions": []
     },
@@ -636,8 +649,8 @@
         {
           "id": "install-vue",
           "command": "npm install @agentskit/chat-vue @agentskit/chat @agentskit/vue",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/vue/tests/agent-chat.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -653,10 +666,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/vue/README.md",
+          "packages/vue/package.json",
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.md"
         ],
-        "sourceHash": "sha256:f385d520f88098cee250a513a54c4d4180e343fd346770529dfd26cb09df7c66"
+        "sourceHash": "sha256:fea7a0eb6824f74252f2d19f1d620037a53032345ec323904e8c180b3c25270f"
       },
       "exceptions": [
         {
@@ -712,8 +726,8 @@
         {
           "id": "install-svelte",
           "command": "npm install @agentskit/chat-svelte @agentskit/chat @agentskit/svelte",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/svelte/tests/agent-chat.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -729,10 +743,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/svelte/README.md",
+          "packages/svelte/package.json",
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.md"
         ],
-        "sourceHash": "sha256:fc99c6fb2576fbf8b6581d0717f8d77350c117da6724f3bcb0b8091e9830dd14"
+        "sourceHash": "sha256:b62602fd103ade62d8bcdee82ee7780ca4fdd3acce65196ba84505cc8d34a7d7"
       },
       "exceptions": [
         {
@@ -788,8 +803,8 @@
         {
           "id": "install-solid",
           "command": "npm install @agentskit/chat-solid @agentskit/chat @agentskit/solid",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/solid/tests/agent-chat.test.tsx",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -805,10 +820,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/solid/README.md",
+          "packages/solid/package.json",
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.md"
         ],
-        "sourceHash": "sha256:cb09e91ae42aee18a3c1826aa4c7a5985cd1c6ab08c85adb566badd69cc4bff4"
+        "sourceHash": "sha256:2ff8581edeb4ce7f559bf030beecf7417e00fb4c7562f5d2e37ae0539fab1a5a"
       },
       "exceptions": [
         {
@@ -864,8 +880,8 @@
         {
           "id": "install-angular",
           "command": "npm install @agentskit/chat-angular @agentskit/chat @agentskit/angular",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/angular/tests/agent-chat.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -881,10 +897,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/angular/README.md",
+          "packages/angular/package.json",
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.md"
         ],
-        "sourceHash": "sha256:a1ab766ed1ac17e6906176cc98beff95ab2d7947ff2d814ab339be05c24e14b8"
+        "sourceHash": "sha256:bb4fb74ecce0a956f05eeacebdae8edb033e5b3ee092e170de2c1f5424e86647"
       },
       "exceptions": [
         {
@@ -940,8 +957,8 @@
         {
           "id": "install-react-native",
           "command": "npm install @agentskit/chat-react-native @agentskit/chat @agentskit/react-native",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/react-native/tests/agent-chat-native.test.tsx",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -957,10 +974,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/react-native/README.md",
+          "packages/react-native/package.json",
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.md"
         ],
-        "sourceHash": "sha256:be4c894b42a3782f6527e4cd5f686ea4a1f1a84ec6230c7fde854b21356025a0"
+        "sourceHash": "sha256:cf5a8717fde987471f591fbfd947ed2f03e80bc0cccd34252c73b915b90447b5"
       },
       "exceptions": [
         {
@@ -1016,8 +1034,8 @@
         {
           "id": "install-ink",
           "command": "npm install @agentskit/chat-ink @agentskit/chat @agentskit/ink",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/ink/tests/agent-chat.test.tsx",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -1033,10 +1051,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/ink/README.md",
+          "packages/ink/package.json",
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.md"
         ],
-        "sourceHash": "sha256:3f6f0f5f056b7d3e49fc0e9326ad24fb13bf58a71d864a50cee34b9bb4439144"
+        "sourceHash": "sha256:a9e658d29a9f47e90ed4f8fbf56b6349b52864a2516747afbafdca11f60ba2e9"
       },
       "exceptions": [
         {
@@ -1092,8 +1111,8 @@
         {
           "id": "install-devtools",
           "command": "npm install @agentskit/chat-devtools @agentskit/eval",
-          "test": "scripts/readme-standard.test.mjs",
-          "testCommand": "pnpm test:readme-standard"
+          "test": "packages/devtools/tests/devtools.test.ts",
+          "testCommand": "pnpm test"
         }
       ],
       "examples": [
@@ -1109,10 +1128,11 @@
         "reviewDueOn": "2027-01-10",
         "sources": [
           "packages/devtools/README.md",
+          "packages/devtools/package.json",
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:77ed215001506237c6b0976054cadae6d2a6ada2532f629a1907a7bf34fb4e22"
+        "sourceHash": "sha256:36a474113af351ad6f21885379c6bb0dbc5a6ada687b6f3e3df90d31893cfc00"
       },
       "exceptions": [
         {

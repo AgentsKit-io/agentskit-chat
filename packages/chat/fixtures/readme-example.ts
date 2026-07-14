@@ -1,6 +1,7 @@
 import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
 
-export const definition = defineChat({
+export const createSupportChat = (adapter: AdapterFactory) => defineChat({
   id: 'support',
-  chat: { id: 'support', model: 'mock/demo' },
+  chat: { adapter },
 })

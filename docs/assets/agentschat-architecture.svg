@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 280" role="img" aria-label="AgentsKit Chat architecture: one definition, deterministic answers, then native renderers">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" role="img" aria-label="AgentsKit Chat architecture: one definition, deterministic answers, optional Ask escalation, then seven native renderers">
   <defs>
     <style>
       .box { fill: #0f172a; stroke: #38bdf8; stroke-width: 2; rx: 12; }
@@ -17,14 +17,20 @@
   <text class="label" x="272" y="118">deterministic</text>
   <text class="sub" x="272" y="146">local answers first</text>
   <rect class="box" x="480" y="84" width="180" height="112"/>
-  <text class="label" x="500" y="118">Ask backend</text>
-  <text class="sub" x="500" y="146">trusted escalation</text>
-  <rect class="box" x="708" y="44" width="188" height="72"/>
-  <text class="label" x="728" y="78">React · Vue · Svelte</text>
-  <rect class="box" x="708" y="132" width="188" height="72"/>
-  <text class="label" x="728" y="166">RN · Ink · Angular</text>
+  <text class="label" x="500" y="118">answer plane</text>
+  <text class="sub" x="500" y="146">local or grounded</text>
+  <rect class="box" x="366" y="228" width="180" height="64"/>
+  <text class="label" x="386" y="258">Ask backend</text>
+  <text class="sub" x="386" y="280">optional trusted escalation</text>
+  <rect class="box" x="708" y="40" width="188" height="88"/>
+  <text class="label" x="728" y="72">React · Vue · Svelte</text>
+  <text class="sub" x="728" y="100">Solid</text>
+  <rect class="box" x="708" y="144" width="188" height="72"/>
+  <text class="label" x="728" y="178">RN · Ink · Angular</text>
   <path class="arrow" d="M204 140 H252"/>
   <path class="arrow" d="M432 140 H480"/>
-  <path class="arrow" d="M660 120 H708"/>
-  <path class="arrow" d="M660 160 H708"/>
+  <path class="arrow" d="M342 196 V260 H366"/>
+  <path class="arrow" d="M546 260 H570 V196"/>
+  <path class="arrow" d="M660 120 H684 V84 H708"/>
+  <path class="arrow" d="M660 160 H684 V180 H708"/>
 </svg>
