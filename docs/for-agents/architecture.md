@@ -7,6 +7,8 @@
 - Upstream-first guardrail: [`../architecture/adrs/0002-upstream-first-no-reimplementation.md`](../architecture/adrs/0002-upstream-first-no-reimplementation.md)
 - Current adoption matrix: [`../architecture/upstream-adoption.md`](../architecture/upstream-adoption.md)
 - Product requirements: [`../product/PRD.md`](../product/PRD.md)
+- Ecosystem convergence: [`../architecture/adrs/0030-ecosystem-product-chat-convergence.md`](../architecture/adrs/0030-ecosystem-product-chat-convergence.md)
+- Adoption ledger: [`../dogfood/ecosystem-adoption.md`](../dogfood/ecosystem-adoption.md)
 
 ## Change route
 
