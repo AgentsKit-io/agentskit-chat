@@ -1,7 +1,7 @@
 import { onboardingApplication, operationsApplication, ragChat, ragSession, supportChat, unauthorizedOperationsApplication } from '@agentskit/chat-example-shared'
 import { createChatSession } from '@agentskit/chat'
-import { decodeTurnEvent, snapshotMessages } from '@agentskit/chat-protocol'
-import { validTurnEventFixtures } from '@agentskit/chat-protocol/fixtures'
+import { decodeTurnEvent, snapshotMessages } from '@agentskit/chat/protocol'
+import { validTurnEventFixtures } from '@agentskit/chat/protocol/fixtures'
 import { AgentChatNative } from '@agentskit/chat-react-native'
 import { Linking, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 

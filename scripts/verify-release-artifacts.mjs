@@ -74,17 +74,17 @@ try {
 
   run('pnpm', ['install', '--ignore-scripts'], consumer)
   run('node', ['--input-type=module', '-e', [
-    "const protocol=await import('@agentskit/chat-protocol')",
+    "const protocol=await import('@agentskit/chat/protocol')",
     "const chat=await import('@agentskit/chat')",
-    "const server=await import('@agentskit/chat-server')",
-    "const devtools=await import('@agentskit/chat-devtools')",
+    "const server=await import('@agentskit/chat/server')",
+    "const devtools=await import('@agentskit/chat/devtools')",
     "if(!protocol.decodeTurnEvent||!chat.defineChat||!server.createChatHandler||!devtools.createTraceCapture) throw new Error('missing ESM export')",
   ].join(';')], consumer)
   run('node', ['--input-type=commonjs', '-e', [
-    "const protocol=require('@agentskit/chat-protocol')",
+    "const protocol=require('@agentskit/chat/protocol')",
     "const chat=require('@agentskit/chat')",
-    "const server=require('@agentskit/chat-server')",
-    "const devtools=require('@agentskit/chat-devtools')",
+    "const server=require('@agentskit/chat/server')",
+    "const devtools=require('@agentskit/chat/devtools')",
     "if(!protocol.decodeTurnEvent||!chat.defineChat||!server.createChatHandler||!devtools.createTraceCapture) throw new Error('missing CJS export')",
   ].join(';')], consumer)
 } finally {

@@ -1,5 +1,6 @@
 {
   "name": "@agentskit/chat-protocol",
+  "private": true,
   "version": "0.2.0",
   "description": "Versioned turn protocol for AgentsKit Chat.",
   "license": "MIT",
@@ -47,8 +48,5 @@
     "@agentskit/core": "^1.12.2",
     "tsup": "^8.5.1"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {}
 }

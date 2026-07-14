@@ -2,6 +2,19 @@
 
 Framework-neutral application definitions for AgentsKit Chat.
 
+Shared Chat capabilities ship as subpath exports from this package:
+
+```ts
+import { decodeTurnEvent } from '@agentskit/chat/protocol'
+import { createChatHandler } from '@agentskit/chat/server'
+import { createTraceCapture } from '@agentskit/chat/devtools'
+```
+
+The former `@agentskit/chat-protocol`, `@agentskit/chat-server`, and
+`@agentskit/chat-devtools` package names are deprecated. They remain internal
+workspace modules so their implementation and tests stay isolated without
+creating independent npm products.
+
 Actionable choices use `createActionConfirmation`, which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit.
 
 Use `createCapabilityPolicy` and `withActionPolicy` to default-deny actions from trusted session capabilities while keeping enforcement in AgentsKit.

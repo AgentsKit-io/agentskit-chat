@@ -2,9 +2,7 @@
   "schemaVersion": 1,
   "version": "0.2.0",
   "packages": [
-    { "name": "@agentskit/chat-protocol", "directory": "protocol" },
     { "name": "@agentskit/chat", "directory": "chat" },
-    { "name": "@agentskit/chat-server", "directory": "server" },
     { "name": "@agentskit/chat-react", "directory": "react" },
     { "name": "@agentskit/chat-react-native", "directory": "react-native" },
     { "name": "@agentskit/chat-ink", "directory": "ink" },
@@ -12,8 +10,7 @@
     { "name": "@agentskit/chat-svelte", "directory": "svelte" },
     { "name": "@agentskit/chat-solid", "directory": "solid" },
     { "name": "@agentskit/chat-angular", "directory": "angular" },
-    { "name": "@agentskit/chat-cli", "directory": "cli" },
-    { "name": "@agentskit/chat-devtools", "directory": "devtools" }
+    { "name": "@agentskit/chat-cli", "directory": "cli" }
   ],
   "renderers": [
     { "id": "react", "package": "@agentskit/chat-react", "platform": "dom" },

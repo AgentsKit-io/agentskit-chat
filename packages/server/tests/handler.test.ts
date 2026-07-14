@@ -1,7 +1,7 @@
 import { createInMemoryMemory } from '@agentskit/core'
 import type { AdapterFactory } from '@agentskit/core'
-import type { SessionSnapshot } from '@agentskit/chat-protocol'
-import { decodeTurnEvent } from '@agentskit/chat-protocol'
+import type { SessionSnapshot } from '@agentskit/chat/protocol'
+import { decodeTurnEvent } from '@agentskit/chat/protocol'
 import { createServer } from 'node:http'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 

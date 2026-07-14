@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*"
+    "@agentskit/chat": "workspace:*"
   },
   "peerDependencies": {
     "@agentskit/vue": "^0.4.4",

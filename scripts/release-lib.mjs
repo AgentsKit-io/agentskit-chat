@@ -174,6 +174,15 @@ export const inspectRelease = async root => {
   if (!releaseWorkflow.includes('registry-url: https://registry.npmjs.org')) {
     diagnostics.push('release workflow must configure npm registry authentication')
   }
+  if (!releaseWorkflow.includes('id-token: write')) {
+    diagnostics.push('release workflow must grant the npm Trusted Publishing OIDC permission')
+  }
+  if (!releaseWorkflow.includes('environment: npm')) {
+    diagnostics.push('release workflow must use the npm protected environment')
+  }
+  if (/NPM_TOKEN|NODE_AUTH_TOKEN/.test(releaseWorkflow)) {
+    diagnostics.push('release workflow must not depend on stored npm tokens')
+  }
 
   return { diagnostics, release }
 }

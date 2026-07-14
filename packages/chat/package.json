@@ -21,13 +21,33 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./protocol": {
+      "types": "./dist/protocol.d.ts",
+      "import": "./dist/protocol.js",
+      "require": "./dist/protocol.cjs"
+    },
+    "./protocol/fixtures": {
+      "types": "./dist/protocol-fixtures.d.ts",
+      "import": "./dist/protocol-fixtures.js",
+      "require": "./dist/protocol-fixtures.cjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.cjs"
+    },
+    "./devtools": {
+      "types": "./dist/devtools.d.ts",
+      "import": "./dist/devtools.js",
+      "require": "./dist/devtools.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "build": "tsup",
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat-protocol build && vitest run"
   },
@@ -35,13 +55,15 @@
     "@agentskit/core": "^1.12.3"
   },
   "dependencies": {
-    "@agentskit/chat-protocol": "workspace:*",
+    "@agentskit/eval": "^0.4.17",
     "@agentskit/memory": "^0.11.0",
     "@agentskit/statechart": "^0.2.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@agentskit/core": "^1.12.3",
+    "@agentskit/chat-protocol": "workspace:*",
+    "@types/node": "^25.0.0",
     "tsup": "^8.5.1"
   },
   "publishConfig": {

@@ -39,6 +39,7 @@ jobs:
       - run: pnpm exec changeset status
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm check:publication-surface
       - run: pnpm conformance:gate
       - run: pnpm docs:bridge:gate
       - run: pnpm exec playwright install --with-deps chromium
@@ -74,6 +75,7 @@ jobs:
       - run: npm install --global npm@11
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - run: pnpm check:publication-surface
       - run: node scripts/release-gate.mjs
       - run: node scripts/pack-release.mjs
       - name: Create or refresh draft release
@@ -83,11 +85,8 @@ jobs:
           gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --draft --generate-notes
           gh release upload "$GITHUB_REF_NAME" artifacts/* --repo "$GITHUB_REPOSITORY" --clobber
       - name: Publish npm package graph with provenance
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          if [ -n "${NPM_TOKEN:-}" ]; then export NODE_AUTH_TOKEN="$NPM_TOKEN"; fi
-          for package in protocol chat server react react-native ink vue svelte solid angular cli devtools; do
+          node -e "const fs=require('node:fs'); for(const item of JSON.parse(fs.readFileSync('release/manifest.json')).packages) console.log(item.directory)" | while read -r package; do
             name=$(node -p "require('./packages/$package/package.json').name")
             version=$(node -p "require('./packages/$package/package.json').version")
             base="${name#@}"

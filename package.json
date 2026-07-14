@@ -29,7 +29,8 @@
     "conformance:report": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --write",
     "bundle:budget": "node scripts/bundle-budget.mjs",
     "release:gate": "pnpm build && node scripts/release-gate.mjs",
-    "release:pack": "pnpm build && node scripts/pack-release.mjs"
+    "release:pack": "pnpm build && node scripts/pack-release.mjs",
+    "check:publication-surface": "node scripts/check-publication-surface.mjs"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.0.2",

@@ -1,6 +1,6 @@
 import { ChoiceListComponent, FormComponent, SourceListComponent, SourceListPropsSchema, commandRoute, createCapabilityPolicy, createChatSession, defineChat, defineComponentManifest, validateStandardComponentInteraction, withActionPolicy, type DeterministicRoute } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentSelectionEvent } from '@agentskit/chat-protocol'
-import { captureActionPolicyTrace, captureActionTrace, createTraceCapture } from '@agentskit/chat-devtools'
+import type { ComponentInteractionEvent, ComponentSelectionEvent } from '@agentskit/chat/protocol'
+import { captureActionPolicyTrace, captureActionTrace, createTraceCapture } from '@agentskit/chat/devtools'
 import { defineTool, type AdapterFactory, type ToolDefinition } from '@agentskit/core'
 import { createAjvValidator } from '@agentskit/validation'
 import { createRAG, type RAG } from '@agentskit/rag'

@@ -3,7 +3,8 @@ import { Component, ContentChild, Input, OnChanges, SimpleChanges, TemplateRef, 
 import { AgentskitChat, ChatContainerComponent, InputBarComponent, MessageComponent, ThinkingIndicatorComponent, ToolConfirmationComponent } from '@agentskit/angular'
 import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat/protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
 import { StandardComponentComponent } from './standard-component.js'
 

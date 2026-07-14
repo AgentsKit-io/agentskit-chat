@@ -18,7 +18,7 @@ const run = async (command: string, args: readonly string[], cwd: string, env?: 
 }
 
 beforeAll(async () => {
-  await execute('pnpm', ['--filter', '@agentskit/chat-protocol', 'build'], { cwd: workspace })
+  await execute('pnpm', ['--filter', '@agentskit/chat/protocol', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-server', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-react', 'build'], { cwd: workspace })

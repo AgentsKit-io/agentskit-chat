@@ -30,8 +30,7 @@
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
   "dependencies": {
-    "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*"
+    "@agentskit/chat": "workspace:*"
   },
   "peerDependencies": {
     "@agentskit/ink": "^0.10.1",

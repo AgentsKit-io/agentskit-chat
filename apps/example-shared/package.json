@@ -8,15 +8,13 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-devtools": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.12.2",
     "@agentskit/rag": "^0.4.14",
     "@agentskit/validation": "^0.2.1"
   },
   "scripts": {
     "lint": "tsc --noEmit",
-    "test": "pnpm --filter @agentskit/chat-devtools build && vitest run --coverage"
+    "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.9",

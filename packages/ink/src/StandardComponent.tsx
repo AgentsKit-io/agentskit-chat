@@ -1,5 +1,5 @@
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFrame, resolveComponentFallback, type ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'
 import { Box, Text, useInput } from 'ink'
 import { useRef, useState, type ReactElement } from 'react'
 
