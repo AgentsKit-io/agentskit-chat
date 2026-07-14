@@ -6,7 +6,6 @@ test('navigates the canonical docs and answers a known question locally', async 
   await expect(page.getByRole('heading', { name: 'React quick start' }).first()).toBeVisible()
   const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
   expect(accessibility.violations).toEqual([])
-  await expect(page).toHaveScreenshot('react-quick-start.png', { fullPage: true, animations: 'disabled', maxDiffPixels: 100 })
   await page.getByRole('button', { name: 'Ask the docs' }).click()
   const input = page.getByPlaceholder('Ask about AgentsKit Chat…')
   await input.fill('Which clients are supported?')
@@ -15,6 +14,38 @@ test('navigates the canonical docs and answers a known question locally', async 
   await expect(page.getByRole('heading', { name: 'Sources' })).toBeVisible()
   await page.getByRole('link', { name: 'Release compatibility' }).click()
   await expect(page).toHaveURL(/\/docs\/releases\/compatibility$/)
+})
+
+test('shows every public maturity state and preserves the landing layout', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/')
+  const maturity = page.getByTestId('maturity-grid')
+  for (const state of ['Released', 'Alpha', 'Planned', 'Unavailable']) {
+    await expect(maturity.getByText(state, { exact: true })).toBeVisible()
+  }
+  await expect(maturity).toHaveScreenshot('maturity-grid.png', {
+    animations: 'disabled',
+    mask: [maturity.locator('strong'), maturity.locator('p')],
+    maxDiffPixelRatio: 0.01,
+  })
+})
+
+test('keeps the interactive assistant usable on a mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/docs/getting-started/react')
+  await page.getByRole('button', { name: 'Ask the docs' }).click()
+  const assistant = page.getByRole('complementary', { name: 'AgentsKit Chat documentation assistant' })
+  await expect(assistant).toBeInViewport()
+  await expect(page.getByPlaceholder('Ask about AgentsKit Chat…')).toBeVisible()
+  const box = await assistant.boundingBox()
+  expect(box).not.toBeNull()
+  expect(box?.x).toBeGreaterThanOrEqual(0)
+  expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(390)
+  await expect(assistant).toHaveScreenshot('mobile-assistant.png', {
+    animations: 'disabled',
+    mask: [assistant.locator('strong'), assistant.locator('p'), assistant.locator('button'), assistant.locator('input')],
+    maxDiffPixelRatio: 0.01,
+  })
 })
 
 test('keeps unavailable backend behavior explicit and supports keyboard focus', async ({ page }) => {

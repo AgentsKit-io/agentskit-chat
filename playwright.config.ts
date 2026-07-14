@@ -29,7 +29,7 @@ const servers: NonNullable<PlaywrightTestConfig['webServer']> = [
 
 export default defineConfig({
   testDir: './tests/e2e',
-  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{platform}{ext}',
   projects: [
     { name: 'react', testMatch: /react-hello-world/, use: { baseURL: 'http://127.0.0.1:4173' } },
     { name: 'react-native', testMatch: /react-native-hello-world/, use: { baseURL: 'http://127.0.0.1:4174' } },

@@ -11,6 +11,13 @@ const config = {
     '@agentskit/chat-react',
     '@agentskit/chat-server',
   ],
+  webpack(config) {
+    config.resolve.extensionAlias = {
+      ...config.resolve.extensionAlias,
+      '.js': ['.ts', '.tsx', '.js'],
+    }
+    return config
+  },
 }
 
 export default withMDX(config)
