@@ -21,17 +21,19 @@ to forward the request and return the response.
 ```ts
 // app/api/chat/route.ts
 import { createChatHandler } from '@agentskit/chat-server'
-import { supportChat } from '@/lib/support-chat'
-import { createMemorySessionStorage } from '@/lib/session-storage'
+import { verifyBearer } from '@/lib/auth'
+import { chats } from '@/lib/chats'
+import { sessions } from '@/lib/session-storage'
 
 const handler = createChatHandler({
   authenticate: async request => {
-    const sessionId = request.headers.get('x-session-id')
-    if (!sessionId) return { ok: false, response: new Response('Unauthorized', { status: 401 }) }
-    return { ok: true, context: { sessionId, capabilities: ['support.ticket.create'] } }
+    const identity = await verifyBearer(request)
+    return identity
+      ? { ok: true, context: identity }
+      : { ok: false, response: new Response('Unauthorized', { status: 401 }) }
   },
-  resolveDefinition: () => supportChat,
-  sessionStorage: () => createMemorySessionStorage(),
+  resolveDefinition: context => chats.forTenant(context?.tenantId),
+  sessionStorage: context => sessions.forTenant(context?.tenantId),
 })
 
 export const POST = (request: Request) => handler(request)
@@ -59,25 +61,39 @@ const chat = createChatHandler({ /* … */ })
 const app = express()
 
 app.post('/api/chat', async (req, res) => {
-  const headers = new Headers()
-  for (const [key, value] of Object.entries(req.headers)) {
-    if (typeof value === 'string') headers.set(key, value)
-    else if (Array.isArray(value)) value.forEach(item => headers.append(key, item))
-  }
-  const request = new Request(`http://${req.headers.host}${req.url}`, {
-    method: 'POST',
-    headers,
-    body: req,
-    duplex: 'half',
-  } as RequestInit)
-  const response = await chat(request)
-  res.status(response.status)
-  response.headers.forEach((value, key) => res.setHeader(key, value))
-  if (response.body) {
-    const { Readable } = await import('node:stream')
-    Readable.fromWeb(response.body as import('node:stream/web').ReadableStream).pipe(res)
-  } else {
+  const disconnected = new AbortController()
+  const abort = () => { if (!res.writableEnded) disconnected.abort() }
+  req.once('aborted', abort)
+  res.once('close', abort)
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
+  try {
+    const headers = new Headers()
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (typeof value === 'string') headers.set(key, value)
+      else if (Array.isArray(value)) value.forEach(item => headers.append(key, item))
+    }
+    const request = new Request(`http://${req.headers.host}${req.url}`, {
+      method: 'POST',
+      headers,
+      body: req,
+      duplex: 'half',
+      signal: disconnected.signal,
+    } as RequestInit)
+    const response = await chat(request)
+    reader = response.body?.getReader()
+    res.status(response.status)
+    response.headers.forEach((value, key) => res.setHeader(key, value))
+    if (!reader) return res.end()
+    while (true) {
+      const result = await reader.read()
+      if (result.done) break
+      res.write(result.value)
+    }
     res.end()
+  } finally {
+    if (disconnected.signal.aborted) await reader?.cancel().catch(() => undefined)
+    req.removeListener('aborted', abort)
+    res.removeListener('close', abort)
   }
 })
 ```

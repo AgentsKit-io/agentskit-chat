@@ -1,36 +1,25 @@
 import { defineConfig, type PlaywrightTestConfig } from '@playwright/test'
 
-const argv = process.argv.join(' ')
-const selected = (() => {
-  const match = argv.match(/--project(?:=|\s+)([^\s]+)/)
-  return match?.[1]
-})()
-
-const servers: NonNullable<PlaywrightTestConfig['webServer']> = []
-if (!selected || selected === 'react') {
-  servers.push({
+const servers: NonNullable<PlaywrightTestConfig['webServer']> = [
+  {
     command: 'pnpm --filter @agentskit/chat-example-react dev --host 127.0.0.1 --port 4173',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-  })
-}
-if (!selected || selected === 'react-native') {
-  servers.push({
+  },
+  {
     command: 'pnpm --filter @agentskit/chat-example-react-native dev:web --port 4174',
     url: 'http://127.0.0.1:4174',
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
-  })
-}
-if (!selected || selected === 'vue') {
-  servers.push({
+  },
+  {
     command: 'pnpm --filter @agentskit/chat-example-vue dev --host 127.0.0.1 --port 4175',
     url: 'http://127.0.0.1:4175',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-  })
-}
+  },
+]
 
 export default defineConfig({
   testDir: './tests/e2e',

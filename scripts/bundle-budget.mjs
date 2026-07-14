@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Fail if published package ESM entrypoints exceed conservative size budgets.
- * Budgets are measured on the primary ESM build artifact after `pnpm build`.
+ * Fail if published package ESM output exceeds conservative size budgets.
+ * Budgets include the primary entry and every emitted ESM `.js` chunk.
  */
 import { readdir, stat } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
@@ -25,13 +25,13 @@ export const entryBudgets = [
  * @param {string} directory
  * @returns {Promise<number>}
  */
-const directoryBytes = async directory => {
+const directoryBytes = async (directory, include = () => true) => {
   let total = 0
   const entries = await readdir(directory, { withFileTypes: true })
   for (const entry of entries) {
     const path = join(directory, entry.name)
-    if (entry.isDirectory()) total += await directoryBytes(path)
-    else if (entry.isFile()) total += (await stat(path)).size
+    if (entry.isDirectory()) total += await directoryBytes(path, include)
+    else if (entry.isFile() && include(path)) total += (await stat(path)).size
   }
   return total
 }
@@ -51,7 +51,11 @@ export const measureBundleBudgets = async ({ root, budgets = entryBudgets, inclu
   for (const budget of budgets) {
     const file = join(root, 'packages', budget.directory, budget.entry)
     try {
-      const size = (await stat(file)).size
+      await stat(file)
+      const size = await directoryBytes(
+        join(root, 'packages', budget.directory, 'dist'),
+        path => path.endsWith('.js'),
+      )
       rows.push({ name: budget.name, size, maxBytes: budget.maxBytes, ok: size <= budget.maxBytes })
       if (size > budget.maxBytes) failures.push(`${budget.name}: ${size} bytes exceeds budget ${budget.maxBytes} (${budget.entry})`)
     } catch (error) {

@@ -36,6 +36,15 @@ test('rejects an artifact above its bundle budget', async () => {
   })
 })
 
+test('includes emitted ESM chunks in the package budget', async () => {
+  await withArtifact('export{}', async root => {
+    await writeFile(join(root, 'packages', 'fixture', 'dist', 'chunk-runtime.js'), 'x'.repeat(9))
+    const result = await measureBundleBudgets({ root, budgets: fixtureBudget, includeSpecialFormats: false })
+    assert.equal(result.rows[0]?.ok, false)
+    assert.match(result.failures[0] ?? '', /exceeds budget 8/)
+  })
+})
+
 test('rejects a missing build artifact', async () => {
   const root = await mkdtemp(join(tmpdir(), 'agentskit-chat-bundle-budget-'))
   try {
