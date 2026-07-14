@@ -71,7 +71,7 @@ describe('AgentChat', () => {
     expect(await screen.findByText('Grounded answer.')).toBeTruthy()
     const link = await screen.findByRole('link')
     expect(screen.getByText('Grounded answer.').compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    fireEvent.click(link)
+    expect(fireEvent.click(link)).toBe(true)
     expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ type: 'interact', instanceId: sourceFrame.instanceId, event: 'open' }))
   })
 

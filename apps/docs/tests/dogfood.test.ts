@@ -37,6 +37,16 @@ describe('documentation dogfood', () => {
     const handler = createDocsAskHandler({
       retriever: { retrieve },
       generator: { async *generate({ sources }) { yield { type: 'text', delta: `Grounded in ${sources[0]?.title}.` } } },
+      authenticate: () => ({ ok: true, context: { subjectId: 'docs-test-user' } }),
+      resolveSubjectId: context => context.subjectId,
+      resolveSite: () => ({
+        protocol: 'agentskit.chat.backend-site', version: 1, siteId: 'agentskit-chat-docs',
+        assistant: { id: 'agentskit-chat-guide', name: 'AgentsKit Chat guide', suggestions: ['Which clients are supported?'] },
+        corpus: { id: 'agentskit-chat-public', mode: 'local' }, components: ['source-list'], actions: [],
+        limits: { requestTimeoutMs: 30_000, retrievalTimeoutMs: 8_000, generationTimeoutMs: 20_000, maxSources: 5 },
+        persistence: { mode: 'disabled' },
+      }),
+      rateLimit: () => ({ allowed: true }),
     })
     const response = await handler(askRequest('How are hosted and self-hosted backends equivalent?'))
     const events = decodeAskEvents(await response.text()).events

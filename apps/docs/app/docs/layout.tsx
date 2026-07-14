@@ -11,8 +11,8 @@ export default function DocumentationLayout({ children }: { readonly children: R
     links={[
       { text: 'Stability', url: '/docs/releases/stability' },
       { text: 'llms.txt', url: '/llms.txt', external: true },
+      { text: 'GitHub', url: 'https://github.com/AgentsKit-io/agentskit-chat', external: true },
     ]}
-    githubUrl="https://github.com/AgentsKit-io/agentskit-chat"
     sidebar={{ defaultOpenLevel: 1, collapsible: true }}
   >
     {children}

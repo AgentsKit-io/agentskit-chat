@@ -5,9 +5,11 @@
 :root {
   --ak-brand: #6157ff;
   --ak-brand-strong: #4338ca;
+  --color-fd-muted-foreground: hsl(0, 0%, 38%);
 }
 
 body { text-rendering: optimizeLegibility; }
+html:not(.dark) pre code span { color: #4b5563 !important; }
 
 .maturity-badge {
   display: inline-flex;
