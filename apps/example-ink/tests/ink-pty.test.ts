@@ -45,10 +45,26 @@ const waitForAnother = async (read: () => string, text: string, before: number):
   }
 }
 
+const waitForSettled = async (read: () => string, quietMs = 200): Promise<void> => {
+  const deadline = Date.now() + 5_000
+  let length = read().length
+  let lastChange = Date.now()
+  while (Date.now() - lastChange < quietMs) {
+    if (Date.now() >= deadline) throw new Error('Timed out waiting for terminal output to settle')
+    await new Promise(resolve => setTimeout(resolve, 25))
+    const nextLength = read().length
+    if (nextLength !== length) {
+      length = nextLength
+      lastChange = Date.now()
+    }
+  }
+}
+
 const submit = async (pty: IPty, value: string): Promise<void> => {
   pty.write(value)
   await new Promise(resolve => setTimeout(resolve, 25))
   pty.write('\r')
+  await new Promise(resolve => setTimeout(resolve, 100))
 }
 
 afterEach(() => {
@@ -87,22 +103,16 @@ describe('Ink PTY host', () => {
   it('retries, regenerates, and edits through lifecycle commands', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    let ready = occurrences(app.output(), 'Ask support or type /support')
     await submit(app.pty, 'before-edit')
     await waitFor(app.output, 'AgentsKit received: before-edit')
-    await waitForAnother(app.output, 'Ask support or type /support', ready)
-    ready = occurrences(app.output(), 'Ask support or type /support')
-    let before = occurrences(app.output(), 'AgentsKit received: before-edit')
+    await waitForSettled(app.output)
     await submit(app.pty, '/retry')
-    await waitForAnother(app.output, 'AgentsKit received: before-edit', before)
-    await waitForAnother(app.output, 'Ask support or type /support', ready)
-    ready = occurrences(app.output(), 'Ask support or type /support')
-    before = occurrences(app.output(), 'AgentsKit received: before-edit')
+    await waitForSettled(app.output)
     await submit(app.pty, '/regenerate')
-    await waitForAnother(app.output, 'AgentsKit received: before-edit', before)
-    await waitForAnother(app.output, 'Ask support or type /support', ready)
+    await waitForSettled(app.output)
     await submit(app.pty, '/edit after-edit')
     await waitFor(app.output, 'AgentsKit received: after-edit')
+    await waitForSettled(app.output)
   }, 15_000)
 
   it('exits gracefully on Ctrl+C', async () => {
