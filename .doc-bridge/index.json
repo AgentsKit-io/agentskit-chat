@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "6be98248b44794113d81259d39f7ca88a07a1f384ec442f2200ab91247853ba3",
+  "contentHash": "71274e82f418c7e01692a961963b07ba5d2d76adb75f9f59f537f03edfa57c44",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-14T15:40:45.476Z",
+  "generatedAt": "2026-07-14T18:44:34.561Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -206,7 +206,7 @@
       "title": "Stable release handoff",
       "path": "docs/for-agents/release.md",
       "description": "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
-      "body": "Stable release handoff Read first - - - - - Ownership release/manifest.json is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions. Do not publish from a developer machine. A stable tag contained in main starts the protected npm environment workflow. The bootstrap credential may remain only in that protected environment until all twelve packages are linked to the GitHub Actions trusted publisher; remove it immediately after an OIDC readiness check succeeds. Checks Do not close a release issue until npm provenance, clean npm installation, GitHub checksums, host smoke tests, and human launch review are linked publicly."
+      "body": "Stable release handoff Read first - - - - - Ownership release/manifest.json is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions. Do not publish from a developer machine. A stable tag contained in main starts the protected npm environment workflow. The stable workflow is OIDC-only. The protected npm environment must not contain NPM TOKEN or NODE AUTH TOKEN ; both public packages trust the GitHub Actions publisher for .github/workflows/release.yml and environment npm . Checks Do not close a release issue until npm provenance, clean npm installation, GitHub checksums, host smoke tests, and human launch review are linked publicly."
     }
   ],
   "handoffs": {

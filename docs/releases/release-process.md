@@ -18,22 +18,14 @@ Stable publishing is intentionally HITL and runs only from
 The workflow verifies tag ancestry and exact fixed-group versions, installs
 from the lockfile without a dependency cache, runs every quality/conformance,
 browser, native, PTY, documentation, package, and clean-room gate, then packs
-all 12 public packages with SHA-256 checksums. The protected publish job uses a
+both public packages with SHA-256 checksums. The protected publish job uses a
 GitHub-hosted runner with `id-token: write` and npm provenance.
 
-The package names do not exist on npm before `0.1.0`. npm requires a package to
-exist before a trusted publisher can be attached. Therefore the owner must:
-
-1. provide a short-lived, least-privilege npm token to the protected `npm`
-   environment for the one-time bootstrap publish;
-2. after all packages exist, configure each package to trust
-   `AgentsKit-io/agentskit-chat`, workflow `release.yml`, environment `npm`;
-3. remove the bootstrap token and require OIDC for later releases.
-
-The workflow supports both states without changing source: it uses the
-bootstrap token only when present; otherwise npm 11 detects GitHub OIDC. Every
-publish requests public access and provenance. A GitHub release is made public
-only after all npm publishes succeed.
+The `0.1.0` bootstrap used a short-lived token because the package names did
+not yet exist. That credential has been removed. Both public packages now trust
+`AgentsKit-io/agentskit-chat`, workflow `release.yml`, environment `npm`; npm 11
+uses GitHub OIDC and every publish requests public access and provenance. A
+GitHub release is made public only after both npm publishes succeed.
 
 See npm's official guidance for
 [trusted publishing](https://docs.npmjs.com/trusted-publishers/),
@@ -42,7 +34,7 @@ See npm's official guidance for
 
 ## Verify
 
-Confirm all 12 npm pages show the version in `release/manifest.json` and provenance, install the package graph
+Confirm both npm pages show the version in `release/manifest.json` and provenance, install the package graph
 from npm in a clean directory, run `npm audit signatures`, verify GitHub assets
 against `SHA256SUMS`, and smoke the Docs, Registry, and Playbook hosts. Record
 links and results on issue #30 before closing the milestone.
