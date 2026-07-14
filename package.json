@@ -1,6 +1,6 @@
 {
   "name": "agentskit-chat",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Cross-framework application framework for interactive agent experiences, built on AgentsKit.",
   "license": "MIT",

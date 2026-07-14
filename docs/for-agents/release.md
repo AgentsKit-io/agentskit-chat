@@ -16,10 +16,10 @@ The conformance manifest owns component/event/platform evidence. Changesets own
 future version intent; accepted ADRs/RFCs own contract change decisions.
 
 Do not publish from a developer machine. A stable tag contained in `main`
-starts the protected `npm` environment workflow. The bootstrap credential may
-remain only in that protected environment until all twelve packages are linked
-to the GitHub Actions trusted publisher; remove it immediately after an OIDC
-readiness check succeeds.
+starts the protected `npm` environment workflow. The stable workflow is
+OIDC-only. The protected `npm` environment must not contain `NPM_TOKEN` or
+`NODE_AUTH_TOKEN`; both public packages trust the GitHub Actions publisher for
+`.github/workflows/release.yml` and environment `npm`.
 
 ## Checks
 

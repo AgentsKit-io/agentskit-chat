@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Safe scaffolding for AgentsKit Chat applications.",
   "license": "MIT",
   "repository": {

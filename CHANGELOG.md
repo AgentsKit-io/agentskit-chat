@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 — 2026-07-14
+
+AgentsKit Chat consolidates its public npm surface from twelve packages to two
+without collapsing the internal framework-specific ownership boundaries.
+
+- Publishes protocol, server, devtools, React, React Native, Ink, Vue, Svelte,
+  Solid, and Angular APIs as explicit `@agentskit/chat/*` subpaths.
+- Keeps every renderer's native compilation, peer dependencies, conformance,
+  accessibility, and bundle budget isolated inside the monorepo.
+- Updates the CLI, examples, Fumadocs dogfood, public guides, and executable
+  README fixtures to install the consolidated package graph.
+- Adds release gates that verify exactly two public packages, all seven
+  renderer exports, clean installation, checksums, and npm provenance.
+- Preserves the former package names as the immutable `0.2.x` compatibility
+  line; applications migrate imports using the documented subpath mapping.
+
 ## 0.2.0 — 2026-07-13
 
 AgentsKit Chat now ships the trusted Ask backend vertical required by public

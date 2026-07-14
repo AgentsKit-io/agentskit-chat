@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-solid",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Solid application shell for AgentsKit Chat.",
   "license": "MIT",
   "repository": {

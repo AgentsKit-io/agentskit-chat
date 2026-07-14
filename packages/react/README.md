@@ -40,7 +40,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published at `0.2.0` with React 18+, `@agentskit/react ^0.7.1`, and Chromium E2E evidence in CI.
+Published in `@agentskit/chat` at `0.3.0` with React 18+, `@agentskit/react ^0.7.1`, and Chromium E2E evidence in CI.
 
 - React 18+
 - TypeScript strict mode

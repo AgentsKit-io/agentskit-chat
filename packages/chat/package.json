@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Cross-framework application definitions for AgentsKit Chat.",
   "license": "MIT",
   "repository": {
@@ -105,22 +105,54 @@
     "vue": "^3.4.0"
   },
   "peerDependenciesMeta": {
-    "@agentskit/angular": { "optional": true },
-    "@agentskit/ink": { "optional": true },
-    "@agentskit/react": { "optional": true },
-    "@agentskit/react-native": { "optional": true },
-    "@agentskit/solid": { "optional": true },
-    "@agentskit/svelte": { "optional": true },
-    "@agentskit/vue": { "optional": true },
-    "@angular/common": { "optional": true },
-    "@angular/core": { "optional": true },
-    "ink": { "optional": true },
-    "react": { "optional": true },
-    "react-native": { "optional": true },
-    "rxjs": { "optional": true },
-    "solid-js": { "optional": true },
-    "svelte": { "optional": true },
-    "vue": { "optional": true }
+    "@agentskit/angular": {
+      "optional": true
+    },
+    "@agentskit/ink": {
+      "optional": true
+    },
+    "@agentskit/react": {
+      "optional": true
+    },
+    "@agentskit/react-native": {
+      "optional": true
+    },
+    "@agentskit/solid": {
+      "optional": true
+    },
+    "@agentskit/svelte": {
+      "optional": true
+    },
+    "@agentskit/vue": {
+      "optional": true
+    },
+    "@angular/common": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "ink": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "rxjs": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@agentskit/eval": "^0.4.17",
