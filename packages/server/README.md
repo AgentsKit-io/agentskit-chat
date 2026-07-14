@@ -1,33 +1,58 @@
 # @agentskit/chat-server
 
-Web-standard request handler for AgentsKit Chat definitions. It composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol/session contracts.
+**Profile:** `major-package`
 
+Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts.
+
+## Verified proof
+
+| Surface | Evidence |
+|---|---|
+| Chat handler | [ADR-0012](../../docs/architecture/adrs/0012-web-standard-snapshot-handler.md) |
+| Ask vertical | [ADR-0026](../../docs/architecture/adrs/0026-trusted-ask-backend-vertical.md) |
+| Deployment recipes | [deployment guide](../../docs/deployment.md) |
+
+## Quick start
+
+<!-- readme-command:install-server -->
+```bash
+npm install @agentskit/chat-server @agentskit/chat @agentskit/core
+```
+
+<!-- readme-example:chat-handler -->
 ```ts
-const POST = createChatHandler({
-  authenticate: async request => ({ ok: true, context: await authenticate(request) }),
-  resolveDefinition: context => chats.forTenant(context.tenantId),
-  sessionStorage: context => sessions.forTenant(context.tenantId),
+import { createChatHandler } from '@agentskit/chat-server'
+
+export const POST = createChatHandler({
+  authenticate: async () => ({ ok: true, context: {} }),
+  resolveDefinition: () => definition,
+  sessionStorage: () => storage,
 })
 ```
 
-The returned function accepts a standard `Request` and returns a standard streaming `Response`.
+The returned function accepts a standard `Request` and returns a streaming `Response`. Semantic escalations use `createAskServiceHandler` with trusted site resolution.
 
-Semantic questions escalated by the deterministic plane use the trusted Ask
-vertical:
+![Server handlers bridge definitions to HTTP and Ask](./../../docs/assets/agentschat-architecture.svg)
 
-```ts
-const POST = createAskServiceHandler({
-  authenticate,
-  resolveSite,
-  resolveSubjectId: identity => identity.subjectId,
-  retrievers: { local: localRag, federated: federatedRag },
-  generator,
-  sessionStore,
-  rateLimit,
-  onMetric,
-})
+```mermaid
+flowchart LR
+  R["Request"] --> H["createChatHandler"]
+  H --> S["streaming Response"]
 ```
 
-Site/corpus/assistant authority is resolved server-side. Successful responses
-are cited Ask NDJSON; hosted and self-hosted routes mount the same factory. See
-the [backend guide](../../docs/backend.md).
+## Maturity and compatibility
+
+Published at `0.2.0` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.md](../../docs/deployment.md).
+
+- Node.js 22+
+- Web-standard `Request` / `Response`
+
+## Contributing
+
+Package ownership: `packages/server`. Follow [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+**Tags:** `agentskit-chat`, `server`, `web-standard`, `streaming`
+
+## AgentsKit ecosystem
+
+Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit).

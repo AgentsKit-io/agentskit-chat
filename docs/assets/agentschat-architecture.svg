@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 280" role="img" aria-label="AgentsKit Chat architecture: one definition, deterministic answers, then native renderers">
+  <defs>
+    <style>
+      .box { fill: #0f172a; stroke: #38bdf8; stroke-width: 2; rx: 12; }
+      .label { fill: #e2e8f0; font: 600 16px ui-sans-serif, system-ui, sans-serif; }
+      .sub { fill: #94a3b8; font: 14px ui-sans-serif, system-ui, sans-serif; }
+      .arrow { stroke: #64748b; stroke-width: 2; marker-end: url(#arrow); fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="box" x="24" y="84" width="180" height="112"/>
+  <text class="label" x="44" y="118">defineChat</text>
+  <text class="sub" x="44" y="146">routes · policy · manifest</text>
+  <rect class="box" x="252" y="84" width="180" height="112"/>
+  <text class="label" x="272" y="118">deterministic</text>
+  <text class="sub" x="272" y="146">local answers first</text>
+  <rect class="box" x="480" y="84" width="180" height="112"/>
+  <text class="label" x="500" y="118">Ask backend</text>
+  <text class="sub" x="500" y="146">trusted escalation</text>
+  <rect class="box" x="708" y="44" width="188" height="72"/>
+  <text class="label" x="728" y="78">React · Vue · Svelte</text>
+  <rect class="box" x="708" y="132" width="188" height="72"/>
+  <text class="label" x="728" y="166">RN · Ink · Angular</text>
+  <path class="arrow" d="M204 140 H252"/>
+  <path class="arrow" d="M432 140 H480"/>
+  <path class="arrow" d="M660 120 H708"/>
+  <path class="arrow" d="M660 160 H708"/>
+</svg>
