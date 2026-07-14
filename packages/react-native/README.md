@@ -1,4 +1,4 @@
-# @agentskit/chat-react-native
+# @agentskit/chat/react-native
 
 **Profile:** `concise-package`
 
@@ -15,12 +15,12 @@ React Native application shell for an AgentsKit Chat definition. Delegates chat 
 
 <!-- readme-command:install-react-native -->
 ```bash
-npm install @agentskit/chat-react-native @agentskit/chat @agentskit/react-native
+npm install @agentskit/chat @agentskit/react-native
 ```
 
 <!-- readme-example:import-react-native -->
 ```tsx
-import { AgentChatNative } from '@agentskit/chat-react-native'
+import { AgentChatNative } from '@agentskit/chat/react-native'
 ```
 
 `ChoiceListNative` renders a validated shared frame with native accessibility roles and labels. Use `theme` and `slots` with `toChatNativeStyles` for semantic styling. See [theming and composition](../../docs/theming-and-composition.md).

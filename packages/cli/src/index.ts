@@ -29,14 +29,14 @@ const packageJson = (renderer: ChatRenderer): string => JSON.stringify({
   name: 'agentskit-chat-app', private: true, version: '0.0.0', type: 'module', ...(renderer === 'react-native' ? { main: 'expo/AppEntry.js' } : {}),
   scripts: { typecheck: renderer === 'svelte' ? 'svelte-check --tsconfig ./tsconfig.json' : 'tsc --noEmit', test: 'vitest run', ...(['react', 'vue', 'svelte', 'solid', 'angular'].includes(renderer) ? { dev: 'vite', build: 'vite build' } : renderer === 'react-native' ? { dev: 'expo start', build: 'expo export --platform web' } : { dev: 'tsx src/index.tsx' }) },
   dependencies: {
-    '@agentskit/chat': 'latest', '@agentskit/chat-protocol': 'latest', '@agentskit/chat-server': 'latest', '@agentskit/core': '^1.12.2', zod: '^4.3.6',
-    ...(renderer === 'react' ? { '@agentskit/chat-react': 'latest', '@agentskit/react': '^0.7.1', react: '^19.0.0', 'react-dom': '^19.0.0' }
-      : renderer === 'react-native' ? { '@agentskit/chat-react-native': 'latest', '@agentskit/react-native': '^0.4.4', expo: '^57.0.4', react: '19.2.3', 'react-dom': '19.2.3', 'react-native': '^0.86.0', 'react-native-web': '^0.21.2' }
-        : renderer === 'ink' ? { '@agentskit/chat-ink': 'latest', '@agentskit/ink': '^0.10.1', ink: '^7.0.0', react: '^19.0.0' }
-          : renderer === 'vue' ? { '@agentskit/chat-vue': 'latest', '@agentskit/vue': '^0.4.4', vue: '^3.5.0' }
-            : renderer === 'svelte' ? { '@agentskit/chat-svelte': 'latest', '@agentskit/svelte': '^0.4.4', svelte: '^5.0.0' }
-              : renderer === 'solid' ? { '@agentskit/chat-solid': 'latest', '@agentskit/solid': '^0.4.4', 'solid-js': '^1.9.0' }
-                : { '@agentskit/chat-angular': 'latest', '@agentskit/angular': '^0.4.6', '@angular/common': '^21.0.0', '@angular/compiler': '^21.0.0', '@angular/core': '^21.0.0', '@angular/platform-browser': '^21.0.0', rxjs: '^7.8.0', tslib: '^2.8.0', 'zone.js': '^0.16.0' }),
+    '@agentskit/chat': 'latest', '@agentskit/core': '^1.12.2', zod: '^4.3.6',
+    ...(renderer === 'react' ? { '@agentskit/react': '^0.7.1', react: '^19.0.0', 'react-dom': '^19.0.0' }
+      : renderer === 'react-native' ? { '@agentskit/react-native': '^0.4.4', expo: '^57.0.4', react: '19.2.3', 'react-dom': '19.2.3', 'react-native': '^0.86.0', 'react-native-web': '^0.21.2' }
+        : renderer === 'ink' ? { '@agentskit/ink': '^0.10.1', ink: '^7.0.0', react: '^19.0.0' }
+          : renderer === 'vue' ? { '@agentskit/vue': '^0.4.4', vue: '^3.5.0' }
+            : renderer === 'svelte' ? { '@agentskit/svelte': '^0.4.4', svelte: '^5.0.0' }
+              : renderer === 'solid' ? { '@agentskit/solid': '^0.4.4', 'solid-js': '^1.9.0' }
+                : { '@agentskit/angular': '^0.4.6', '@angular/common': '^21.0.0', '@angular/compiler': '^21.0.0', '@angular/core': '^21.0.0', '@angular/platform-browser': '^21.0.0', rxjs: '^7.8.0', tslib: '^2.8.0', 'zone.js': '^0.16.0' }),
   },
   devDependencies: { '@types/node': '^25.0.0', tsx: '^4.20.0', typescript: renderer === 'angular' ? '^5.9.0' : '^6.0.0', vitest: '^4.0.0', ...(['react', 'react-native', 'ink'].includes(renderer) ? { '@types/react': '^19.0.0' } : {}), ...(renderer === 'react' ? { '@types/react-dom': '^19.0.0', '@vitejs/plugin-react': '^5.0.0', vite: '^8.0.0' } : renderer === 'vue' ? { '@vitejs/plugin-vue': '^6.0.0', vite: '^8.0.0' } : renderer === 'svelte' ? { '@sveltejs/vite-plugin-svelte': '^7.0.0', 'svelte-check': '^4.0.0', vite: '^8.0.0' } : renderer === 'solid' ? { 'vite-plugin-solid': '^2.11.0', vite: '^8.0.0' } : renderer === 'angular' ? { vite: '^8.0.0' } : {}) },
 }, null, 2) + '\n'
@@ -58,9 +58,9 @@ const demoAdapter: AdapterFactory = {
 
 export const chat = defineChat({ id: 'starter', chat: { adapter: demoAdapter } })
 `,
-  'src/server.ts': `import type { SessionSnapshot } from '@agentskit/chat-protocol'
+  'src/server.ts': `import type { SessionSnapshot } from '@agentskit/chat/protocol'
 import type { SessionStorage } from '@agentskit/chat'
-import { createChatHandler } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
 import { chat } from './chat.js'
 
 let snapshot: SessionSnapshot | undefined
@@ -104,7 +104,7 @@ const rendererFiles = (renderer: ChatRenderer): Record<string, string> => render
   'src/main.tsx': `import '@agentskit/react/theme'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { AgentChat } from '@agentskit/chat-react'
+import { AgentChat } from '@agentskit/chat/react'
 import { chat } from './chat.js'
 
 createRoot(document.getElementById('root')!).render(<StrictMode><AgentChat definition={chat} /></StrictMode>)
@@ -117,13 +117,13 @@ import { defineConfig } from 'vite'
 export default defineConfig({ plugins: [react()] })
 `,
 } : renderer === 'react-native' ? {
-  'App.tsx': `import { AgentChatNative } from '@agentskit/chat-react-native'
+  'App.tsx': `import { AgentChatNative } from '@agentskit/chat/react-native'
 import { chat } from './src/chat'
 export default function App() { return <AgentChatNative definition={chat} /> }
 `,
   'app.json': JSON.stringify({ expo: { name: 'AgentsKit Chat', slug: 'agentskit-chat' } }, null, 2) + '\n',
 } : renderer === 'ink' ? {
-  'src/index.tsx': `import { AgentChat } from '@agentskit/chat-ink'
+  'src/index.tsx': `import { AgentChat } from '@agentskit/chat/ink'
 import { render } from 'ink'
 import { chat } from './chat.js'
 const app = render(<AgentChat definition={chat} />)
@@ -131,21 +131,21 @@ if (process.env.CI) setTimeout(() => app.unmount(), 0)
 `,
 } : renderer === 'vue' ? {
   'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n',
-  'src/main.ts': `import { createApp, h } from 'vue'\nimport { AgentChat } from '@agentskit/chat-vue'\nimport { chat } from './chat.js'\ncreateApp({ render: () => h(AgentChat, { definition: chat }) }).mount('#app')\n`,
+  'src/main.ts': `import { createApp, h } from 'vue'\nimport { AgentChat } from '@agentskit/chat/vue'\nimport { chat } from './chat.js'\ncreateApp({ render: () => h(AgentChat, { definition: chat }) }).mount('#app')\n`,
   'vite.config.ts': `import vue from '@vitejs/plugin-vue'\nimport { defineConfig } from 'vite'\nexport default defineConfig({ plugins: [vue()] })\n`,
 } : renderer === 'svelte' ? {
   'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n',
-  'src/App.svelte': `<script lang="ts">\n  import { AgentChat } from '@agentskit/chat-svelte'\n  import { chat } from './chat.js'\n</script>\n<AgentChat definition={chat} />\n`,
+  'src/App.svelte': `<script lang="ts">\n  import { AgentChat } from '@agentskit/chat/svelte'\n  import { chat } from './chat.js'\n</script>\n<AgentChat definition={chat} />\n`,
   'src/main.ts': `import { mount } from 'svelte'\nimport App from './App.svelte'\nmount(App, { target: document.getElementById('app')! })\n`,
   'src/vite-env.d.ts': `/// <reference types="svelte" />\n`,
   'vite.config.ts': `import { svelte } from '@sveltejs/vite-plugin-svelte'\nimport { defineConfig } from 'vite'\nexport default defineConfig({ plugins: [svelte()] })\n`,
 } : renderer === 'solid' ? {
   'index.html': '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.tsx"></script></body></html>\n',
-  'src/main.tsx': `import { render } from 'solid-js/web'\nimport { AgentChat } from '@agentskit/chat-solid'\nimport { chat } from './chat.js'\nrender(() => <AgentChat definition={chat} />, document.getElementById('app')!)\n`,
+  'src/main.tsx': `import { render } from 'solid-js/web'\nimport { AgentChat } from '@agentskit/chat/solid'\nimport { chat } from './chat.js'\nrender(() => <AgentChat definition={chat} />, document.getElementById('app')!)\n`,
   'vite.config.ts': `import { defineConfig } from 'vite'\nimport solid from 'vite-plugin-solid'\nexport default defineConfig({ plugins: [solid()] })\n`,
 } : {
   'index.html': '<!doctype html><html><body><app-root></app-root><script type="module" src="/src/main.ts"></script></body></html>\n',
-  'src/main.ts': `import 'zone.js'\nimport '@angular/compiler'\nimport { Component } from '@angular/core'\nimport { bootstrapApplication } from '@angular/platform-browser'\nimport { AgentChatComponent } from '@agentskit/chat-angular'\nimport { chat } from './chat.js'\n@Component({ selector: 'app-root', standalone: true, imports: [AgentChatComponent], template: '<ak-agent-chat [definition]="chat" />' })\nclass AppComponent { readonly chat = chat }\nvoid bootstrapApplication(AppComponent)\n`,
+  'src/main.ts': `import 'zone.js'\nimport '@angular/compiler'\nimport { Component } from '@angular/core'\nimport { bootstrapApplication } from '@angular/platform-browser'\nimport { AgentChatComponent } from '@agentskit/chat/angular'\nimport { chat } from './chat.js'\n@Component({ selector: 'app-root', standalone: true, imports: [AgentChatComponent], template: '<ak-agent-chat [definition]="chat" />' })\nclass AppComponent { readonly chat = chat }\nvoid bootstrapApplication(AppComponent)\n`,
 }
 
 const tsconfig = (renderer: ChatRenderer): string => JSON.stringify({ compilerOptions: {
@@ -214,14 +214,14 @@ const componentFiles = (name: string, renderers: readonly ChatRenderer[]): Recor
   for (const renderer of [...new Set(renderers)]) {
     const relative = `src/components/${renderer}/${kebab}.${renderer === 'svelte' ? 'svelte' : renderer === 'vue' || renderer === 'angular' ? 'ts' : 'tsx'}`
     files[relative] = renderer === 'svelte'
-      ? `<script lang="ts">\n  import { StandardComponent } from '@agentskit/chat-svelte'\n  import type { ComponentManifest } from '@agentskit/chat'\n  import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'\n  import { ${pascal}PropsSchema } from '../${kebab}.js'\n  let { frame, manifest, onInteract, disabled = false }: { frame: ComponentRenderFrame; manifest: ComponentManifest; onInteract: (event: ComponentInteractionEvent) => void; disabled?: boolean } = $props()\n  const value = $derived(frame.componentKey === '${kebab}' ? ${pascal}PropsSchema.parse(frame.props) : undefined)\n</script>\n{#if value}<section aria-label={value.label}>{value.label}</section>{:else}<StandardComponent {frame} {manifest} {onInteract} {disabled} />{/if}\n`
+      ? `<script lang="ts">\n  import { StandardComponent } from '@agentskit/chat/svelte'\n  import type { ComponentManifest } from '@agentskit/chat'\n  import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'\n  import { ${pascal}PropsSchema } from '../${kebab}.js'\n  let { frame, manifest, onInteract, disabled = false }: { frame: ComponentRenderFrame; manifest: ComponentManifest; onInteract: (event: ComponentInteractionEvent) => void; disabled?: boolean } = $props()\n  const value = $derived(frame.componentKey === '${kebab}' ? ${pascal}PropsSchema.parse(frame.props) : undefined)\n</script>\n{#if value}<section aria-label={value.label}>{value.label}</section>{:else}<StandardComponent {frame} {manifest} {onInteract} {disabled} />{/if}\n`
       : renderer === 'vue'
-        ? `import { h, type VNode } from 'vue'\nimport { StandardComponent, type StandardComponentProps } from '@agentskit/chat-vue'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\nexport const ${pascal} = (slot: StandardComponentProps): VNode[] => { if (slot.frame.componentKey !== '${kebab}') return [h(StandardComponent, slot)]; const props = ${pascal}PropsSchema.parse(slot.frame.props); return [h('section', { 'aria-label': props.label }, props.label)] }\n`
+        ? `import { h, type VNode } from 'vue'\nimport { StandardComponent, type StandardComponentProps } from '@agentskit/chat/vue'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\nexport const ${pascal} = (slot: StandardComponentProps): VNode[] => { if (slot.frame.componentKey !== '${kebab}') return [h(StandardComponent, slot)]; const props = ${pascal}PropsSchema.parse(slot.frame.props); return [h('section', { 'aria-label': props.label }, props.label)] }\n`
         : renderer === 'angular'
-          ? `import { Component, Input } from '@angular/core'\nimport { StandardComponentComponent } from '@agentskit/chat-angular'\nimport type { ComponentManifest } from '@agentskit/chat'\nimport type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\n@Component({ selector: 'ak-${kebab}', standalone: true, imports: [StandardComponentComponent], template: '@if (value; as item) { <section [attr.aria-label]="item.label">{{ item.label }}</section> } @else { <ak-standard-component [frame]="frame" [manifest]="manifest" [onInteract]="onInteract" [disabled]="disabled" /> }' })\nexport class ${pascal}Component { @Input({ required: true }) frame!: ComponentRenderFrame; @Input({ required: true }) manifest!: ComponentManifest; @Input({ required: true }) onInteract!: (event: ComponentInteractionEvent) => void; @Input() disabled = false; get value() { return this.frame.componentKey === '${kebab}' ? ${pascal}PropsSchema.parse(this.frame.props) : undefined } }\n`
+          ? `import { Component, Input } from '@angular/core'\nimport { StandardComponentComponent } from '@agentskit/chat/angular'\nimport type { ComponentManifest } from '@agentskit/chat'\nimport type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\n@Component({ selector: 'ak-${kebab}', standalone: true, imports: [StandardComponentComponent], template: '@if (value; as item) { <section [attr.aria-label]="item.label">{{ item.label }}</section> } @else { <ak-standard-component [frame]="frame" [manifest]="manifest" [onInteract]="onInteract" [disabled]="disabled" /> }' })\nexport class ${pascal}Component { @Input({ required: true }) frame!: ComponentRenderFrame; @Input({ required: true }) manifest!: ComponentManifest; @Input({ required: true }) onInteract!: (event: ComponentInteractionEvent) => void; @Input() disabled = false; get value() { return this.frame.componentKey === '${kebab}' ? ${pascal}PropsSchema.parse(this.frame.props) : undefined } }\n`
           : renderer === 'solid'
-            ? `import { StandardComponent, type StandardComponentProps } from '@agentskit/chat-solid'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\nexport const ${pascal} = (slot: StandardComponentProps) => { if (slot.frame.componentKey !== '${kebab}') return <StandardComponent {...slot} />; const props = ${pascal}PropsSchema.parse(slot.frame.props); return <section aria-label={props.label}>{props.label}</section> }\n`
-            : `import { ${renderer === 'react-native' ? 'StandardComponentNative as DefaultStandardComponent, type StandardComponentNativeProps' : 'StandardComponent as DefaultStandardComponent, type StandardComponentProps'} } from '@agentskit/chat-${renderer}'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\n${renderer === 'react-native' ? "import { Text } from 'react-native'\n" : renderer === 'ink' ? "import { Text } from 'ink'\n" : ''}export const ${pascal} = (slot: ${renderer === 'react-native' ? 'StandardComponentNativeProps' : 'StandardComponentProps'}) => { if (slot.frame.componentKey !== '${kebab}') return <DefaultStandardComponent {...slot} />; const props = ${pascal}PropsSchema.parse(slot.frame.props); return <${renderer === 'react-native' || renderer === 'ink' ? 'Text' : 'section'}${renderer === 'react-native' ? ' accessibilityLabel={props.label}' : renderer === 'ink' ? '' : ' aria-label={props.label}'}>{props.label}</${renderer === 'react-native' || renderer === 'ink' ? 'Text' : 'section'}> }\n`
+            ? `import { StandardComponent, type StandardComponentProps } from '@agentskit/chat/solid'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\nexport const ${pascal} = (slot: StandardComponentProps) => { if (slot.frame.componentKey !== '${kebab}') return <StandardComponent {...slot} />; const props = ${pascal}PropsSchema.parse(slot.frame.props); return <section aria-label={props.label}>{props.label}</section> }\n`
+            : `import { ${renderer === 'react-native' ? 'StandardComponentNative as DefaultStandardComponent, type StandardComponentNativeProps' : 'StandardComponent as DefaultStandardComponent, type StandardComponentProps'} } from '@agentskit/chat/${renderer}'\nimport { ${pascal}PropsSchema } from '../${kebab}.js'\n${renderer === 'react-native' ? "import { Text } from 'react-native'\n" : renderer === 'ink' ? "import { Text } from 'ink'\n" : ''}export const ${pascal} = (slot: ${renderer === 'react-native' ? 'StandardComponentNativeProps' : 'StandardComponentProps'}) => { if (slot.frame.componentKey !== '${kebab}') return <DefaultStandardComponent {...slot} />; const props = ${pascal}PropsSchema.parse(slot.frame.props); return <${renderer === 'react-native' || renderer === 'ink' ? 'Text' : 'section'}${renderer === 'react-native' ? ' accessibilityLabel={props.label}' : renderer === 'ink' ? '' : ' aria-label={props.label}'}>{props.label}</${renderer === 'react-native' || renderer === 'ink' ? 'Text' : 'section'}> }\n`
   }
   return files
 }

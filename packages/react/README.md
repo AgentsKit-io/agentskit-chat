@@ -1,4 +1,4 @@
-# @agentskit/chat-react
+# @agentskit/chat/react
 
 **Profile:** `major-package`
 
@@ -16,12 +16,12 @@ Accessible React application shell over `@agentskit/react`. Chat state, streamin
 
 <!-- readme-command:install-react -->
 ```bash
-npm install @agentskit/chat-react @agentskit/chat @agentskit/react
+npm install @agentskit/chat @agentskit/react
 ```
 
 <!-- readme-example:agent-chat -->
 ```tsx
-import { AgentChat } from '@agentskit/chat-react'
+import { AgentChat } from '@agentskit/chat/react'
 import type { ChatDefinition } from '@agentskit/chat'
 
 export const App = ({ definition }: { readonly definition: ChatDefinition }) =>

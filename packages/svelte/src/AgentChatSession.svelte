@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, type SvelteChatStore } from '@agentskit/svelte'
-  import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+  import { decodeComponentFrame, isComponentFrameCandidate, type ComponentInteractionEvent, type ComponentRenderFrame, type ComponentSelectionEvent } from '@agentskit/chat/protocol'
   import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveComponentFrame } from '@agentskit/chat'
   import type { ChatState, Message as ChatMessage } from '@agentskit/core'
   import type { AgentChatProps } from './types.js'

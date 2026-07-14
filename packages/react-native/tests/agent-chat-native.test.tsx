@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ChatReturn } from '@agentskit/core'
 import { ChoiceListComponent, StandardComponentCatalog, createChatSession, defineChat, defineComponentManifest, resumeChatSession } from '@agentskit/chat'
-import { createAssistantContentEncoder, type SessionSnapshot } from '@agentskit/chat-protocol'
+import { createAssistantContentEncoder, type SessionSnapshot } from '@agentskit/chat/protocol'
 import { AgentChat } from '../../react/src/index.js'
 import { invalidChoiceListPropsFrame, invalidComponentFrameFixtures, standardComponentFrameFixtures, unknownComponentFrame, validChoiceListFrame } from '../../protocol/src/fixtures.js'
 import type { ReactNode } from 'react'

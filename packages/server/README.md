@@ -1,4 +1,4 @@
-# @agentskit/chat-server
+# @agentskit/chat/server
 
 **Profile:** `major-package`
 
@@ -16,13 +16,13 @@ Web-standard request handlers for AgentsKit Chat definitions. Composes the canon
 
 <!-- readme-command:install-server -->
 ```bash
-npm install @agentskit/chat-server @agentskit/chat @agentskit/core
+npm install @agentskit/chat @agentskit/core
 ```
 
 <!-- readme-example:chat-handler -->
 ```ts
-import { createChatHandler } from '@agentskit/chat-server'
-import type { ChatHandlerOptions } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
+import type { ChatHandlerOptions } from '@agentskit/chat/server'
 import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
 
 type TenantContext = { readonly tenantId: string }

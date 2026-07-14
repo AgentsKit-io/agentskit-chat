@@ -14,7 +14,8 @@ export function computeReadmeClaims() {
     return manifest.private !== true && manifest.publishConfig?.access === 'public'
   })
   const renderers = ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']
-  const rendererPackages = publicPackages.filter(dir => renderers.includes(dir))
+  const releasedRenderers = readJson('release/manifest.json').renderers
+  const rendererPackages = releasedRenderers.filter(renderer => renderers.includes(renderer.id))
   const catalogSupport = readJson('packages/react/catalog-support.json')
   const standardComponents = Object.keys(catalogSupport.components).length
   const conformanceRows = readFileSync(join(REPO_ROOT, 'docs/conformance/matrix.generated.md'), 'utf8')

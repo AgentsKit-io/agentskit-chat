@@ -1,5 +1,5 @@
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import type { ChatState, Message, ToolCall } from '@agentskit/core'
 import type { SvelteChatStore } from '@agentskit/svelte'
 import type { Snippet } from 'svelte'

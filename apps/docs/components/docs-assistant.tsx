@@ -1,6 +1,6 @@
 'use client'
 
-import { AgentChat } from '@agentskit/chat-react'
+import { AgentChat } from '@agentskit/chat/react'
 import { useEffect, useRef, useState } from 'react'
 import { docsChatDefinition } from '@/lib/chat-definition'
 

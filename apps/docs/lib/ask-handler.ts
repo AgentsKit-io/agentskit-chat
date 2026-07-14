@@ -1,4 +1,4 @@
-import { createAskServiceHandler, type AskServiceHandlerOptions, type AskServiceRetriever } from '@agentskit/chat-server'
+import { createAskServiceHandler, type AskServiceHandlerOptions, type AskServiceRetriever } from '@agentskit/chat/server'
 
 export type DocsAskHandlerOptions<TContext> = Omit<AskServiceHandlerOptions<TContext>, 'retrievers'> & {
   readonly retriever: AskServiceRetriever

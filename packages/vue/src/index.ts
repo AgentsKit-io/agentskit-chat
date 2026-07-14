@@ -1,6 +1,7 @@
 import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat/protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import { ChatRoot, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/vue'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
 import { defineComponent, Fragment, h, ref, watchEffect, type CSSProperties, type PropType, type Slots, type SlotsType, type VNode, type VNodeChild } from 'vue'

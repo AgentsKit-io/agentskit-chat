@@ -1,12 +1,12 @@
 # Svelte quick start
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat-svelte @agentskit/svelte svelte
+pnpm add @agentskit/chat @agentskit/chat/svelte @agentskit/svelte svelte
 ```
 
 ```svelte
 <script lang="ts">
-  import { AgentChat } from '@agentskit/chat-svelte'
+  import { AgentChat } from '@agentskit/chat/svelte'
   import { supportChat } from './support-chat'
 </script>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolveChoiceListFrame, selectChoice } from '@agentskit/chat'
   import type { ComponentManifest } from '@agentskit/chat'
-  import type { ComponentSelectionEvent } from '@agentskit/chat-protocol'
+  import type { ComponentSelectionEvent } from '@agentskit/chat/protocol'
 
   let { frame, manifest, onSelect, disabled = false }: { frame: unknown; manifest: ComponentManifest; onSelect: (event: ComponentSelectionEvent) => void; disabled?: boolean } = $props()
   const resolved = $derived(resolveChoiceListFrame(frame, manifest))

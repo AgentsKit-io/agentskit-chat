@@ -52,7 +52,7 @@ Construct `providerAdapter` with the supported AgentsKit provider package used b
 
 ## Persistence and deployment
 
-For a deployed application, combine the definition with `createChatHandler` from `@agentskit/chat-server`, a durable `SessionStorage`, and an upstream `ChatMemory` adapter. The application session stores only AgentsKit Chat metadata; canonical messages remain in upstream memory. Replace the demo ticket service with a durable, transactional implementation. If retry-safe ticket creation is required, the host integration must supply and persist an application-specific idempotency key; this simplified service does not expose AgentsKit's internal tool-call identity.
+For a deployed application, combine the definition with `createChatHandler` from `@agentskit/chat/server`, a durable `SessionStorage`, and an upstream `ChatMemory` adapter. The application session stores only AgentsKit Chat metadata; canonical messages remain in upstream memory. Replace the demo ticket service with a durable, transactional implementation. If retry-safe ticket creation is required, the host integration must supply and persist an application-specific idempotency key; this simplified service does not expose AgentsKit's internal tool-call identity.
 
 Deploy the Web-standard handler behind host authentication. Forward request cancellation and deadlines, keep provider/ticket credentials server-side, and retain policy/action traces according to your audit requirements.
 

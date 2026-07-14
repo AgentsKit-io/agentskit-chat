@@ -1,4 +1,4 @@
-# @agentskit/chat-devtools
+# @agentskit/chat/devtools
 
 **Profile:** `concise-package`
 
@@ -18,12 +18,12 @@ This package does not record or replay model calls. Use `createRecordingAdapter`
 
 <!-- readme-command:install-devtools -->
 ```bash
-npm install @agentskit/chat-devtools @agentskit/eval
+npm install @agentskit/chat @agentskit/eval
 ```
 
 <!-- readme-example:import-devtools -->
 ```ts
-import { createReplayFixture } from '@agentskit/chat-devtools'
+import { createReplayFixture } from '@agentskit/chat/devtools'
 ```
 
 Store replay cassettes beside application traces with `createReplayFixture` after upstream eval adapters produce them.

@@ -11,8 +11,6 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*",
-    "@agentskit/chat-react-native": "workspace:*",
     "@agentskit/react-native": "^0.4.4",
     "expo": "^57.0.4",
     "react": "19.2.3",

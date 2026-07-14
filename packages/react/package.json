@@ -32,8 +32,7 @@
     "test": "pnpm --filter @agentskit/chat-protocol build && pnpm --filter @agentskit/chat build && vitest run --environment happy-dom"
   },
   "dependencies": {
-    "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*"
+    "@agentskit/chat": "workspace:*"
   },
   "peerDependencies": {
     "@agentskit/react": "^0.7.1",
@@ -49,8 +48,6 @@
     "react-dom": "^19.2.7",
     "tsup": "^8.5.1"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

@@ -1,4 +1,4 @@
-# @agentskit/chat-solid
+# @agentskit/chat/solid
 
 **Profile:** `concise-package`
 
@@ -15,12 +15,12 @@ Solid application shell for AgentsKit Chat. Composes `useChat` and the headless 
 
 <!-- readme-command:install-solid -->
 ```bash
-npm install @agentskit/chat-solid @agentskit/chat @agentskit/solid
+npm install @agentskit/chat @agentskit/solid
 ```
 
 <!-- readme-example:import-solid -->
 ```ts
-import { AgentChat } from '@agentskit/chat-solid'
+import { AgentChat } from '@agentskit/chat/solid'
 ```
 
 Customization uses typed Solid render props: `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList`.

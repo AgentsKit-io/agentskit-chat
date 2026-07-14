@@ -1,8 +1,8 @@
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, STANDARD_COMPONENT_KEYS, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, formatSemanticFallback, getLifecycleTargets, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatTheme, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import { decodeAssistantContent, decodeComponentFrame, isAssistantContentCandidate, isComponentFrameCandidate } from '@agentskit/chat-protocol'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
-import type { AssistantContentPart } from '@agentskit/chat-protocol'
+import { decodeAssistantContent, decodeComponentFrame, isAssistantContentCandidate, isComponentFrameCandidate } from '@agentskit/chat/protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
+import type { AssistantContentPart } from '@agentskit/chat/protocol'
 import {
   ChatContainer,
   InputBar,

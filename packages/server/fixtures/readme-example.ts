@@ -1,5 +1,5 @@
-import { createChatHandler } from '@agentskit/chat-server'
-import type { ChatHandlerOptions } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
+import type { ChatHandlerOptions } from '@agentskit/chat/server'
 import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
 
 type TenantContext = { readonly tenantId: string }

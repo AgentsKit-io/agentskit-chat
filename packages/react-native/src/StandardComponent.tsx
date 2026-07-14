@@ -1,5 +1,5 @@
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFrame, validateStandardComponentInteraction, type ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'
 import { useState, type ReactElement } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 

@@ -1,4 +1,4 @@
-# @agentskit/chat-svelte
+# @agentskit/chat/svelte
 
 **Profile:** `concise-package`
 
@@ -15,12 +15,12 @@ Svelte 5 application shell for AgentsKit Chat. Composes `createChatStore` and th
 
 <!-- readme-command:install-svelte -->
 ```bash
-npm install @agentskit/chat-svelte @agentskit/chat @agentskit/svelte
+npm install @agentskit/chat @agentskit/svelte
 ```
 
 <!-- readme-example:import-svelte -->
 ```ts
-import { AgentChat } from '@agentskit/chat-svelte'
+import { AgentChat } from '@agentskit/chat/svelte'
 ```
 
 Customization uses typed Svelte snippets: `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList`.

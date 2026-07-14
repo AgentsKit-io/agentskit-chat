@@ -2,7 +2,7 @@ import {
   verifyLocalKnowledgeArtifactSync,
   type LocalKnowledgeArtifact,
   type VerifiedLocalKnowledgeArtifact,
-} from '@agentskit/chat-protocol'
+} from '@agentskit/chat/protocol'
 
 export const KNOWLEDGE_HASH = 'sha256:d80aa1918f799c7824de8ff3a2f32454d07da2b0c815ec04bfceda51f5624382' as const
 

@@ -1,6 +1,7 @@
 import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat/protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import { ChatContainer, defaultInkTheme, InkThemeProvider, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat, useInkTheme } from '@agentskit/ink'
 import type { InkTheme } from '@agentskit/ink'
 import { Box, Text, useInput } from 'ink'

@@ -1,1 +1,1 @@
-import { AgentChat } from '@agentskit/chat-svelte'
+import { AgentChat } from '@agentskit/chat/svelte'

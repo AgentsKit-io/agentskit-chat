@@ -1,4 +1,4 @@
-# @agentskit/chat-ink
+# @agentskit/chat/ink
 
 **Profile:** `concise-package`
 
@@ -16,12 +16,12 @@ Opinionated Ink shell for a framework-neutral AgentsKit Chat definition. Chat st
 
 <!-- readme-command:install-ink -->
 ```bash
-npm install @agentskit/chat-ink @agentskit/chat @agentskit/ink
+npm install @agentskit/chat @agentskit/ink
 ```
 
 <!-- readme-example:import-ink -->
 ```tsx
-import { AgentChat } from '@agentskit/chat-ink'
+import { AgentChat } from '@agentskit/chat/ink'
 ```
 
 Unsupported visual components should be validated through `parseSemanticFallback` from `@agentskit/chat` and rendered through `SemanticFallback`. The native `ChoiceList` supports Up/Down or a number followed by Enter.

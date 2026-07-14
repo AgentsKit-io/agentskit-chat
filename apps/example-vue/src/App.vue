@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { AgentChat } from '@agentskit/chat-vue'
-import type { ComponentInteractionEvent } from '@agentskit/chat-protocol'
+import { AgentChat } from '@agentskit/chat/vue'
+import type { ComponentInteractionEvent } from '@agentskit/chat/protocol'
 import {
   onboardingApplication,
   operationsApplication,

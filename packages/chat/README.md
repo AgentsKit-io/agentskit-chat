@@ -4,6 +4,19 @@
 
 Framework-neutral application definitions that compile to AgentsKit configuration. Owns typed routes, policy composition, component manifests, session metadata, deterministic answer adapters, and semantic fallback envelopes while the upstream controller keeps lifecycle, memory, and tool execution.
 
+Protocol, server, devtools, and all seven framework renderers ship as subpath exports:
+
+```ts
+import { decodeTurnEvent } from '@agentskit/chat/protocol'
+import { createChatHandler } from '@agentskit/chat/server'
+import { createTraceCapture } from '@agentskit/chat/devtools'
+import { AgentChat } from '@agentskit/chat/react'
+```
+
+They remain isolated private workspace modules for ownership and testing, while npm consumers install only `@agentskit/chat`. The former standalone package names remain available until the separate deprecation phase.
+
+Actionable choices use `createActionConfirmation`, which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit.
+
 ## Verified proof
 
 | Surface | Evidence |
@@ -38,9 +51,10 @@ Use `resumeChatSession(definition, { sessionId, storage })` for cross-client met
 
 ```mermaid
 flowchart LR
-  C["@agentskit/chat"] --> P["@agentskit/chat-protocol"]
-  C --> S["@agentskit/chat-server"]
-  C --> R["renderer packages"]
+  C["@agentskit/chat"] --> P["/protocol"]
+  C --> S["/server"]
+  C --> D["/devtools"]
+  C --> R["seven renderer subpaths"]
 ```
 
 ## Maturity and compatibility

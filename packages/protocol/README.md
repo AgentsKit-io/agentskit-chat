@@ -1,4 +1,4 @@
-# @agentskit/chat-protocol
+# @agentskit/chat/protocol
 
 **Profile:** `major-package`
 
@@ -18,12 +18,12 @@ Decode untrusted wire data at every boundary:
 
 <!-- readme-command:install-protocol -->
 ```bash
-npm install @agentskit/chat-protocol
+npm install @agentskit/chat
 ```
 
 <!-- readme-example:decode-turn -->
 ```ts
-import { decodeTurnEvent } from '@agentskit/chat-protocol'
+import { decodeTurnEvent } from '@agentskit/chat/protocol'
 
 const result = decodeTurnEvent({ unexpected: true })
 if (result.ok) throw new Error('expected invalid turn event')

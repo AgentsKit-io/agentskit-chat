@@ -1,6 +1,7 @@
 import { formatSemanticFallback, getLifecycleTargets, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
 import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat-protocol'
+import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat/protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import { ChatContainer, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat } from '@agentskit/solid'
 import type { ChatReturn, Message as ChatMessage, ToolCall } from '@agentskit/core'
 import { For, Show, createEffect, createMemo, createSignal, on, untrack, type JSX } from 'solid-js'

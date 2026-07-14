@@ -5,7 +5,7 @@
   "claims": [
     {
       "id": "public-packages",
-      "value": 12,
+      "value": 2,
       "noun": "public npm packages",
       "evidence": {
         "type": "repository-derivation",
@@ -19,8 +19,8 @@
       "noun": "native renderers",
       "evidence": {
         "type": "repository-derivation",
-        "path": "packages/{react,vue,svelte,solid,angular,react-native,ink}",
-        "summary": "Renderer packages with catalog-support evidence."
+        "path": "release/manifest.json#/renderers",
+        "summary": "Native renderer subpaths declared in the public release manifest."
       }
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       "id": "architecture-adrs",
-      "value": 26,
+      "value": 29,
       "noun": "architecture ADRs",
       "evidence": {
         "type": "repository-derivation",
@@ -75,7 +75,7 @@
     },
     {
       "id": "agent-handoffs",
-      "value": 27,
+      "value": 28,
       "noun": "agent handoffs",
       "evidence": {
         "type": "repository-derivation",

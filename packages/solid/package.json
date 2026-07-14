@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.12.2"
   },
   "peerDependencies": {
@@ -50,8 +49,6 @@
     "tsup": "^8.5.1",
     "vite-plugin-solid": "^2.11.12"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

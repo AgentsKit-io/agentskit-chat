@@ -3,14 +3,14 @@
 Install the application shell and its published upstream peers:
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat-ink @agentskit/ink ink react
+pnpm add @agentskit/chat @agentskit/chat/ink @agentskit/ink ink react
 ```
 
 Define the chat in a framework-neutral module and render it from an Ink entry point:
 
 ```tsx
 import { defineChat } from '@agentskit/chat'
-import { AgentChat } from '@agentskit/chat-ink'
+import { AgentChat } from '@agentskit/chat/ink'
 import { render } from 'ink'
 
 import { adapter } from './adapter.js'

@@ -1,5 +1,5 @@
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'
 import { defineComponent, h, reactive, type PropType, type VNode } from 'vue'
 
 export interface StandardComponentProps { readonly frame: ComponentRenderFrame; readonly manifest: ComponentManifest; readonly onInteract: (event: ComponentInteractionEvent) => void; readonly disabled?: boolean }

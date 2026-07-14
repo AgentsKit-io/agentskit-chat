@@ -1,1 +1,1 @@
-import { createReplayFixture } from '@agentskit/chat-devtools'
+import { createReplayFixture } from '@agentskit/chat/devtools'

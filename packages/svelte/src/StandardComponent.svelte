@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame } from '@agentskit/chat'
   import type { ComponentManifest } from '@agentskit/chat'
-  import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
+  import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'
 
   let { frame, manifest, onInteract, disabled = false }: { frame: ComponentRenderFrame; manifest: ComponentManifest; onInteract: (event: ComponentInteractionEvent) => void; disabled?: boolean } = $props()
   let values: Record<string, string | boolean> = $state({})

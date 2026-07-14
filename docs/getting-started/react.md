@@ -21,7 +21,7 @@ export const supportChat = defineChat({
 Render it with the native React binding:
 
 ```tsx
-import { AgentChat } from '@agentskit/chat-react'
+import { AgentChat } from '@agentskit/chat/react'
 import { supportChat } from './support-chat'
 
 export const Support = () => (

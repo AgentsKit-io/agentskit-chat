@@ -11,7 +11,6 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/chat-vue": "workspace:*",
     "@agentskit/core": "^1.12.2",
     "@agentskit/vue": "^0.4.4",
     "vue": "^3.5.38"

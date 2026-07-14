@@ -38,15 +38,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../../packages/chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../../packages/protocol
-      '@agentskit/chat-react':
-        specifier: workspace:*
-        version: link:../../packages/react
-      '@agentskit/chat-server':
-        specifier: workspace:*
-        version: link:../../packages/server
       '@agentskit/core':
         specifier: ^1.12.3
         version: 1.12.3
@@ -102,12 +93,12 @@ importers:
 
   apps/example-ink:
     dependencies:
+      '@agentskit/chat':
+        specifier: workspace:*
+        version: link:../../packages/chat
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-ink':
-        specifier: workspace:*
-        version: link:../../packages/ink
       '@agentskit/ink':
         specifier: ^0.10.1
         version: 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
@@ -139,9 +130,6 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-react':
-        specifier: workspace:*
-        version: link:../../packages/react
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
@@ -176,12 +164,6 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../../packages/protocol
-      '@agentskit/chat-react-native':
-        specifier: workspace:*
-        version: link:../../packages/react-native
       '@agentskit/react-native':
         specifier: ^0.4.4
         version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
@@ -210,12 +192,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../../packages/chat
-      '@agentskit/chat-devtools':
-        specifier: workspace:*
-        version: link:../../packages/devtools
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../../packages/protocol
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
@@ -241,9 +217,6 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-solid':
-        specifier: workspace:*
-        version: link:../../packages/solid
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.3
@@ -269,9 +242,6 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-svelte':
-        specifier: workspace:*
-        version: link:../../packages/svelte
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.3
@@ -300,9 +270,6 @@ importers:
       '@agentskit/chat-example-shared':
         specifier: workspace:*
         version: link:../example-shared
-      '@agentskit/chat-vue':
-        specifier: workspace:*
-        version: link:../../packages/vue
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.3
@@ -328,9 +295,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
@@ -380,22 +344,79 @@ importers:
 
   packages/chat:
     dependencies:
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
+      '@agentskit/angular':
+        specifier: ^0.4.6
+        version: 0.4.6(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@agentskit/eval':
+        specifier: ^0.4.17
+        version: 0.4.19
+      '@agentskit/ink':
+        specifier: ^0.10.1
+        version: 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@agentskit/memory':
         specifier: ^0.11.0
         version: 0.11.0
+      '@agentskit/react':
+        specifier: ^0.7.1
+        version: 0.7.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@agentskit/react-native':
+        specifier: ^0.4.4
+        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
+      '@agentskit/solid':
+        specifier: ^0.4.4
+        version: 0.4.4(solid-js@1.9.14)
       '@agentskit/statechart':
         specifier: ^0.2.0
         version: 0.2.0
+      '@agentskit/svelte':
+        specifier: ^0.4.4
+        version: 0.4.4(svelte@5.56.4)
+      '@agentskit/vue':
+        specifier: ^0.4.4
+        version: 0.4.4(vue@3.5.39(typescript@6.0.3))
+      '@angular/common':
+        specifier: '>=18.1 <22'
+        version: 21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: '>=18.1 <22'
+        version: 21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.16.2)
+      ink:
+        specifier: '>=7.1.0'
+        version: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      react:
+        specifier: '>=18'
+        version: 19.2.7
+      react-native:
+        specifier: '*'
+        version: 0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7)
+      rxjs:
+        specifier: ^7.0.0
+        version: 7.8.2
+      solid-js:
+        specifier: ^1.9.0
+        version: 1.9.14
+      svelte:
+        specifier: ^5.0.0
+        version: 5.56.4
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      vue:
+        specifier: ^3.4.0
+        version: 3.5.39(typescript@6.0.3)
       zod:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
+      '@agentskit/chat-protocol':
+        specifier: workspace:*
+        version: link:../protocol
       '@agentskit/core':
         specifier: ^1.12.3
         version: 1.12.3
+      '@types/node':
+        specifier: ^25.0.0
+        version: 25.9.5
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.16)(typescript@6.0.3)(yaml@2.9.0)
@@ -446,9 +467,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -493,9 +511,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -527,9 +542,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -580,9 +592,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
@@ -617,9 +626,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
       '@agentskit/core':
         specifier: ^1.12.2
         version: 1.12.2
@@ -654,9 +660,6 @@ importers:
       '@agentskit/chat':
         specifier: workspace:*
         version: link:../chat
-      '@agentskit/chat-protocol':
-        specifier: workspace:*
-        version: link:../protocol
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2

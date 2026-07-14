@@ -1,4 +1,4 @@
-import { decodeAskEvents, verifyLocalKnowledgeArtifactSync } from '@agentskit/chat-protocol'
+import { decodeAskEvents, verifyLocalKnowledgeArtifactSync } from '@agentskit/chat/protocol'
 import { describe, expect, it, vi } from 'vitest'
 import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler'
 import { collectCanonicalDocs } from '../lib/docs-index'

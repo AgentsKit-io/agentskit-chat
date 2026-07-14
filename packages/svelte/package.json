@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.12.2"
   },
   "peerDependencies": {
@@ -50,8 +49,6 @@
     "svelte": "^5.56.4",
     "svelte-check": "^4.4.1"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

@@ -1,1 +1,1 @@
-import { AgentChat } from '@agentskit/chat-ink'
+import { AgentChat } from '@agentskit/chat/ink'

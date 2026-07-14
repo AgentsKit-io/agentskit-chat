@@ -1,1 +1,1 @@
-import { AgentChat } from '@agentskit/chat-vue'
+import { AgentChat } from '@agentskit/chat/vue'

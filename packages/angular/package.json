@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.12.2",
     "tslib": "^2.8.1"
   },
@@ -58,8 +57,6 @@
     "typescript": "^5.9.3",
     "zone.js": "^0.16.2"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

@@ -1,4 +1,4 @@
-# @agentskit/chat-vue
+# @agentskit/chat/vue
 
 **Profile:** `concise-package`
 
@@ -15,12 +15,12 @@ Native Vue 3 application shell for AgentsKit Chat. Composes `useChat`, `ChatRoot
 
 <!-- readme-command:install-vue -->
 ```bash
-npm install @agentskit/chat-vue @agentskit/chat @agentskit/vue
+npm install @agentskit/chat @agentskit/vue
 ```
 
 <!-- readme-example:import-vue -->
 ```ts
-import { AgentChat } from '@agentskit/chat-vue'
+import { AgentChat } from '@agentskit/chat/vue'
 ```
 
 Use the named scoped slots `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList` for Vue-native customization.

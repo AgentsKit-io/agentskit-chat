@@ -1,1 +1,1 @@
-import { AgentChatComponent } from '@agentskit/chat-angular'
+import { AgentChatComponent } from '@agentskit/chat/angular'

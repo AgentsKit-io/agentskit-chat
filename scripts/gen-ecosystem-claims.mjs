@@ -21,7 +21,7 @@ const claims = {
       id: 'renderers',
       value: stats.rendererPackages,
       noun: 'native renderers',
-      evidence: { type: 'repository-derivation', path: 'packages/{react,vue,svelte,solid,angular,react-native,ink}', summary: 'Renderer packages with catalog-support evidence.' },
+      evidence: { type: 'repository-derivation', path: 'release/manifest.json#/renderers', summary: 'Native renderer subpaths declared in the public release manifest.' },
     },
     {
       id: 'standard-components',

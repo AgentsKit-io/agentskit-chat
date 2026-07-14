@@ -1,6 +1,6 @@
 import { Component, Input, type OnChanges } from '@angular/core'
 import { ApprovalRequestPropsSchema, ButtonGroupPropsSchema, ConfirmationPropsSchema, ErrorNoticePropsSchema, FileAttachmentPropsSchema, FormPropsSchema, LinkCardPropsSchema, ProgressPropsSchema, SourceListPropsSchema, TablePropsSchema, ToolCallPropsSchema, createComponentInteraction, resolveComponentFallback, resolveComponentFrame, type ComponentManifest } from '@agentskit/chat'
-import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat-protocol'
+import type { ComponentInteractionEvent, ComponentRenderFrame } from '@agentskit/chat/protocol'
 
 @Component({
   selector: 'ak-standard-component', standalone: true,
