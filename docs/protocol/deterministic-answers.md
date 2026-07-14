@@ -20,7 +20,7 @@ import {
 import {
   decodeDeterministicSiteConfig,
   verifyLocalKnowledgeArtifact,
-} from '@agentskit/chat-protocol'
+} from '@agentskit/chat/protocol'
 
 const site = decodeDeterministicSiteConfig(siteConfigJson)
 if (!site.ok) throw new Error(site.diagnostic.message)
@@ -89,4 +89,4 @@ Local adapter chunks expose the validated envelope at `chunk.metadata.answer`. B
 
 Artifacts are capped at 512 KiB, 1,024 entries, and 16 aliases per entry. Queries are capped at 512 characters. Links accept safe root-relative paths or credential-free HTTP(S). Diagnostics are stable and never echo the rejected payload or raw Zod issues.
 
-Optional additive v1 fields are compatible. A new required field, normalization rule, outcome, or confidence meaning requires v2, migration fixtures, and a new ADR. Conformance fixtures cover exact match, ambiguity, miss, stale, corrupt, hash mismatch, backend provenance, and offline behavior through `@agentskit/chat-protocol/fixtures`.
+Optional additive v1 fields are compatible. A new required field, normalization rule, outcome, or confidence meaning requires v2, migration fixtures, and a new ADR. Conformance fixtures cover exact match, ambiguity, miss, stale, corrupt, hash mismatch, backend provenance, and offline behavior through `@agentskit/chat/protocol/fixtures`.

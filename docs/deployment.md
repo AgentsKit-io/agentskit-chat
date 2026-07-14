@@ -5,7 +5,7 @@ adapter, trusted host context, storage, and native renderer vary.
 
 ## Web-standard server — recommended
 
-Mount `createChatHandler` from `@agentskit/chat-server` in a Node, serverless,
+Mount `createChatHandler` from `@agentskit/chat/server` in a Node, serverless,
 or edge route that supports Web `Request`, `Response`, `ReadableStream`, and
 `AbortSignal`. Authenticate before resolving a definition or parsing untrusted
 input. Keep provider keys, authorization, tenant context, durable storage, and
@@ -20,7 +20,7 @@ to forward the request and return the response.
 
 ```ts
 // app/api/chat/route.ts
-import { createChatHandler } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
 import { verifyBearer } from '@/lib/auth'
 import { chats } from '@/lib/chats'
 import { sessions } from '@/lib/session-storage'
@@ -43,7 +43,7 @@ export const POST = (request: Request) => handler(request)
 
 ```ts
 import { Hono } from 'hono'
-import { createChatHandler } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
 
 const chat = createChatHandler({ /* authenticate, resolveDefinition, sessionStorage */ })
 const app = new Hono()
@@ -55,7 +55,7 @@ export default app
 
 ```ts
 import express from 'express'
-import { createChatHandler } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
 
 const chat = createChatHandler({ /* … */ })
 const app = express()
@@ -101,7 +101,7 @@ app.post('/api/chat', async (req, res) => {
 #### Cloudflare Worker
 
 ```ts
-import { createChatHandler } from '@agentskit/chat-server'
+import { createChatHandler } from '@agentskit/chat/server'
 
 const chat = createChatHandler({ /* … */ })
 

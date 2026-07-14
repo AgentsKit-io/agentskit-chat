@@ -1,21 +1,57 @@
-# @agentskit/chat-protocol
+# @agentskit/chat/protocol
 
-Framework-neutral v1 turn events for AgentsKit Chat.
+**Profile:** `major-package`
 
-```ts
-import { decodeTurnEvent } from '@agentskit/chat-protocol'
+Framework-neutral v1 turn events, deterministic answer envelopes, and Ask service contracts for AgentsKit Chat. Transports snapshots of canonical AgentsKit state without implementing a controller, stream reducer, transport, or persistence layer.
 
-const result = decodeTurnEvent(untrustedInput)
-if (!result.ok) return result.diagnostic
+## Verified proof
+
+| Surface | Evidence |
+|---|---|
+| Turn protocol | [v1 guide](../../docs/protocol/v1.md) |
+| Deterministic answers | [deterministic guide](../../docs/protocol/deterministic-answers.md) |
+| Ask backend | [backend guide](../../docs/backend.md) |
+
+## Quick start
+
+Decode untrusted wire data at every boundary:
+
+<!-- readme-command:install-protocol -->
+```bash
+npm install @agentskit/chat
 ```
 
-The package transports snapshots of canonical AgentsKit state. It does not implement a controller, stream reducer, transport, or persistence layer.
+<!-- readme-example:decode-turn -->
+```ts
+import { decodeTurnEvent } from '@agentskit/chat/protocol'
 
-It also owns the accepted versioned site-config, local-knowledge, and unified-answer envelopes used by the deterministic answer plane. Decode untrusted data with `decodeDeterministicSiteConfig` and `decodeAnswerResponse`; cryptographically verify local artifacts with `verifyLocalKnowledgeArtifact`. See the [deterministic answer guide](../../docs/protocol/deterministic-answers.md).
+const result = decodeTurnEvent({ unexpected: true })
+if (result.ok) throw new Error('expected invalid turn event')
+```
 
-The package also validates the additive Ask request, trusted backend site
-configuration, grounded sources, CAS session records, typed diagnostics,
-usage, and privacy-safe metrics used by `createAskServiceHandler`. See the
-[backend guide](../../docs/backend.md).
+For ordered assistant prose plus registered components, use `createAssistantContentEncoder` and decode with `decodeAssistantContent`.
 
-For one canonical assistant message containing both streamed prose and registered application components, use `createAssistantContentEncoder` and decode with `decodeAssistantContent`. Every text chunk must pass through the encoder; raw model output must never be appended to the envelope. See the [v1 protocol guide](../../docs/protocol/v1.md#ordered-assistant-content).
+![Protocol sits between definitions and transports](./../../docs/assets/agentschat-architecture.svg)
+
+```mermaid
+flowchart LR
+  U["untrusted input"] --> D["decodeTurnEvent"]
+  D --> S["validated snapshot"]
+```
+
+## Maturity and compatibility
+
+Published at `0.2.0`. Wire changes require a new protocol version and explicit decoder path. See [stability](../../docs/releases/stability.md).
+
+- Node.js 22+
+- TypeScript strict mode
+
+## Contributing
+
+Package ownership: `packages/protocol`. Follow [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
+**Tags:** `agentskit-chat`, `protocol`, `runtime-validation`, `typescript`
+
+## AgentsKit ecosystem
+
+Consumes AgentsKit state snapshots from [AgentsKit](https://github.com/AgentsKit-io/agentskit). Shared across Registry, Playbook, and Doc Bridge dogfood hosts.

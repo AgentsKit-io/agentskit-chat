@@ -2,6 +2,7 @@ AgentsKit Chat is the cross-framework application framework for interactive agen
 
 ## Knowledge
 
+- [Fumadocs framework dogfood handoff](docs/for-agents/apps/docs.md): `apps/docs` is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root `docs/` directory in place; do not create a second prose corpus inside the app.
 - [Ink example handoff](docs/for-agents/apps/example-ink.md): `apps/example-ink` is the executable terminal proof for unchanged support, onboarding, protected operations, and cited RAG definitions. It owns only Ink process startup and PTY verification.
 - [React Native example](docs/for-agents/apps/example-react-native.md): Expo dogfood app for unchanged support, onboarding, protected operations, and cited RAG definitions. It proves native lifecycle, forms, policy denial, and source presentation. App-specific native dependencies live here.
 - [React example handoff](docs/for-agents/apps/example-react.md): `apps/example-react` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`.

@@ -5,9 +5,9 @@ schemas, decoders, or resolvers; TypeScript types alone are not a trust boundary
 
 | Package | Primary public API |
 |---|---|
-| `@agentskit/chat-protocol` | Turn/session/component schemas and codecs, ordered assistant content, Ask events, deterministic answer contracts, conformance fixtures via `/fixtures`. |
+| `@agentskit/chat/protocol` | Turn/session/component schemas and codecs, ordered assistant content, Ask events, deterministic answer contracts, conformance fixtures via `/protocol/fixtures`. |
 | `@agentskit/chat` | `defineChat`, sessions, deterministic routes, conversation composition, component manifest/resolution, semantic theme/fallback, action confirmation/policy, Ask adapter/memory, deterministic answer adapter. |
-| `@agentskit/chat-server` | `createChatHandler`, `ChatHandlerOptions`, `ChatHandlerError`; standard `Request` → streaming `Response`. |
+| `@agentskit/chat/server` | `createChatHandler`, `ChatHandlerOptions`, `ChatHandlerError`; standard `Request` → streaming `Response`. |
 | `@agentskit/chat/react` | `AgentChat`, `ChoiceList`, `StandardComponent`, native slots, `toChatCssVariables`. |
 | `@agentskit/chat/react-native` | `AgentChatNative`, `ChoiceListNative`, `StandardComponentNative`, native slots/styles, `toChatNativeStyles`. |
 | `@agentskit/chat/ink` | `AgentChat`, `ChoiceList`, `StandardComponent`, `SemanticFallback`, native slots, `toChatInkTheme`. |
@@ -16,7 +16,7 @@ schemas, decoders, or resolvers; TypeScript types alone are not a trust boundary
 | `@agentskit/chat/solid` | `AgentChat`, `ChoiceList`, `StandardComponent`, render props, `toChatCssVariables`. |
 | `@agentskit/chat/angular` | `AgentChatComponent`, `ChoiceListComponent`, `StandardComponentComponent`, content templates, `toChatCssVariables`. |
 | `@agentskit/chat-cli` | `CHAT_RENDERERS`, `detectRenderer`, `initChatProject`, `addChatComponent`; binary `agentskit-chat`. |
-| `@agentskit/chat-devtools` | Trace capture/projection, replay fixture codecs, and `compareRendererOutcomes`. Model recording/replay remains in `@agentskit/eval/replay`. |
+| `@agentskit/chat/devtools` | Trace capture/projection, replay fixture codecs, and `compareRendererOutcomes`. Model recording/replay remains in `@agentskit/eval/replay`. |
 
 Renderer shells accept the same `ChatDefinition` while exposing native slots,
 templates, snippets, render props, or styles. They delegate controller state,

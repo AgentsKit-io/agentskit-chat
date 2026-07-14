@@ -1,13 +1,21 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8386516238844553e40d43ede51dea12aa36e53323f83f25734339d4eb7782a7",
+  "contentHash": "6be98248b44794113d81259d39f7ca88a07a1f384ec442f2200ab91247853ba3",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-14T00:56:07.917Z",
+  "generatedAt": "2026-07-14T15:40:45.476Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
   },
   "knowledge": [
+    {
+      "id": "docs",
+      "type": "agent-doc",
+      "title": "Fumadocs framework dogfood handoff",
+      "path": "docs/for-agents/apps/docs.md",
+      "description": "`apps/docs` is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root `docs/` directory in place; do not create a second prose corpus inside the app.",
+      "body": "Fumadocs framework dogfood handoff Ownership apps/docs is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root docs/ directory in place; do not create a second prose corpus inside the app. The host may compose public framework contracts, configure deployment-specific adapters, and style renderer slots. It must not implement model execution, semantic retrieval, memory, controller lifecycle, or protocol validation. Generic gaps belong upstream in AgentsKit. Boundaries - lib/knowledge.ts is a small, bounded public artifact with integrity verification. Exact matching stays in @agentskit/chat . - lib/chat-definition.ts is the single definition rendered by the published React binding. Other clients continue to consume the same framework-neutral definition contract. - lib/ask-handler.ts is the host composition seam around createAskServiceHandler ; retrieval and generation remain injected AgentsKit adapters. - /api/ask fails closed unless the deployment explicitly configures a hosted endpoint or injects self-hosted adapters. - /api/search is Fumadocs navigation search only. It is never a semantic Ask retriever. - /raw , /llms.txt , and /llms-full.txt expose only the canonical public corpus. The maturity claim is governed by Proposed ADR-0027 and needs HITL approval before it becomes Accepted. Checks"
+    },
     {
       "id": "example-ink",
       "type": "agent-doc",
@@ -86,7 +94,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : fixed package graph, provenance, compatibility, and HITL publication. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : hosted/self-hosted site policy, cited retrieval, persistence, and metrics. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : DOM parity host over the shared definition. - : Svelte 5 DOM parity host over the shared definition. - : Solid DOM parity host over the shared definition. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink remain the original architecture-proof targets; Vue, Svelte, and Solid now host the same shared references in apps/ . - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : fixed package graph, provenance, compatibility, and HITL publication. - : live-host ownership correction, migration boundary, and parity evidence. - : canonical docs portal, deterministic public knowledge, and hosted/self-hosted Ask seam. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : hosted/self-hosted site policy, cited retrieval, persistence, and metrics. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : DOM parity host over the shared definition. - : Svelte 5 DOM parity host over the shared definition. - : Solid DOM parity host over the shared definition. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink remain the original architecture-proof targets; Vue, Svelte, and Solid now host the same shared references in apps/ . - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "angular",
@@ -375,6 +383,38 @@
       },
       "notes": [
         "Replayable application traces and semantic renderer parity composed with AgentsKit eval"
+      ]
+    },
+    "docs-app": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "docs-app",
+        "path": "apps/docs"
+      },
+      "startHere": "docs/for-agents/apps/docs.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/docs.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/docs"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-docs lint",
+        "pnpm --filter @agentskit/chat-docs test",
+        "pnpm --filter @agentskit/chat-docs build",
+        "pnpm --filter @agentskit/chat-docs test:e2e",
+        "pnpm docs:bridge:gate"
+      ],
+      "humanDoc": "architecture/adrs/0027-fumadocs-framework-dogfood",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Fumadocs portal and full public framework dogfood over the canonical docs corpus"
       ]
     },
     "dogfood-hosts": {
@@ -998,6 +1038,7 @@
       "chat",
       "cli",
       "devtools",
+      "docs-app",
       "dogfood-hosts",
       "example-ink",
       "example-react",
@@ -1087,6 +1128,20 @@
         "purpose": "Replayable application traces and semantic renderer parity composed with AgentsKit eval",
         "humanDoc": "devtools",
         "agentDoc": "docs/for-agents/packages/devtools.md"
+      },
+      "docs-app": {
+        "id": "docs-app",
+        "path": "apps/docs",
+        "checks": [
+          "pnpm --filter @agentskit/chat-docs lint",
+          "pnpm --filter @agentskit/chat-docs test",
+          "pnpm --filter @agentskit/chat-docs build",
+          "pnpm --filter @agentskit/chat-docs test:e2e",
+          "pnpm docs:bridge:gate"
+        ],
+        "purpose": "Fumadocs portal and full public framework dogfood over the canonical docs corpus",
+        "humanDoc": "architecture/adrs/0027-fumadocs-framework-dogfood",
+        "agentDoc": "docs/for-agents/apps/docs.md"
       },
       "dogfood-hosts": {
         "id": "dogfood-hosts",

@@ -20,6 +20,7 @@
       "@agentskit/chat/solid": ["packages/solid/src/index.tsx"],
       "@agentskit/chat/svelte": ["packages/svelte/src/index.ts"],
       "@agentskit/chat/vue": ["packages/vue/src/index.ts"],
+      "@agentskit/chat-angular": ["packages/angular/src/index.ts"],
       "@agentskit/chat-ink": ["packages/ink/src/index.tsx"],
       "@agentskit/chat-react": ["packages/react/src/index.tsx"],
       "@agentskit/chat-react-native": ["packages/react-native/src/index.tsx"],

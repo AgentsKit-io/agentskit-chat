@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "productId": "agentskit-chat",
+  "version": "0.2.0",
+  "claims": [
+    {
+      "id": "public-packages",
+      "value": 2,
+      "noun": "public npm packages",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "packages/*/package.json",
+        "summary": "Non-private workspace packages with public publishConfig."
+      }
+    },
+    {
+      "id": "renderers",
+      "value": 7,
+      "noun": "native renderers",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "release/manifest.json#/renderers",
+        "summary": "Native renderer subpaths declared in the public release manifest."
+      }
+    },
+    {
+      "id": "standard-components",
+      "value": 12,
+      "noun": "standard components",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "packages/react/catalog-support.json",
+        "summary": "Registered application components in the closed catalog."
+      }
+    },
+    {
+      "id": "conformance-requirements",
+      "value": 12,
+      "noun": "conformance requirements",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "docs/conformance/matrix.generated.md",
+        "summary": "Release-blocking renderer and protocol requirements."
+      }
+    },
+    {
+      "id": "getting-started-guides",
+      "value": 7,
+      "noun": "renderer quick starts",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "docs/getting-started/*.md",
+        "summary": "Framework-specific adoption guides."
+      }
+    },
+    {
+      "id": "example-apps",
+      "value": 6,
+      "noun": "example applications",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "apps/example-*",
+        "summary": "Runnable proof apps for renderers and shared definitions."
+      }
+    },
+    {
+      "id": "architecture-adrs",
+      "value": 29,
+      "noun": "architecture ADRs",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": "docs/architecture/adrs",
+        "summary": "Public architecture decision records."
+      }
+    },
+    {
+      "id": "agent-handoffs",
+      "value": 28,
+      "noun": "agent handoffs",
+      "evidence": {
+        "type": "repository-derivation",
+        "path": ".doc-bridge/index.json#/handoffs",
+        "summary": "Doc Bridge agent-handoff entries for ownership routing."
+      }
+    }
+  ]
+}

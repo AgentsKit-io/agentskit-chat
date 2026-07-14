@@ -4,7 +4,7 @@ Use the upstream recorder for model traffic and the Chat capture for application
 
 ```ts
 import { createRecordingAdapter, createReplayAdapter } from '@agentskit/eval/replay'
-import { captureActionPolicyTrace, captureActionTrace, captureTurnTrace, createReplayFixture, createTraceCapture, serializeReplayFixture } from '@agentskit/chat-devtools'
+import { captureActionPolicyTrace, captureActionTrace, captureTurnTrace, createReplayFixture, createTraceCapture, serializeReplayFixture } from '@agentskit/chat/devtools'
 
 const recording = createRecordingAdapter(adapter)
 const capture = createTraceCapture({ redactFields: ['token', 'password', 'authorization'] })

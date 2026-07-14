@@ -17,7 +17,7 @@ flowchart LR
 ## Shared production factory
 
 ```ts
-import { createAskServiceHandler } from '@agentskit/chat-server'
+import { createAskServiceHandler } from '@agentskit/chat/server'
 
 export const ask = createAskServiceHandler({
   authenticate: (request, signal) => auth.verify(request, signal),

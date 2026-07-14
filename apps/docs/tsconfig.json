@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@agentskit/chat": ["../../packages/chat/src/index.ts"],
+      "@agentskit/chat-protocol": ["../../packages/protocol/src/index.ts"],
+      "@agentskit/chat-react": ["../../packages/react/src/index.tsx"],
+      "@agentskit/chat-server": ["../../packages/server/src/index.ts"],
+      "@agentskit/chat/protocol": ["../../packages/protocol/src/index.ts"],
+      "@agentskit/chat/react": ["../../packages/react/src/index.tsx"],
+      "@agentskit/chat/server": ["../../packages/server/src/index.ts"]
+    },
+    "noEmit": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts",
+    ".next/types/**/*.ts",
+    ".source/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

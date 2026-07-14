@@ -45,6 +45,18 @@ test('includes emitted ESM chunks in the package budget', async () => {
   })
 })
 
+test('excludes assembled subdirectories that have independent budgets', async () => {
+  await withArtifact('export{}', async root => {
+    const renderer = join(root, 'packages', 'fixture', 'dist', 'renderers', 'react')
+    await mkdir(renderer, { recursive: true })
+    await writeFile(join(renderer, 'index.js'), 'x'.repeat(9))
+    const budgets = [{ ...fixtureBudget[0], excludedDirectories: ['renderers'] }]
+    const result = await measureBundleBudgets({ root, budgets, includeSpecialFormats: false })
+    assert.deepEqual(result.failures, [])
+    assert.equal(result.rows[0]?.size, 8)
+  })
+})
+
 test('rejects a missing build artifact', async () => {
   const root = await mkdtemp(join(tmpdir(), 'agentskit-chat-bundle-budget-'))
   try {

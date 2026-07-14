@@ -1,12 +1,12 @@
-# ADR-0028 — Renderers as Chat subpaths
+# ADR-0029 — Renderers as Chat subpaths
 
 - **Status:** Accepted
 - **Date:** 2026-07-14
-- **Supersedes:** The renderer-publication decision in ADR-0027
+- **Supersedes:** The renderer-publication decision in ADR-0028
 
 ## Context
 
-ADR-0027 kept seven framework renderers as standalone npm products because they
+ADR-0028 kept seven framework renderers as standalone npm products because they
 have distinct peer dependencies and build formats. Those boundaries remain
 useful inside the monorepo, but npm optional peer dependencies and explicit
 subpath exports allow one public tarball without loading unrelated frameworks.

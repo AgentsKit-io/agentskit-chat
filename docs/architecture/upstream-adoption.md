@@ -270,3 +270,20 @@ clean-install/provenance gates, and publishing automation. It introduces no
 controller, reducer, adapter lifecycle, statechart, memory, replay, tool,
 confirmation, RAG, or framework-binding implementation. No upstream gap was
 identified by release preparation.
+
+## Fumadocs framework dogfood adoption record (#71)
+
+Inspected the published AgentsKit controller, React binding, RAG/Retriever,
+memory, provider-adapter, cancellation, and usage contracts together with the
+released AgentsKit Chat definition, deterministic artifact, Ask adapter,
+session memory, React renderer, protocol, and trusted Ask handler boundaries.
+
+The documentation property consumes those exports through package boundaries.
+It adds only Fumadocs navigation over the canonical repository corpus,
+site-owned presentation slots, verified local documentation entries, trusted
+site configuration, and deployment composition. Retrieval, generation, vector
+storage, canonical messages, controller lifecycle, cancellation, protocol
+decoding, and browser memory remain upstream or existing framework concerns.
+No private source, behavior, identifier, data, or business rule is copied or
+published. See proposed
+[ADR-0027](./adrs/0027-fumadocs-framework-dogfood.md).

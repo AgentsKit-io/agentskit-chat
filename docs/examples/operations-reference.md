@@ -28,7 +28,7 @@ Each factory result binds one trusted context, service, policy, session, and tra
 ]
 ```
 
-The example uses `@agentskit/chat-devtools` trace capture; it does not implement another ledger. Production hosts should append snapshots to a durable, access-controlled audit sink, preserve canonical tool-call correlation IDs, apply retention policy, and never store credentials or raw service errors.
+The example uses `@agentskit/chat/devtools` trace capture; it does not implement another ledger. Production hosts should append snapshots to a durable, access-controlled audit sink, preserve canonical tool-call correlation IDs, apply retention policy, and never store credentials or raw service errors.
 
 ## Upstream adoption
 

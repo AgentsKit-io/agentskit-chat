@@ -9,6 +9,7 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Governance](./governance.md): issue structure, dependencies, Definition of Done, and delivery rules.
 - [Stable release](./release.md): fixed package graph, provenance, compatibility, and HITL publication.
 - [Registry/Playbook dogfood](../dogfood/registry-playbook.md): live-host ownership correction, migration boundary, and parity evidence.
+- [Fumadocs framework dogfood](./apps/docs.md): canonical docs portal, deterministic public knowledge, and hosted/self-hosted Ask seam.
 - [Chat package](./packages/chat.md): minimal framework-neutral `defineChat` contract.
 - [Protocol package](./packages/protocol.md): versioned turn events, compatibility, and conformance fixtures.
 - [Trusted Ask backend](../backend.md): hosted/self-hosted site policy, cited retrieval, persistence, and metrics.

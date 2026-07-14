@@ -6,6 +6,9 @@ playwright-report/
 test-results/
 artifacts/
 .svelte-kit/
+.next/
+.source/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example

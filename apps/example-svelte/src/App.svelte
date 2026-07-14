@@ -1,6 +1,6 @@
 <script lang="ts">
   import { AgentChat } from '@agentskit/chat/svelte'
-  import type { ComponentInteractionEvent } from '@agentskit/chat-protocol'
+  import type { ComponentInteractionEvent } from '@agentskit/chat/protocol'
   import {
     onboardingApplication,
     operationsApplication,

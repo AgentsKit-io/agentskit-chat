@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="AgentsKit Chat mark">
+  <rect width="96" height="96" rx="20" fill="#0f172a"/>
+  <path d="M24 58c8-18 20-26 24-26s16 8 24 26" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="36" cy="40" r="5" fill="#e2e8f0"/>
+  <circle cx="60" cy="40" r="5" fill="#e2e8f0"/>
+  <path d="M30 66h36" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+</svg>

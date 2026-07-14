@@ -118,6 +118,15 @@ component protocol. The Registry/Playbook ownership correction and parity
 evidence are recorded in
 [the dogfood migration record](../dogfood/registry-playbook.md).
 
+## Public documentation property
+
+The Fumadocs application under `apps/docs` is a first-class dogfood host. It
+renders the canonical `docs/` corpus without copying it and composes the public
+protocol, chat, server, and React packages for deterministic-first documentation
+Ask. Hosted and self-hosted modes share one Ask contract; retrieval and provider
+execution remain injected AgentsKit adapters. See
+[ADR-0027](./adrs/0027-fumadocs-framework-dogfood.md).
+
 ## Initial architecture proof
 
 The first shared example must run from one unchanged chat definition in React, React Native, and Ink. These targets exercise DOM, native mobile, and terminal constraints. Vue, Svelte, and Solid now host the same shared references under `apps/example-{vue,svelte,solid}` with Playwright coverage for Vue. Angular remains covered by package-level conformance and agent-chat suites.

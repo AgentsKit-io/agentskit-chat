@@ -1,4 +1,4 @@
-# ADR-0027 — Public package consolidation
+# ADR-0028 — Public package consolidation
 
 - **Status:** Accepted
 - **Date:** 2026-07-14

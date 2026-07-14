@@ -1,0 +1,24 @@
+{
+  "title": "AgentsKit Chat",
+  "pages": [
+    "getting-started",
+    "api-reference",
+    "components",
+    "conversation",
+    "actions",
+    "sessions",
+    "backend",
+    "server",
+    "deployment",
+    "theming-and-composition",
+    "devtools",
+    "protocol",
+    "examples",
+    "releases",
+    "architecture",
+    "governance",
+    "dogfood",
+    "for-agents",
+    "product"
+  ]
+}

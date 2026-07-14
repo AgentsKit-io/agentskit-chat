@@ -25,12 +25,17 @@
     "docs:bridge:chat": "ak-docs chat",
     "docs:bridge:memory:ingest": "ak-docs memory ingest",
     "catalog:report": "pnpm --filter @agentskit/chat build && node scripts/generate-catalog-report.mjs",
-    "conformance:gate": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --check",
+    "conformance:gate": "node scripts/conformance-gate.mjs --check",
     "conformance:report": "pnpm --filter @agentskit/chat build && node scripts/conformance-gate.mjs --write",
     "bundle:budget": "node scripts/bundle-budget.mjs",
     "release:gate": "pnpm build && node scripts/release-gate.mjs",
     "release:pack": "pnpm build && node scripts/pack-release.mjs",
-    "check:publication-surface": "node scripts/check-publication-surface.mjs"
+    "check:publication-surface": "node scripts/check-publication-surface.mjs",
+    "check:readme-standard": "node scripts/check-readme-standard.mjs",
+    "test:readme-standard": "vitest run scripts/readme-standard.test.mjs",
+    "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
+    "ecosystem:claims": "node scripts/gen-ecosystem-claims.mjs",
+    "ecosystem:claims:check": "node scripts/gen-ecosystem-claims.mjs --check"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.0.2",

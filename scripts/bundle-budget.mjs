@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /**
- * Fail if published package ESM output exceeds conservative size budgets.
- * Budgets include the primary entry and every emitted ESM `.js` chunk.
+ * Fail if package ESM output exceeds conservative size budgets.
+ * Budgets include the primary entry and every emitted ESM `.js` chunk owned by
+ * that workspace. Assembled renderer directories are excluded from the Chat
+ * core budget because each renderer keeps its own budget below.
  */
 import { readdir, stat } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-/** @type {ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number }>} */
+/** @type {ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number; excludedDirectories?: readonly string[] }>} */
 export const entryBudgets = [
   { name: '@agentskit/chat-protocol', directory: 'protocol', entry: 'dist/index.js', maxBytes: 120_000 },
-  { name: '@agentskit/chat', directory: 'chat', entry: 'dist/index.js', maxBytes: 180_000 },
+  { name: '@agentskit/chat', directory: 'chat', entry: 'dist/index.js', maxBytes: 180_000, excludedDirectories: ['renderers'] },
   { name: '@agentskit/chat-server', directory: 'server', entry: 'dist/index.js', maxBytes: 40_000 },
   { name: '@agentskit/chat-react', directory: 'react', entry: 'dist/index.js', maxBytes: 80_000 },
   { name: '@agentskit/chat-react-native', directory: 'react-native', entry: 'dist/index.js', maxBytes: 80_000 },
@@ -25,12 +27,14 @@ export const entryBudgets = [
  * @param {string} directory
  * @returns {Promise<number>}
  */
-const directoryBytes = async (directory, include = () => true) => {
+const directoryBytes = async (directory, include = () => true, excludedDirectories = new Set()) => {
   let total = 0
   const entries = await readdir(directory, { withFileTypes: true })
   for (const entry of entries) {
     const path = join(directory, entry.name)
-    if (entry.isDirectory()) total += await directoryBytes(path, include)
+    if (entry.isDirectory() && !excludedDirectories.has(entry.name)) {
+      total += await directoryBytes(path, include, excludedDirectories)
+    }
     else if (entry.isFile() && include(path)) total += (await stat(path)).size
   }
   return total
@@ -39,7 +43,7 @@ const directoryBytes = async (directory, include = () => true) => {
 /**
  * @param {{
  *   root: string
- *   budgets?: ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number }>
+ *   budgets?: ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number; excludedDirectories?: readonly string[] }>
  *   includeSpecialFormats?: boolean
  * }} options
  */
@@ -55,6 +59,7 @@ export const measureBundleBudgets = async ({ root, budgets = entryBudgets, inclu
       const size = await directoryBytes(
         join(root, 'packages', budget.directory, 'dist'),
         path => path.endsWith('.js'),
+        new Set(budget.excludedDirectories ?? []),
       )
       rows.push({ name: budget.name, size, maxBytes: budget.maxBytes, ok: size <= budget.maxBytes })
       if (size > budget.maxBytes) failures.push(`${budget.name}: ${size} bytes exceeds budget ${budget.maxBytes} (${budget.entry})`)
@@ -91,7 +96,7 @@ export const measureBundleBudgets = async ({ root, budgets = entryBudgets, inclu
 /**
  * @param {string} root
  * @param {{
- *   budgets?: ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number }>
+ *   budgets?: ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number; excludedDirectories?: readonly string[] }>
  *   includeSpecialFormats?: boolean
  * }} measureOptions
  */

@@ -1,5 +1,5 @@
 import type { AdapterFactory, Message, StreamChunk } from '@agentskit/core'
-import { decodeAssistantContent, type ComponentRenderFrame } from '@agentskit/chat/protocol'
+import { decodeAssistantContent, type ComponentRenderFrame } from '@agentskit/chat-protocol'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
@@ -251,7 +251,7 @@ describe('Ask adapter', () => {
     const tool = projectAskEvent({ type: 'tool', id: 'tool', name: 'custom', args: {} }, projector)
     expect(tool?.kind).toBe('component')
     if (tool?.kind !== 'component') return
-    const { createAssistantContentEncoder } = await import('@agentskit/chat/protocol')
+    const { createAssistantContentEncoder } = await import('@agentskit/chat-protocol')
     const encoder = createAssistantContentEncoder()
     const content = encoder.encode({ kind: 'text', text: 'answer' }) + encoder.encode({ kind: 'component', frame: tool.frame })
     expect(projectAskMessages([message('assistant', content), { ...message('user', 'ignored'), role: 'system' }])).toEqual([
