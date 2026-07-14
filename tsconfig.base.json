@@ -9,6 +9,7 @@
       "@agentskit/chat": ["packages/chat/src/index.ts"],
       "@agentskit/chat-protocol": ["packages/protocol/src/index.ts"],
       "@agentskit/chat-protocol/fixtures": ["packages/protocol/src/fixtures.ts"],
+      "@agentskit/chat-angular": ["packages/angular/src/index.ts"],
       "@agentskit/chat-ink": ["packages/ink/src/index.tsx"],
       "@agentskit/chat-react": ["packages/react/src/index.tsx"],
       "@agentskit/chat-react-native": ["packages/react-native/src/index.tsx"],

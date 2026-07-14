@@ -65,7 +65,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-10-12',
-      sources: ['README.md', 'package.json', 'release/manifest.json', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'scripts/compute-readme-claims.mjs', 'scripts/gen-ecosystem-claims.mjs', 'scripts/lib/readme-claims.mjs', 'docs/releases/stability.md', 'docs/releases/compatibility.md', '.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/release-alpha.yml'],
+      sources: ['README.md', 'package.json', 'tsconfig.base.json', 'release/manifest.json', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'scripts/compute-readme-claims.mjs', 'scripts/gen-ecosystem-claims.mjs', 'scripts/lib/readme-claims.mjs', 'docs/releases/stability.md', 'docs/releases/compatibility.md', '.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/release-alpha.yml'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -91,7 +91,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/chat/README.md', 'packages/chat/package.json', 'packages/chat/fixtures/readme-example.ts', 'docs/components/catalog.generated.md'],
+      sources: ['packages/chat/README.md', 'packages/chat/package.json', 'packages/chat/tsconfig.json', 'packages/chat/fixtures/readme-example.ts', 'docs/components/catalog.generated.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -117,7 +117,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/protocol/README.md', 'packages/protocol/package.json', 'packages/protocol/fixtures/readme-example.ts', 'docs/protocol/v1.md'],
+      sources: ['packages/protocol/README.md', 'packages/protocol/package.json', 'packages/protocol/tsconfig.json', 'packages/protocol/fixtures/readme-example.ts', 'docs/protocol/v1.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -143,7 +143,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/server/README.md', 'packages/server/package.json', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.md'],
+      sources: ['packages/server/README.md', 'packages/server/package.json', 'packages/server/tsconfig.json', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -195,7 +195,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/react/README.md', 'packages/react/package.json', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.md'],
+      sources: ['packages/react/README.md', 'packages/react/package.json', 'packages/react/tsconfig.json', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.md'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -235,7 +235,7 @@ for (const pkg of concisePackages) {
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2027-01-10',
-      sources: [`packages/${pkg.dir}/README.md`, `packages/${pkg.dir}/package.json`, `packages/${pkg.dir}/fixtures/readme-example.${ext}`, pkg.guide],
+      sources: [`packages/${pkg.dir}/README.md`, `packages/${pkg.dir}/package.json`, `packages/${pkg.dir}/tsconfig.json`, `packages/${pkg.dir}/fixtures/readme-example.${ext}`, pkg.guide],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [visualException],
