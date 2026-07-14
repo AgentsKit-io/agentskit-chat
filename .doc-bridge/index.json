@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8c3fd3e52c6c661a3b3ec212fb7c5cc45e1caaff7d4fd9cb994116f4f73ad74e",
+  "contentHash": "8386516238844553e40d43ede51dea12aa36e53323f83f25734339d4eb7782a7",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-13T22:54:13.358Z",
+  "generatedAt": "2026-07-14T00:56:07.917Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -41,6 +41,30 @@
       "body": "Shared example definition Owns support, onboarding, protected operations, and cited RAG definitions used unchanged by React, React Native, and Ink, plus injectable domain, retrieval, and trusted-host seams. Keep this package free of DOM, React, Expo, and React Native imports. It is example infrastructure, not a new framework runtime abstraction."
     },
     {
+      "id": "example-solid",
+      "type": "agent-doc",
+      "title": "Solid example handoff",
+      "path": "docs/for-agents/apps/example-solid.md",
+      "description": "`apps/example-solid` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`. This package owns only Solid bootstrapping and query routing.",
+      "body": "Solid example handoff Ownership apps/example-solid hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in example-shared . This package owns only Solid bootstrapping and query routing. Checks"
+    },
+    {
+      "id": "example-svelte",
+      "type": "agent-doc",
+      "title": "Svelte example handoff",
+      "path": "docs/for-agents/apps/example-svelte.md",
+      "description": "`apps/example-svelte` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`. This package owns only Svelte 5 bootstrapping and query routing.",
+      "body": "Svelte example handoff Ownership apps/example-svelte hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in example-shared . This package owns only Svelte 5 bootstrapping and query routing. Checks"
+    },
+    {
+      "id": "example-vue",
+      "type": "agent-doc",
+      "title": "Vue example handoff",
+      "path": "docs/for-agents/apps/example-vue.md",
+      "description": "`apps/example-vue` hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in `example-shared`. This package owns only Vue bootstrapping and query routing.",
+      "body": "Vue example handoff Ownership apps/example-vue hosts shared support, onboarding, protected operations, and cited RAG references selected by query parameter. Domain behavior stays in example-shared . This package owns only Vue bootstrapping and query routing. Read first - - - Checks"
+    },
+    {
       "id": "architecture",
       "type": "agent-doc",
       "title": "Architecture handoff",
@@ -62,7 +86,7 @@
       "title": "AgentsKit Chat agent index",
       "path": "docs/for-agents/index.md",
       "description": "Use this index with `ak-docs query` to locate the owning documentation before changing the repository.",
-      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : fixed package graph, provenance, compatibility, and HITL publication. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : hosted/self-hosted site policy, cited retrieval, persistence, and metrics. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink are the first architecture-proof targets. - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
+      "body": "AgentsKit Chat agent index Use this index with ak-docs query to locate the owning documentation before changing the repository. Ownership - : requirements, user stories, scope, and release outcomes. - : system boundaries, contracts, modules, protocols, and ADRs. - : issue structure, dependencies, Definition of Done, and delivery rules. - : fixed package graph, provenance, compatibility, and HITL publication. - : live-host ownership correction, migration boundary, and parity evidence. - : minimal framework-neutral defineChat contract. - : versioned turn events, compatibility, and conformance fixtures. - : hosted/self-hosted site policy, cited retrieval, persistence, and metrics. - : native React shell over @agentskit/react . - : native Vue shell over @agentskit/vue . - : standalone Angular shell over @agentskit/angular . - : native Svelte 5 shell over @agentskit/svelte . - : native Solid shell over @agentskit/solid . - : native mobile shell over @agentskit/react-native . - : native terminal shell and semantic text fallback. - : safe project detection and application scaffolding. - : deterministic executable proof. - : DOM parity host over the shared definition. - : Svelte 5 DOM parity host over the shared definition. - : Solid DOM parity host over the shared definition. - : Expo proof using the shared definition. - : PTY proof using the shared definition. - : framework-neutral deterministic definition and fixture. Invariants - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer. - Shared definitions and protocol are framework-neutral. - Renderers are native and consume the corresponding AgentsKit binding. - React, React Native, and Ink remain the original architecture-proof targets; Vue, Svelte, and Solid now host the same shared references in apps/ . - Every render frame and action input is runtime validated. - Missing platform components degrade to declared semantic fallbacks."
     },
     {
       "id": "angular",
@@ -174,7 +198,7 @@
       "title": "Stable release handoff",
       "path": "docs/for-agents/release.md",
       "description": "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
-      "body": "Stable release handoff Read first - - - - - Ownership release/manifest.json is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions. Do not publish from a developer machine. A stable tag contained in main starts the protected npm environment workflow. The one-time first publish may use only the documented short-lived bootstrap credential; subsequent releases use the configured npm trusted publisher and GitHub OIDC. Checks Do not close a release issue until npm provenance, clean npm installation, GitHub checksums, host smoke tests, and human launch review are linked publicly."
+      "body": "Stable release handoff Read first - - - - - Ownership release/manifest.json is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions. Do not publish from a developer machine. A stable tag contained in main starts the protected npm environment workflow. The bootstrap credential may remain only in that protected environment until all twelve packages are linked to the GitHub Actions trusted publisher; remove it immediately after an OIDC readiness check succeeds. Checks Do not close a release issue until npm provenance, clean npm installation, GitHub checksums, host smoke tests, and human launch review are linked publicly."
     }
   ],
   "handoffs": {
@@ -432,7 +456,7 @@
       ],
       "checks": [
         "pnpm --filter @agentskit/chat-example-react build",
-        "pnpm test:e2e"
+        "pnpm test:e2e --project=react"
       ],
       "humanDoc": "examples/support-reference",
       "bridge": {
@@ -461,7 +485,7 @@
       ],
       "checks": [
         "pnpm --filter @agentskit/chat-example-react-native build",
-        "pnpm test:e2e"
+        "pnpm test:e2e --project=react-native"
       ],
       "humanDoc": "examples/support-reference",
       "bridge": {
@@ -498,6 +522,91 @@
       },
       "notes": [
         "Framework-neutral support, onboarding, and protected operations domains with injected host seams"
+      ]
+    },
+    "example-solid": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-solid",
+        "path": "apps/example-solid"
+      },
+      "startHere": "docs/for-agents/apps/example-solid.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-solid.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-solid"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-solid build"
+      ],
+      "humanDoc": "examples/dom-renderer-parity",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Solid surface of shared support, onboarding, operations, and RAG references"
+      ]
+    },
+    "example-svelte": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-svelte",
+        "path": "apps/example-svelte"
+      },
+      "startHere": "docs/for-agents/apps/example-svelte.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-svelte.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-svelte"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-svelte build"
+      ],
+      "humanDoc": "examples/dom-renderer-parity",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Svelte 5 surface of shared support, onboarding, operations, and RAG references"
+      ]
+    },
+    "example-vue": {
+      "type": "agent-handoff",
+      "schemaVersion": 1,
+      "source": ".doc-bridge/index.json",
+      "target": {
+        "type": "package",
+        "id": "example-vue",
+        "path": "apps/example-vue"
+      },
+      "startHere": "docs/for-agents/apps/example-vue.md",
+      "readBeforeEditing": [
+        "docs/for-agents/apps/example-vue.md",
+        "AGENTS.md"
+      ],
+      "editRoots": [
+        "apps/example-vue"
+      ],
+      "checks": [
+        "pnpm --filter @agentskit/chat-example-vue build",
+        "pnpm test:e2e --project=vue"
+      ],
+      "humanDoc": "examples/dom-renderer-parity",
+      "bridge": {
+        "humanDoc": "linked"
+      },
+      "notes": [
+        "Vue surface of shared support, onboarding, operations, and RAG references"
       ]
     },
     "governance": {
@@ -737,7 +846,7 @@
       "target": {
         "type": "package",
         "id": "release",
-        "path": "packages/release"
+        "path": "release"
       },
       "startHere": "docs/for-agents/release.md",
       "readBeforeEditing": [
@@ -745,20 +854,23 @@
         "AGENTS.md"
       ],
       "editRoots": [
-        "packages/release"
+        "release"
       ],
       "checks": [
-        "pnpm --filter release test",
-        "pnpm --filter release lint"
+        "pnpm lint",
+        "pnpm test",
+        "pnpm build",
+        "pnpm conformance:gate",
+        "pnpm docs:bridge:gate",
+        "pnpm release:gate",
+        "pnpm release:pack"
       ],
+      "humanDoc": "releases/release-process",
       "bridge": {
-        "humanDoc": "missing",
-        "action": "ak-docs bootstrap agent-docs",
-        "bootstrap": "docs/for-agents/human/release.md"
+        "humanDoc": "linked"
       },
       "notes": [
-        "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
-        "Human guide missing for release. Run: ak-docs bootstrap agent-docs"
+        "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication"
       ]
     },
     "server": {
@@ -817,40 +929,6 @@
       },
       "notes": [
         "Solid application shell consuming @agentskit/solid directly"
-      ]
-    },
-    "stable-release": {
-      "type": "agent-handoff",
-      "schemaVersion": 1,
-      "source": ".doc-bridge/index.json",
-      "target": {
-        "type": "package",
-        "id": "stable-release",
-        "path": "release"
-      },
-      "startHere": "docs/for-agents/release.md",
-      "readBeforeEditing": [
-        "docs/for-agents/release.md",
-        "AGENTS.md"
-      ],
-      "editRoots": [
-        "release"
-      ],
-      "checks": [
-        "pnpm lint",
-        "pnpm test",
-        "pnpm build",
-        "pnpm conformance:gate",
-        "pnpm docs:bridge:gate",
-        "pnpm release:gate",
-        "pnpm release:pack"
-      ],
-      "humanDoc": "releases/release-process",
-      "bridge": {
-        "humanDoc": "linked"
-      },
-      "notes": [
-        "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication"
       ]
     },
     "svelte": {
@@ -925,6 +1003,9 @@
       "example-react",
       "example-react-native",
       "example-shared",
+      "example-solid",
+      "example-svelte",
+      "example-vue",
       "governance",
       "ink",
       "operations-reference",
@@ -936,7 +1017,6 @@
       "release",
       "server",
       "solid",
-      "stable-release",
       "svelte",
       "vue"
     ],
@@ -1037,7 +1117,7 @@
         "path": "apps/example-react",
         "checks": [
           "pnpm --filter @agentskit/chat-example-react build",
-          "pnpm test:e2e"
+          "pnpm test:e2e --project=react"
         ],
         "purpose": "React surface of support, onboarding, and protected operations references",
         "humanDoc": "examples/support-reference",
@@ -1048,7 +1128,7 @@
         "path": "apps/example-react-native",
         "checks": [
           "pnpm --filter @agentskit/chat-example-react-native build",
-          "pnpm test:e2e"
+          "pnpm test:e2e --project=react-native"
         ],
         "purpose": "Expo proof of support, onboarding, and protected operations parity",
         "humanDoc": "examples/support-reference",
@@ -1064,6 +1144,37 @@
         "purpose": "Framework-neutral support, onboarding, and protected operations domains with injected host seams",
         "humanDoc": "examples/support-reference",
         "agentDoc": "docs/for-agents/apps/example-shared.md"
+      },
+      "example-solid": {
+        "id": "example-solid",
+        "path": "apps/example-solid",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-solid build"
+        ],
+        "purpose": "Solid surface of shared support, onboarding, operations, and RAG references",
+        "humanDoc": "examples/dom-renderer-parity",
+        "agentDoc": "docs/for-agents/apps/example-solid.md"
+      },
+      "example-svelte": {
+        "id": "example-svelte",
+        "path": "apps/example-svelte",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-svelte build"
+        ],
+        "purpose": "Svelte 5 surface of shared support, onboarding, operations, and RAG references",
+        "humanDoc": "examples/dom-renderer-parity",
+        "agentDoc": "docs/for-agents/apps/example-svelte.md"
+      },
+      "example-vue": {
+        "id": "example-vue",
+        "path": "apps/example-vue",
+        "checks": [
+          "pnpm --filter @agentskit/chat-example-vue build",
+          "pnpm test:e2e --project=vue"
+        ],
+        "purpose": "Vue surface of shared support, onboarding, operations, and RAG references",
+        "humanDoc": "examples/dom-renderer-parity",
+        "agentDoc": "docs/for-agents/apps/example-vue.md"
       },
       "governance": {
         "id": "governance",
@@ -1153,12 +1264,18 @@
       },
       "release": {
         "id": "release",
-        "path": "packages/release",
+        "path": "release",
         "checks": [
-          "pnpm --filter release test",
-          "pnpm --filter release lint"
+          "pnpm lint",
+          "pnpm test",
+          "pnpm build",
+          "pnpm conformance:gate",
+          "pnpm docs:bridge:gate",
+          "pnpm release:gate",
+          "pnpm release:pack"
         ],
-        "purpose": "`release/manifest.json` is the source of truth for the fixed public package graph and renderer set. Package manifests own exact peer ranges and exports. The conformance manifest owns component/event/platform evidence. Changesets own future version intent; accepted ADRs/RFCs own contract change decisions.",
+        "purpose": "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication",
+        "humanDoc": "releases/release-process",
         "agentDoc": "docs/for-agents/release.md"
       },
       "server": {
@@ -1182,22 +1299,6 @@
         "purpose": "Solid application shell consuming @agentskit/solid directly",
         "humanDoc": "getting-started/solid",
         "agentDoc": "docs/for-agents/packages/solid.md"
-      },
-      "stable-release": {
-        "id": "stable-release",
-        "path": "release",
-        "checks": [
-          "pnpm lint",
-          "pnpm test",
-          "pnpm build",
-          "pnpm conformance:gate",
-          "pnpm docs:bridge:gate",
-          "pnpm release:gate",
-          "pnpm release:pack"
-        ],
-        "purpose": "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication",
-        "humanDoc": "releases/release-process",
-        "agentDoc": "docs/for-agents/release.md"
       },
       "svelte": {
         "id": "svelte",

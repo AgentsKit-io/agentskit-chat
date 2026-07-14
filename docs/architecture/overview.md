@@ -120,7 +120,7 @@ evidence are recorded in
 
 ## Initial architecture proof
 
-The first shared example must run from one unchanged chat definition in React, React Native, and Ink. These targets exercise DOM, native mobile, and terminal constraints. Vue, Svelte, Solid, and Angular follow once the universal contract survives those three environments.
+The first shared example must run from one unchanged chat definition in React, React Native, and Ink. These targets exercise DOM, native mobile, and terminal constraints. Vue, Svelte, and Solid now host the same shared references under `apps/example-{vue,svelte,solid}` with Playwright coverage for Vue. Angular remains covered by package-level conformance and agent-chat suites.
 
 ## Risks
 

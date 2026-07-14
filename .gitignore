@@ -11,3 +11,6 @@ artifacts/
 !.env.example
 .DS_Store
 .expo/
+.doc-bridge/vectors/
+.doc-bridge/memory-inbox/*
+!.doc-bridge/memory-inbox/.gitkeep

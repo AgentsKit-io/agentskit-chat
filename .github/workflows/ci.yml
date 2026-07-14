@@ -33,7 +33,9 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm conformance:gate
+      - run: pnpm bundle:budget
       - run: pnpm docs:bridge:gate
+      - run: pnpm docs:bridge:doctor
       - run: node scripts/release-gate.mjs
       - run: node scripts/pack-release.mjs
 
