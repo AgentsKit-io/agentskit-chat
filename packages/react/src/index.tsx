@@ -70,6 +70,7 @@ export interface StandardComponentProps {
   readonly manifest: ComponentManifest
   readonly onInteract: (event: ComponentInteractionEvent) => void
   readonly disabled?: boolean
+  readonly allowNativeNavigation?: boolean
 }
 
 const coalesceTextParts = (parts: readonly AssistantContentPart[]): readonly AssistantContentPart[] => {
@@ -94,7 +95,7 @@ const StandardForm = ({ frame, manifest, onInteract, disabled }: StandardCompone
   </form>
 }
 
-export const StandardComponent = ({ frame, manifest, onInteract, disabled = false }: StandardComponentProps): ReactElement | null => {
+export const StandardComponent = ({ frame, manifest, onInteract, disabled = false, allowNativeNavigation = false }: StandardComponentProps): ReactElement | null => {
   if (!resolveComponentFrame(frame, manifest).ok || frame.componentKey === 'choice-list') return null
   const emit = (event: string, value?: unknown): void => onInteract(createComponentInteraction(frame, manifest, event, value))
   switch (frame.componentKey) {
@@ -102,7 +103,7 @@ export const StandardComponent = ({ frame, manifest, onInteract, disabled = fals
     case 'form': return <StandardForm frame={frame} manifest={manifest} onInteract={onInteract} disabled={disabled} />
     case 'confirmation': { const props = ConfirmationPropsSchema.parse(frame.props); return <section aria-label={props.title} data-ak-component="confirmation"><h3>{props.title}</h3><p>{props.message}</p><button type="button" disabled={disabled} onClick={() => emit('confirm')}>{props.confirmLabel}</button><button type="button" disabled={disabled} onClick={() => emit('cancel')}>{props.cancelLabel}</button></section> }
     case 'progress': { const props = ProgressPropsSchema.parse(frame.props); return <div data-ak-component="progress"><label>{props.label}<progress max={100} value={props.value} /></label>{props.status ? <p>{props.status}</p> : null}</div> }
-    case 'source-list': { const props = SourceListPropsSchema.parse(frame.props); return <section data-ak-component="source-list"><h3>{props.label}</h3><ul>{props.sources.map(source => <li key={source.id}>{source.url ? <a href={source.url} onClick={() => emit('open', source.id)}>{source.title}</a> : source.title}{source.snippet ? <p>{source.snippet}</p> : null}</li>)}</ul></section> }
+    case 'source-list': { const props = SourceListPropsSchema.parse(frame.props); return <section data-ak-component="source-list"><h3>{props.label}</h3><ul>{props.sources.map(source => <li key={source.id}>{source.url ? <a href={source.url} onClick={event => { if (!allowNativeNavigation) event.preventDefault(); emit('open', source.id) }}>{source.title}</a> : source.title}{source.snippet ? <p>{source.snippet}</p> : null}</li>)}</ul></section> }
     case 'link-card': { const props = LinkCardPropsSchema.parse(frame.props); return <a data-ak-component="link-card" href={props.href} onClick={event => { event.preventDefault(); emit('open', props.href) }}><strong>{props.title}</strong>{props.description ? <span>{props.description}</span> : null}{props.label ? <span>{props.label}</span> : null}</a> }
     case 'error-notice': { const props = ErrorNoticePropsSchema.parse(frame.props); return <section role="alert" data-ak-component="error-notice"><strong>{props.title}</strong><p>{props.message}</p>{props.code ? <code>{props.code}</code> : null}{props.retryLabel ? <button type="button" disabled={disabled} onClick={() => emit('retry')}>{props.retryLabel}</button> : null}</section> }
     case 'tool-call': { const props = ToolCallPropsSchema.parse(frame.props); return <section role="status" data-ak-component="tool-call"><strong>{props.name}</strong><span>{props.status}</span>{props.arguments ? <pre>{JSON.stringify(props.arguments, null, 2)}</pre> : null}{props.result === undefined ? null : <pre>{JSON.stringify(props.result, null, 2)}</pre>}</section> }
@@ -136,7 +137,7 @@ export const ChoiceList = ({ frame, manifest, onSelect, disabled = false }: Choi
   )
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, actionConfirmationTtlMs, session: preparedSession, theme: themeInput, slots = {} }: AgentChatProps): ReactElement => {
+const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract, actionConfirmationTtlMs, session: preparedSession, theme: themeInput, slots = {} }: AgentChatProps): ReactElement => {
   const theme: ChatTheme = resolveChatTheme(themeInput)
   const ContainerSlot = slots.Container ?? ChatContainer
   const MessageSlot = slots.Message ?? Message
@@ -201,7 +202,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const interactComponent = (event: ComponentInteractionEvent): void => {
     if (resolvedInstancesRef.current.has(event.instanceId)) return
     resolvedInstancesRef.current.add(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current))
-    try { onComponentInteract(event) } catch (error) { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)); setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
+    try { onComponentInteract?.(event) } catch (error) { resolvedInstancesRef.current.delete(event.instanceId); setResolvedInstances(new Set(resolvedInstancesRef.current)); setActionError(error instanceof Error ? error : new Error('Component interaction callback failed.')) }
   }
   const approve = (toolCallId: string): void => {
     const record = confirmation.getByToolCall(toolCallId)
@@ -224,7 +225,7 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
     }
     if (resolved?.ok) return frame.componentKey === 'choice-list'
       ? <ChoiceListSlot key={key} frame={frame} manifest={manifest!} disabled={resolvedInstances.has(frame.instanceId)} onSelect={event => selectComponent(event, frame)} />
-      : <StandardComponentSlot key={key} frame={frame} manifest={manifest!} disabled={resolvedInstances.has(frame.instanceId)} onInteract={interactComponent} />
+      : <StandardComponentSlot key={key} frame={frame} manifest={manifest!} disabled={resolvedInstances.has(frame.instanceId)} allowNativeNavigation={onComponentInteract === undefined} onInteract={interactComponent} />
     return <p key={key} data-ak-component-fallback="">{formatSemanticFallback(frame.fallback)}</p>
   }
 

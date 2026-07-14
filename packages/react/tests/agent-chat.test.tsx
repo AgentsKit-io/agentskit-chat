@@ -71,8 +71,25 @@ describe('AgentChat', () => {
     expect(await screen.findByText('Grounded answer.')).toBeTruthy()
     const link = await screen.findByRole('link')
     expect(screen.getByText('Grounded answer.').compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(fireEvent.click(link)).toBe(true)
+    expect(fireEvent.click(link)).toBe(false)
     expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ type: 'interact', instanceId: sourceFrame.instanceId, event: 'open' }))
+  })
+
+  it('allows native source navigation when the host does not own interaction handling', async () => {
+    const sourceFrame = standardComponentFrameFixtures.find(frame => frame.componentKey === 'source-list')!
+    const composite: AdapterFactory = {
+      createSource: () => ({
+        async *stream() {
+          yield { type: 'text' as const, content: createAssistantContentEncoder().encode({ kind: 'component', frame: sourceFrame }) }
+          yield { type: 'done' as const }
+        },
+        abort() {},
+      }),
+    }
+    render(<AgentChat definition={defineChat({ id: 'native-source', chat: { adapter: composite }, components: defineComponentManifest(StandardComponentCatalog) })} />)
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'sources' } })
+    fireEvent.submit(screen.getByRole('textbox').closest('form')!)
+    expect(fireEvent.click(await screen.findByRole('link'))).toBe(true)
   })
 
   it('hides partial transport and diagnoses malformed composite records accessibly', () => {
