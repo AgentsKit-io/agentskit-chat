@@ -1,0 +1,39 @@
+{
+  "name": "@agentskit/chat-docs",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "fumadocs-mdx",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test -c playwright.config.ts"
+  },
+  "dependencies": {
+    "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-protocol": "workspace:*",
+    "@agentskit/chat-react": "workspace:*",
+    "@agentskit/chat-server": "workspace:*",
+    "@agentskit/core": "^1.12.3",
+    "@agentskit/react": "^0.7.4",
+    "fumadocs-core": "15.6.5",
+    "fumadocs-mdx": "11.6.4",
+    "fumadocs-ui": "15.6.5",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  }
+}
