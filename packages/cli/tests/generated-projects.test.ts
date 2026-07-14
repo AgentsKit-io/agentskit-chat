@@ -18,7 +18,7 @@ const run = async (command: string, args: readonly string[], cwd: string, env?: 
 }
 
 beforeAll(async () => {
-  await execute('pnpm', ['--filter', '@agentskit/chat/protocol', 'build'], { cwd: workspace })
+  await execute('pnpm', ['--filter', '@agentskit/chat-protocol', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-server', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-react', 'build'], { cwd: workspace })
@@ -28,6 +28,7 @@ beforeAll(async () => {
   await execute('pnpm', ['--filter', '@agentskit/chat-svelte', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-solid', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-angular', 'build'], { cwd: workspace })
+  await execute('node', ['scripts/assemble-chat-package.mjs'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-cli', 'build'], { cwd: workspace })
 }, 60_000)
 
@@ -63,7 +64,7 @@ describe('generated projects', () => {
   it('adds and type-checks one semantic component across selected targets', async () => {
     const root = path.join(workspace, 'apps', `cli-fixture-component-${randomUUID()}`); roots.push(root)
     await mkdir(root, { recursive: true })
-    await writeFile(path.join(root, 'package.json'), JSON.stringify({ name: 'component-fixture', private: true, type: 'module', dependencies: { '@agentskit/chat': 'workspace:*', '@agentskit/chat-ink': 'workspace:*', '@agentskit/chat-react': 'workspace:*', '@agentskit/chat-vue': 'workspace:*', '@types/react': '^19.0.0', ink: '^7.0.0', react: '^19.0.0', vue: '^3.5.0', zod: '^4.0.0' } }))
+    await writeFile(path.join(root, 'package.json'), JSON.stringify({ name: 'component-fixture', private: true, type: 'module', dependencies: { '@agentskit/chat': 'workspace:*', '@types/react': '^19.0.0', ink: '^7.0.0', react: '^19.0.0', vue: '^3.5.0', zod: '^4.0.0' } }))
     await writeFile(path.join(root, 'tsconfig.json'), JSON.stringify({ compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'bundler', jsx: 'react-jsx', strict: true, noEmit: true, skipLibCheck: true }, include: ['src'] }))
     const command = await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', 'react,vue,ink', '--directory', root, '--yes'], workspace)
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })

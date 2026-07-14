@@ -1,11 +1,11 @@
 # Solid quick start
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat-solid @agentskit/solid solid-js
+pnpm add @agentskit/chat @agentskit/chat/solid @agentskit/solid solid-js
 ```
 
 ```tsx
-import { AgentChat } from '@agentskit/chat-solid'
+import { AgentChat } from '@agentskit/chat/solid'
 import { supportChat } from './support-chat'
 
 export function SupportChat() {

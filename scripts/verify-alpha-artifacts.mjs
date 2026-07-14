@@ -10,7 +10,7 @@ if (!version) throw new Error('usage: node scripts/verify-alpha-artifacts.mjs <a
 
 const packages = [
   ['@agentskit/chat', `agentskit-chat-${version}.tgz`],
-  ['@agentskit/chat-react', `agentskit-chat-react-${version}.tgz`],
+  ['@agentskit/chat-cli', `agentskit-chat-cli-${version}.tgz`],
 ]
 
 const run = (command, args, cwd) => {
@@ -42,9 +42,9 @@ await writeFile(join(consumer, 'package.json'), JSON.stringify({
   pnpm: { overrides: { '@agentskit/chat': dependencies['@agentskit/chat'] } },
 }, null, 2))
 await writeFile(join(consumer, 'index.html'), '<div id="root"></div><script type="module" src="/src.jsx"></script>')
-await writeFile(join(consumer, 'src.jsx'), "import React from 'react'; import { createRoot } from 'react-dom/client'; import { AgentChat } from '@agentskit/chat-react'; import { defineChat } from '@agentskit/chat'; const definition=defineChat({id:'clean-room',chat:{adapter:{createSource:()=>({async *stream(){yield {type:'done'}},abort(){}})}}}); createRoot(document.getElementById('root')).render(React.createElement(AgentChat,{definition}));")
+await writeFile(join(consumer, 'src.jsx'), "import React from 'react'; import { createRoot } from 'react-dom/client'; import { AgentChat } from '@agentskit/chat/react'; import { defineChat } from '@agentskit/chat'; const definition=defineChat({id:'clean-room',chat:{adapter:{createSource:()=>({async *stream(){yield {type:'done'}},abort(){}})}}}); createRoot(document.getElementById('root')).render(React.createElement(AgentChat,{definition}));")
 run('pnpm', ['install', '--ignore-scripts'], consumer)
-run('node', ['--input-type=module', '-e', "const [p,c,r,s,d]=await Promise.all([import('@agentskit/chat/protocol'),import('@agentskit/chat'),import('@agentskit/chat-react'),import('@agentskit/chat/server'),import('@agentskit/chat/devtools')]); if(!p.decodeTurnEvent||!p.decodeAskEvents||!c.defineChat||!c.createAskAdapter||!c.createAskSessionMemory||!r.AgentChat||!s.createChatHandler||!d.createTraceCapture) throw new Error('missing ESM export')"], consumer)
-run('node', ['--input-type=commonjs', '-e', "const p=require('@agentskit/chat/protocol'),c=require('@agentskit/chat'),r=require('@agentskit/chat-react'),s=require('@agentskit/chat/server'),d=require('@agentskit/chat/devtools'); if(!p.decodeTurnEvent||!p.decodeAskEvents||!c.defineChat||!c.createAskAdapter||!c.createAskSessionMemory||!r.AgentChat||!s.createChatHandler||!d.createTraceCapture) throw new Error('missing CJS export')"], consumer)
+run('node', ['--input-type=module', '-e', "const [p,c,r,s,d]=await Promise.all([import('@agentskit/chat/protocol'),import('@agentskit/chat'),import('@agentskit/chat/react'),import('@agentskit/chat/server'),import('@agentskit/chat/devtools')]); if(!p.decodeTurnEvent||!p.decodeAskEvents||!c.defineChat||!c.createAskAdapter||!c.createAskSessionMemory||!r.AgentChat||!s.createChatHandler||!d.createTraceCapture) throw new Error('missing ESM export')"], consumer)
+run('node', ['--input-type=commonjs', '-e', "const p=require('@agentskit/chat/protocol'),c=require('@agentskit/chat'),r=require('@agentskit/chat/react'),s=require('@agentskit/chat/server'),d=require('@agentskit/chat/devtools'); if(!p.decodeTurnEvent||!p.decodeAskEvents||!c.defineChat||!c.createAskAdapter||!c.createAskSessionMemory||!r.AgentChat||!s.createChatHandler||!d.createTraceCapture) throw new Error('missing CJS export')"], consumer)
 run('pnpm', ['exec', 'vite', 'build'], consumer)
 console.log(`alpha artifact verification passed for ${version}`)

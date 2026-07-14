@@ -14,7 +14,7 @@ describe('chat init', () => {
     const target = path.join(root, 'project')
     const files = await initChatProject({ targetDir: target, renderer })
     expect(files).toEqual(expect.arrayContaining(['README.md', 'package.json', 'src/chat.ts', 'src/server.ts', 'tests/chat.test.ts', 'tsconfig.json']))
-    expect(JSON.parse(await readFile(path.join(target, 'package.json'), 'utf8')).dependencies).toHaveProperty(`@agentskit/chat-${renderer}`)
+    expect(JSON.parse(await readFile(path.join(target, 'package.json'), 'utf8')).dependencies).toHaveProperty('@agentskit/chat')
     await expect(initChatProject({ targetDir: target, renderer })).rejects.toMatchObject({ code: 'TARGET_EXISTS' })
   })
 

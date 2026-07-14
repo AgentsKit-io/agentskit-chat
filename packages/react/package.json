@@ -48,8 +48,6 @@
     "react-dom": "^19.2.7",
     "tsup": "^8.5.1"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

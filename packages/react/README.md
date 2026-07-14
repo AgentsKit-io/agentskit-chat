@@ -1,4 +1,4 @@
-# @agentskit/chat-react
+# @agentskit/chat/react
 
 Accessible React application shell over `@agentskit/react`.
 

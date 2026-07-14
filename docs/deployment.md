@@ -139,14 +139,14 @@ and share `@agentskit/chat-example-shared`.
 
 ## React Native / Expo
 
-Use `@agentskit/chat-react-native` and call a trusted backend. Storage,
+Use `@agentskit/chat/react-native` and call a trusted backend. Storage,
 navigation, safe-area layout, and platform permissions stay host-owned. The
 release gate exercises native-mobile accessibility contracts and Expo web/iOS
 production bundles.
 
 ## Ink / terminal
 
-Use `@agentskit/chat-ink` in an interactive TTY. Unsupported visual components
+Use `@agentskit/chat/ink` in an interactive TTY. Unsupported visual components
 render their validated semantic fallback. The PTY gate covers keyboard submit,
 choice, confirmation, lifecycle, stop, focus, and exit behavior.
 

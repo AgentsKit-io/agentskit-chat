@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/chat-ink": "workspace:*",
     "@agentskit/ink": "^0.10.1",
     "ink": "^7.1.0",
-    "react": "^19.2.7"
+    "react": "^19.2.7",
+    "@agentskit/chat": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.0.0",

@@ -2,17 +2,12 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
   "changelog": false,
   "commit": false,
-  "fixed": [[
-    "@agentskit/chat",
-    "@agentskit/chat-react",
-    "@agentskit/chat-react-native",
-    "@agentskit/chat-ink",
-    "@agentskit/chat-vue",
-    "@agentskit/chat-svelte",
-    "@agentskit/chat-solid",
-    "@agentskit/chat-angular",
-    "@agentskit/chat-cli"
-  ]],
+  "fixed": [
+    [
+      "@agentskit/chat",
+      "@agentskit/chat-cli"
+    ]
+  ],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",

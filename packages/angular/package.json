@@ -57,8 +57,6 @@
     "typescript": "^5.9.3",
     "zone.js": "^0.16.2"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

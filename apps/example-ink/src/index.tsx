@@ -1,5 +1,5 @@
 import { onboardingApplication, operationsApplication, ragChat, ragSession, supportChat, supportSession } from '@agentskit/chat-example-shared'
-import { AgentChat } from '@agentskit/chat-ink'
+import { AgentChat } from '@agentskit/chat/ink'
 import { render } from 'ink'
 import React from 'react'
 

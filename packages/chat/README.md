@@ -8,12 +8,13 @@ Shared Chat capabilities ship as subpath exports from this package:
 import { decodeTurnEvent } from '@agentskit/chat/protocol'
 import { createChatHandler } from '@agentskit/chat/server'
 import { createTraceCapture } from '@agentskit/chat/devtools'
+import { AgentChat } from '@agentskit/chat/react'
 ```
 
-The former `@agentskit/chat-protocol`, `@agentskit/chat-server`, and
-`@agentskit/chat-devtools` package names are deprecated. They remain internal
-workspace modules so their implementation and tests stay isolated without
-creating independent npm products.
+Protocol, server, devtools, and all seven framework renderers remain isolated
+workspace modules for ownership and testing, while npm consumers install only
+`@agentskit/chat` and import the corresponding subpath. The former standalone
+package names remain available until the separate deprecation phase.
 
 Actionable choices use `createActionConfirmation`, which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit.
 

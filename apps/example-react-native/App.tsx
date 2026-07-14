@@ -2,7 +2,7 @@ import { onboardingApplication, operationsApplication, ragChat, ragSession, supp
 import { createChatSession } from '@agentskit/chat'
 import { decodeTurnEvent, snapshotMessages } from '@agentskit/chat/protocol'
 import { validTurnEventFixtures } from '@agentskit/chat/protocol/fixtures'
-import { AgentChatNative } from '@agentskit/chat-react-native'
+import { AgentChatNative } from '@agentskit/chat/react-native'
 import { Linking, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 const completeSnapshot = decodeTurnEvent(validTurnEventFixtures[3].event)

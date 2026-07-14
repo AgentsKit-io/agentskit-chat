@@ -1,4 +1,4 @@
-import { AgentChat } from '@agentskit/chat-react'
+import { AgentChat } from '@agentskit/chat/react'
 import { onboardingApplication, operationsApplication, ragChat, ragSession, supportChat, supportSession, unauthorizedOperationsApplication } from '@agentskit/chat-example-shared'
 
 const onboarding = new URLSearchParams(window.location.search).get('reference') === 'onboarding'

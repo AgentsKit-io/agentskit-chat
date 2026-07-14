@@ -3,14 +3,14 @@
 Install the application shell and its native peers:
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat-angular @agentskit/angular @angular/core @angular/common rxjs
+pnpm add @agentskit/chat @agentskit/chat/angular @agentskit/angular @angular/core @angular/common rxjs
 ```
 
 Keep the definition in a framework-neutral module, then import the standalone component:
 
 ```ts
 import { Component } from '@angular/core'
-import { AgentChatComponent } from '@agentskit/chat-angular'
+import { AgentChatComponent } from '@agentskit/chat/angular'
 import { supportChat } from './support-chat'
 
 @Component({

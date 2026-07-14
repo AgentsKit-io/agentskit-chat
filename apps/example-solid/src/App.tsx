@@ -1,4 +1,4 @@
-import { AgentChat } from '@agentskit/chat-solid'
+import { AgentChat } from '@agentskit/chat/solid'
 import {
   onboardingApplication,
   operationsApplication,

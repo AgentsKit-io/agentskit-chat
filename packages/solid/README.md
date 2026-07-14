@@ -1,4 +1,4 @@
-# @agentskit/chat-solid
+# @agentskit/chat/solid
 
 Solid application shell for AgentsKit Chat. It composes `useChat` and the headless components from `@agentskit/solid`; chat state, streaming, and lifecycle remain upstream.
 

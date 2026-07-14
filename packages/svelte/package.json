@@ -49,8 +49,6 @@
     "svelte": "^5.56.4",
     "svelte-check": "^4.4.1"
   },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  }
+  "publishConfig": {},
+  "private": true
 }

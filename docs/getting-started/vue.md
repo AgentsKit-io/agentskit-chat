@@ -3,14 +3,14 @@
 Install the application shell and its native peers:
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat-vue @agentskit/vue vue
+pnpm add @agentskit/chat @agentskit/chat/vue @agentskit/vue vue
 ```
 
 Keep the chat definition in a framework-neutral module, then render it from Vue:
 
 ```vue
 <script setup lang="ts">
-import { AgentChat } from '@agentskit/chat-vue'
+import { AgentChat } from '@agentskit/chat/vue'
 import { supportChat } from './support-chat'
 </script>
 
