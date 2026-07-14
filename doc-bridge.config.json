@@ -67,7 +67,7 @@
             "pnpm docs:bridge:gate"
           ]
         },
-        "stable-release": {
+        "release": {
           "path": "release",
           "purpose": "Fixed public package graph, stable documentation, provenance, clean-install gates, and HITL publication",
           "agentDoc": "docs/for-agents/release.md",
@@ -202,7 +202,35 @@
           "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-react build",
-            "pnpm test:e2e"
+            "pnpm test:e2e --project=react"
+          ]
+        },
+        "example-vue": {
+          "path": "apps/example-vue",
+          "purpose": "Vue surface of shared support, onboarding, operations, and RAG references",
+          "agentDoc": "docs/for-agents/apps/example-vue.md",
+          "humanDoc": "examples/dom-renderer-parity",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-vue build",
+            "pnpm test:e2e --project=vue"
+          ]
+        },
+        "example-svelte": {
+          "path": "apps/example-svelte",
+          "purpose": "Svelte 5 surface of shared support, onboarding, operations, and RAG references",
+          "agentDoc": "docs/for-agents/apps/example-svelte.md",
+          "humanDoc": "examples/dom-renderer-parity",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-svelte build"
+          ]
+        },
+        "example-solid": {
+          "path": "apps/example-solid",
+          "purpose": "Solid surface of shared support, onboarding, operations, and RAG references",
+          "agentDoc": "docs/for-agents/apps/example-solid.md",
+          "humanDoc": "examples/dom-renderer-parity",
+          "checks": [
+            "pnpm --filter @agentskit/chat-example-solid build"
           ]
         },
         "example-shared": {
@@ -222,7 +250,7 @@
           "humanDoc": "examples/support-reference",
           "checks": [
             "pnpm --filter @agentskit/chat-example-react-native build",
-            "pnpm test:e2e"
+            "pnpm test:e2e --project=react-native"
           ]
         },
         "example-ink": {
@@ -235,6 +263,7 @@
             "pnpm test:pty"
           ]
         },
+
         "operations-reference": {
           "path": "apps/example-shared",
           "purpose": "Policy-protected operations domain, audit trace, and deployment recipe",
@@ -287,25 +316,63 @@
         "handoff.resolve",
         "doc.search",
         "doc.get",
-        "gate.status"
+        "gate.status",
+        "memory.classify",
+        "memory.promoteDraft",
+        "retriever.query"
       ]
     }
+  },
+  "intelligence": {
+    "enabled": true,
+    "adapter": {
+      "provider": "ollama",
+      "model": "llama3.2",
+      "apiKeyEnv": ""
+    },
+    "chat": {
+      "enabled": true,
+      "sources": ["agent", "human", "federation"],
+      "handoffFirst": true
+    },
+    "retriever": {
+      "enabled": true,
+      "mode": "agentskit-rag"
+    },
+    "memory": {
+      "enabled": true,
+      "adapters": ["playbook-memory", "cursor-rules", "session-export"],
+      "ingestDir": ".doc-bridge/memory-inbox",
+      "classify": true,
+      "promote": {
+        "enabled": true,
+        "targets": ["agent", "human", "agents-md"],
+        "requireApproval": true
+      }
+    },
+    "runtime": "agentskit"
   },
   "federation": {
     "enabled": true,
     "sources": [
       {
         "id": "agentskit",
-        "llmsTxt": "https://www.agentskit.io/llms.txt"
+        "llmsTxt": "https://www.agentskit.io/llms.txt",
+        "includeInRetriever": true,
+        "includeInChat": true
       },
       {
         "id": "playbook",
         "llmsTxt": "https://playbook.agentskit.io/llms.txt",
-        "rawBaseUrl": "https://playbook.agentskit.io/raw/"
+        "rawBaseUrl": "https://playbook.agentskit.io/raw/",
+        "includeInRetriever": true,
+        "includeInChat": true
       },
       {
         "id": "registry",
-        "llmsTxt": "https://registry.agentskit.io/llms.txt"
+        "llmsTxt": "https://registry.agentskit.io/llms.txt",
+        "includeInRetriever": false,
+        "includeInChat": true
       }
     ]
   }

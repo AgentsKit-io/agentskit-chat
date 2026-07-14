@@ -27,7 +27,12 @@ beforeAll(async () => {
   verifiedArtifact = await verifyFixture(localKnowledgeArtifactFixture)
   verifiedStaleArtifact = await verifyFixture(staleLocalKnowledgeArtifactFixture)
 })
-const trust = (artifact: LocalKnowledgeArtifact) => ({ expectedContentHash: artifact.contentHash, expectedSiteId: artifact.siteId })
+const fixtureNow = (): number => Date.parse('2026-07-13T12:00:00Z')
+const trust = (artifact: LocalKnowledgeArtifact) => ({
+  expectedContentHash: artifact.contentHash,
+  expectedSiteId: artifact.siteId,
+  now: fixtureNow,
+})
 
 const message = (content: string): Message => ({
   id: 'user-1', role: 'user', content, status: 'complete', createdAt: new Date(0),

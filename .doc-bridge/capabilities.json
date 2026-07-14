@@ -7,7 +7,7 @@
     "name": "agentskit-chat",
     "root": "."
   },
-  "contentHash": "8c3fd3e52c6c661a3b3ec212fb7c5cc45e1caaff7d4fd9cb994116f4f73ad74e",
+  "contentHash": "8386516238844553e40d43ede51dea12aa36e53323f83f25734339d4eb7782a7",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": ".doc-bridge/llms.txt"
@@ -32,7 +32,10 @@
         "handoff.resolve",
         "doc.search",
         "doc.get",
-        "gate.status"
+        "gate.status",
+        "memory.classify",
+        "memory.promoteDraft",
+        "retriever.query"
       ]
     }
   }

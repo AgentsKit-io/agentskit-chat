@@ -21,6 +21,9 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [Ink package](./packages/ink.md): native terminal shell and semantic text fallback.
 - [CLI package](./packages/cli.md): safe project detection and application scaffolding.
 - [React example](./apps/example-react.md): deterministic executable proof.
+- [Vue example](./apps/example-vue.md): DOM parity host over the shared definition.
+- [Svelte example](./apps/example-svelte.md): Svelte 5 DOM parity host over the shared definition.
+- [Solid example](./apps/example-solid.md): Solid DOM parity host over the shared definition.
 - [React Native example](./apps/example-react-native.md): Expo proof using the shared definition.
 - [Ink example](./apps/example-ink.md): PTY proof using the shared definition.
 - [Shared example](./apps/example-shared.md): framework-neutral deterministic definition and fixture.
@@ -30,6 +33,6 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - AgentsKit owns primitives; AgentsKit Chat owns the opinionated application layer.
 - Shared definitions and protocol are framework-neutral.
 - Renderers are native and consume the corresponding AgentsKit binding.
-- React, React Native, and Ink are the first architecture-proof targets.
+- React, React Native, and Ink remain the original architecture-proof targets; Vue, Svelte, and Solid now host the same shared references in `apps/`.
 - Every render frame and action input is runtime validated.
 - Missing platform components degrade to declared semantic fallbacks.

@@ -16,9 +16,10 @@ The conformance manifest owns component/event/platform evidence. Changesets own
 future version intent; accepted ADRs/RFCs own contract change decisions.
 
 Do not publish from a developer machine. A stable tag contained in `main`
-starts the protected `npm` environment workflow. The one-time first publish may
-use only the documented short-lived bootstrap credential; subsequent releases
-use the configured npm trusted publisher and GitHub OIDC.
+starts the protected `npm` environment workflow. The bootstrap credential may
+remain only in that protected environment until all twelve packages are linked
+to the GitHub Actions trusted publisher; remove it immediately after an OIDC
+readiness check succeeds.
 
 ## Checks
 

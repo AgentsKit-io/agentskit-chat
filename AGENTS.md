@@ -38,9 +38,19 @@ Use `@agentskit/doc-bridge` before editing a module:
 pnpm docs:bridge:index
 pnpm docs:bridge:query ownership <id> --agent
 pnpm docs:bridge:gate
+pnpm docs:bridge:doctor
 ```
 
-MCP is enabled with `handoff.resolve`, `doc.search`, `doc.get`, and `gate.status`.
+MCP is enabled with `handoff.resolve`, `doc.search`, `doc.get`, `gate.status`,
+`memory.classify`, `memory.promoteDraft`, and `retriever.query`.
+
+Optional Layer 1 (local Ollama peers for RAG/chat; never required for CI):
+
+```bash
+pnpm docs:bridge:rag:ingest
+pnpm docs:bridge:ask "Who owns packages/vue?"
+pnpm docs:bridge:memory:ingest
+```
 
 ## Current phase
 
