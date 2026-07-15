@@ -25,6 +25,7 @@ export * from './catalog.js'
 export * from './ask.js'
 export * from './deterministic.js'
 export * from './presentation.js'
+export * from './controlled.js'
 
 const ThemeColorSchema = z.string().regex(/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, 'Theme colors must use portable hex notation.')
 const ThemeLengthSchema = z.number().finite().nonnegative().max(1_000)

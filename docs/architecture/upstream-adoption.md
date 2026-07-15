@@ -287,3 +287,22 @@ decoding, and browser memory remain upstream or existing framework concerns.
 No private source, behavior, identifier, data, or business rule is copied or
 published. See proposed
 [ADR-0027](./adrs/0027-fumadocs-framework-dogfood.md).
+
+## Externally controlled session adoption record (#106)
+
+Inspected `@agentskit/core@1.12.3` `ChatReturn`, `Message`, `StreamStatus`,
+`TokenUsage`, tool-confirmation lifecycle, and the public
+`@agentskit/core/memory-validation` entry point, plus
+`@agentskit/react@0.7.1` `useChat` and presentation components. Those contracts
+already define canonical state, messages, lifecycle callbacks, validation, and
+the definition-owned React controller path.
+
+AgentsKit Chat adds only a strict serializable application snapshot, delegates
+canonical message validation upstream, and projects host callbacks as a
+`Pick<ChatReturn>`. The React renderer uses separate acquisition components and
+one shared presentation path, so controlled mode never invokes `useChat` while
+definition-owned mode remains unchanged. Authentication, authorization,
+transport, persistence, and snapshot mutation remain host-owned. No controller,
+reducer, adapter consumer, message schema, memory engine, or React primitive is
+copied or reimplemented. No upstream gap blocks #106. See accepted
+[ADR-0031](./adrs/0031-controlled-chat-is-an-application-seam.md).

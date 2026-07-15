@@ -6,7 +6,7 @@ schemas, decoders, or resolvers; TypeScript types alone are not a trust boundary
 | Package | Primary public API |
 |---|---|
 | `@agentskit/chat/protocol` | Turn/session/component schemas and codecs, ordered assistant content, Ask events, deterministic answer contracts, conformance fixtures via `/protocol/fixtures`. |
-| `@agentskit/chat` | `defineChat`, sessions, deterministic routes, conversation composition, component manifest/resolution, semantic theme/fallback, action confirmation/policy, Ask adapter/memory, deterministic answer adapter. |
+| `@agentskit/chat` | `defineChat`, sessions, controlled-session driver, deterministic routes, conversation composition, component manifest/resolution, semantic theme/fallback, action confirmation/policy, Ask adapter/memory, deterministic answer adapter. |
 | `@agentskit/chat/server` | `createChatHandler`, `ChatHandlerOptions`, `ChatHandlerError`; standard `Request` → streaming `Response`. |
 | `@agentskit/chat/react` | `AgentChat`, `ChoiceList`, `StandardComponent`, native slots, `toChatCssVariables`. |
 | `@agentskit/chat/react-native` | `AgentChatNative`, `ChoiceListNative`, `StandardComponentNative`, native slots/styles, `toChatNativeStyles`. |
@@ -22,6 +22,11 @@ Renderer shells accept the same `ChatDefinition` while exposing native slots,
 templates, snippets, render props, or styles. They delegate controller state,
 streaming, messages, tools, cancellation, retry/edit/regenerate, and base
 confirmation behavior to the corresponding AgentsKit binding.
+
+`createControlledChatDriver` validates an external serializable snapshot and
+projects host lifecycle callbacks through the canonical AgentsKit `ChatReturn`
+shape. `AgentChat` accepts that source through its optional `controlled` prop;
+the existing definition-owned mode is unchanged.
 
 The generated declarations in each package's published `dist` directory are
 the exact signature reference. See the package README and the matching
