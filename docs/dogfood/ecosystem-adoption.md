@@ -33,8 +33,10 @@ pnpm test:ecosystem-adoption
 | `inventory-required` | A private or complex consumer needs an approved boundary audit before migration. |
 | `excluded` | A low-level example is intentionally outside the product-chat total. |
 
-The initial baseline certifies three of six declared product chats. This is
-intentional: schema validity must never be confused with full convergence.
+The current baseline certifies four of six declared product chats after the
+Doc Bridge production host adopted the consolidated package. The Chat portal
+still requires its canonical deployment and AKOS still requires bounded private
+certification; schema validity must never be confused with full convergence.
 
 ## Evidence rules
 
