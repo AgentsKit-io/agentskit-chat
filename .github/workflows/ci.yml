@@ -37,6 +37,7 @@ jobs:
       - run: pnpm docs:bridge:gate
       - run: pnpm docs:bridge:doctor
       - run: pnpm ecosystem:claims:check
+      - run: pnpm ecosystem:adoption:check
       - run: pnpm check:readme-standard
       - run: pnpm test:readme-standard
       - run: node scripts/release-gate.mjs

@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "frameworkVersion": "0.3.0",
+  "auditedAt": "2026-07-14",
+  "consumers": [
+    {
+      "id": "agentskit-docs",
+      "name": "AgentsKit Docs",
+      "classification": "product-chat",
+      "repository": "AgentsKit-io/agentskit",
+      "surface": "react",
+      "consumption": "npm",
+      "packageVersion": "0.3.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react"
+      ],
+      "legacyPackages": [],
+      "status": "certified",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+        },
+        "production": {
+          "status": "pass",
+          "url": "https://www.agentskit.io/docs/cookbook/deterministic-docs-answers"
+        }
+      }
+    },
+    {
+      "id": "agentskit-registry",
+      "name": "AgentsKit Registry",
+      "classification": "product-chat",
+      "repository": "AgentsKit-io/agentskit",
+      "surface": "react",
+      "consumption": "npm",
+      "packageVersion": "0.3.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react"
+      ],
+      "legacyPackages": [],
+      "status": "certified",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+        },
+        "production": {
+          "status": "pass",
+          "url": "https://registry.agentskit.io"
+        }
+      }
+    },
+    {
+      "id": "agentskit-chat-docs",
+      "name": "AgentsKit Chat documentation portal",
+      "classification": "product-chat",
+      "repository": "AgentsKit-io/agentskit-chat",
+      "surface": "react",
+      "consumption": "workspace",
+      "packageVersion": "0.3.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react",
+        "@agentskit/chat/server"
+      ],
+      "legacyPackages": [],
+      "status": "deployment-required",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29365061831"
+        },
+        "production": {
+          "status": "missing"
+        }
+      }
+    },
+    {
+      "id": "agents-playbook",
+      "name": "Agents Playbook",
+      "classification": "product-chat",
+      "repository": "AgentsKit-io/agents-playbook",
+      "surface": "react",
+      "consumption": "npm",
+      "packageVersion": "0.3.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react"
+      ],
+      "legacyPackages": [],
+      "status": "certified",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agents-playbook/actions/runs/29369635226"
+        },
+        "production": {
+          "status": "pass",
+          "url": "https://playbook.agentskit.io/docs/discovery"
+        }
+      }
+    },
+    {
+      "id": "doc-bridge-docs",
+      "name": "Doc Bridge documentation portal",
+      "classification": "product-chat",
+      "repository": "AgentsKit-io/doc-bridge",
+      "surface": "react",
+      "consumption": "npm",
+      "packageVersion": "0.2.0",
+      "imports": [
+        "@agentskit/chat"
+      ],
+      "legacyPackages": [
+        "@agentskit/chat-protocol",
+        "@agentskit/chat-react"
+      ],
+      "status": "migrating",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29350537169"
+        },
+        "production": {
+          "status": "pending"
+        }
+      }
+    },
+    {
+      "id": "registry-catalog",
+      "name": "Registry deterministic catalog",
+      "classification": "infrastructure-consumer",
+      "repository": "AgentsKit-io/agentskit-registry",
+      "surface": "protocol",
+      "consumption": "npm",
+      "packageVersion": "0.2.0",
+      "imports": [],
+      "legacyPackages": [
+        "@agentskit/chat-protocol"
+      ],
+      "status": "migrating",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29361105632"
+        },
+        "production": {
+          "status": "not-applicable"
+        }
+      }
+    },
+    {
+      "id": "agentskit-binding-examples",
+      "name": "AgentsKit low-level binding examples",
+      "classification": "low-level-binding-example",
+      "repository": "AgentsKit-io/agentskit",
+      "surface": "multi-surface",
+      "consumption": "direct-binding",
+      "packageVersion": null,
+      "imports": [],
+      "legacyPackages": [],
+      "status": "excluded",
+      "evidence": {
+        "visibility": "public",
+        "ci": {
+          "status": "pass",
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+        },
+        "production": {
+          "status": "not-applicable"
+        }
+      }
+    },
+    {
+      "id": "akos-product-chats",
+      "name": "AKOS product chat surfaces",
+      "classification": "product-chat",
+      "repository": "private:akos",
+      "surface": "multi-surface",
+      "consumption": "not-adopted",
+      "packageVersion": null,
+      "imports": [],
+      "legacyPackages": [],
+      "status": "inventory-required",
+      "evidence": {
+        "visibility": "private-attestation",
+        "ciStatus": "pending",
+        "productionStatus": "pending",
+        "attestation": "pending-private-audit"
+      }
+    }
+  ]
+}
