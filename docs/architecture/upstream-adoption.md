@@ -306,3 +306,20 @@ transport, persistence, and snapshot mutation remain host-owned. No controller,
 reducer, adapter consumer, message schema, memory engine, or React primitive is
 copied or reimplemented. No upstream gap blocks #106. See accepted
 [ADR-0031](./adrs/0031-controlled-chat-is-an-application-seam.md).
+
+## Controlled Ink adoption record (#107)
+
+Inspected `@agentskit/ink@0.10.1` `useChat`, `InputBar`, `ToolConfirmation`,
+`InkThemeProvider`, semantic presentation components, and keyboard handling.
+AgentsKit already owns terminal editing, history, Escape cancellation,
+confirmation input, and lifecycle presentation.
+
+The Ink application shell consumes the same `ControlledChatSource` and
+`createControlledChatDriver` used by React, with separate definition-owned and
+controlled acquisition components feeding one existing terminal presentation.
+Controlled mode never invokes `useChat`; it continues to render the upstream
+input and confirmation components and keeps the existing last-unresolved
+interaction focus rule. The PTY tracer adds only a synthetic host-state fixture
+and injected callbacks. No controller, terminal input parser, lifecycle,
+confirmation widget, transport, persistence, or business behavior is copied or
+reimplemented. No upstream gap or new architecture decision blocks #107.

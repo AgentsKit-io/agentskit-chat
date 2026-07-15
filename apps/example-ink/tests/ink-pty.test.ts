@@ -123,6 +123,21 @@ describe('Ink PTY host', () => {
     expect((await exited).exitCode).toBe(0)
   })
 
+  it('runs a controlled host through input, cancellation, semantic fallback, and graceful exit', async () => {
+    const app = startApp('controlled')
+    await waitFor(app.output, '[unsupported visual: status] Controlled host session is ready.')
+    await waitFor(app.output, 'Controlled host input')
+    await submit(app.pty, '/slow')
+    await waitFor(app.output, 'Controlled stream: press Esc to stop')
+    app.pty.write('\u001b')
+    await waitFor(app.output, 'Controlled stream cancelled.')
+    await submit(app.pty, 'after')
+    await waitFor(app.output, 'Controlled host received: after')
+    const exited = new Promise<{ exitCode: number; signal?: number }>(resolve => app.pty.onExit(resolve))
+    app.pty.write('\u0003')
+    expect((await exited).exitCode).toBe(0)
+  }, 15_000)
+
   it('opens a support ticket only after terminal confirmation', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')

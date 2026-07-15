@@ -25,8 +25,9 @@ confirmation behavior to the corresponding AgentsKit binding.
 
 `createControlledChatDriver` validates an external serializable snapshot and
 projects host lifecycle callbacks through the canonical AgentsKit `ChatReturn`
-shape. `AgentChat` accepts that source through its optional `controlled` prop;
-the existing definition-owned mode is unchanged.
+shape. The React and Ink `AgentChat` renderers accept that source through their
+optional `controlled` prop; their existing definition-owned modes are
+unchanged.
 
 The generated declarations in each package's published `dist` directory are
 the exact signature reference. See the package README and the matching

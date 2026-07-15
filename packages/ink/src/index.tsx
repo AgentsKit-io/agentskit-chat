@@ -1,9 +1,10 @@
-import { STANDARD_COMPONENT_KEYS, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
-import type { ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest } from '@agentskit/chat'
+import { STANDARD_COMPONENT_KEYS, createActionConfirmation, createControlledChatDriver, formatSemanticFallback, getLifecycleTargets, parseSemanticFallback, presentChatMessage, resolveChatSession, resolveChatTheme, resolveChoiceAction, resolveChoiceListFrame, resolveComponentFrame, selectChoice } from '@agentskit/chat'
+import type { ActionConfirmationCoordinator, ChatDefinition, ChatSession, ChatThemeInput, ComponentManifest, ControlledChatDriver, ControlledChatSource } from '@agentskit/chat'
 import { decodeComponentFrame, isComponentFrameCandidate } from '@agentskit/chat/protocol'
 import type { ComponentInteractionEvent, ComponentRenderFrame, ComponentSelectionEvent } from '@agentskit/chat/protocol'
 import { ChatContainer, defaultInkTheme, InkThemeProvider, InputBar, Message, ThinkingIndicator, ToolConfirmation, useChat, useInkTheme } from '@agentskit/ink'
 import type { InkTheme } from '@agentskit/ink'
+import type { ChatReturn } from '@agentskit/core'
 import { Box, Text, useInput } from 'ink'
 import { useMemo, useRef, useState, type ComponentProps, type ComponentType, type ReactElement } from 'react'
 import { StandardComponent, type StandardComponentProps } from './StandardComponent.js'
@@ -55,16 +56,20 @@ export const SemanticFallback = ({ fallback }: SemanticFallbackProps): ReactElem
   return <Text dimColor>{formatSemanticFallback(validated)}</Text>
 }
 
-export interface AgentChatProps {
+export interface AgentChatBaseProps {
   readonly definition: ChatDefinition
   readonly placeholder?: string
   readonly onComponentSelect?: (event: ComponentSelectionEvent) => void
   readonly onComponentInteract?: (event: ComponentInteractionEvent) => void
   readonly actionConfirmationTtlMs?: number
-  readonly session?: ChatSession
   readonly theme?: ChatThemeInput
   readonly slots?: AgentChatSlots
 }
+
+export type AgentChatProps = AgentChatBaseProps & (
+  | { readonly session?: ChatSession, readonly controlled?: undefined }
+  | { readonly controlled: ControlledChatSource, readonly session?: undefined }
+)
 
 export interface ChoiceListProps {
   readonly frame: unknown
@@ -123,7 +128,13 @@ export const ChoiceList = ({ frame, manifest, onSelect, isActive = true }: Choic
   return resolved.ok ? <ResolvedChoiceList resolved={resolved} onSelect={onSelect} isActive={isActive} /> : null
 }
 
-const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, actionConfirmationTtlMs, session: preparedSession, slots = {} }: AgentChatProps): ReactElement => {
+type AgentChatViewProps = AgentChatProps & {
+  readonly chat: ChatReturn
+  readonly sessionId: string
+  readonly confirmation: ActionConfirmationCoordinator
+}
+
+const AgentChatView = ({ definition, placeholder, onComponentSelect = () => undefined, onComponentInteract = () => undefined, slots = {}, chat, sessionId, confirmation }: AgentChatViewProps): ReactElement => {
   const theme = useInkTheme()
   const ContainerSlot = slots.Container ?? ChatContainer
   const MessageSlot = slots.Message ?? Message
@@ -132,20 +143,11 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   const ConfirmationSlot = slots.Confirmation ?? ToolConfirmation
   const ChoiceListSlot = slots.ChoiceList ?? ChoiceList
   const StandardComponentSlot = slots.StandardComponent ?? StandardComponent
-  const [session] = useState(() => resolveChatSession(definition, preparedSession))
-  const sessionId = session.sessionId
   const [actionError, setActionError] = useState<Error | undefined>()
   const [resolvedInstances, setResolvedInstances] = useState<ReadonlySet<string>>(() => new Set())
   const resolvedInstancesRef = useRef(new Set<string>())
-  const config = useMemo(() => session.updateChat(definition.chat), [definition.chat, session])
-  const chat = useChat(config)
   const chatRef = useRef(chat)
   chatRef.current = chat
-  const [confirmation] = useState(() => session.createConfirmation({ ...(actionConfirmationTtlMs === undefined ? {} : { ttlMs: actionConfirmationTtlMs }), chat: {
-    proposeToolCall: proposal => chatRef.current.proposeToolCall(proposal),
-    approve: id => chatRef.current.approve(id),
-    deny: (id, reason) => chatRef.current.deny(id, reason),
-  } }))
   const activePresentation = [...chat.messages].reverse().flatMap(message =>
     [...presentChatMessage(message)].reverse(),
   ).find(presentation => {
@@ -248,9 +250,49 @@ const AgentChatSession = ({ definition, placeholder, onComponentSelect = () => u
   )
 }
 
+const chatActions = (chatRef: { readonly current: ChatReturn }): Pick<ChatReturn, 'proposeToolCall' | 'approve' | 'deny'> => ({
+  proposeToolCall: proposal => chatRef.current.proposeToolCall(proposal),
+  approve: id => chatRef.current.approve(id),
+  deny: (id, reason) => chatRef.current.deny(id, reason),
+})
+
+const AgentChatSession = (props: AgentChatProps): ReactElement => {
+  const [session] = useState(() => resolveChatSession(props.definition, props.session))
+  const config = useMemo(() => session.updateChat(props.definition.chat), [props.definition.chat, session])
+  const chat = useChat(config)
+  const chatRef = useRef<ChatReturn>(chat)
+  chatRef.current = chat
+  const [confirmation] = useState(() => session.createConfirmation({
+    ...(props.actionConfirmationTtlMs === undefined ? {} : { ttlMs: props.actionConfirmationTtlMs }),
+    chat: chatActions(chatRef),
+  }))
+  return <AgentChatView {...props} chat={chat} sessionId={session.sessionId} confirmation={confirmation} />
+}
+
+type ControlledAgentChatSessionProps = AgentChatProps & { readonly chat: ControlledChatDriver }
+
+const ControlledAgentChatSession = ({ chat, ...props }: ControlledAgentChatSessionProps): ReactElement => {
+  const chatRef = useRef<ChatReturn>(chat)
+  chatRef.current = chat
+  const [confirmation] = useState(() => createActionConfirmation({
+    sessionId: chat.sessionId,
+    ...(props.actionConfirmationTtlMs === undefined ? {} : { ttlMs: props.actionConfirmationTtlMs }),
+    chat: chatActions(chatRef),
+  }))
+  return <AgentChatView {...props} chat={chat} sessionId={chat.sessionId} confirmation={confirmation} />
+}
+
+const AgentChatContent = (props: AgentChatProps): ReactElement => {
+  if (props.controlled !== undefined) {
+    const chat = createControlledChatDriver(props.controlled)
+    return <ControlledAgentChatSession key={`${props.definition.id}:${props.definition.revision ?? 1}:${chat.sessionId}:controlled`} {...props} chat={chat} />
+  }
+  return <AgentChatSession key={`${props.definition.id}:${props.definition.revision ?? 1}:${props.session?.sessionId ?? 'new'}`} {...props} />
+}
+
 export const AgentChat = (props: AgentChatProps): ReactElement => (
   <InkThemeProvider {...(props.theme === undefined ? {} : { theme: toChatInkTheme(props.theme) })}>
-    <AgentChatSession key={`${props.definition.id}:${props.definition.revision ?? 1}:${props.session?.sessionId ?? 'new'}`} {...props} />
+    <AgentChatContent {...props} />
   </InkThemeProvider>
 )
 

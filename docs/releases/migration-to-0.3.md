@@ -38,8 +38,8 @@ overrides that hide a remaining legacy import.
 
 Hosts that already receive a complete chat snapshot from a trusted session
 service may replace local controller wiring with the additive `controlled` prop
-on the React `AgentChat`. The source supplies a serializable snapshot and the
-canonical AgentsKit lifecycle callbacks. Do not run both modes for one mounted
-chat, and do not move authentication, authorization, persistence, transport, or
-business rules into the public driver. Hosts that use `definition.chat` locally
-need no change.
+on the React or Ink `AgentChat`. The source supplies a serializable snapshot and
+the canonical AgentsKit lifecycle callbacks. Do not run both modes for one
+mounted chat, and do not move authentication, authorization, persistence,
+transport, or business rules into the public driver. Hosts that use
+`definition.chat` locally need no change.

@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:8b41ffbcf0f7d040ff45bb15ed70762b2cd0ded01106dfbf836a01a2d6c5c008"
+        "sourceHash": "sha256:8752bb78ab76066f9fb847f99bfccc7ce96bea212f18e1ced7f72b7f2790dafe"
       },
       "exceptions": []
     },
@@ -1066,7 +1066,7 @@
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.md"
         ],
-        "sourceHash": "sha256:82db6b726da35c0965a39a280a2549b8e2cb2389c1931f4154d6211242b1935c"
+        "sourceHash": "sha256:88fb2734d166f6b799c409f4e2125f2f62b2de152f85ea39ce6d15ed2f86a616"
       },
       "exceptions": [
         {
