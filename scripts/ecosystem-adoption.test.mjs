@@ -11,9 +11,9 @@ describe('ecosystem adoption contract', () => {
     expect(summarizeEcosystemAdoption(parsed)).toEqual({
       consumers: 8,
       productChats: 6,
-      certifiedProductChats: 3,
-      legacyConsumers: 2,
-      pendingConsumers: 4,
+      certifiedProductChats: 4,
+      legacyConsumers: 0,
+      pendingConsumers: 2,
     })
   })
 
