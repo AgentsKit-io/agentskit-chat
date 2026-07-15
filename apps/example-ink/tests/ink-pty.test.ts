@@ -35,12 +35,10 @@ const waitFor = async (read: () => string, text: string): Promise<void> => {
   }
 }
 
-const occurrences = (value: string, text: string): number => value.split(text).length - 1
-
-const waitForAnother = async (read: () => string, text: string, before: number): Promise<void> => {
-  const deadline = Date.now() + 5_000
-  while (occurrences(read(), text) <= before) {
-    if (Date.now() >= deadline) throw new Error(`Timed out waiting for another ${JSON.stringify(text)}`)
+const waitForAfter = async (read: () => string, offset: number, text: string): Promise<void> => {
+  const deadline = Date.now() + 10_000
+  while (!read().slice(offset).includes(text)) {
+    if (Date.now() >= deadline) throw new Error(`Timed out waiting for ${JSON.stringify(text)} after terminal offset ${offset}`)
     await new Promise(resolve => setTimeout(resolve, 25))
   }
 }
@@ -152,28 +150,30 @@ describe('Ink PTY host', () => {
   it('completes onboarding with keyboard-only form and confirmation controls', async () => {
     const app = startApp('onboarding')
     await waitFor(app.output, 'Type /onboarding to begin')
-    const ready = occurrences(app.output(), 'Type /onboarding to begin')
     await submit(app.pty, '/onboarding')
     await waitFor(app.output, 'Primary role')
-    const goalFields = occurrences(app.output(), 'First goal *:')
+    const roleOffset = app.output().length
     app.pty.write('\r')
-    await waitForAnother(app.output, 'First goal *:', goalFields)
+    await waitForAfter(app.output, roleOffset, 'Save answers')
+    const goalOffset = app.output().length
     app.pty.write('Automate handoffs')
+    await waitForAfter(app.output, goalOffset, 'Automate handoffs')
+    const profileOffset = app.output().length
     app.pty.write('\r')
-    await waitForAnother(app.output, 'Type /onboarding to begin', ready)
+    await waitForAfter(app.output, profileOffset, 'Type /onboarding to begin')
     await submit(app.pty, '/recommend')
     await waitFor(app.output, 'engineering starter')
-    const recommendationReady = occurrences(app.output(), 'Type /onboarding to begin')
+    const recommendationOffset = app.output().length
     app.pty.write('\r')
-    await waitForAnother(app.output, 'Type /onboarding to begin', recommendationReady)
+    await waitForAfter(app.output, recommendationOffset, 'Type /onboarding to begin')
     await submit(app.pty, '/accept')
     await waitFor(app.output, 'Complete onboarding')
     app.pty.write('\r')
     await waitFor(app.output, 'Allow complete-onboarding?')
-    const confirmationReady = occurrences(app.output(), 'Type /onboarding to begin')
+    const confirmationOffset = app.output().length
     app.pty.write('\r')
-    await waitFor(app.output, 'Onboarding confirmed.')
-    await waitForAnother(app.output, 'Type /onboarding to begin', confirmationReady)
+    await waitForAfter(app.output, confirmationOffset, 'Onboarding confirmed.')
+    await waitForAfter(app.output, confirmationOffset, 'Type /onboarding to begin')
     await submit(app.pty, '/done')
     await waitFor(app.output, 'Onboarding complete. Your guided workspace is ready.')
   }, 20_000)
