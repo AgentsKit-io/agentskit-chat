@@ -314,9 +314,87 @@
   },
   "gates": {
     "preset": "standard",
+    "include": [
+      "documentation-standard-v1"
+    ],
     "exclude": [
       "okf-type"
     ]
+  },
+  "conformance": {
+    "documentationStandardV1": {
+      "rawSources": [
+        "README.md",
+        "docs/index.mdx",
+        "docs/for-agents/index.md"
+      ],
+      "contributionPaths": [
+        "CONTRIBUTING.md"
+      ],
+      "metadata": [
+        {
+          "path": "apps/docs/app/layout.tsx",
+          "contains": [
+            "export const metadata",
+            "title:",
+            "description:",
+            "openGraph:"
+          ]
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.agentskit.io/docs",
+          "paths": ["docs/index.mdx"]
+        },
+        {
+          "url": "https://registry.agentskit.io",
+          "paths": ["README.md", "docs/index.mdx"]
+        },
+        {
+          "url": "https://playbook.agentskit.io/docs",
+          "paths": ["docs/index.mdx"]
+        },
+        {
+          "url": "https://agentskit-io.github.io/doc-bridge/",
+          "paths": ["README.md", "docs/index.mdx"]
+        },
+        {
+          "url": "https://github.com/AgentsKit-io/code-review-cli#readme",
+          "paths": ["README.md", "docs/index.mdx"]
+        },
+        {
+          "url": "https://akos.agentskit.io/docs",
+          "paths": ["docs/index.mdx"]
+        }
+      ],
+      "ecosystemContract": {
+        "manifest": "ecosystem.json",
+        "claims": "ecosystem-contract-claims.json",
+        "productId": "agentskit-chat"
+      },
+      "quickstarts": [
+        {
+          "id": "react-chat",
+          "doc": "docs/getting-started/react.md",
+          "test": "tests/e2e/chat-conformance.ts",
+          "command": "pnpm test:e2e --project=react",
+          "testContains": [
+            "streams a deterministic answer",
+            "AgentsKit received: hello"
+          ]
+        }
+      ],
+      "visuals": [
+        "docs/assets/agentschat-architecture.svg"
+      ],
+      "diagrams": [
+        {
+          "path": "docs/backend.md",
+          "contains": ["```mermaid"]
+        }
+      ]
+    }
   },
   "surfaces": {
     "cli": {
