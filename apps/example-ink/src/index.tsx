@@ -2,11 +2,15 @@ import { onboardingApplication, operationsApplication, ragChat, ragSession, supp
 import { AgentChat } from '@agentskit/chat/ink'
 import { render } from 'ink'
 import React from 'react'
+import { ControlledInkExample } from './controlled.js'
 
 const onboarding = process.env.AK_EXAMPLE === 'onboarding'
 const operations = process.env.AK_EXAMPLE === 'operations'
 const rag = process.env.AK_EXAMPLE === 'rag'
-render(rag
+const controlled = process.env.AK_EXAMPLE === 'controlled'
+render(controlled
+  ? <ControlledInkExample />
+  : rag
   ? <AgentChat definition={ragChat} session={ragSession} onComponentInteract={event => { const url = ragChat.resolveSourceInteraction(event); if (url) process.stdout.write(`\nSource: ${url}\n`) }} placeholder="Ask a grounded question" />
   : operations
   ? <AgentChat definition={operationsApplication.definition} session={operationsApplication.session} placeholder="Type /operations to begin" />
