@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
+import { inspectEcosystemAdoption, parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
 
 const manifest = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', import.meta.url), 'utf8'))
 const clone = value => structuredClone(value)
@@ -15,6 +16,12 @@ describe('ecosystem adoption contract', () => {
       legacyConsumers: 0,
       pendingConsumers: 2,
     })
+  })
+
+  it('keeps the certified baseline independent from the next framework release', async () => {
+    const result = await inspectEcosystemAdoption(fileURLToPath(new URL('..', import.meta.url)))
+    expect(result.manifest.frameworkVersion).toBe('0.3.0')
+    expect(result.diagnostics).toEqual([])
   })
 
   it('rejects duplicate and unknown consumers', () => {

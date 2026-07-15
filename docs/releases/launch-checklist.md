@@ -1,13 +1,14 @@
 # Stable public launch checklist
 
-Executable close-out checklist for [issue #30](https://github.com/AgentsKit-io/agentskit-chat/issues/30).
-AgentsKit Chat `0.3.0` is the two-package consolidation release.
+Executable close-out checklist for [issue #104](https://github.com/AgentsKit-io/agentskit-chat/issues/104).
+AgentsKit Chat `0.4.0` adds controlled React and Ink sessions to the consolidated
+two-package graph.
 
 ## Documentation
 
 - [x] Quick starts for React, React Native, Ink, Vue, Svelte, Solid, and Angular
 - [x] API reference, deployment modes, stability, security, and changelog
-- [x] Compatibility matrix, `0.3.0` release notes, and `0.2.x` migration map
+- [x] Compatibility matrix, `0.4.0` release notes, and `0.2.x` migration map
 - [x] Agent handoffs and doc-bridge ownership routing
 - [x] Host adapter recipes for Next.js, Hono, Express, and Cloudflare Workers
 - [x] README install path targets the two-package npm graph
@@ -33,15 +34,15 @@ pnpm test:e2e
 pnpm test:pty
 ```
 
-- [ ] Release and post-merge workflows pass on the `0.3.0` line
+- [ ] Release and post-merge workflows pass on the `0.4.0` line
 - [ ] Both public tarballs match `SHA256SUMS`
 - [ ] All seven renderer exports pass clean-install verification
 - [ ] Expo web and iOS production exports pass in the release workflow
 
 ## Distribution
 
-- [ ] Immutable `v0.3.0` tag and GitHub release are public
-- [ ] Both packages resolve from npm at exact `0.3.0`
+- [ ] Immutable `v0.4.0` tag and GitHub release are public
+- [ ] Both packages resolve from npm at exact `0.4.0`
 - [ ] npm provenance attestations and registry signatures verify
 - [ ] Clean external installation, ESM/CJS imports, and CLI scaffolding pass
 - [ ] npm Trusted Publishing succeeds for both packages through OIDC
@@ -53,14 +54,13 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 ## Dogfood
 
-- [ ] AgentsKit Docs and Registry pin npm `0.3.0`
-- [ ] Playbook pins npm `0.3.0`
+- [ ] AgentsKit Docs and Registry use the consolidated public package
+- [ ] Registry, Playbook, Doc Bridge, and approved private tracers pass their declared pins
 - [ ] Frozen installs, strict typechecks/tests, and production builds pass
 - [ ] Public browser smoke passes for Docs, Registry, and Playbook
 - [ ] No private behavior, identifier, data, or topology enters public evidence
 
 ## Product close-out
 
-- [ ] Record release, provenance, checksums, clean install, and host smoke links on #30
-- [ ] Close issue #30 and milestone **v0 — Cross-framework foundation**
-- [ ] Close PRD #1
+- [ ] Record release, provenance, checksums, clean install, and host smoke links on #104
+- [ ] Complete the convergence ledger only after every public and private tracer passes

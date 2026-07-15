@@ -33,7 +33,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.3.0` with Solid 1.9+ and `@agentskit/solid ^0.4.4`.
+Published in `@agentskit/chat` at `0.4.0` with Solid 1.9+ and `@agentskit/solid ^0.4.4`.
 
 - Solid 1.9+
 - TypeScript strict mode

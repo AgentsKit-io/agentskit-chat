@@ -33,7 +33,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.3.0` with Vue 3.4+ and `@agentskit/vue ^0.4.4`.
+Published in `@agentskit/chat` at `0.4.0` with Vue 3.4+ and `@agentskit/vue ^0.4.4`.
 
 - Vue 3.4+
 - TypeScript strict mode

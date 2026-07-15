@@ -1,10 +1,10 @@
 # Get started
 
-AgentsKit Chat `0.3.0` lets one framework-neutral definition run through a
+AgentsKit Chat `0.4.0` lets one framework-neutral definition run through a
 native renderer. Start with the CLI or select a framework guide.
 
 ```bash
-pnpm dlx @agentskit/chat-cli@0.3.0 init my-chat --renderer react --yes
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
 cd my-chat
 pnpm install
 pnpm test
