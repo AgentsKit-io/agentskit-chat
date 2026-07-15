@@ -64,18 +64,42 @@ test('keeps unavailable backend behavior explicit and supports keyboard focus', 
 })
 
 test('publishes canonical folder indexes, metadata, and machine-readable public docs', async ({ request }) => {
-  const [index, llms, knowledge, raw] = await Promise.all([
+  const [index, llms, llmsFull, knowledge, raw, search, sitemap, robots] = await Promise.all([
     request.get('/docs/getting-started'),
     request.get('/llms.txt'),
+    request.get('/llms-full.txt'),
     request.get('/deterministic/knowledge.json'),
     request.get('/raw/backend.md'),
+    request.get('/api/search?query=react'),
+    request.get('/sitemap.xml'),
+    request.get('/robots.txt'),
   ])
   expect(index.ok()).toBe(true)
   expect(await index.text()).toContain('Get started')
   expect(llms.ok()).toBe(true)
   expect(await llms.text()).toContain('AgentsKit Chat')
+  expect(llmsFull.ok()).toBe(true)
+  expect(await llmsFull.text()).toContain('canonical documentation corpus')
   expect(knowledge.ok()).toBe(true)
   expect((await knowledge.json()).protocol).toBe('agentskit.chat.knowledge')
   expect(raw.ok()).toBe(true)
   expect(await raw.text()).toContain('# Hosted and self-hosted Ask backend')
+  expect(search.ok()).toBe(true)
+  expect(await search.text()).toContain('React quick start')
+  expect(sitemap.ok()).toBe(true)
+  expect(await sitemap.text()).toContain('/docs/getting-started')
+  expect(robots.ok()).toBe(true)
+  expect(await robots.text()).toContain('Sitemap:')
+})
+
+test('serves the public portal with baseline security headers', async ({ request }) => {
+  const response = await request.get('/')
+  expect(response.ok()).toBe(true)
+  expect(response.headers()).toEqual(expect.objectContaining({
+    'content-security-policy': expect.stringContaining("default-src 'self'"),
+    'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'DENY',
+  }))
 })

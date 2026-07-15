@@ -3,6 +3,35 @@
 The shared `ChatDefinition` is unchanged across deployment modes. Only the
 adapter, trusted host context, storage, and native renderer vary.
 
+## Canonical documentation portal
+
+The repository's Fumadocs host lives in `apps/docs` and deploys as one Vercel
+project. Configure that project with `apps/docs` as its root directory and keep
+the canonical production URL in `NEXT_PUBLIC_SITE_URL`. The committed
+`apps/docs/vercel.json` pins the framework and deployment region; Vercel project
+settings must not replace build or application behavior that belongs in source
+control.
+
+Deployments run through the manual `Docs deployment` GitHub workflow. Select
+`preview` for an isolated deployment or `production` for promotion. The
+workflow builds once, deploys the prebuilt artifact, and runs the complete
+browser suite against the immutable deployment URL. Configure these protected
+GitHub environments:
+
+- `docs-preview` with `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, and `VERCEL_TOKEN`.
+- `docs-production` with the same scoped secrets plus required reviewers.
+
+Production promotion is a human decision. Approvers verify the maturity copy,
+preview evidence, canonical/raw/search/sitemap/robots/LLM routes, deterministic
+Ask, explicit unavailable behavior for an unconfigured grounded backend, and
+the security-header smoke before approving the environment. Provider secrets
+remain server-side and must never use a `NEXT_PUBLIC_` name.
+
+Keep the previous successful production deployment available during promotion.
+Rollback reassigns the production alias to that immutable deployment; DNS does
+not need to change. Treat the custom domain as a separate reversible step after
+preview approval.
+
 ## Web-standard server — recommended
 
 Mount `createChatHandler` from `@agentskit/chat/server` in a Node, serverless,
