@@ -41,7 +41,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.3.0`. Wire changes require a new protocol version and explicit decoder path. See [stability](../../docs/releases/stability.md).
+Published in `@agentskit/chat` at `0.4.0`. Wire changes require a new protocol version and explicit decoder path. See [stability](../../docs/releases/stability.md).
 
 - Node.js 22+
 - TypeScript strict mode

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 — 2026-07-15
+
+AgentsKit Chat can now present sessions owned by an existing host without
+creating a second controller or session store.
+
+- Adds a framework-neutral, runtime-validated controlled-session driver with
+  host callbacks for input, send, cancel, retry, edit, regenerate, approval,
+  denial, and component interaction.
+- Adds controlled mode to the React and Ink renderers while preserving their
+  existing definition-owned mode and shared presentation behavior.
+- Keeps transport, authentication, authorization, persistence, and product
+  actions outside the public framework boundary.
+- Adds synthetic conformance fixtures for idle, streaming, error,
+  cancellation-ready, confirmation, and semantic-component states.
+- Preserves the two-package public graph, seven renderer subpaths, protocol v1,
+  and compatibility with applications using the 0.3 definition-owned APIs.
+
 ## 0.3.0 — 2026-07-14
 
 AgentsKit Chat consolidates its public npm surface from twelve packages to two
