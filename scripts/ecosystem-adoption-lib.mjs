@@ -180,8 +180,7 @@ export const inspectEcosystemAdoption = async root => {
   const workspace = await readJson(join(root, 'package.json'))
   const release = await readJson(join(root, 'release/manifest.json'))
   const diagnostics = []
-  if (manifest.frameworkVersion !== workspace.version) diagnostics.push(`framework version ${manifest.frameworkVersion} does not match workspace ${workspace.version}`)
-  if (manifest.frameworkVersion !== release.version) diagnostics.push(`framework version ${manifest.frameworkVersion} does not match release ${release.version}`)
+  if (workspace.version !== release.version) diagnostics.push(`workspace version ${workspace.version} does not match release ${release.version}`)
   return { diagnostics, manifest, summary: summarizeEcosystemAdoption(manifest) }
 }
 

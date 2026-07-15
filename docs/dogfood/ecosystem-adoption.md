@@ -5,6 +5,11 @@ post-v0 convergence program in [PRD #99](https://github.com/AgentsKit-io/agentsk
 It records what is certified today and what remains incomplete; it is not a
 promotional wishlist.
 
+`frameworkVersion` is the exact certification baseline proven by the consumer
+evidence, not an alias for the repository's next release version. It advances
+only after those consumers adopt and prove a newer published version. The
+workspace and release manifest versions must still match each other.
+
 Validate it locally with:
 
 ```bash
