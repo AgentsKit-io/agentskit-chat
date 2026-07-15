@@ -8,6 +8,7 @@
 - Current adoption matrix: [`../architecture/upstream-adoption.md`](../architecture/upstream-adoption.md)
 - Product requirements: [`../product/PRD.md`](../product/PRD.md)
 - Ecosystem convergence: [`../architecture/adrs/0030-ecosystem-product-chat-convergence.md`](../architecture/adrs/0030-ecosystem-product-chat-convergence.md)
+- Controlled host sessions: [`../architecture/adrs/0031-controlled-chat-is-an-application-seam.md`](../architecture/adrs/0031-controlled-chat-is-an-application-seam.md)
 - Adoption ledger: [`../dogfood/ecosystem-adoption.md`](../dogfood/ecosystem-adoption.md)
 
 ## Change route

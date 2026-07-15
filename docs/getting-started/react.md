@@ -39,3 +39,29 @@ pnpm dev
 ```
 
 Send any message to receive a deterministic streamed response. Send `/fail` to verify the accessible error path without a provider key.
+
+## Host-owned sessions
+
+When another trusted process already owns the chat session, pass its validated
+projection through the controlled source instead of creating a second client
+controller:
+
+```tsx
+import type { ControlledChatSource } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+import { supportChat } from './support-chat'
+
+export const Support = ({ source }: { source: ControlledChatSource }) => (
+  <AgentChat definition={supportChat} controlled={source} />
+)
+```
+
+`source.snapshot` contains `sessionId`, serialized canonical `messages`,
+`status`, `input`, a bounded error envelope, and token `usage`. `source.actions`
+implements the existing AgentsKit send, stop, retry, edit, regenerate, input,
+clear, proposal, approval, and denial callbacks. The host must rerender with its
+next snapshot after a callback. Invalid snapshots fail closed, and controlled
+mode does not call `useChat` or instantiate another controller.
+
+Authentication, authorization, transport, persistence, optimistic updates, and
+business behavior remain outside the public driver.
