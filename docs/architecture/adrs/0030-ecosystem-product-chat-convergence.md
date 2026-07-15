@@ -1,6 +1,6 @@
 # ADR-0030: Certify ecosystem product chats through one application layer
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-07-14
 - **Issue:** [#100](https://github.com/AgentsKit-io/agentskit-chat/issues/100)
 - **Parent PRD:** [#99](https://github.com/AgentsKit-io/agentskit-chat/issues/99)
@@ -134,8 +134,8 @@ flowchart TD
 
 ## Acceptance
 
-This ADR remains Proposed until HITL review approves the product-chat definition,
-the low-level-example exception, the private-attestation boundary, and the rule
+HITL approval was recorded on 2026-07-14 for the product-chat definition, the
+low-level-example exception, the private-attestation boundary, and the rule
 that broad promotion requires every declared product chat to be certified.
 
 ## References
