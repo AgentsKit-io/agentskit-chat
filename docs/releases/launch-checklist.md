@@ -53,10 +53,16 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 ## Dogfood
 
-- [ ] AgentsKit Docs and Registry pin npm `0.3.0`
-- [ ] Playbook pins npm `0.3.0`
-- [ ] Frozen installs, strict typechecks/tests, and production builds pass
-- [ ] Public browser smoke passes for Docs, Registry, and Playbook
+Source of truth for host status is [`ecosystem-adoption.json`](../../ecosystem-adoption.json)
+(not this checklist). Do not mark ecosystem convergence complete while the ledger
+still reports pending product chats (baseline: 3 of 6 certified).
+
+- [x] AgentsKit Docs and Registry certified on npm `0.3.0` (ledger)
+- [x] Playbook certified on npm `0.3.0` (ledger)
+- [ ] Doc Bridge and remaining consumers clear of legacy packages (ledger: migrating / inventory)
+- [ ] AgentsKit Chat docs portal production deployment (ledger: deployment-required)
+- [ ] Frozen installs, strict typechecks/tests, and production builds pass for each host
+- [ ] Public browser smoke passes for every certified product chat
 - [ ] No private behavior, identifier, data, or topology enters public evidence
 
 ## Product close-out

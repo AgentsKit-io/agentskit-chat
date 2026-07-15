@@ -1,9 +1,21 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
 
 export const REPO_ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '')
 
 const readJson = path => JSON.parse(readFileSync(join(REPO_ROOT, path), 'utf8'))
+
+/** Derive public claim numbers solely from ecosystem-adoption.json (SSOT). */
+export function computeAdoptionClaims(adoption = readJson('ecosystem-adoption.json')) {
+  const summary = summarizeEcosystemAdoption(parseEcosystemAdoption(adoption))
+  return {
+    certifiedProductChats: summary.certifiedProductChats,
+    productChats: summary.productChats,
+    pendingAdoptionConsumers: summary.pendingConsumers,
+    legacyPackageConsumers: summary.legacyConsumers,
+  }
+}
 
 export function computeReadmeClaims() {
   const packageDirs = readdirSync(join(REPO_ROOT, 'packages')).filter(dir =>
@@ -32,6 +44,7 @@ export function computeReadmeClaims() {
   const architectureAdrs = readdirSync(join(REPO_ROOT, 'docs/architecture/adrs')).filter(file => file.endsWith('.md')).length
   const docBridgeIndex = readJson('.doc-bridge/index.json')
   const agentHandoffs = Object.keys(docBridgeIndex.handoffs ?? {}).length
+  const adoption = computeAdoptionClaims()
 
   return {
     publicPackages: publicPackages.length,
@@ -42,6 +55,7 @@ export function computeReadmeClaims() {
     exampleApps,
     architectureAdrs,
     agentHandoffs,
+    ...adoption,
     version: readJson('package.json').version,
   }
 }

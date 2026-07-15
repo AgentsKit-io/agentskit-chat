@@ -17,12 +17,18 @@ surface in the live host rather than a migration of a live Astro application.
 
 ## Shared boundary
 
-The live hosts first moved from immutable `v0.1.0-alpha.2` tarballs to the exact
-stable npm `0.1.0` graph for `@agentskit/chat`, `@agentskit/chat-protocol`, and
-`@agentskit/chat-react`. They pin one fixed stable graph per adoption round and
-compose supported `@agentskit/core` and `@agentskit/react` releases. Stable
-release assets include SHA-256 checksums and pass clean-room ESM, CJS, Vite,
-tarball, provenance, and renderer verification in the release workflow.
+> **Current truth:** live product-chat adoption is recorded only in
+> [`ecosystem-adoption.json`](../../ecosystem-adoption.json) and summarized in
+> [ecosystem-adoption.md](./ecosystem-adoption.md). Do not treat this playbook’s
+> historical package graph as the present baseline.
+
+**Historical note (issue #27 era):** hosts first moved from immutable
+`v0.1.0-alpha.2` tarballs through a multi-package npm graph
+(`@agentskit/chat`, `@agentskit/chat-protocol`, `@agentskit/chat-react`). The
+public graph is now the consolidated **`@agentskit/chat@0.3.0`** package with
+`/protocol` and `/react` subpaths. Certified consumers on that line today are
+listed in the adoption ledger (3 of 6 product chats); pending consumers must
+not be described as fully migrated.
 
 AgentsKit owns controller lifecycle, messages, cancellation, retry, edit,
 regenerate, and the web-storage memory primitive. AgentsKit Chat Protocol owns

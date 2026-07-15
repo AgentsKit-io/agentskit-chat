@@ -35,10 +35,25 @@ Optional additive v1 fields are compatible. Required-field or semantic changes n
 
 Delegate message-record validation to `@agentskit/core/memory-validation`. Do not recreate canonical message, content-part, tool-call, token, or memory schemas here; missing capability must be fixed and released in AgentsKit first.
 
+## Public surface
+
+Consumers install the consolidated package and import the protocol subpath:
+
+```bash
+npm install @agentskit/chat@0.3.0
+```
+
+```ts
+import { LocalKnowledgeArtifactSchema } from '@agentskit/chat/protocol'
+```
+
+Do not document or reintroduce the retired public package name `@agentskit/chat-protocol`
+for new hosts. Source still lives under `packages/protocol` for workspace builds.
+
 ## Checks
 
 ```bash
-pnpm --filter @agentskit/chat-protocol lint
-pnpm --filter @agentskit/chat-protocol test
-pnpm --filter @agentskit/chat-protocol build
+pnpm --filter @agentskit/chat lint
+pnpm --filter @agentskit/chat test
+pnpm --filter @agentskit/chat build
 ```

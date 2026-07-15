@@ -7,6 +7,10 @@ const claimKeys = {
   'example-apps': 'exampleApps',
   'architecture-adrs': 'architectureAdrs',
   'agent-handoffs': 'agentHandoffs',
+  'certified-product-chats': 'certifiedProductChats',
+  'product-chats': 'productChats',
+  'pending-adoption-consumers': 'pendingAdoptionConsumers',
+  'legacy-package-consumers': 'legacyPackageConsumers',
 }
 
 const claimLabels = {
@@ -18,6 +22,10 @@ const claimLabels = {
   'example-apps': 'Example applications',
   'architecture-adrs': 'Architecture ADRs',
   'agent-handoffs': 'Agent handoffs',
+  'certified-product-chats': 'Certified product chats',
+  'product-chats': 'Declared product chats',
+  'pending-adoption-consumers': 'Pending adoption consumers',
+  'legacy-package-consumers': 'Consumers still listing legacy Chat packages',
 }
 
 export function verifyReadmeClaims(claims, computed, readme) {

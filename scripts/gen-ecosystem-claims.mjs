@@ -59,6 +59,46 @@ const claims = {
       noun: 'agent handoffs',
       evidence: { type: 'repository-derivation', path: '.doc-bridge/index.json#/handoffs', summary: 'Doc Bridge agent-handoff entries for ownership routing.' },
     },
+    {
+      id: 'certified-product-chats',
+      value: stats.certifiedProductChats,
+      noun: 'certified product chats',
+      evidence: {
+        type: 'repository-derivation',
+        path: 'ecosystem-adoption.json',
+        summary: `Product chats with status certified in the adoption ledger (${stats.certifiedProductChats} of ${stats.productChats}). Not a 100% convergence claim while pending consumers remain.`,
+      },
+    },
+    {
+      id: 'product-chats',
+      value: stats.productChats,
+      noun: 'declared product chats',
+      evidence: {
+        type: 'repository-derivation',
+        path: 'ecosystem-adoption.json',
+        summary: 'Declared product-chat consumers in the adoption ledger (source of truth for ecosystem scope).',
+      },
+    },
+    {
+      id: 'pending-adoption-consumers',
+      value: stats.pendingAdoptionConsumers,
+      noun: 'pending adoption consumers',
+      evidence: {
+        type: 'repository-derivation',
+        path: 'ecosystem-adoption.json',
+        summary: 'Consumers not yet certified or excluded (migrating, deployment-required, inventory-required).',
+      },
+    },
+    {
+      id: 'legacy-package-consumers',
+      value: stats.legacyPackageConsumers,
+      noun: 'consumers still listing legacy Chat packages',
+      evidence: {
+        type: 'repository-derivation',
+        path: 'ecosystem-adoption.json',
+        summary: 'Ledger entries with non-empty legacyPackages (must not be reported as fully migrated).',
+      },
+    },
   ],
 }
 

@@ -1,8 +1,10 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
+import { computeAdoptionClaims, computeReadmeClaims } from './compute-readme-claims.mjs'
 
 const manifest = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', import.meta.url), 'utf8'))
+const claims = JSON.parse(readFileSync(new URL('../ecosystem-claims.json', import.meta.url), 'utf8'))
 const clone = value => structuredClone(value)
 
 describe('ecosystem adoption contract', () => {
@@ -15,6 +17,32 @@ describe('ecosystem adoption contract', () => {
       legacyConsumers: 2,
       pendingConsumers: 4,
     })
+    expect(summarizeEcosystemAdoption(parsed).certifiedProductChats).toBeLessThan(
+      summarizeEcosystemAdoption(parsed).productChats,
+    )
+  })
+
+  it('derives public adoption claims only from the ledger (no 100% while pending)', () => {
+    const derived = computeAdoptionClaims(manifest)
+    expect(derived).toEqual({
+      certifiedProductChats: 3,
+      productChats: 6,
+      pendingAdoptionConsumers: 4,
+      legacyPackageConsumers: 2,
+    })
+    expect(derived.pendingAdoptionConsumers).toBeGreaterThan(0)
+
+    const byId = Object.fromEntries(claims.claims.map(claim => [claim.id, claim]))
+    expect(byId['certified-product-chats'].value).toBe(derived.certifiedProductChats)
+    expect(byId['product-chats'].value).toBe(derived.productChats)
+    expect(byId['pending-adoption-consumers'].value).toBe(derived.pendingAdoptionConsumers)
+    expect(byId['legacy-package-consumers'].value).toBe(derived.legacyPackageConsumers)
+    expect(byId['certified-product-chats'].evidence.path).toBe('ecosystem-adoption.json')
+    expect(byId['certified-product-chats'].evidence.summary).toMatch(/Not a 100%/)
+
+    const readme = computeReadmeClaims()
+    expect(readme.certifiedProductChats).toBe(derived.certifiedProductChats)
+    expect(readme.pendingAdoptionConsumers).toBe(derived.pendingAdoptionConsumers)
   })
 
   it('rejects duplicate and unknown consumers', () => {

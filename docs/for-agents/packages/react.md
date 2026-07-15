@@ -15,9 +15,24 @@ Semantic themes map only to published upstream CSS variables. Native slots stay 
 - [`../../getting-started/react.md`](../../getting-started/react.md)
 - [`../../architecture/upstream-adoption.md`](../../architecture/upstream-adoption.md)
 
+## Public surface
+
+Consumers install the consolidated package and import the React renderer subpath:
+
+```bash
+npm install @agentskit/chat@0.3.0 @agentskit/react react
+```
+
+```ts
+import { AgentChat } from '@agentskit/chat/react'
+```
+
+Do not document or reintroduce the retired public package name `@agentskit/chat-react`
+for new hosts. Source still lives under `packages/react` for workspace builds.
+
 ## Checks
 
 ```bash
-pnpm --filter @agentskit/chat-react lint
-pnpm --filter @agentskit/chat-react test
+pnpm --filter @agentskit/chat lint
+pnpm --filter @agentskit/chat test
 ```

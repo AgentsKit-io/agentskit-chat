@@ -1,7 +1,13 @@
 # Ecosystem adoption ledger
 
-`ecosystem-adoption.json` is the machine-readable source of truth for the
-post-v0 convergence program in [PRD #99](https://github.com/AgentsKit-io/agentskit-chat/issues/99).
+`ecosystem-adoption.json` is the **only** machine-readable source of truth for
+the post-v0 convergence program in
+[PRD #99](https://github.com/AgentsKit-io/agentskit-chat/issues/99).
+Public README counts, `ecosystem-claims.json` adoption rows, and dogfood
+summaries must be **derived** from this ledger. They must never invent a
+“100% adopted” story while any consumer remains pending, migrating, or
+inventory-required.
+
 It records what is certified today and what remains incomplete; it is not a
 promotional wishlist.
 
@@ -10,6 +16,7 @@ Validate it locally with:
 ```bash
 pnpm ecosystem:adoption:check
 pnpm test:ecosystem-adoption
+pnpm ecosystem:claims:check
 ```
 
 ## Classifications
