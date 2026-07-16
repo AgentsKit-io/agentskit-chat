@@ -6,8 +6,9 @@ adapter, trusted host context, storage, and native renderer vary.
 ## Canonical documentation portal
 
 The repository's Fumadocs host lives in `apps/docs` and deploys as one Vercel
-project. Configure that project with `apps/docs` as its root directory and keep
-the canonical production URL in `NEXT_PUBLIC_SITE_URL`. The committed
+project at [chat.agentskit.io](https://chat.agentskit.io/docs). Configure that
+project with `apps/docs` as its root directory and keep the canonical
+production URL in `NEXT_PUBLIC_SITE_URL`. The committed
 `apps/docs/vercel.json` pins the framework and deployment region; Vercel project
 settings must not replace build or application behavior that belongs in source
 control.

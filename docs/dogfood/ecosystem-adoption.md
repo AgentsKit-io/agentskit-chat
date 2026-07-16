@@ -5,6 +5,11 @@ post-v0 convergence program in [PRD #99](https://github.com/AgentsKit-io/agentsk
 It records what is certified today and what remains incomplete; it is not a
 promotional wishlist.
 
+`frameworkVersion` is the exact certification baseline proven by the consumer
+evidence, not an alias for the repository's next release version. It advances
+only after those consumers adopt and prove a newer published version. The
+workspace and release manifest versions must still match each other.
+
 Validate it locally with:
 
 ```bash
@@ -33,8 +38,10 @@ pnpm test:ecosystem-adoption
 | `inventory-required` | A private or complex consumer needs an approved boundary audit before migration. |
 | `excluded` | A low-level example is intentionally outside the product-chat total. |
 
-The initial baseline certifies three of six declared product chats. This is
-intentional: schema validity must never be confused with full convergence.
+The current baseline certifies four of six declared product chats after the
+Doc Bridge production host adopted the consolidated package. The Chat portal
+still requires its canonical deployment and AKOS still requires bounded private
+certification; schema validity must never be confused with full convergence.
 
 ## Evidence rules
 

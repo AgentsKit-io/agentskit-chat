@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Safe scaffolding for AgentsKit Chat applications.",
   "license": "MIT",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
+  "homepage": "https://chat.agentskit.io/docs",
   "bugs": {
     "url": "https://github.com/AgentsKit-io/agentskit-chat/issues"
   },

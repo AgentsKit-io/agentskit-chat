@@ -59,7 +59,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published at `0.3.0` with `@agentskit/core ^1.12.3`, `@agentskit/memory ^0.11.0`, and `@agentskit/statechart ^0.2.0`. See [stability](../../docs/releases/stability.md).
+Published at `0.4.0` with `@agentskit/core ^1.12.3`, `@agentskit/memory ^0.11.0`, and `@agentskit/statechart ^0.2.0`. See [stability](../../docs/releases/stability.md).
 
 - Node.js 22+
 - TypeScript strict mode

@@ -1,6 +1,7 @@
 {
   "title": "AgentsKit Chat",
   "pages": [
+    "index",
     "getting-started",
     "api-reference",
     "components",

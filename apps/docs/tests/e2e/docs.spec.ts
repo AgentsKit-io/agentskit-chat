@@ -16,18 +16,12 @@ test('navigates the canonical docs and answers a known question locally', async 
   await expect(page).toHaveURL(/\/docs\/releases\/compatibility$/)
 })
 
-test('shows every public maturity state and preserves the landing layout', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 900 })
+test('uses the documentation portal as the canonical product entry point', async ({ page }) => {
   await page.goto('/')
-  const maturity = page.getByTestId('maturity-grid')
-  for (const state of ['Released', 'Alpha', 'Planned', 'Unavailable']) {
-    await expect(maturity.getByText(state, { exact: true })).toBeVisible()
-  }
-  await expect(maturity).toHaveScreenshot('maturity-grid.png', {
-    animations: 'disabled',
-    mask: [maturity.locator('strong'), maturity.locator('p')],
-    maxDiffPixelRatio: 0.01,
-  })
+  await expect(page).toHaveURL(/\/docs$/)
+  await expect(page.getByRole('heading', { name: 'AgentsKit Chat', level: 1 })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Continue through the ecosystem' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'View canonical Markdown' })).toHaveAttribute('href', '/raw/index.mdx')
 })
 
 test('keeps the interactive assistant usable on a mobile viewport', async ({ page }) => {
@@ -64,26 +58,43 @@ test('keeps unavailable backend behavior explicit and supports keyboard focus', 
 })
 
 test('publishes canonical folder indexes, metadata, and machine-readable public docs', async ({ request }) => {
-  const [index, llms, llmsFull, knowledge, raw, search, sitemap, robots] = await Promise.all([
+  const [home, index, llms, full, forAgents, knowledge, raw, rawIndex, architecture, search, sitemap, robots] = await Promise.all([
+    request.get('/docs'),
     request.get('/docs/getting-started'),
     request.get('/llms.txt'),
     request.get('/llms-full.txt'),
+    request.get('/for-agents'),
     request.get('/deterministic/knowledge.json'),
     request.get('/raw/backend.md'),
+    request.get('/raw/index.mdx'),
+    request.get('/assets/agentschat-architecture.svg'),
     request.get('/api/search?query=react'),
     request.get('/sitemap.xml'),
     request.get('/robots.txt'),
   ])
+  expect(home.ok()).toBe(true)
+  expect(await home.text()).toContain('Continue through the ecosystem')
   expect(index.ok()).toBe(true)
   expect(await index.text()).toContain('Get started')
   expect(llms.ok()).toBe(true)
-  expect(await llms.text()).toContain('AgentsKit Chat')
-  expect(llmsFull.ok()).toBe(true)
-  expect(await llmsFull.text()).toContain('canonical documentation corpus')
+  const concise = await llms.text()
+  expect(concise).toContain('AgentsKit Chat')
+  expect(concise.length).toBeLessThan(10_000)
+  expect(concise).toContain('https://akos.agentskit.io')
+  expect(full.ok()).toBe(true)
+  const complete = await full.text()
+  expect(complete).toContain('canonical documentation corpus')
+  expect(complete.length).toBeGreaterThan(concise.length)
+  expect(forAgents.ok()).toBe(true)
+  expect(forAgents.url()).toContain('/docs/for-agents')
   expect(knowledge.ok()).toBe(true)
   expect((await knowledge.json()).protocol).toBe('agentskit.chat.knowledge')
   expect(raw.ok()).toBe(true)
   expect(await raw.text()).toContain('# Hosted and self-hosted Ask backend')
+  expect(rawIndex.ok()).toBe(true)
+  expect(await rawIndex.text()).toContain('title: AgentsKit Chat')
+  expect(architecture.ok()).toBe(true)
+  expect(architecture.headers()['content-type']).toContain('image/svg+xml')
   expect(search.ok()).toBe(true)
   expect(await search.text()).toContain('React quick start')
   expect(sitemap.ok()).toBe(true)

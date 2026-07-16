@@ -1,5 +1,6 @@
 import { source } from '@/lib/source'
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page'
+import { Card, Cards } from 'fumadocs-ui/components/card'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -12,11 +13,12 @@ export default async function DocumentationPage({ params }: { readonly params: P
   if (!page) notFound()
   const Content = page.data.body
   const path = (slug ?? []).join('/')
+  const rawPath = page.file?.path ?? `${path || 'index'}.md`
   return <DocsPage toc={page.data.toc} editOnGithub={{ owner: 'AgentsKit-io', repo: 'agentskit-chat', sha: 'main', path: `docs/${page.file?.path ?? ''}` }}>
     <DocsTitle>{page.data.title}</DocsTitle>
     {page.data.description ? <DocsDescription>{page.data.description}</DocsDescription> : null}
-    <p className="mb-6 text-xs"><Link className="underline" href={`/raw/${path || 'index'}.md`}>View canonical Markdown</Link></p>
-    <DocsBody><Content /></DocsBody>
+    <p className="mb-6 text-xs"><Link className="underline" href={`/raw/${rawPath}`}>View canonical Markdown</Link></p>
+    <DocsBody><Content components={{ Card, Cards }} /></DocsBody>
   </DocsPage>
 }
 

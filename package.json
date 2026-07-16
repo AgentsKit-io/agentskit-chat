@@ -1,6 +1,6 @@
 {
   "name": "agentskit-chat",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Cross-framework application framework for interactive agent experiences, built on AgentsKit.",
   "license": "MIT",
@@ -21,6 +21,7 @@
     "docs:bridge:query": "ak-docs query",
     "docs:bridge:gate": "ak-docs gate run",
     "docs:bridge:doctor": "ak-docs doctor --text",
+    "docs:bridge:conformance": "ak-docs conformance run documentation-standard-v1 --text",
     "docs:bridge:rag:ingest": "ak-docs rag ingest",
     "docs:bridge:ask": "ak-docs ask",
     "docs:bridge:chat": "ak-docs chat",
@@ -41,7 +42,7 @@
     "ecosystem:adoption:check": "node scripts/check-ecosystem-adoption.mjs"
   },
   "devDependencies": {
-    "@agentskit/doc-bridge": "1.0.2",
+    "@agentskit/doc-bridge": "1.1.1",
     "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.61.0",
     "@vitest/coverage-v8": "^4.1.9",

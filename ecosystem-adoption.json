@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.3.0",
-  "auditedAt": "2026-07-14",
+  "auditedAt": "2026-07-15",
   "consumers": [
     {
       "id": "agentskit-docs",
@@ -22,7 +22,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "pass",
@@ -49,7 +49,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "pass",
@@ -118,23 +118,23 @@
       "repository": "AgentsKit-io/doc-bridge",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.2.0",
+      "packageVersion": "0.3.0",
       "imports": [
-        "@agentskit/chat"
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react"
       ],
-      "legacyPackages": [
-        "@agentskit/chat-protocol",
-        "@agentskit/chat-react"
-      ],
-      "status": "migrating",
+      "legacyPackages": [],
+      "status": "certified",
       "evidence": {
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29350537169"
+          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29415788817"
         },
         "production": {
-          "status": "pending"
+          "status": "pass",
+          "url": "https://agentskit-io.github.io/doc-bridge/"
         }
       }
     },
@@ -145,17 +145,17 @@
       "repository": "AgentsKit-io/agentskit-registry",
       "surface": "protocol",
       "consumption": "npm",
-      "packageVersion": "0.2.0",
-      "imports": [],
-      "legacyPackages": [
-        "@agentskit/chat-protocol"
+      "packageVersion": "0.3.0",
+      "imports": [
+        "@agentskit/chat/protocol"
       ],
-      "status": "migrating",
+      "legacyPackages": [],
+      "status": "certified",
       "evidence": {
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29361105632"
+          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29380404600"
         },
         "production": {
           "status": "not-applicable"
@@ -177,7 +177,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29372991095"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "not-applicable"
