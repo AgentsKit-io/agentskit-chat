@@ -141,7 +141,7 @@
         ],
         "maturity": [
           "## Maturity and compatibility",
-          "0.4.0"
+          "0.4.1"
         ],
         "compatibility": [
           "Node.js 22",
@@ -183,7 +183,7 @@
         },
         {
           "id": "init-react",
-          "command": "pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes",
+          "command": "pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes",
           "test": "packages/cli/tests/init.test.ts",
           "testCommand": "pnpm test"
         }
@@ -241,7 +241,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "stability.md"
         ],
         "compatibility": [
@@ -320,7 +320,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "stability.md"
         ],
         "compatibility": [
@@ -398,7 +398,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "deployment.md"
         ],
         "compatibility": [
@@ -476,7 +476,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "angular"
         ],
         "compatibility": [
@@ -553,7 +553,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "React 18+"
         ],
         "compatibility": [
@@ -630,7 +630,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Vue 3.4+",
@@ -708,7 +708,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Svelte 5+",
@@ -786,7 +786,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Solid 1.9+",
@@ -864,7 +864,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Angular 18.1–21",
@@ -942,7 +942,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "React 18+",
@@ -1020,7 +1020,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Ink 7.1+",
@@ -1098,7 +1098,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Node.js 22+",
