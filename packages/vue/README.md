@@ -8,7 +8,7 @@ Native Vue 3 application shell for AgentsKit Chat. Composes `useChat`, `ChatRoot
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [Vue guide](../../docs/getting-started/vue.md) |
+| Quick start | [Vue guide](../../docs/getting-started/vue.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 
 ## Quick start

@@ -143,7 +143,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/server/README.md', 'packages/server/package.json', 'packages/server/tsconfig.json', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.md'],
+      sources: ['packages/server/README.md', 'packages/server/package.json', 'packages/server/tsconfig.json', 'packages/server/fixtures/readme-example.ts', 'docs/deployment.mdx'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -169,7 +169,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/cli/README.md', 'packages/cli/package.json', 'packages/cli/fixtures/readme-example.mjs', 'docs/cli.md'],
+      sources: ['packages/cli/README.md', 'packages/cli/package.json', 'packages/cli/fixtures/readme-example.mjs', 'docs/cli.mdx'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -195,7 +195,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-11-11',
-      sources: ['packages/react/README.md', 'packages/react/package.json', 'packages/react/tsconfig.json', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.md'],
+      sources: ['packages/react/README.md', 'packages/react/package.json', 'packages/react/tsconfig.json', 'packages/react/fixtures/readme-example.tsx', 'docs/getting-started/react.mdx'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
@@ -203,12 +203,12 @@ const surfaces = [
 ]
 
 const concisePackages = [
-  { dir: 'vue', exampleId: 'import-vue', commandId: 'install-vue', command: 'npm install @agentskit/chat @agentskit/vue', promise: 'Native Vue 3 application shell', compatibility: ['Vue 3.4+', 'TypeScript strict mode'], guide: 'docs/getting-started/vue.md', test: 'packages/vue/tests/agent-chat.test.ts' },
-  { dir: 'svelte', exampleId: 'import-svelte', commandId: 'install-svelte', command: 'npm install @agentskit/chat @agentskit/svelte', promise: 'Svelte 5 application shell', compatibility: ['Svelte 5+', 'SSR evidence in CI'], guide: 'docs/getting-started/svelte.md', test: 'packages/svelte/tests/agent-chat.test.ts' },
-  { dir: 'solid', exampleId: 'import-solid', commandId: 'install-solid', command: 'npm install @agentskit/chat @agentskit/solid', promise: 'Solid application shell', compatibility: ['Solid 1.9+', 'TypeScript strict mode'], guide: 'docs/getting-started/solid.md', test: 'packages/solid/tests/agent-chat.test.tsx' },
-  { dir: 'angular', exampleId: 'import-angular', commandId: 'install-angular', command: 'npm install @agentskit/chat @agentskit/angular', promise: 'Native Angular application shell', compatibility: ['Angular 18.1–21', 'Partial-Ivy AOT package test in CI'], guide: 'docs/getting-started/angular.md', test: 'packages/angular/tests/agent-chat.test.ts' },
-  { dir: 'react-native', exampleId: 'import-react-native', commandId: 'install-react-native', command: 'npm install @agentskit/chat @agentskit/react-native', promise: 'React Native application shell', compatibility: ['React 18+', 'Native accessibility roles in CI'], guide: 'docs/getting-started/react-native.md', test: 'packages/react-native/tests/agent-chat-native.test.tsx' },
-  { dir: 'ink', exampleId: 'import-ink', commandId: 'install-ink', command: 'npm install @agentskit/chat @agentskit/ink', promise: 'Opinionated Ink shell', compatibility: ['Ink 7.1+', 'Terminal keyboard flow and graceful process exit verified'], guide: 'docs/getting-started/ink.md', test: 'packages/ink/tests/agent-chat.test.tsx' },
+  { dir: 'vue', exampleId: 'import-vue', commandId: 'install-vue', command: 'npm install @agentskit/chat @agentskit/vue', promise: 'Native Vue 3 application shell', compatibility: ['Vue 3.4+', 'TypeScript strict mode'], guide: 'docs/getting-started/vue.mdx', test: 'packages/vue/tests/agent-chat.test.ts' },
+  { dir: 'svelte', exampleId: 'import-svelte', commandId: 'install-svelte', command: 'npm install @agentskit/chat @agentskit/svelte', promise: 'Svelte 5 application shell', compatibility: ['Svelte 5+', 'SSR evidence in CI'], guide: 'docs/getting-started/svelte.mdx', test: 'packages/svelte/tests/agent-chat.test.ts' },
+  { dir: 'solid', exampleId: 'import-solid', commandId: 'install-solid', command: 'npm install @agentskit/chat @agentskit/solid', promise: 'Solid application shell', compatibility: ['Solid 1.9+', 'TypeScript strict mode'], guide: 'docs/getting-started/solid.mdx', test: 'packages/solid/tests/agent-chat.test.tsx' },
+  { dir: 'angular', exampleId: 'import-angular', commandId: 'install-angular', command: 'npm install @agentskit/chat @agentskit/angular', promise: 'Native Angular application shell', compatibility: ['Angular 18.1–21', 'Partial-Ivy AOT package test in CI'], guide: 'docs/getting-started/angular.mdx', test: 'packages/angular/tests/agent-chat.test.ts' },
+  { dir: 'react-native', exampleId: 'import-react-native', commandId: 'install-react-native', command: 'npm install @agentskit/chat @agentskit/react-native', promise: 'React Native application shell', compatibility: ['React 18+', 'Native accessibility roles in CI'], guide: 'docs/getting-started/react-native.mdx', test: 'packages/react-native/tests/agent-chat-native.test.tsx' },
+  { dir: 'ink', exampleId: 'import-ink', commandId: 'install-ink', command: 'npm install @agentskit/chat @agentskit/ink', promise: 'Opinionated Ink shell', compatibility: ['Ink 7.1+', 'Terminal keyboard flow and graceful process exit verified'], guide: 'docs/getting-started/ink.mdx', test: 'packages/ink/tests/agent-chat.test.tsx' },
   { dir: 'devtools', exampleId: 'import-devtools', commandId: 'install-devtools', command: 'npm install @agentskit/chat @agentskit/eval', promise: 'Application trace capture', compatibility: ['Node.js 22+', 'Composes upstream replay'], guide: 'docs/devtools.md', test: 'packages/devtools/tests/devtools.test.ts' },
 ]
 

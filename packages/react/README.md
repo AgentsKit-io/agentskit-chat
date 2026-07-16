@@ -10,7 +10,7 @@ Accessible React application shell over `@agentskit/react`. Chat state, streamin
 |---|---|
 | DOM parity | [dom renderer parity](../../docs/examples/dom-renderer-parity.md) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
-| Quick start | [React guide](../../docs/getting-started/react.md) |
+| Quick start | [React guide](../../docs/getting-started/react.mdx) |
 
 ## Quick start
 

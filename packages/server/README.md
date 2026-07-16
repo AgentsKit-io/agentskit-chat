@@ -10,7 +10,7 @@ Web-standard request handlers for AgentsKit Chat definitions. Composes the canon
 |---|---|
 | Chat handler | [ADR-0012](../../docs/architecture/adrs/0012-web-standard-snapshot-handler.md) |
 | Ask vertical | [ADR-0026](../../docs/architecture/adrs/0026-trusted-ask-backend-vertical.md) |
-| Deployment recipes | [deployment guide](../../docs/deployment.md) |
+| Deployment recipes | [deployment guide](../../docs/deployment.mdx) |
 
 ## Quick start
 
@@ -51,7 +51,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.1` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.md](../../docs/deployment.md).
+Published in `@agentskit/chat` at `0.4.1` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.mdx](../../docs/deployment.mdx).
 
 - Node.js 22+
 - Web-standard `Request` / `Response`

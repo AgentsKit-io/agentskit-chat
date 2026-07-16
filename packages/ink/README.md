@@ -8,7 +8,7 @@ Opinionated Ink shell for a framework-neutral AgentsKit Chat definition. Chat st
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [Ink guide](../../docs/getting-started/ink.md) |
+| Quick start | [Ink guide](../../docs/getting-started/ink.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 | PTY evidence | `apps/example-ink` and `pnpm test:pty` |
 

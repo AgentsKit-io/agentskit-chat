@@ -32,4 +32,4 @@ storage policy, audit retention, and deployment hardening.
 
 See [action policy](./docs/actions/policy.md),
 [confirmation](./docs/actions/confirmation.md), and
-[deployment modes](./docs/deployment.md).
+[deployment modes](./docs/deployment.mdx).

@@ -8,7 +8,7 @@ Svelte 5 application shell for AgentsKit Chat. Composes `createChatStore` and th
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [Svelte guide](../../docs/getting-started/svelte.md) |
+| Quick start | [Svelte guide](../../docs/getting-started/svelte.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 
 ## Quick start

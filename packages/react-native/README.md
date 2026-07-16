@@ -8,7 +8,7 @@ React Native application shell for an AgentsKit Chat definition. Delegates chat 
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [React Native guide](../../docs/getting-started/react-native.md) |
+| Quick start | [React Native guide](../../docs/getting-started/react-native.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 
 ## Quick start

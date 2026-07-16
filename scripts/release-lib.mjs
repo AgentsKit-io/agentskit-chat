@@ -47,7 +47,7 @@ const requiredDocs = [
   'CHANGELOG.md',
   'SECURITY.md',
   'docs/api-reference.md',
-  'docs/deployment.md',
+  'docs/deployment.mdx',
   'docs/getting-started/README.md',
   'docs/releases/compatibility.md',
   'docs/releases/migration-from-alpha.md',

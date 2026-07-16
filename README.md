@@ -58,7 +58,7 @@ pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 ```
 
-Continue with the [seven renderer quick starts](./docs/getting-started/README.md), [API reference](./docs/api-reference.md), and [deployment modes](./docs/deployment.md).
+Continue with the [seven renderer quick starts](./docs/getting-started/README.md), [API reference](./docs/api-reference.md), and [deployment modes](./docs/deployment.mdx).
 
 ![Deterministic-before-backend flow from one definition through local answers, trusted Ask escalation, and seven native renderers](./docs/assets/agentschat-architecture.svg)
 
