@@ -9,6 +9,18 @@ import {
 const adoption = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', import.meta.url), 'utf8'))
 const plan = JSON.parse(readFileSync(new URL('../release/legacy-package-deprecations.json', import.meta.url), 'utf8'))
 const clone = value => structuredClone(value)
+const certifiedAdoption = () => {
+  const certified = clone(adoption)
+  const akos = certified.consumers.find(consumer => consumer.id === 'akos-product-chats')
+  akos.status = 'certified'
+  akos.evidence = {
+    visibility: 'private-attestation',
+    ciStatus: 'pass',
+    productionStatus: 'pass',
+    attestation: 'chat-convergence-pass',
+  }
+  return certified
+}
 
 describe('legacy package deprecation dry-run', () => {
   it('enumerates every legacy package exactly once with a canonical replacement', () => {
@@ -47,7 +59,7 @@ describe('legacy package deprecation dry-run', () => {
   })
 
   it('becomes ready only after public and private evidence is certified', () => {
-    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(adoption), parseLegacyDeprecationPlan(plan))
+    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(certifiedAdoption()), parseLegacyDeprecationPlan(plan))
     expect(result).toMatchObject({ ready: true, blockers: [] })
   })
 

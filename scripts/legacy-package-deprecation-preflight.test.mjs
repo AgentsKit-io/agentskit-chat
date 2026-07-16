@@ -4,6 +4,18 @@ import { runLegacyDeprecationPreflight } from './legacy-package-deprecation-pref
 
 const adoption = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', import.meta.url), 'utf8'))
 const plan = JSON.parse(readFileSync(new URL('../release/legacy-package-deprecations.json', import.meta.url), 'utf8'))
+const certifiedAdoption = () => {
+  const certified = structuredClone(adoption)
+  const akos = certified.consumers.find(consumer => consumer.id === 'akos-product-chats')
+  akos.status = 'certified'
+  akos.evidence = {
+    visibility: 'private-attestation',
+    ciStatus: 'pass',
+    productionStatus: 'pass',
+    attestation: 'chat-convergence-pass',
+  }
+  return certified
+}
 const response = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body })
 const consolidated = {
   'dist-tags': { latest: '0.4.1' },
@@ -33,7 +45,7 @@ const createFetch = ({ deprecated = false, brokenUrl = false, failedCi = false }
 
 describe('legacy package live preflight', () => {
   it('requires reachable evidence, consolidated exports, and clean npm metadata', async () => {
-    const result = await runLegacyDeprecationPreflight({ adoption, plan, fetchImpl: createFetch() })
+    const result = await runLegacyDeprecationPreflight({ adoption: certifiedAdoption(), plan, fetchImpl: createFetch() })
     expect(result.ready).toBe(true)
     expect(result.legacyPackages).toHaveLength(10)
     expect(result.privateAttestations).toEqual([{ id: 'akos-product-chats', attestation: 'chat-convergence-pass' }])
@@ -109,7 +121,7 @@ describe('legacy package live preflight', () => {
       calls.push({ url, options })
       return baseFetch(url, options)
     }
-    const result = await runLegacyDeprecationPreflight({ adoption, plan, fetchImpl, githubToken: 'test-token' })
+    const result = await runLegacyDeprecationPreflight({ adoption: certifiedAdoption(), plan, fetchImpl, githubToken: 'test-token' })
     expect(result.ready).toBe(true)
     const repeatedRun = 'https://api.github.com/repos/AgentsKit-io/agentskit/actions/runs/29415738248'
     expect(calls.filter(call => call.url === repeatedRun)).toHaveLength(1)

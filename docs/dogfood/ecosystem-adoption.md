@@ -46,13 +46,13 @@ pnpm test:ecosystem-adoption
 | `inventory-required` | A private or complex consumer needs an approved boundary audit before migration. |
 | `excluded` | A low-level example is intentionally outside the product-chat total. |
 
-The 2026-07-16 baseline certifies all six declared product chats. The Chat portal
-was promoted through its protected immutable deployment workflow and AKOS passed
-the bounded Chat-convergence attestation at exact 0.4.0. That private statement
-covers dependency, renderer, CI, terminal, and public production smoke only; it
-does not certify every AKOS capability or disclose private implementation detail.
-Schema validity must never be confused with freshness, so the final release gate
-still re-reads public evidence and npm state immediately before HITL approval.
+The 2026-07-16 baseline certifies five of the six declared product chats. The
+Chat portal was promoted through its protected immutable deployment workflow.
+AKOS remains `deployment-required` at exact 0.4.0: its bounded CI attestation
+passes, while the current production attestation is pending. No private URL,
+identifier, topology, behavior, or business rule is recorded here. Schema
+validity must never be confused with freshness, so the final release gate
+re-reads public evidence and npm state immediately before HITL approval.
 
 ## Evidence rules
 
