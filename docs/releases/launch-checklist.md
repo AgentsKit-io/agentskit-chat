@@ -60,11 +60,11 @@ The stable workflow must remain token-free. Its protected publish job uses
 ## Dogfood
 
 - [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline
-- [ ] Chat Docs is certified with the canonical production evidence from #102
+- [x] Chat Docs is certified with the canonical production evidence from #102
 - [ ] AKOS is certified through an approved aggregate private attestation
 - [ ] Frozen installs, strict typechecks/tests, and production builds pass for all declared consumers
-- [ ] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge
-- [ ] No private AKOS behavior, identifier, data, or topology enters public evidence
+- [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge
+- [x] No private AKOS behavior, identifier, data, or topology enters public evidence
 
 ## Product close-out
 
@@ -73,7 +73,7 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 ## Legacy package retirement
 
-- [ ] #102 is merged and the Chat documentation portal is certified in the ledger
+- [x] #102 is closed with canonical deployment evidence and the Chat documentation portal is certified in the ledger
 - [ ] AKOS has an approved aggregate private attestation and is certified in the ledger
 - [ ] `pnpm release:deprecation:plan -- --require-ready` passes on clean `main`
 - [ ] The exact ten-command dry-run receives explicit HITL approval on #103
