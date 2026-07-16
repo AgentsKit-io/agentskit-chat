@@ -1,5 +1,6 @@
 import { collectCanonicalDocs, publicDocSlug } from '@/lib/docs-index'
-import { allEcosystemProducts } from '@/lib/ecosystem'
+import ecosystem from '../../../ecosystem.json'
+import { formatEcosystemLlmsBlock } from '@/lib/ecosystem-llms-block'
 
 export const dynamic = 'force-static'
 
@@ -29,11 +30,41 @@ export async function GET() {
     const slug = publicDocSlug(document.path)
     return `- [${document.title}](${site}/docs${slug ? `/${slug}` : ''}) — ${document.description}\n  Raw: ${site}/raw/${document.path}`
   })
-  const ecosystem = allEcosystemProducts.map(product =>
-    `- ${product.label} (${product.maturity}): ${product.docs}\n  LLM index: ${product.llms}`,
-  )
+  const products = (
+    ecosystem.products as Array<{
+      id: string
+      name: string
+      role?: string
+      promise: string
+      maturity?: string
+      surfaces: { home?: string; docs?: string; llms?: string }
+      navigation: { order: number }
+    }>
+  ).toSorted((left, right) => left.navigation.order - right.navigation.order)
+
+  const ecosystemLines = formatEcosystemLlmsBlock({
+    products,
+    currentProductId: 'agentskit-chat',
+    prefer: 'docs',
+  })
+
   return new Response(
-    `# AgentsKit Chat\n\n> Cross-framework chat applications built on AgentsKit.\n\n- Repository: https://github.com/AgentsKit-io/agentskit-chat\n- Deterministic knowledge: ${site}/deterministic/knowledge.json\n- Full public corpus: ${site}/llms-full.txt\n- Agent entry point: ${site}/for-agents\n\n## Ecosystem\n\n${ecosystem.join('\n')}\n\n## Documentation\n\n${rows.join('\n')}\n`,
+    [
+      '# AgentsKit Chat',
+      '',
+      '> Cross-framework chat applications built on AgentsKit.',
+      '',
+      '- Repository: https://github.com/AgentsKit-io/agentskit-chat',
+      `- Deterministic knowledge: ${site}/deterministic/knowledge.json`,
+      `- Full corpus: ${site}/llms-full.txt`,
+      `- Agent entry point: ${site}/for-agents`,
+      '',
+      ...ecosystemLines,
+      '## Documentation',
+      '',
+      ...rows,
+      '',
+    ].join('\n'),
     { headers: { 'content-type': 'text/plain; charset=utf-8' } },
   )
 }
