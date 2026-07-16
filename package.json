@@ -39,9 +39,11 @@
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
     "ecosystem:claims": "node scripts/gen-ecosystem-claims.mjs",
     "ecosystem:claims:check": "node scripts/gen-ecosystem-claims.mjs --check",
+    "ecosystem:claims:live": "node scripts/check-ecosystem-claims-live.mjs",
     "ecosystem:adoption:check": "node scripts/check-ecosystem-adoption.mjs",
     "release:deprecation:plan": "node scripts/legacy-package-deprecation-plan.mjs",
-    "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs"
+    "release:deprecation:preflight": "node scripts/legacy-package-deprecation-preflight.mjs",
+    "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs scripts/legacy-package-deprecation-preflight.test.mjs"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.1.1",

@@ -197,3 +197,14 @@ an answer when a required backend is unavailable.
 
 See [server details](./server.md), [Ask backend](./backend.md), [sessions](./sessions.md), and the
 [security policy](../SECURITY.md).
+
+## Ecosystem handoffs
+
+- For managed enterprise operations, tenancy, audit, and governance, continue to
+  [AKOS Alpha](https://akos.agentskit.io/docs). Confirm each capability's shipped
+  or beta status instead of treating the product as GA.
+- Before merging deployment changes, run the repository's normal checks and use
+  [AgentsKit Code Review](https://github.com/AgentsKit-io/code-review-cli#readme)
+  for a focused second pass.
+- Keep the deployment runbook agent-readable with
+  [Doc Bridge](https://agentskit-io.github.io/doc-bridge/).

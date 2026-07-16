@@ -5,6 +5,16 @@ import { z } from 'zod'
 const exactVersionSchema = z.string().regex(/^\d+\.\d+\.\d+$/, 'must be an exact stable version')
 const httpsUrlSchema = z.string().url().startsWith('https://')
 
+const compareVersions = (left, right) => {
+  const leftParts = left.split('.').map(Number)
+  const rightParts = right.split('.').map(Number)
+  for (let index = 0; index < 3; index += 1) {
+    const difference = leftParts[index] - rightParts[index]
+    if (difference !== 0) return difference
+  }
+  return 0
+}
+
 const publicRepositories = [
   'AgentsKit-io/agentskit',
   'AgentsKit-io/agentskit-registry',
@@ -64,7 +74,7 @@ const privateEvidenceSchema = z.object({
   visibility: z.literal('private-attestation'),
   ciStatus: z.enum(['pass', 'pending']),
   productionStatus: z.enum(['pass', 'pending']),
-  attestation: z.enum(['pending-private-audit', 'private-audit-pass']),
+  attestation: z.enum(['pending-chat-convergence-audit', 'chat-convergence-pass']),
 }).strict()
 
 const consumerSchema = z.object({
@@ -93,11 +103,32 @@ export const requiredConsumerIds = [
 ]
 
 export const ecosystemAdoptionSchema = z.object({
-  schemaVersion: z.literal(1),
-  frameworkVersion: exactVersionSchema,
+  schemaVersion: z.literal(3),
+  minimumConsolidatedVersion: exactVersionSchema,
+  currentFrameworkVersion: exactVersionSchema,
+  supportedConsolidatedVersions: z.array(exactVersionSchema).min(1),
   auditedAt: z.iso.date(),
   consumers: z.array(consumerSchema).length(requiredConsumerIds.length),
 }).strict().superRefine((manifest, context) => {
+  if (compareVersions(manifest.minimumConsolidatedVersion, manifest.currentFrameworkVersion) > 0) {
+    context.addIssue({ code: 'custom', path: ['minimumConsolidatedVersion'], message: 'minimum consolidated version cannot exceed the current framework version' })
+  }
+  if (new Set(manifest.supportedConsolidatedVersions).size !== manifest.supportedConsolidatedVersions.length) {
+    context.addIssue({ code: 'custom', path: ['supportedConsolidatedVersions'], message: 'supported consolidated versions must be unique' })
+  }
+  if (!manifest.supportedConsolidatedVersions.includes(manifest.minimumConsolidatedVersion)
+    || !manifest.supportedConsolidatedVersions.includes(manifest.currentFrameworkVersion)) {
+    context.addIssue({ code: 'custom', path: ['supportedConsolidatedVersions'], message: 'supported consolidated versions must include the minimum and current versions' })
+  }
+  for (const [index, version] of manifest.supportedConsolidatedVersions.entries()) {
+    if (compareVersions(version, manifest.minimumConsolidatedVersion) < 0
+      || compareVersions(version, manifest.currentFrameworkVersion) > 0) {
+      context.addIssue({ code: 'custom', path: ['supportedConsolidatedVersions', index], message: 'supported consolidated versions must stay within the audited minimum and current boundaries' })
+    }
+    if (index > 0 && compareVersions(manifest.supportedConsolidatedVersions[index - 1], version) >= 0) {
+      context.addIssue({ code: 'custom', path: ['supportedConsolidatedVersions', index], message: 'supported consolidated versions must be strictly increasing' })
+    }
+  }
   const seen = new Set()
   for (const [index, consumer] of manifest.consumers.entries()) {
     const path = ['consumers', index]
@@ -128,8 +159,9 @@ export const ecosystemAdoptionSchema = z.object({
       context.addIssue({ code: 'custom', path: [...path, 'status'], message: 'only low-level binding examples may be excluded' })
     }
     if (consumer.status === 'certified') {
-      if (consumer.packageVersion !== manifest.frameworkVersion) {
-        context.addIssue({ code: 'custom', path: [...path, 'packageVersion'], message: 'certified consumers must use the exact framework version' })
+      if (consumer.packageVersion === null
+        || !manifest.supportedConsolidatedVersions.includes(consumer.packageVersion)) {
+        context.addIssue({ code: 'custom', path: [...path, 'packageVersion'], message: 'certified consumers must use an exact supported consolidated framework version' })
       }
       if (!['npm', 'workspace'].includes(consumer.consumption)) {
         context.addIssue({ code: 'custom', path: [...path, 'consumption'], message: 'certified consumers must consume the consolidated package' })
@@ -147,8 +179,8 @@ export const ecosystemAdoptionSchema = z.object({
         if (consumer.classification === 'product-chat' && consumer.evidence.production.status !== 'pass') {
           context.addIssue({ code: 'custom', path: [...path, 'evidence', 'production'], message: 'certified product chats require passing production evidence' })
         }
-      } else if (consumer.evidence.ciStatus !== 'pass' || consumer.evidence.productionStatus !== 'pass' || consumer.evidence.attestation !== 'private-audit-pass') {
-        context.addIssue({ code: 'custom', path: [...path, 'evidence'], message: 'certified private consumers require a complete private audit attestation' })
+      } else if (consumer.evidence.ciStatus !== 'pass' || consumer.evidence.productionStatus !== 'pass' || consumer.evidence.attestation !== 'chat-convergence-pass') {
+        context.addIssue({ code: 'custom', path: [...path, 'evidence'], message: 'certified private consumers require a complete Chat convergence attestation' })
       }
     }
   }
@@ -176,12 +208,21 @@ export const summarizeEcosystemAdoption = manifest => {
   }
 }
 
+export const formatEcosystemAdoptionResult = manifest => ({
+  schemaVersion: manifest.schemaVersion,
+  minimumConsolidatedVersion: manifest.minimumConsolidatedVersion,
+  currentFrameworkVersion: manifest.currentFrameworkVersion,
+  supportedConsolidatedVersions: manifest.supportedConsolidatedVersions,
+  ...summarizeEcosystemAdoption(manifest),
+})
+
 export const inspectEcosystemAdoption = async root => {
   const manifest = parseEcosystemAdoption(await readJson(join(root, 'ecosystem-adoption.json')))
   const workspace = await readJson(join(root, 'package.json'))
   const release = await readJson(join(root, 'release/manifest.json'))
   const diagnostics = []
   if (workspace.version !== release.version) diagnostics.push(`workspace version ${workspace.version} does not match release ${release.version}`)
+  if (manifest.currentFrameworkVersion !== release.version) diagnostics.push(`current framework version ${manifest.currentFrameworkVersion} does not match release ${release.version}`)
   return { diagnostics, manifest, summary: summarizeEcosystemAdoption(manifest) }
 }
 

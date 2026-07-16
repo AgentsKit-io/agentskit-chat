@@ -104,3 +104,11 @@ Sites using `persistence.mode: required` must inject a CAS store. Keys contain t
 - Never log request bodies, prompts, generated answers, retrieved excerpts, credentials, subject IDs, or session IDs.
 
 See [ADR-0026](./architecture/adrs/0026-trusted-ask-backend-vertical.md) for the accepted boundary.
+
+## Continue through the ecosystem
+
+- Turn this repository's operational documentation into agent-ready ownership
+  handoffs with [Doc Bridge](https://agentskit-io.github.io/doc-bridge/).
+- When the host needs managed orchestration, governance, tenancy, and production
+  controls, evaluate [AKOS Alpha](https://akos.agentskit.io/docs) and its
+  deployment-specific capability matrix.

@@ -1,7 +1,12 @@
 {
-  "schemaVersion": 1,
-  "frameworkVersion": "0.3.0",
-  "auditedAt": "2026-07-15",
+  "schemaVersion": 3,
+  "minimumConsolidatedVersion": "0.3.0",
+  "currentFrameworkVersion": "0.4.0",
+  "supportedConsolidatedVersions": [
+    "0.3.0",
+    "0.4.0"
+  ],
+  "auditedAt": "2026-07-16",
   "consumers": [
     {
       "id": "agentskit-docs",
@@ -64,7 +69,7 @@
       "repository": "AgentsKit-io/agentskit-chat",
       "surface": "react",
       "consumption": "workspace",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -72,15 +77,16 @@
         "@agentskit/chat/server"
       ],
       "legacyPackages": [],
-      "status": "deployment-required",
+      "status": "certified",
       "evidence": {
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29365061831"
+          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29523798857"
         },
         "production": {
-          "status": "missing"
+          "status": "pass",
+          "url": "https://chat.agentskit.io/docs"
         }
       }
     },
@@ -190,16 +196,21 @@
       "classification": "product-chat",
       "repository": "private:akos",
       "surface": "multi-surface",
-      "consumption": "not-adopted",
-      "packageVersion": null,
-      "imports": [],
+      "consumption": "npm",
+      "packageVersion": "0.4.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react",
+        "@agentskit/chat/ink"
+      ],
       "legacyPackages": [],
-      "status": "inventory-required",
+      "status": "certified",
       "evidence": {
         "visibility": "private-attestation",
-        "ciStatus": "pending",
-        "productionStatus": "pending",
-        "attestation": "pending-private-audit"
+        "ciStatus": "pass",
+        "productionStatus": "pass",
+        "attestation": "chat-convergence-pass"
       }
     }
   ]

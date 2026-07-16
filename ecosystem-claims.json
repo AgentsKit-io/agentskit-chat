@@ -9,6 +9,7 @@
       "noun": "public npm packages",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "packages/*/package.json",
         "summary": "Non-private workspace packages with public publishConfig."
       }
@@ -19,6 +20,7 @@
       "noun": "native renderers",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "release/manifest.json#/renderers",
         "summary": "Native renderer subpaths declared in the public release manifest."
       }
@@ -29,6 +31,7 @@
       "noun": "standard components",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "packages/react/catalog-support.json",
         "summary": "Registered application components in the closed catalog."
       }
@@ -39,6 +42,7 @@
       "noun": "conformance requirements",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "docs/conformance/matrix.generated.md",
         "summary": "Release-blocking renderer and protocol requirements."
       }
@@ -49,6 +53,7 @@
       "noun": "renderer quick starts",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "docs/getting-started/*.md",
         "summary": "Framework-specific adoption guides."
       }
@@ -59,16 +64,18 @@
       "noun": "example applications",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "apps/example-*",
         "summary": "Runnable proof apps for renderers and shared definitions."
       }
     },
     {
       "id": "architecture-adrs",
-      "value": 31,
+      "value": 33,
       "noun": "architecture ADRs",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": "docs/architecture/adrs",
         "summary": "Public architecture decision records."
       }
@@ -79,6 +86,7 @@
       "noun": "agent handoffs",
       "evidence": {
         "type": "repository-derivation",
+        "repo": "AgentsKit-io/agentskit-chat",
         "path": ".doc-bridge/index.json#/handoffs",
         "summary": "Doc Bridge agent-handoff entries for ownership routing."
       }

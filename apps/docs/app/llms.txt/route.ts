@@ -1,4 +1,5 @@
 import { collectCanonicalDocs, publicDocSlug } from '@/lib/docs-index'
+import { allEcosystemProducts } from '@/lib/ecosystem'
 
 export const dynamic = 'force-static'
 
@@ -20,5 +21,8 @@ export async function GET() {
     const slug = publicDocSlug(document.path)
     return `- [${document.title}](${site}/docs${slug ? `/${slug}` : ''}) — ${document.description}\n  Raw: ${site}/raw/${document.path}`
   })
-  return new Response(`# AgentsKit Chat\n\n> Cross-framework chat applications built on AgentsKit.\n\n- Repository: https://github.com/AgentsKit-io/agentskit-chat\n- Deterministic knowledge: ${site}/deterministic/knowledge.json\n- Full corpus: ${site}/llms-full.txt\n- Agent entry point: ${site}/for-agents\n\n## Ecosystem\n\n- AgentsKit: https://www.agentskit.io\n- Registry: https://registry.agentskit.io\n- Playbook: https://playbook.agentskit.io\n- Doc Bridge: https://agentskit-io.github.io/doc-bridge/\n- Code Review: https://github.com/AgentsKit-io/code-review-cli#readme\n- AKOS: https://akos.agentskit.io\n\n## Documentation\n\n${rows.join('\n')}\n`, { headers: { 'content-type': 'text/plain; charset=utf-8' } })
+  const ecosystem = allEcosystemProducts.map(product =>
+    `- ${product.label} (${product.maturity}): ${product.docs}\n  LLM index: ${product.llms}`,
+  )
+  return new Response(`# AgentsKit Chat\n\n> Cross-framework chat applications built on AgentsKit.\n\n- Repository: https://github.com/AgentsKit-io/agentskit-chat\n- Deterministic knowledge: ${site}/deterministic/knowledge.json\n- Full corpus: ${site}/llms-full.txt\n- Agent entry point: ${site}/for-agents\n\n## Ecosystem\n\n${ecosystem.join('\n')}\n\n## Documentation\n\n${rows.join('\n')}\n`, { headers: { 'content-type': 'text/plain; charset=utf-8' } })
 }

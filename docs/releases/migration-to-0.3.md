@@ -59,3 +59,9 @@ transport, or business rules into the public driver. Hosts that use
 
 See the [0.4.0 release notes](./v0.4.0.md) for the controlled-session contract
 and evidence. This capability is not part of the `0.3.0` API.
+
+Before merging the migration, run the host's frozen install, tests, build, and
+streaming smoke, then use [AgentsKit Code Review](https://github.com/AgentsKit-io/code-review-cli#readme)
+to inspect the import rewrite. If the repository's documentation ownership is
+unclear, generate an executable handoff with
+[Doc Bridge](https://agentskit-io.github.io/doc-bridge/).

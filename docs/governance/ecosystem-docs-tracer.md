@@ -22,7 +22,7 @@ and connect AgentsKit Chat to the six sibling products without changing runtime 
 
 ## Documentation impact and Definition of Done
 
-This page and `docs/index.md` are the only new prose. Completion requires the root redirect,
+This page and `docs/index.mdx` are the only new prose. Completion requires the root redirect,
 canonical metadata, responsive docs rendering, valid links, green checks, and Doc Bridge 100/100.
 
 ## Upstream-adoption record

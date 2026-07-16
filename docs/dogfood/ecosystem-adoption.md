@@ -5,10 +5,12 @@ post-v0 convergence program in [PRD #99](https://github.com/AgentsKit-io/agentsk
 It records what is certified today and what remains incomplete; it is not a
 promotional wishlist.
 
-`frameworkVersion` is the exact certification baseline proven by the consumer
-evidence, not an alias for the repository's next release version. It advances
-only after those consumers adopt and prove a newer published version. The
-workspace and release manifest versions must still match each other.
+`minimumConsolidatedVersion` is the first package line that replaced the legacy
+standalone packages. `currentFrameworkVersion` follows the current public
+release, and `supportedConsolidatedVersions` is the closed set of exact releases
+backed by evidence. Every consumer records one member of that set; ranges and
+inferred intermediate patches fail closed. The
+workspace, release manifest, and current framework version must agree.
 
 Private workspace modules keep internal implementation versions and are not
 independent release identities. Governance metadata agreement applies to the
@@ -19,6 +21,7 @@ Validate it locally with:
 
 ```bash
 pnpm ecosystem:adoption:check
+pnpm ecosystem:claims:live
 pnpm test:ecosystem-adoption
 ```
 
@@ -43,10 +46,13 @@ pnpm test:ecosystem-adoption
 | `inventory-required` | A private or complex consumer needs an approved boundary audit before migration. |
 | `excluded` | A low-level example is intentionally outside the product-chat total. |
 
-The current baseline certifies four of six declared product chats after the
-Doc Bridge production host adopted the consolidated package. The Chat portal
-still requires its canonical deployment and AKOS still requires bounded private
-certification; schema validity must never be confused with full convergence.
+The 2026-07-16 baseline certifies all six declared product chats. The Chat portal
+was promoted through its protected immutable deployment workflow and AKOS passed
+the bounded Chat-convergence attestation at exact 0.4.0. That private statement
+covers dependency, renderer, CI, terminal, and public production smoke only; it
+does not certify every AKOS capability or disclose private implementation detail.
+Schema validity must never be confused with freshness, so the final release gate
+still re-reads public evidence and npm state immediately before HITL approval.
 
 ## Evidence rules
 
@@ -74,3 +80,8 @@ business rules, topology, or data.
 
 Adding a new declared consumer changes the certification scope and therefore
 requires an ADR review rather than an unreviewed JSON append.
+
+The final operator check is intentionally live: `pnpm release:deprecation:preflight`
+re-reads every public evidence URL, the consolidated package exports, and all
+legacy package metadata from the npm registry. Both the deterministic plan and
+this live preflight must report `READY FOR HITL`; neither command mutates npm.

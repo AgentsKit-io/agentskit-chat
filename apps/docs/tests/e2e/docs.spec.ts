@@ -92,7 +92,15 @@ test('publishes canonical folder indexes, metadata, and machine-readable public 
   const concise = await llms.text()
   expect(concise).toContain('AgentsKit Chat')
   expect(concise.length).toBeLessThan(10_000)
-  expect(concise).toContain('https://akos.agentskit.io')
+  for (const product of [
+    'https://www.agentskit.io/docs',
+    'https://registry.agentskit.io/docs',
+    'https://chat.agentskit.io/docs',
+    'https://playbook.agentskit.io/docs',
+    'https://agentskit-io.github.io/doc-bridge/',
+    'https://github.com/AgentsKit-io/code-review-cli#readme',
+    'https://akos.agentskit.io/docs',
+  ]) expect(concise).toContain(product)
   expect(full.ok()).toBe(true)
   const complete = await full.text()
   expect(complete).toContain('canonical documentation corpus')

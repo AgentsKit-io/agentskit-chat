@@ -30,11 +30,13 @@ export const legacyPackageReplacements = {
 }
 
 export const legacyDeprecationPlanSchema = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   migrationUrl: z.literal('https://chat.agentskit.io/docs/releases/migration-to-0.3'),
   packages: z.array(z.object({
     name: z.enum(legacyPackageNames),
     replacement: replacementSchema,
+    expectedLatest: z.literal('0.2.0'),
+    expectedVersions: z.tuple([z.literal('0.1.0'), z.literal('0.2.0')]),
   }).strict()).length(legacyPackageNames.length),
 }).strict().superRefine((plan, context) => {
   const names = plan.packages.map(entry => entry.name)
