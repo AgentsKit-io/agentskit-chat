@@ -20,7 +20,9 @@ Core packages require the published AgentsKit ranges in their manifests:
 The release workflow builds on Node 24 with npm 11 and also runs the normal CI
 matrix on Node 22.
 
-The [generated conformance matrix](../conformance/matrix.generated.md) is the
-release-blocking component/event/platform record. A range being installable is
-not enough: a new upstream version is promoted only after the repository gates
-pass against it.
+The [generated conformance matrix](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/conformance/matrix.generated.md)
+is the release-blocking component/event/platform record (repository artifact).
+A range being installable is not enough: a new upstream version is promoted only
+after the repository gates pass against it.
+
+See also [Stability](/docs/releases/stability).

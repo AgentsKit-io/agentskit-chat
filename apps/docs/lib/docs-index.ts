@@ -1,5 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { isPublicDocPath } from './public-docs'
 
 const root = join(process.cwd(), '..', '..', 'docs')
 
@@ -16,6 +17,7 @@ export function publicDocSlug(path: string): string {
     .replace(/(^|\/)(?:README|index)$/, '')
 }
 
+/** Public product docs only — never ships private maintainer trees (architecture, PRD, ADRs, …). */
 export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
   const documents: CanonicalDoc[] = []
   const walk = async (directory: string, prefix: string[]): Promise<void> => {
@@ -24,6 +26,8 @@ export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
       const full = join(directory, entry.name)
       if (entry.isDirectory()) await walk(full, [...prefix, entry.name])
       else if (/\.mdx?$/.test(entry.name)) {
+        const path = [...prefix, entry.name].join('/')
+        if (!isPublicDocPath(path)) continue
         const body = await readFile(full, 'utf8')
         const title = frontmatterValue(body, 'title')
           ?? body.match(/^#\s+(.+)$/m)?.[1]?.trim()
@@ -31,7 +35,7 @@ export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
         const description = frontmatterValue(body, 'description')
           ?? body.replace(/^---\n[\s\S]*?\n---\n?/, '').split('\n').find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
           ?? ''
-        documents.push({ path: [...prefix, entry.name].join('/'), title, description, body })
+        documents.push({ path, title, description, body })
       }
     }
   }

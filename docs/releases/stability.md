@@ -16,9 +16,18 @@ AgentsKit Chat follows SemVer as a fixed package group.
 
 Applications should pin a minor line (`^0.4.0` for this release), commit their
 lockfile, run renderer conformance and host E2E before upgrades, and review both
-the changelog and migration guide. Stable `0.1.x` consumers should follow the
-[0.2 migration](./migration-to-0.2.md). Alpha GitHub tarball consumers should
-follow [the alpha migration](./migration-from-alpha.md). Stable `0.2.x`
-consumers should follow the [0.3 package consolidation migration](./migration-to-0.3.md).
+the changelog and migration guide.
+
+## Migration guides (repository)
+
+Maintainer migration notes live in the monorepo (not every path is on the
+public product site):
+
+- [0.2 migration](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-to-0.2.md)
+- [Alpha → stable migration](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-from-alpha.md)
+- [0.3 package consolidation](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-to-0.3.md)
+
 Applications already on `0.3.x` can adopt `0.4.0` without changing their
 definition-owned sessions; controlled React and Ink modes are additive.
+
+See also [Compatibility](/docs/releases/compatibility).

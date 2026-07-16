@@ -81,13 +81,15 @@ test('keeps unavailable backend behavior explicit and supports keyboard focus', 
 })
 
 test('publishes public docs surface and keeps machine-readable artifacts', async ({ request }) => {
-  const [home, docs, guide, llms, knowledge, raw, architecture, product] = await Promise.all([
+  const [home, docs, guide, llms, llmsFull, knowledge, raw, rawPrivate, architecture, product] = await Promise.all([
     request.get('/'),
     request.get('/docs'),
     request.get('/docs/guides/install-and-run'),
     request.get('/llms.txt'),
+    request.get('/llms-full.txt'),
     request.get('/deterministic/knowledge.json'),
     request.get('/raw/backend.mdx'),
+    request.get('/raw/architecture/overview.md'),
     request.get('/docs/architecture/overview'),
     request.get('/docs/product/PRD'),
   ])
@@ -97,10 +99,16 @@ test('publishes public docs surface and keeps machine-readable artifacts', async
   expect(guide.ok()).toBe(true)
   expect(await guide.text()).toContain('Install and run')
   expect(llms.ok()).toBe(true)
+  expect(llmsFull.ok()).toBe(true)
+  const llmsBody = await llms.text()
+  expect(llmsBody).not.toContain('architecture/overview')
+  expect(llmsBody).not.toContain('for-agents/index')
+  expect(await llmsFull.text()).not.toMatch(/<!-- architecture\//)
   expect(knowledge.ok()).toBe(true)
   expect(raw.ok()).toBe(true)
   expect(await raw.text()).toMatch(/createAskServiceHandler|Ask backend/i)
-  // private maintainer docs must not be on the public site
+  // private maintainer docs must not be on the public site (HTML or raw/llms)
+  expect(rawPrivate.status()).toBe(404)
   expect(architecture.status()).toBe(404)
   expect(product.status()).toBe(404)
 })

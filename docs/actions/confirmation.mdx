@@ -42,16 +42,25 @@ With [sessions](/docs/sessions), resolution first claims `approving` / `rejectin
 ```ts
 import { createActionConfirmation } from '@agentskit/chat'
 
-const handle = createActionConfirmation({
+// chat must expose proposeToolCall / approve / deny (e.g. from the controlled driver)
+const confirmation = createActionConfirmation({
   sessionId: session.sessionId,
-  action: 'email.send',
-  input: { to: 'ada@example.com' },
-  toolCallId: call.id,
-  chat: { proposeToolCall, approve, deny },
+  chat: {
+    proposeToolCall: chat.proposeToolCall,
+    approve: chat.approve,
+    deny: chat.deny,
+  },
 })
 
-// UI shows confirm/deny bound to handle.token
-await handle.approve() // or handle.reject(reason)
+// Propose a tool call — returns a pending record with token + toolCallId
+const record = await confirmation.propose({
+  name: 'email.send',
+  input: { to: 'ada@example.com' },
+})
+
+// UI shows confirm/deny bound to record.token
+await confirmation.approve(record.token, session.sessionId)
+// or: await confirmation.reject(record.token, session.sessionId, 'user denied')
 ```
 
 ### Invariants

@@ -72,7 +72,6 @@ export const source = {
         || isPublicDocPath(`${joined}.mdx`)
         || isPublicDocPath(`${joined}/index.mdx`)
         || isPublicDocPath(`${joined}/README.md`)
-        || isPublicDocPath(`getting-started/${joined.split('/').pop()}.md`)
       )
     })
   },

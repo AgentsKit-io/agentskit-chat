@@ -58,10 +58,14 @@ export function Support() {
 import { createChatHandler } from '@agentskit/chat/server'
 import { createSupportChat } from './support-chat'
 import { adapter } from './adapter'
+import { storage } from './session-storage'
+
+const definition = createSupportChat(adapter)
 
 export const POST = createChatHandler({
-  definition: createSupportChat(adapter),
+  resolveDefinition: () => definition,
+  sessionStorage: () => storage,
 })
 ```
 
-See [Connect backend](/docs/guides/connect-backend) and [Sessions](/docs/sessions).
+See [Connect backend](/docs/guides/connect-backend), [Server](/docs/server), and [Sessions](/docs/sessions).

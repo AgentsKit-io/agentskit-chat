@@ -30,7 +30,7 @@ description: "A labelled set of action buttons with one select event. Component 
 | --- | --- | --- |
 | `label` | string (1–256) | Group label (fieldset legend) |
 | `buttons` | 1–12 items | Each has `id`, `label`, optional `disabled`, optional `variant` |
-| `buttons[].variant` | `primary` \| `secondary` \| `danger` | Visual hint for the host shell |
+| `buttons[].variant` | `primary` \| `secondary` \| `danger` | Optional schema hint — stock shells do not style by variant; map it in your theme/slots |
 | `buttons[].disabled` | boolean | If true, select is rejected by validation |
 
 ## Frame example
