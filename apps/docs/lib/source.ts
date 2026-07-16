@@ -1,5 +1,6 @@
 import { docs } from '@/.source'
-import { getSlugs, loader, type LoaderOutput, type LoaderConfig } from 'fumadocs-core/source'
+import { getSlugs, loader } from 'fumadocs-core/source'
+import type { PageTree } from 'fumadocs-core/server'
 import { isPublicDocPath } from './public-docs'
 
 const base = loader({
@@ -12,13 +13,15 @@ const base = loader({
       : getSlugs(info),
 })
 
-function filterTree(node: any): any {
-  if (!node) return node
-  if (node.type === 'page') {
-    const file = node.$ref?.file ?? node.file ?? ''
-    const path = typeof file === 'string' ? file : file?.path ?? node.url?.replace(/^\/docs\/?/, '') ?? ''
-    // Keep separator items
-    if (node.name && !node.url) return node
+function isPageTreeNode(node: PageTree.Node | null): node is PageTree.Node {
+  return node !== null
+}
+
+function filterTree(node: PageTree.Root): PageTree.Root
+function filterTree(node: PageTree.Node): PageTree.Node | null
+function filterTree(node: PageTree.Root | PageTree.Node): PageTree.Root | PageTree.Node | null {
+  if ('type' in node && node.type === 'page') {
+    const path = node.$ref?.file ?? node.url.replace(/^\/docs\/?/, '')
     // pages have url like /docs/...
     const rel = (node.$id ?? path ?? '').toString().replace(/^docs\//, '')
     // If we can't resolve, keep if url looks public
@@ -36,9 +39,9 @@ function filterTree(node: any): any {
     }
     return null
   }
-  if (node.children) {
-    const children = node.children.map(filterTree).filter(Boolean)
-    if (children.length === 0 && node.type === 'folder') return null
+  if ('children' in node) {
+    const children = node.children.map(filterTree).filter(isPageTreeNode)
+    if (children.length === 0 && 'type' in node && node.type === 'folder') return null
     return { ...node, children }
   }
   return node
@@ -57,7 +60,7 @@ export const source = {
       // allow root index
       const joined = (slug ?? []).join('/')
       if (!isPublicDocPath(`${joined}.md`) && !isPublicDocPath(`${joined}.mdx`) && !isPublicDocPath(`${joined}/index.mdx`) && !isPublicDocPath(`${joined}/README.md`)) {
-        return undefined as any
+        return undefined
       }
     }
     return page
