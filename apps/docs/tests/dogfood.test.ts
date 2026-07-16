@@ -51,7 +51,14 @@ describe('documentation dogfood', () => {
       'code-review',
       'akos',
     ])
-    expect(ecosystemBarProducts.map(product => product.id)).toEqual(allEcosystemProducts.map(product => product.id))
+    expect(ecosystemBarProducts.map(product => product.id)).toEqual([
+      'agentskit',
+      'registry',
+      'agentskit-chat',
+      'playbook',
+      'doc-bridge',
+      'akos',
+    ])
     expect(allEcosystemProducts.find(product => product.id === 'akos')).toEqual(expect.objectContaining({
       docs: 'https://akos.agentskit.io/docs',
       maturity: 'stable',
