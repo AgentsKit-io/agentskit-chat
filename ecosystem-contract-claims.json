@@ -203,7 +203,7 @@
         },
         {
           "id": "getting-started-guides",
-          "value": 7,
+          "value": 0,
           "noun": "renderer quick starts",
           "evidence": {
             "type": "repository-derivation",
