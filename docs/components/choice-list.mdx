@@ -1,0 +1,94 @@
+---
+title: ChoiceList
+description: Schema-backed choice UI — same selection event on every renderer.
+---
+
+# ChoiceList
+
+`ChoiceList` is the primary interactive component: one prompt, 1–20 choices, one `agentskit.chat.component` v1 selection event on every shell.
+
+## Live
+
+<ComponentGallery />
+
+(See the **Choice list** card above, or the full [gallery](/docs/examples/components).)
+
+## Declare
+
+```ts
+import { ChoiceListComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+
+export const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ChoiceListComponent]),
+  // or StandardComponentCatalog for the full closed set
+  chat: { adapter },
+})
+```
+
+Only declared keys can render. `resolveComponentFrame(frame, components)` validates envelope + props schema.
+
+## Render frame (untrusted)
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "choice-list",
+  "instanceId": "destination-choice",
+  "props": {
+    "prompt": "Where should we go?",
+    "choices": [
+      { "id": "docs", "label": "Documentation", "description": "Read the guide." },
+      { "id": "demo", "label": "Demo" }
+    ]
+  },
+  "fallback": { "kind": "choice-list", "summary": "Choose Documentation or Demo." }
+}
+```
+
+Frames may come from the model or a deterministic route — always resolve before rendering.
+
+## Typed actions
+
+A choice may declare:
+
+```ts
+{ action: { name: 'email.send', input: { to: 'ada@example.com' } } }
+```
+
+- Name resolves only through `ChatConfig.tools` ([AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations)).
+- Tool must be executable, opt into confirmation, and pass argument validation.
+- Selection **proposes** a tool call — it never executes.
+
+See [Action policy](/docs/actions/policy) and [Confirmation](/docs/actions/confirmation).
+
+## Host callbacks
+
+```tsx
+<AgentChat
+  definition={definition}
+  onComponentSelect={(event) => {
+    // { type: 'select', componentKey, instanceId, choiceId }
+  }}
+  onComponentInteract={(event) => {
+    // form / confirm / open / download intents
+  }}
+/>
+```
+
+## Native renderers
+
+| Shell | Component |
+| --- | --- |
+| React | `<ChoiceList />` fieldset + buttons |
+| Vue / Svelte / Solid / Angular | native fieldset patterns + replaceable slots |
+| React Native | `<ChoiceListNative />` |
+| Ink | arrow keys / number + Enter |
+
+## Related
+
+- [Component catalog](/docs/components/catalog)
+- [Examples](/docs/examples/components)
+- [Action policy](/docs/actions/policy)

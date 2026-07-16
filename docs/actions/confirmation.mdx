@@ -1,0 +1,68 @@
+---
+title: Action confirmation
+description: Typed confirmation handles for side effects — pending, approving, terminal.
+---
+
+# Typed action confirmation
+
+Selection **proposes** a tool call; it never executes. React / RN / Ink render AgentsKit confirmation UI. Manual hosts use `createActionConfirmation`.
+
+## Status machine
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  pending --> approving\n' +
+      '  pending --> rejecting\n' +
+      '  pending --> expiring\n' +
+      '  approving --> approved\n' +
+      '  rejecting --> rejected\n' +
+      '  expiring --> expired'
+  }
+/>
+
+Without persistent storage, a choice moves `pending` → terminal (`approved` / `rejected` / `expired`) after upstream success.
+
+With [sessions](/docs/sessions), resolution first claims `approving` / `rejecting` / `expiring` via CAS, only the winning client delegates, then the terminal status is persisted.
+
+## Fields
+
+| Field | Meaning |
+| --- | --- |
+| `token` | Opaque session correlation handle — **not** authentication |
+| `sessionId` | Session allowed to approve or reject |
+| `action` | Registered upstream tool name |
+| `input` | Validated, immutable argument snapshot |
+| `toolCallId` | Canonical AgentsKit tool-call identity |
+| `expiresAt` | Absolute expiry checked before approval |
+| `status` | `pending` · processing · terminal |
+
+## Example
+
+```ts
+import { createActionConfirmation } from '@agentskit/chat'
+
+const handle = createActionConfirmation({
+  sessionId: session.sessionId,
+  action: 'email.send',
+  input: { to: 'ada@example.com' },
+  toolCallId: call.id,
+  chat: { proposeToolCall, approve, deny },
+})
+
+// UI shows confirm/deny bound to handle.token
+await handle.approve() // or handle.reject(reason)
+```
+
+### Invariants
+
+- Concurrent replay cannot execute twice (CAS claim before delegation).
+- Token from another session is inert.
+- Processing + terminal records stay inert on resume after crash.
+- This is **not** an audit ledger — attach approver identity and persist audit in the host if needed.
+
+## Related
+
+- [Action policy](/docs/actions/policy)
+- [Sessions](/docs/sessions)
+- [Components gallery](/docs/examples/components)

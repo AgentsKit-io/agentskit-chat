@@ -1,0 +1,148 @@
+---
+title: Deployment
+description: Deploy the same ChatDefinition on Next, Hono, Express, and edge — Web-standard handlers.
+---
+
+# Deployment modes
+
+The shared `ChatDefinition` is unchanged across deployment modes. Only the adapter, trusted host context, storage, and native renderer vary.
+
+## Topology
+
+<Mermaid
+  chart={
+    'flowchart TB\n' +
+      '  subgraph clients [Clients]\n' +
+      '    W[Web React Vue …]\n' +
+      '    M[React Native]\n' +
+      '    T[Ink terminal]\n' +
+      '  end\n' +
+      '  subgraph edge [Your edge / server]\n' +
+      '    CH[createChatHandler]\n' +
+      '    ASK[createAskServiceHandler]\n' +
+      '  end\n' +
+      '  subgraph ak [AgentsKit substrate]\n' +
+      '    AD[Adapters providers]\n' +
+      '    RG[RAG memory tools]\n' +
+      '  end\n' +
+      '  W --> CH\n' +
+      '  M --> CH\n' +
+      '  T --> CH\n' +
+      '  W --> ASK\n' +
+      '  CH --> AD\n' +
+      '  ASK --> RG'
+  }
+/>
+
+## Next.js App Router
+
+```ts
+// app/api/chat/route.ts
+import { createChatHandler } from '@agentskit/chat/server'
+import { verifyBearer } from '@/lib/auth'
+import { chats } from '@/lib/chats'
+import { sessions } from '@/lib/session-storage'
+
+const handler = createChatHandler({
+  authenticate: async request => {
+    const identity = await verifyBearer(request)
+    return identity
+      ? { ok: true, context: identity }
+      : { ok: false, response: new Response('Unauthorized', { status: 401 }) }
+  },
+  resolveDefinition: context => chats.forTenant(context?.tenantId),
+  sessionStorage: context => sessions.forTenant(context?.tenantId),
+})
+
+export const POST = (request: Request) => handler(request)
+```
+
+Ask route: same pattern with [`createAskServiceHandler`](/docs/backend).
+
+## Hono
+
+```ts
+import { Hono } from 'hono'
+import { createChatHandler } from '@agentskit/chat/server'
+
+const chat = createChatHandler({ /* authenticate, resolveDefinition, sessionStorage */ })
+const app = new Hono()
+app.post('/api/chat', c => chat(c.req.raw))
+export default app
+```
+
+## Express (Node 18+)
+
+```ts
+import express from 'express'
+import { createChatHandler } from '@agentskit/chat/server'
+
+const chat = createChatHandler({ /* … */ })
+const app = express()
+
+app.post('/api/chat', async (req, res) => {
+  const disconnected = new AbortController()
+  const abort = () => { if (!res.writableEnded) disconnected.abort() }
+  req.once('aborted', abort)
+  res.once('close', abort)
+
+  const headers = new Headers()
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (typeof value === 'string') headers.set(key, value)
+    else if (Array.isArray(value)) value.forEach(item => headers.append(key, item))
+  }
+
+  const request = new Request(`http://${req.headers.host}${req.url}`, {
+    method: 'POST',
+    headers,
+    body: req,
+    duplex: 'half',
+    signal: disconnected.signal,
+  } as RequestInit)
+
+  const response = await chat(request)
+  res.status(response.status)
+  response.headers.forEach((v, k) => res.setHeader(k, v))
+  if (!response.body) { res.end(); return }
+  const reader = response.body.getReader()
+  const pump = async (): Promise<void> => {
+    const { done, value } = await reader.read()
+    if (done) { res.end(); return }
+    res.write(Buffer.from(value))
+    return pump()
+  }
+  await pump()
+})
+```
+
+## Cloudflare Worker
+
+```ts
+import { createChatHandler } from '@agentskit/chat/server'
+
+const chat = createChatHandler({ /* … */ })
+
+export default {
+  fetch(request: Request) {
+    if (new URL(request.url).pathname === '/api/chat' && request.method === 'POST') {
+      return chat(request)
+    }
+    return new Response('Not found', { status: 404 })
+  },
+}
+```
+
+## Checklist
+
+1. Shared `defineChat` definition (no secrets in the client)
+2. Server-side adapter + keys via [AgentsKit providers](https://www.agentskit.io/docs/data/providers)
+3. Auth before body parse
+4. CAS [`SessionStorage`](/docs/sessions)
+5. Native shell per surface ([examples](/docs/examples/multi-surface))
+
+## Related
+
+- [Server](/docs/server)
+- [Backend Ask](/docs/backend)
+- [Connect backend](/docs/guides/connect-backend)
+- [CLI](/docs/cli)

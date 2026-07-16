@@ -1,0 +1,113 @@
+---
+title: Hosted and self-hosted Ask backend
+description: Production Ask handler for grounded semantic answers — one protocol, host-owned adapters.
+---
+
+# Hosted and self-hosted Ask backend
+
+`createAskServiceHandler` is the production boundary for semantic questions that the **deterministic plane** cannot answer. One public protocol in every deployment; all authority is derived **server-side**.
+
+Chat does **not** reimplement embeddings, vector search, or model transport. Those stay on [AgentsKit](https://www.agentskit.io/docs) — RAG, providers/adapters, and memory.
+
+## How a question is answered
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  Q["Exact question"] --> D{"Deterministic artifact"}\n' +
+      '  D -->|"match"| L["Local cited answer"]\n' +
+      '  D -->|"miss"| H["Trusted Ask handler"]\n' +
+      '  H --> A["Authenticate and resolve site"]\n' +
+      '  A --> R["AgentsKit RAG / Retriever"]\n' +
+      '  R --> G["AgentsKit provider / adapter"]\n' +
+      '  G --> C["Cited Ask NDJSON"]\n' +
+      '  C --> P["CAS persistence + private metrics"]'
+  }
+/>
+
+1. **Exact / known** questions hit the local deterministic artifact (no model).
+2. **Misses** escalate to the trusted Ask handler.
+3. Host injects auth, site policy, retriever, generator, rate limits, and storage.
+
+## Shared production factory
+
+```ts
+import { createAskServiceHandler } from '@agentskit/chat/server'
+
+export const ask = createAskServiceHandler({
+  authenticate: (request, signal) => auth.verify(request, signal),
+  resolveSite: (identity, signal) => siteRegistry.resolve(identity.siteId, signal),
+  resolveSubjectId: identity => identity.subjectId,
+  retrievers: {
+    local: { retrieve: input => localRag.retrieve(input) },
+    federated: { retrieve: input => federatedRag.retrieve(input) },
+  },
+  generator: providerGenerator,
+  sessionStore: durableCasStore,
+  rateLimit: input => limiter.consume(input.site.siteId, input.subjectId, input.signal),
+  onMetric: metric => telemetry.record(metric),
+})
+```
+
+- `localRag` / `federatedRag` wrap [AgentsKit RAG / Retriever](https://www.agentskit.io/docs/data/rag).
+- `providerGenerator` uses an [AgentsKit provider/adapter](https://www.agentskit.io/docs/data/providers) — Chat never ships model SDKs.
+
+<AdaptersCallout />
+
+## Hosted route (Next.js)
+
+```ts
+// app/api/ask/route.ts
+import { createAskServiceHandler } from '@agentskit/chat/server'
+
+const handler = createAskServiceHandler({ /* host adapters above */ })
+
+export const POST = (request: Request) => handler(request)
+```
+
+## Self-hosted / edge
+
+The same handler works wherever Web `Request`/`Response` exist (Hono, Workers, Node 18+). Keep secrets and policy on the server — never in the client shell.
+
+## Client shell (docs assistant pattern)
+
+```tsx
+import { defineChat, createAskAdapter, createDeterministicAnswerAdapter } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const ask = createAskAdapter({ endpoint: '/api/ask', corpus: 'public', persona: 'guide' })
+const adapter = createDeterministicAnswerAdapter({
+  artifact: verifiedKnowledge,
+  fallbackMode: 'backend',
+  fallback: ask,
+})
+
+export const docsChat = defineChat({
+  id: 'docs',
+  chat: { adapter },
+})
+
+export const DocsAssistant = () => (
+  <AgentChat definition={docsChat} placeholder="Ask about the product…" />
+)
+```
+
+Live on this site: the floating **Ask the docs** button uses this stack.
+
+## Security invariants
+
+| Rule | Why |
+| --- | --- |
+| Auth before body parse | Untrusted JSON never runs unauthenticated |
+| Site policy server-side | Client corpus/persona are equality hints only |
+| Citations required | Successful answers include ≥1 safe citation |
+| Host owns rate limits | Framework does not ship multi-tenant infra |
+
+## Related
+
+- [Connect backend](/docs/guides/connect-backend)
+- [Server handler](/docs/server)
+- [Add RAG](/docs/guides/add-rag)
+- [Deployment](/docs/deployment)
+- [AgentsKit RAG](https://www.agentskit.io/docs/data/rag)
+- [AgentsKit providers](https://www.agentskit.io/docs/data/providers)

@@ -1,0 +1,90 @@
+---
+title: Sessions
+description: Cross-client session metadata with CAS storage — AgentsKit keeps message authority.
+---
+
+# Persistent cross-client sessions
+
+[AgentsKit](https://www.agentskit.io/docs) remains the **message** authority. Put a `ChatMemory` on `definition.chat.memory`, then store only Chat **application metadata** through `SessionStorage`.
+
+## Split of ownership
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  Def[ChatDefinition] --> Mem[AgentsKit ChatMemory]\n' +
+      '  Def --> Meta[SessionStorage CAS]\n' +
+      '  Mem --> Msgs[Messages tools streams]\n' +
+      '  Meta --> App[Routes state confirmations cursor]'
+  }
+/>
+
+| Concern | Owner | Store |
+| --- | --- | --- |
+| Messages, tools, streams | AgentsKit | `ChatMemory` / provider |
+| Routes, app state, confirmations, cursor | AgentsKit Chat | `SessionStorage` |
+
+## Resume on any shell
+
+```tsx
+import { resumeChatSession } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const session = await resumeChatSession(definition, {
+  sessionId: 'customer-42',
+  storage: applicationSessionStorage,
+})
+
+export const Support = () => (
+  <AgentChat definition={definition} session={session} />
+)
+```
+
+The same preparation works before mounting React Native or Ink: load the same `sessionId`, point `ChatConfig.memory` at the same conversation.
+
+## CAS contract (required)
+
+`SessionStorage.save(snapshot, expectedCursor)` must be **atomic**:
+
+| `expectedCursor` | Behavior |
+| --- | --- |
+| `undefined` | Create only |
+| stored value | Update only if cursor matches |
+| mismatch | Return `false` (conflict) |
+
+A plain last-write-wins key/value write is **unsafe** — two resumed clients must not resolve the same pending action.
+
+## Snapshot shape
+
+Protocol `agentskit.chat.session` v1 includes:
+
+- definition identity + revision
+- deterministic application state
+- monotonic cursor
+- pending or terminal confirmation bindings
+
+**Never messages.** Increment `definition.revision` when a state-machine change invalidates old application metadata.
+
+## Hydration rules
+
+| Load result | Behavior |
+| --- | --- |
+| `null` / `undefined` | Start clean |
+| Invalid JSON / unknown version | Reject before hydration |
+| Session / definition / revision mismatch | Reject |
+
+Version 0 is the only implicit migration currently supported.
+
+## Persist and confirmations
+
+- Call `session.persist()` at an explicit durability boundary.
+- Deterministic transitions also schedule saves.
+- Confirmation changes **await** durable storage; failure rejects the operation.
+- Resolution uses durable processing status before delegation; terminal status only after upstream success.
+
+## Related
+
+- [Server handler](/docs/server)
+- [Action confirmation](/docs/actions/confirmation)
+- [Routes and state](/docs/conversation/routes-and-state)
+- [AgentsKit memory](https://www.agentskit.io/docs/data/memory)

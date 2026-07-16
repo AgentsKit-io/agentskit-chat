@@ -1,0 +1,62 @@
+---
+title: Streaming lifecycle
+description: Cancel, retry, edit, regenerate — AgentsKit owns semantics; Chat shells expose them.
+---
+
+# Streaming lifecycle
+
+[AgentsKit](https://www.agentskit.io/docs) owns the lifecycle. AgentsKit Chat renderers expose the same `ChatReturn` operations without reimplementing abort or stream reducers.
+
+## Operations
+
+| Operation | AgentsKit method | Default shell |
+| --- | --- | --- |
+| Cancel | `stop()` | Stop button · Escape in Ink |
+| Retry | `retry()` | Retry · `/retry` in Ink |
+| Edit | `edit(messageId, content)` | Edit last message · `/edit …` in Ink |
+| Regenerate | `regenerate(messageId?)` | Regenerate · `/regenerate` in Ink |
+
+## Visual map
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  stream[Streaming turn] --> stop[stop]\n' +
+      '  done[Complete turn] --> retry[retry]\n' +
+      '  done --> regen[regenerate]\n' +
+      '  done --> edit[edit + recompute]'
+  }
+/>
+
+Cancellation aborts the upstream source. AgentsKit prevents late chunks from mutating canonical state after abort.
+
+## Lineage and reconnect
+
+A v1 `server.turn.snapshot` may include lineage:
+
+```json
+{
+  "lineage": {
+    "operation": "regenerate",
+    "parentTurnId": "turn-previous",
+    "sourceMessageId": "message-assistant"
+  }
+}
+```
+
+- `createSnapshotEvent(...)` projects canonical messages + submit/retry/edit/regenerate lineage.
+- `createTurnSnapshotCursor(sessionId)` applies snapshots from a transport.
+- First valid snapshot initializes reconnect; later snapshots need a greater sequence.
+- Duplicate, stale, malformed, and foreign-session events are no-ops.
+
+Snapshots are complete projections. The cursor chooses the current projection — it never merges messages or interprets adapter chunks.
+
+## In the docs assistant
+
+The floating **Ask the docs** shell shows Retry / Regenerate / Edit after a completed turn — same operations as production shells.
+
+## Related
+
+- [Server](/docs/server)
+- [Sessions](/docs/sessions)
+- [Basic chat example](/docs/examples/basic-chat)

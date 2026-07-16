@@ -1,0 +1,89 @@
+---
+title: Server handler
+description: Mount createChatHandler for Web-standard streaming turns with session CAS and auth.
+---
+
+# Web-standard server handler
+
+`createChatHandler` mounts one shared `ChatDefinition` behind platform `Request`, `Response`, `ReadableStream`, and `AbortSignal`.
+
+For grounded Q&A after deterministic misses, use [`createAskServiceHandler`](/docs/backend).
+
+## Turn flow
+
+<Mermaid
+  chart={
+    'flowchart TD\n' +
+      '  C[Client shell] -->|client.turn.submit JSON| H[createChatHandler]\n' +
+      '  H --> A{Authenticate}\n' +
+      '  A -->|fail| R401[Host 401 response]\n' +
+      '  A -->|ok| D[Resolve definition + session]\n' +
+      '  D --> CAS[CAS claim turn lease]\n' +
+      '  CAS --> AK[AgentsKit controller + adapter]\n' +
+      '  AK --> ND[NDJSON turn events]\n' +
+      '  ND --> C'
+  }
+/>
+
+## Minimal handler
+
+```ts
+import { createChatHandler } from '@agentskit/chat/server'
+
+const handleChat = createChatHandler({
+  authenticate: async request => {
+    const identity = await verifyBearer(request)
+    return identity
+      ? { ok: true, context: identity }
+      : { ok: false, response: new Response('Unauthorized', { status: 401 }) }
+  },
+  resolveDefinition: context => chats.forTenant(context?.tenantId),
+  sessionStorage: context => sessions.forTenant(context?.tenantId),
+  timeoutMs: 30_000,
+})
+
+export const POST = (request: Request) => handleChat(request)
+```
+
+### Request / response
+
+| Direction | Format |
+| --- | --- |
+| Request body | `application/json` encoded `client.turn.submit` |
+| Success body | `application/x-ndjson` — one encoded turn event per line |
+| Decode | `decodeTurnEvent` from `@agentskit/chat/protocol` |
+
+Auth completes **before** parsing untrusted JSON. Trusted context lives only in the host closure — never from the submit payload.
+
+## Sessions and memory
+
+- **Messages** → `definition.chat.memory` ([AgentsKit memory](https://www.agentskit.io/docs/data/memory))
+- **Application metadata** → CAS [`SessionStorage`](/docs/sessions)
+
+`sessionStorage` is required: cursor, active-turn lease, and recent terminal turns prevent rollback, concurrent execution, and replay of tool effects.
+
+## Limits and failures
+
+| Default | Value |
+| --- | --- |
+| Body limit | 64 KiB |
+| Deadline | 30 s |
+
+Method, media type, body, event, timeout, cancellation, and internal failures emit **safe versioned diagnostics**. Request abort / response cancel / timeout stop the upstream AgentsKit controller.
+
+## Where to mount
+
+| Host | Pattern |
+| --- | --- |
+| Next / Remix / SvelteKit / edge | Export the handler where Web handlers are supported |
+| Node HTTP | Translate to `Request`, pipe `Response.body` |
+| Express / Hono | Thin bridge; forward disconnect cancellation |
+
+Full recipes: [Deployment](/docs/deployment).
+
+## Related
+
+- [Backend (Ask)](/docs/backend)
+- [Sessions](/docs/sessions)
+- [Lifecycle](/docs/lifecycle)
+- [Connect backend guide](/docs/guides/connect-backend)

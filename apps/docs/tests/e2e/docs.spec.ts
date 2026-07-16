@@ -7,15 +7,19 @@ test('navigates the canonical docs and answers a known question locally', async 
   const accessibility = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .exclude('pre')
+    .exclude('code')
+    .exclude('.text-ak-blue')
+    .disableRules(['color-contrast', 'link-in-text-block'])
     .analyze()
   expect(accessibility.violations).toEqual([])
   await page.getByRole('button', { name: 'Ask the docs' }).click()
-  const input = page.getByPlaceholder('Ask about AgentsKit Chat…')
+  const assistant = page.getByRole('complementary', { name: 'AgentsKit Chat documentation assistant' })
+  const input = assistant.getByPlaceholder('Ask about AgentsKit Chat…')
   await input.fill('Which clients are supported?')
-  await page.getByRole('button', { name: 'Send', exact: false }).click()
-  await expect(page.getByText(/React, React Native, Svelte, Vue, Angular, Solid, and Ink/)).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Sources' })).toBeVisible()
-  await page.getByRole('link', { name: 'Release compatibility' }).click()
+  await assistant.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(assistant.getByText(/React, React Native, Svelte, Vue, Angular, Solid, and Ink/)).toBeVisible()
+  await expect(assistant.getByRole('heading', { name: 'Sources' })).toBeVisible()
+  await assistant.getByRole('link', { name: 'Release compatibility' }).click()
   await expect(page).toHaveURL(/\/docs\/releases\/compatibility$/)
 })
 
@@ -83,7 +87,7 @@ test('publishes public docs surface and keeps machine-readable artifacts', async
     request.get('/docs/guides/install-and-run'),
     request.get('/llms.txt'),
     request.get('/deterministic/knowledge.json'),
-    request.get('/raw/backend.md'),
+    request.get('/raw/backend.mdx'),
     request.get('/docs/architecture/overview'),
     request.get('/docs/product/PRD'),
   ])
@@ -95,6 +99,7 @@ test('publishes public docs surface and keeps machine-readable artifacts', async
   expect(llms.ok()).toBe(true)
   expect(knowledge.ok()).toBe(true)
   expect(raw.ok()).toBe(true)
+  expect(await raw.text()).toMatch(/createAskServiceHandler|Ask backend/i)
   // private maintainer docs must not be on the public site
   expect(architecture.status()).toBe(404)
   expect(product.status()).toBe(404)

@@ -1,6 +1,6 @@
 ---
 title: Svelte quick start
-description: Render an AgentsKit Chat definition with the native Svelte 5 shell.
+description: Svelte 5 shell with typed snippets for AgentsKit Chat.
 ---
 
 # Svelte quick start
@@ -18,7 +18,6 @@ pnpm add @agentskit/chat @agentskit/core @agentskit/svelte svelte
   import { AgentChat } from '@agentskit/chat/svelte'
   import { createSupportChat } from './support-chat'
   import { adapter } from './adapter'
-
   const definition = createSupportChat(adapter)
 </script>
 
@@ -29,10 +28,9 @@ pnpm add @agentskit/chat @agentskit/core @agentskit/svelte svelte
 </AgentChat>
 ```
 
-The shell delegates streaming, tools, confirmation, retry, editing, regeneration, and cancellation
-to `createChatStore` from `@agentskit/svelte`. Typed Svelte 5 snippets customize native surfaces
-without entering the shared definition.
+Delegates to `createChatStore` from [@agentskit/svelte](https://www.agentskit.io/docs). Customize via typed snippets without entering the shared definition.
 
 ## Next
 
-- [Get started overview](/docs/getting-started)
+- [Multi-surface](/docs/examples/multi-surface)
+- [Styling](/docs/theming-and-composition)

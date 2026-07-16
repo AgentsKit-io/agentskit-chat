@@ -7,17 +7,26 @@ export const PUBLIC_DOC_GLOBS = [
   'index.mdx',
   'getting-started/**/*',
   'guides/**/*',
+  'examples/**/*',
   'components/**/*',
   'theming-and-composition.md',
+  'theming-and-composition.mdx',
   'server.md',
+  'server.mdx',
   'backend.md',
+  'backend.mdx',
   'sessions.md',
+  'sessions.mdx',
   'deployment.md',
+  'deployment.mdx',
   'cli.md',
+  'cli.mdx',
   'api-reference.md',
+  'api-reference.mdx',
   'conversation/**/*',
   'actions/**/*',
   'lifecycle.md',
+  'lifecycle.mdx',
   'releases/stability.md',
   'releases/compatibility.md',
 ] as const
@@ -32,7 +41,6 @@ export const PRIVATE_DOC_PREFIXES = [
   'conformance',
   'protocol',
   'devtools',
-  'examples',
   'releases/alpha',
   'releases/launch',
   'releases/migration',
@@ -40,22 +48,57 @@ export const PRIVATE_DOC_PREFIXES = [
   'releases/v0',
 ] as const
 
+const PUBLIC_TOP_LEVEL = new Set([
+  'theming-and-composition.md',
+  'theming-and-composition.mdx',
+  'server.md',
+  'server.mdx',
+  'backend.md',
+  'backend.mdx',
+  'sessions.md',
+  'sessions.mdx',
+  'deployment.md',
+  'deployment.mdx',
+  'cli.md',
+  'cli.mdx',
+  'api-reference.md',
+  'api-reference.mdx',
+  'lifecycle.md',
+  'lifecycle.mdx',
+  'index.mdx',
+])
+
 export function isPublicDocPath(relativePath: string): boolean {
   const normalized = relativePath.replace(/\\/g, '/').replace(/^\.?\//, '')
-  if (PRIVATE_DOC_PREFIXES.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`) || normalized.startsWith(prefix))) {
-    // allow releases/stability + compatibility only
+
+  if (
+    PRIVATE_DOC_PREFIXES.some(
+      (prefix) =>
+        normalized === prefix ||
+        normalized.startsWith(`${prefix}/`) ||
+        normalized.startsWith(prefix),
+    )
+  ) {
     if (normalized === 'releases/stability.md' || normalized === 'releases/compatibility.md') return true
-    if (normalized.startsWith('releases/') && !normalized.includes('stability') && !normalized.includes('compatibility')) return false
-    if (!normalized.startsWith('releases/')) return false
+    if (normalized.startsWith('releases/')) return false
+    return false
   }
-  // explicit public set via path rules
-  if (normalized === 'index.mdx') return true
+
+  if (PUBLIC_TOP_LEVEL.has(normalized)) return true
   if (normalized.startsWith('getting-started/')) return true
   if (normalized.startsWith('guides/')) return true
-  if (normalized.startsWith('examples/')) return true
-  if (normalized.startsWith('components/')) return true
-  if (normalized === 'theming-and-composition.md') return true
-  if (['server.md', 'backend.md', 'sessions.md', 'deployment.md', 'cli.md', 'api-reference.md', 'lifecycle.md'].includes(normalized)) return true
+  if (normalized.startsWith('examples/')) {
+    // product examples only — skip legacy reference dumps
+    if (normalized.includes('reference') || normalized.includes('dom-renderer') || normalized.includes('parity')) {
+      return false
+    }
+    return true
+  }
+  if (normalized.startsWith('components/')) {
+    // hide generated matrix from primary reading path optional - allow catalog
+    if (normalized.endsWith('catalog.generated.md')) return false
+    return true
+  }
   if (normalized.startsWith('conversation/')) return true
   if (normalized.startsWith('actions/')) return true
   if (normalized === 'releases/stability.md' || normalized === 'releases/compatibility.md') return true

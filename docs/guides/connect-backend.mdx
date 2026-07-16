@@ -1,0 +1,66 @@
+---
+title: Connect a backend
+description: Mount createChatHandler and optional Ask backends for production chat.
+---
+
+# Connect a backend
+
+## Overview
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  UI[AgentChat shell] --> CH[createChatHandler]\n' +
+      '  UI --> ASK[createAskServiceHandler]\n' +
+      '  CH --> AK[AgentsKit adapter]\n' +
+      '  ASK --> RAG[AgentsKit RAG + provider]'
+  }
+/>
+
+## Chat HTTP handler
+
+```ts
+import { createChatHandler } from '@agentskit/chat/server'
+import { supportChat } from './chat'
+
+export default createChatHandler({
+  authenticate: async request => { /* … */ },
+  resolveDefinition: () => supportChat,
+  sessionStorage: () => storage,
+})
+```
+
+Details: [Server](/docs/server) · recipes: [Deployment](/docs/deployment).
+
+## Ask / grounded Q&A
+
+```ts
+import { createAskServiceHandler } from '@agentskit/chat/server'
+
+export const POST = createAskServiceHandler({
+  authenticate: /* … */,
+  resolveSite: /* … */,
+  retrievers: { local: { retrieve: /* AgentsKit RAG */ } },
+  generator: /* AgentsKit provider */,
+})
+```
+
+Full contract: [Backend](/docs/backend).
+
+## Sessions
+
+Persist application metadata with CAS storage; messages stay in AgentsKit memory — [Sessions](/docs/sessions).
+
+## Checklist
+
+1. Shared `defineChat` definition  
+2. `createChatHandler` (or local adapter) for turns  
+3. Optional Ask handler for grounded misses  
+4. Auth + rate limits on the host  
+5. Native renderer per client  
+
+## Related
+
+- [Install](/docs/guides/install-and-run)
+- [Add RAG](/docs/guides/add-rag)
+- [Support bot example](/docs/examples/support-bot)

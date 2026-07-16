@@ -1,0 +1,52 @@
+---
+title: React Native quick start
+description: Expo / React Native shell for the same ChatDefinition.
+---
+
+# React Native quick start
+
+Mobile is first-class — same `defineChat` as web and terminal.
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/react-native react react-native
+```
+
+Native deps belong to the Expo/RN app, not the Chat package.
+
+## Shell
+
+```tsx
+import { AgentChatNative } from '@agentskit/chat/react-native'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+export default function App() {
+  return <AgentChatNative definition={createSupportChat(adapter)} />
+}
+```
+
+## Shared definition
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: { adapter, systemPrompt: 'Help users on mobile.' },
+  })
+```
+
+## Monorepo example
+
+```bash
+pnpm --filter @agentskit/chat-example-react-native start
+```
+
+## Next
+
+- [Sessions](/docs/sessions) (resume the same sessionId on web + mobile)
+- [Multi-surface](/docs/examples/multi-surface)

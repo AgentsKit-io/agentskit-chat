@@ -30,7 +30,10 @@ describe('documentation dogfood', () => {
     const documents = await collectCanonicalDocs()
     expect(documents.length).toBeGreaterThan(50)
     expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.includes('AI chat'))).toBe(true)
-    expect(documents.some(document => document.path === 'backend.md' && document.title === 'Hosted and self-hosted Ask backend')).toBe(true)
+    expect(documents.some(document =>
+      (document.path === 'backend.md' || document.path === 'backend.mdx')
+      && document.title.includes('Ask backend'),
+    )).toBe(true)
   })
 
   it('maps canonical index documents to public folder URLs', () => {

@@ -1,6 +1,6 @@
 ---
 title: Angular quick start
-description: Render an AgentsKit Chat definition with the native Angular shell.
+description: Standalone Angular component shell for AgentsKit Chat.
 ---
 
 # Angular quick start
@@ -36,11 +36,9 @@ export class SupportComponent {
 }
 ```
 
-`AgentChatComponent` delegates state, streaming, tools, confirmation, retry, editing, regeneration,
-cancellation, and teardown to `AgentskitChat` from `@agentskit/angular`. Each mounted shell receives
-an isolated service provider. Content templates customize `container`, `message`, `input`,
-`thinking`, `confirmation`, and `choiceList` without entering the shared definition.
+Delegates to `AgentskitChat` from [@agentskit/angular](https://www.agentskit.io/docs). Content templates: `container`, `message`, `input`, `thinking`, `confirmation`, `choiceList`.
 
 ## Next
 
-- [Get started overview](/docs/getting-started)
+- [Multi-surface](/docs/examples/multi-surface)
+- [CLI](/docs/cli)
