@@ -38,7 +38,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published at `0.4.0`. Targets: `react`, `react-native`, `ink`, `vue`, `svelte`, `solid`, and `angular`.
+Published at `0.4.1`. Targets: `react`, `react-native`, `ink`, `vue`, `svelte`, `solid`, and `angular`.
 
 - Node.js 22+
 - Never merges, deletes, or overwrites existing project files

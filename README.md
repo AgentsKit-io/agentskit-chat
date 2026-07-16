@@ -50,12 +50,12 @@ Scaffold a React project from the published CLI, then verify the README claim le
 
 <!-- readme-command:init-react -->
 ```bash
-pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 ```
 
 <!-- readme-example:init-react -->
 ```bash
-pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 ```
 
 Continue with the [seven renderer quick starts](./docs/getting-started/README.md), [API reference](./docs/api-reference.md), and [deployment modes](./docs/deployment.md).
@@ -71,7 +71,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-AgentsKit Chat `0.4.0` ships as two public npm packages with provenance: `@agentskit/chat` and `@agentskit/chat-cli`. Protocol, server, devtools, and renderer APIs are versioned subpaths of `@agentskit/chat`; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See [stability and upgrades](./docs/releases/stability.md), the [0.4 release notes](./docs/releases/v0.4.0.md), the [0.3 package migration](./docs/releases/migration-to-0.3.md), and the [compatibility matrix](./docs/releases/compatibility.md).
+AgentsKit Chat `0.4.1` ships as two public npm packages with provenance: `@agentskit/chat` and `@agentskit/chat-cli`. Protocol, server, devtools, and renderer APIs are versioned subpaths of `@agentskit/chat`; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See [stability and upgrades](./docs/releases/stability.md), the [0.4 release notes](./docs/releases/v0.4.0.md), the [0.3 package migration](./docs/releases/migration-to-0.3.md), and the [compatibility matrix](./docs/releases/compatibility.md).
 
 - Node.js 22 in CI; Node.js 24 in release workflows
 - TypeScript strict mode across packages

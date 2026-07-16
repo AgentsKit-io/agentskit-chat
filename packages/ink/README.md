@@ -34,7 +34,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.0` with Ink 7.1+, React 18+, and real PTY interaction tests in CI.
+Published in `@agentskit/chat` at `0.4.1` with Ink 7.1+, React 18+, and real PTY interaction tests in CI.
 
 - Ink 7.1+
 - Terminal keyboard flow and graceful process exit verified

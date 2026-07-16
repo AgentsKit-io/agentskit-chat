@@ -36,7 +36,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.0` with `@agentskit/eval ^0.4.19` where replay composition is used.
+Published in `@agentskit/chat` at `0.4.1` with `@agentskit/eval ^0.4.19` where replay composition is used.
 
 - Node.js 22+
 - Composes upstream replay; does not fork eval primitives

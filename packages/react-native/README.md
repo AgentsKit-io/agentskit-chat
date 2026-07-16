@@ -33,7 +33,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.0` with React 18+, React Native, and Expo web/iOS bundle evidence in release workflows.
+Published in `@agentskit/chat` at `0.4.1` with React 18+, React Native, and Expo web/iOS bundle evidence in release workflows.
 
 - React 18+
 - Native accessibility roles in CI

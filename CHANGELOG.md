@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.1 — 2026-07-16
+
+Metadata-only patch so both public packages advertise the canonical docs portal.
+
+- Publishes `homepage: https://chat.agentskit.io/docs` for `@agentskit/chat` and
+  `@agentskit/chat-cli`.
+- Fails release pack verification when packaged manifests omit that homepage.
+- Preserves every `0.4.0` runtime contract, export map, and peer range.
+
 ## 0.4.0 — 2026-07-15
 
 AgentsKit Chat can now present sessions owned by an existing host without
