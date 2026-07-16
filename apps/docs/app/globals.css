@@ -192,6 +192,94 @@ html.dark body {
   opacity: .45;
 }
 
+/* Lifecycle footer: Retry / Regenerate / Edit (unstyled bare buttons from AgentChat) */
+.docs-assistant [aria-label='Response actions'],
+[data-ak-example] [aria-label='Response actions'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  padding: .5rem .75rem;
+  border-top: 1px solid #30363d;
+  background: #0d1117;
+}
+
+.docs-assistant [aria-label='Response actions'] button,
+[data-ak-example] [aria-label='Response actions'] button {
+  min-height: 1.9rem;
+  border: 1px solid #30363d;
+  border-radius: 999px;
+  background: #161b22;
+  color: #8b949e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: .3rem .7rem;
+  cursor: pointer;
+}
+
+.docs-assistant [aria-label='Response actions'] button:hover,
+[data-ak-example] [aria-label='Response actions'] button:hover {
+  border-color: #58a6ff;
+  color: #e6edf3;
+}
+
+.docs-assistant [aria-label='Response actions'] form,
+[data-ak-example] [aria-label='Response actions'] form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  width: 100%;
+  align-items: center;
+}
+
+.docs-assistant [aria-label='Response actions'] label,
+[data-ak-example] [aria-label='Response actions'] label {
+  display: flex;
+  flex: 1;
+  min-width: 12rem;
+  flex-direction: column;
+  gap: .25rem;
+  font-size: 11px;
+  color: #8b949e;
+}
+
+.docs-assistant [aria-label='Response actions'] input,
+[data-ak-example] [aria-label='Response actions'] input {
+  min-height: 2.25rem;
+  border: 1px solid #30363d;
+  border-radius: .5rem;
+  background: #0d1117;
+  color: #e6edf3;
+  padding: .35rem .6rem;
+}
+
+/* Sources block from deterministic answers */
+.docs-assistant h3,
+.docs-assistant [data-ak-component='source-list'] h3 {
+  margin: .75rem 0 .35rem;
+  font-size: .75rem;
+  font-weight: 650;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #8b949e;
+}
+
+.docs-assistant [data-ak-component='source-list'] a,
+.docs-assistant [data-ak-component='source-list'] li {
+  color: #58a6ff;
+  font-size: .85rem;
+}
+
+.docs-assistant [data-ak-message],
+.docs-assistant [data-ak-role] {
+  max-width: 92%;
+}
+
+.docs-assistant [data-ak-content] {
+  font-size: .9rem;
+  line-height: 1.45;
+}
+
 /* Live examples + component gallery */
 [data-ak-example] [data-ak-app-chat] {
   display: flex;

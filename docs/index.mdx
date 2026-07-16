@@ -96,10 +96,14 @@ render(<AgentChat definition={createSupportChat(adapter)} />)
 
 ## Ecosystem
 
-AgentsKit owns adapters, tools, memory, and RAG. Chat composes them into multi-surface applications.
+Chat composes <AgentsKitRef /> — adapters, tools, memory, and RAG stay upstream.
+
+<EcosystemStrip />
+
+<AdaptersCallout />
 
 <Cards className="lg:grid-cols-3">
-  <Card title="AgentsKit" description="Runtime, adapters, tools, RAG." href="https://www.agentskit.io/docs" external />
+  <Card title="AgentsKit docs" description="Runtime, adapters, tools, RAG." href="https://www.agentskit.io/docs" external />
+  <Card title="AgentsKit examples" description="Reference demos on the core site." href="https://www.agentskit.io/docs/reference/examples" external />
   <Card title="Registry" description="Ready-to-adapt agents." href="https://registry.agentskit.io/agents" external />
-  <Card title="AKOS" description="Enterprise orchestration." href="https://akos.agentskit.io/docs" external />
 </Cards>

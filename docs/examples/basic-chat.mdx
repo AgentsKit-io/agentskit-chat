@@ -38,9 +38,16 @@ export function ProductChat({ adapter }: { adapter: AdapterFactory }) {
 
 ## Notes
 
-- Swap `adapter` for any AgentsKit adapter (`openai`, `anthropic`, mock, …).
+<AdaptersCallout />
+
 - Import `@agentskit/react/theme` (or map semantic tokens yourself).
 - The same `createChat(adapter)` feeds Vue, Svelte, Solid, Angular, RN, and Ink.
+
+## AgentsKit substrate
+
+Chat composes <AgentsKitRef /> — it does not replace adapters, tools, memory, or RAG.
+
+<EcosystemStrip />
 
 ## Next
 

@@ -49,8 +49,16 @@ const chat = defineChat({
 export const App = () => <AgentChat definition={chat} />
 ```
 
+## Adapters (from AgentsKit — not Chat)
+
+<AdaptersCallout />
+
+Chat only needs an `AdapterFactory`. Pick any provider from the
+[AgentsKit provider catalog](https://www.agentskit.io/docs/data/providers).
+
 ## Next
 
+- [Live examples](/docs/examples)
 - [Add RAG](/docs/guides/add-rag)
 - [Connect a backend](/docs/guides/connect-backend)
 - [Style the shell](/docs/guides/style)

@@ -23,6 +23,7 @@
       "@agentskit/chat-react": ["../../packages/react/src/index.tsx"],
       "@agentskit/chat-server": ["../../packages/server/src/index.ts"],
       "@agentskit/chat/protocol": ["../../packages/protocol/src/index.ts"],
+      "@agentskit/chat/protocol/fixtures": ["../../packages/protocol/src/fixtures.ts"],
       "@agentskit/chat/react": ["../../packages/react/src/index.tsx"],
       "@agentskit/chat/server": ["../../packages/server/src/index.ts"]
     },
