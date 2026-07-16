@@ -2,6 +2,7 @@ import { decodeAskEvents, verifyLocalKnowledgeArtifactSync } from '@agentskit/ch
 import { describe, expect, it, vi } from 'vitest'
 import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler'
 import { collectCanonicalDocs, publicDocSlug } from '../lib/docs-index'
+import { allEcosystemProducts, ecosystemBarProducts } from '../lib/ecosystem'
 import { KNOWLEDGE_HASH, localKnowledgeArtifact, verifiedKnowledgeArtifact } from '../lib/knowledge'
 
 const askRequest = (query: string) => new Request('https://chat.agentskit.io/api/ask?corpus=agentskit-chat-public&persona=agentskit-chat-guide', {
@@ -38,6 +39,23 @@ describe('documentation dogfood', () => {
     expect(publicDocSlug('getting-started/README.md')).toBe('getting-started')
     expect(publicDocSlug('for-agents/index.md')).toBe('for-agents')
     expect(publicDocSlug('backend.md')).toBe('backend')
+  })
+
+  it('derives all seven ecosystem links from the canonical manifest', () => {
+    expect(allEcosystemProducts.map(product => product.id)).toEqual([
+      'agentskit',
+      'registry',
+      'agentskit-chat',
+      'playbook',
+      'doc-bridge',
+      'code-review',
+      'akos',
+    ])
+    expect(ecosystemBarProducts.map(product => product.id)).toEqual(allEcosystemProducts.map(product => product.id))
+    expect(allEcosystemProducts.find(product => product.id === 'akos')).toEqual(expect.objectContaining({
+      docs: 'https://akos.agentskit.io/docs',
+      maturity: 'alpha',
+    }))
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {

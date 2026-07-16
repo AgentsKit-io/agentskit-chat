@@ -1,6 +1,6 @@
 # ADR-0027: Fumadocs site is a first-class AgentsKit Chat dogfood host
 
-- Status: Proposed
+- Status: Accepted — HITL approved 2026-07-16
 - Date: 2026-07-14
 - Issue: [#71](https://github.com/AgentsKit-io/agentskit-chat/issues/71)
 
@@ -29,10 +29,10 @@ Markdown and `llms.txt` routes expose the same canonical or generated sources.
 The interactive documentation assistant is a normal React host of the public
 framework:
 
-1. `@agentskit/chat-protocol` validates the generated local knowledge artifact.
+1. `@agentskit/chat/protocol` validates the generated local knowledge artifact.
 2. `@agentskit/chat` composes deterministic resolution, the Ask adapter, and
    browser session memory.
-3. `@agentskit/chat-react` renders the shared definition through the upstream
+3. `@agentskit/chat/react` renders the shared definition through the upstream
    `@agentskit/react` binding.
 4. Exact known questions resolve from the verified local artifact before any
    network request.
@@ -40,7 +40,7 @@ framework:
    operators may select the hosted endpoint without changing the definition.
 
 The self-hosted Next route is built with `createAskServiceHandler` from
-`@agentskit/chat-server`. Retrieval, generation, persistence, rate limiting,
+`@agentskit/chat/server`. Retrieval, generation, persistence, rate limiting,
 and metrics remain injected host adapters. Production adapters must compose
 published AgentsKit RAG, memory, and provider packages. If required adapters
 are absent, the route returns an explicit unavailable response; it never
@@ -114,5 +114,8 @@ apps/docs
 
 ## Acceptance
 
-This ADR remains Proposed until the HITL review for #71 approves the maturity
-copy, dogfood claim, and hosted/self-hosted deployment posture.
+The owner approved the public **Alpha** maturity copy and deployment posture on
+2026-07-16. Issue #102 records the protected preview, immutable production
+deployment, 7/7 remote smoke, successful promotion, and byte-identical canonical
+domain evidence. The Ask route remains explicitly fail-closed when its hosted
+adapters are not configured.

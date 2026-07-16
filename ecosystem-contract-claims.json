@@ -135,8 +135,19 @@
         "type": "endpoint",
         "url": "https://registry.agentskit.io/r/index.json"
       },
-      "verification": "declared",
-      "claims": []
+      "verification": "verified",
+      "claims": [
+        {
+          "id": "published-agents",
+          "value": 346,
+          "noun": "published agents",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://registry.agentskit.io/r/index.json",
+            "summary": "Entries returned by the canonical Registry index on 2026-07-16."
+          }
+        }
+      ]
     },
     {
       "productId": "agentskit-chat",
@@ -144,8 +155,97 @@
         "type": "repository",
         "repo": "AgentsKit-io/agentskit-chat"
       },
-      "verification": "declared",
-      "claims": []
+      "verification": "verified",
+      "claims": [
+        {
+          "id": "public-packages",
+          "value": 2,
+          "noun": "public npm packages",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "packages/*/package.json",
+            "summary": "Non-private workspace packages with public publishConfig."
+          }
+        },
+        {
+          "id": "renderers",
+          "value": 7,
+          "noun": "native renderers",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "release/manifest.json#/renderers",
+            "summary": "Native renderer subpaths declared in the public release manifest."
+          }
+        },
+        {
+          "id": "standard-components",
+          "value": 12,
+          "noun": "standard components",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "packages/react/catalog-support.json",
+            "summary": "Registered application components in the closed catalog."
+          }
+        },
+        {
+          "id": "conformance-requirements",
+          "value": 12,
+          "noun": "conformance requirements",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "docs/conformance/matrix.generated.md",
+            "summary": "Release-blocking renderer and protocol requirements."
+          }
+        },
+        {
+          "id": "getting-started-guides",
+          "value": 7,
+          "noun": "renderer quick starts",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "docs/getting-started/*.md",
+            "summary": "Framework-specific adoption guides."
+          }
+        },
+        {
+          "id": "example-apps",
+          "value": 6,
+          "noun": "example applications",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "apps/example-*",
+            "summary": "Runnable proof apps for renderers and shared definitions."
+          }
+        },
+        {
+          "id": "architecture-adrs",
+          "value": 33,
+          "noun": "architecture ADRs",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": "docs/architecture/adrs",
+            "summary": "Public architecture decision records."
+          }
+        },
+        {
+          "id": "agent-handoffs",
+          "value": 28,
+          "noun": "agent handoffs",
+          "evidence": {
+            "type": "repository-derivation",
+            "repo": "AgentsKit-io/agentskit-chat",
+            "path": ".doc-bridge/index.json#/handoffs",
+            "summary": "Doc Bridge agent-handoff entries for ownership routing."
+          }
+        }
+      ]
     },
     {
       "productId": "playbook",
@@ -153,8 +253,59 @@
         "type": "endpoint",
         "url": "https://playbook.agentskit.io/api/stats.json"
       },
-      "verification": "declared",
-      "claims": []
+      "verification": "verified",
+      "claims": [
+        {
+          "id": "pillars",
+          "value": 6,
+          "noun": "engineering pillars",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://playbook.agentskit.io/api/stats.json",
+            "summary": "Pillar count returned by the canonical Playbook stats endpoint on 2026-07-16."
+          }
+        },
+        {
+          "id": "patterns",
+          "value": 87,
+          "noun": "documented patterns",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://playbook.agentskit.io/api/stats.json",
+            "summary": "Pattern count returned by the canonical Playbook stats endpoint on 2026-07-16."
+          }
+        },
+        {
+          "id": "gate-scripts",
+          "value": 13,
+          "noun": "gate scripts",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://playbook.agentskit.io/api/stats.json",
+            "summary": "Gate-script count returned by the canonical Playbook stats endpoint on 2026-07-16."
+          }
+        },
+        {
+          "id": "delivery-phases",
+          "value": 6,
+          "noun": "delivery phases",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://playbook.agentskit.io/api/stats.json",
+            "summary": "Phase count returned by the canonical Playbook stats endpoint on 2026-07-16."
+          }
+        },
+        {
+          "id": "templates",
+          "value": 6,
+          "noun": "delivery templates",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://playbook.agentskit.io/api/stats.json",
+            "summary": "Template count returned by the canonical Playbook stats endpoint on 2026-07-16."
+          }
+        }
+      ]
     },
     {
       "productId": "doc-bridge",
@@ -180,8 +331,19 @@
         "type": "endpoint",
         "url": "https://akos.agentskit.io/api/stats.json"
       },
-      "verification": "declared",
-      "claims": []
+      "verification": "verified",
+      "claims": [
+        {
+          "id": "registered-verbs",
+          "value": 540,
+          "noun": "registered capability verbs",
+          "evidence": {
+            "type": "endpoint",
+            "url": "https://akos.agentskit.io/api/stats.json",
+            "summary": "Capability-verb count returned by the canonical AKOS stats endpoint on 2026-07-16; this is inventory evidence, not a stability claim."
+          }
+        }
+      ]
     }
   ]
 }

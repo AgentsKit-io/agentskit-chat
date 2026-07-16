@@ -19,29 +19,35 @@ describe('legacy package deprecation dry-run', () => {
   })
 
   it('fails closed while any active consumer is not certified', () => {
-    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(adoption), parseLegacyDeprecationPlan(plan))
+    const blocked = clone(adoption)
+    const docs = blocked.consumers.find(consumer => consumer.id === 'agentskit-chat-docs')
+    docs.status = 'deployment-required'
+    docs.evidence.production = { status: 'missing' }
+    const akos = blocked.consumers.find(consumer => consumer.id === 'akos-product-chats')
+    akos.status = 'inventory-required'
+    akos.consumption = 'not-adopted'
+    akos.packageVersion = null
+    akos.imports = []
+    akos.evidence = {
+      visibility: 'private-attestation',
+      ciStatus: 'pending',
+      productionStatus: 'pending',
+      attestation: 'pending-chat-convergence-audit',
+    }
+
+    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(blocked), parseLegacyDeprecationPlan(plan))
     expect(result.ready).toBe(false)
-    expect(result.blockers).toEqual(['akos-product-chats is inventory-required'])
+    expect(result.blockers).toEqual([
+      'agentskit-chat-docs is deployment-required',
+      'akos-product-chats is inventory-required',
+    ])
     expect(result.commands).toHaveLength(10)
     expect(result.operations).toHaveLength(10)
     expect(result.procedure).toHaveLength(4)
   })
 
-  it('becomes ready only after the remaining private evidence is certified', () => {
-    const ready = clone(adoption)
-    const akos = ready.consumers.find(consumer => consumer.id === 'akos-product-chats')
-    akos.status = 'certified'
-    akos.consumption = 'npm'
-    akos.packageVersion = ready.frameworkVersion
-    akos.imports = ['@agentskit/chat']
-    akos.evidence = {
-      visibility: 'private-attestation',
-      ciStatus: 'pass',
-      productionStatus: 'pass',
-      attestation: 'private-audit-pass',
-    }
-
-    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(ready), parseLegacyDeprecationPlan(plan))
+  it('becomes ready only after public and private evidence is certified', () => {
+    const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(adoption), parseLegacyDeprecationPlan(plan))
     expect(result).toMatchObject({ ready: true, blockers: [] })
   })
 

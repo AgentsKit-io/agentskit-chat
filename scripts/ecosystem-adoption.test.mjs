@@ -1,27 +1,36 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { inspectEcosystemAdoption, parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
+import { formatEcosystemAdoptionResult, inspectEcosystemAdoption, parseEcosystemAdoption, summarizeEcosystemAdoption } from './ecosystem-adoption-lib.mjs'
 
 const manifest = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', import.meta.url), 'utf8'))
 const clone = value => structuredClone(value)
 
 describe('ecosystem adoption contract', () => {
-  it('accepts the public convergence baseline without claiming private convergence', () => {
+  it('accepts the audited baseline only after every declared product chat converges', () => {
     const parsed = parseEcosystemAdoption(manifest)
     expect(summarizeEcosystemAdoption(parsed)).toEqual({
       consumers: 8,
       productChats: 6,
-      certifiedProductChats: 5,
+      certifiedProductChats: 6,
       legacyConsumers: 0,
-      pendingConsumers: 1,
+      pendingConsumers: 0,
     })
   })
 
-  it('keeps the certified baseline independent from the next framework release', async () => {
+  it('tracks the current release while retaining the minimum consolidated baseline', async () => {
     const result = await inspectEcosystemAdoption(fileURLToPath(new URL('..', import.meta.url)))
-    expect(result.manifest.frameworkVersion).toBe('0.4.0')
+    expect(result.manifest.minimumConsolidatedVersion).toBe('0.3.0')
+    expect(result.manifest.currentFrameworkVersion).toBe('0.4.0')
+    expect(result.manifest.supportedConsolidatedVersions).toEqual(['0.3.0', '0.4.0'])
     expect(result.diagnostics).toEqual([])
+    expect(formatEcosystemAdoptionResult(result.manifest)).toMatchObject({
+      schemaVersion: 3,
+      minimumConsolidatedVersion: '0.3.0',
+      currentFrameworkVersion: '0.4.0',
+      supportedConsolidatedVersions: ['0.3.0', '0.4.0'],
+    })
+    expect(formatEcosystemAdoptionResult(result.manifest)).not.toHaveProperty('frameworkVersion')
   })
 
   it('rejects duplicate and unknown consumers', () => {
@@ -40,7 +49,7 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(repository)).toThrow()
 
     const range = clone(manifest)
-    range.consumers[0].packageVersion = '^0.4.0'
+    range.consumers[0].packageVersion = '^0.3.0'
     expect(() => parseEcosystemAdoption(range)).toThrow('exact stable version')
   })
 
@@ -64,8 +73,8 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(privateLeak)).toThrow()
 
     const falseCertification = clone(manifest)
-    falseCertification.consumers.at(-1).status = 'certified'
-    expect(() => parseEcosystemAdoption(falseCertification)).toThrow('certified consumers must use the exact framework version')
+    falseCertification.consumers.at(-1).evidence.ciStatus = 'pending'
+    expect(() => parseEcosystemAdoption(falseCertification)).toThrow('complete Chat convergence attestation')
   })
 
   it('allows direct bindings only as excluded low-level examples', () => {
@@ -75,7 +84,34 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(product)).toThrow('only low-level binding examples may be excluded')
 
     const adopted = clone(manifest)
-    adopted.consumers.at(-1).packageVersion = '0.4.0'
+    adopted.consumers.at(-1).consumption = 'not-adopted'
     expect(() => parseEcosystemAdoption(adopted)).toThrow('not-adopted consumers cannot claim a package version')
+  })
+
+  it('accepts exact supported consumer versions but rejects versions outside the certified window', () => {
+    const mixed = clone(manifest)
+    expect(() => parseEcosystemAdoption(mixed)).not.toThrow()
+
+    const stale = clone(manifest)
+    stale.consumers[0].packageVersion = '0.2.0'
+    expect(() => parseEcosystemAdoption(stale)).toThrow('exact supported consolidated framework version')
+
+    const future = clone(manifest)
+    future.consumers[0].packageVersion = '0.5.0'
+    expect(() => parseEcosystemAdoption(future)).toThrow('exact supported consolidated framework version')
+
+    const unproved = clone(manifest)
+    unproved.consumers[0].packageVersion = '0.3.999'
+    expect(() => parseEcosystemAdoption(unproved)).toThrow('exact supported consolidated framework version')
+
+    const belowBoundary = clone(manifest)
+    belowBoundary.supportedConsolidatedVersions.unshift('0.2.0')
+    belowBoundary.consumers[0].packageVersion = '0.2.0'
+    expect(() => parseEcosystemAdoption(belowBoundary)).toThrow('audited minimum and current boundaries')
+
+    const aboveBoundary = clone(manifest)
+    aboveBoundary.supportedConsolidatedVersions.push('9.9.9')
+    aboveBoundary.consumers[0].packageVersion = '9.9.9'
+    expect(() => parseEcosystemAdoption(aboveBoundary)).toThrow('audited minimum and current boundaries')
   })
 })

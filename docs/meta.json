@@ -3,23 +3,16 @@
   "pages": [
     "index",
     "getting-started",
-    "api-reference",
+    "architecture",
     "components",
     "conversation",
     "actions",
     "sessions",
     "backend",
-    "server",
     "deployment",
-    "theming-and-composition",
+    "api-reference",
     "devtools",
-    "protocol",
-    "examples",
     "releases",
-    "architecture",
-    "governance",
-    "dogfood",
-    "for-agents",
-    "product"
+    "for-agents"
   ]
 }

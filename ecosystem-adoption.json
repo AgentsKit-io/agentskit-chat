@@ -1,6 +1,11 @@
 {
-  "schemaVersion": 1,
-  "frameworkVersion": "0.4.0",
+  "schemaVersion": 3,
+  "minimumConsolidatedVersion": "0.3.0",
+  "currentFrameworkVersion": "0.4.0",
+  "supportedConsolidatedVersions": [
+    "0.3.0",
+    "0.4.0"
+  ],
   "auditedAt": "2026-07-16",
   "consumers": [
     {
@@ -10,7 +15,7 @@
       "repository": "AgentsKit-io/agentskit",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.3.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -22,7 +27,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "pass",
@@ -37,7 +42,7 @@
       "repository": "AgentsKit-io/agentskit",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.3.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -49,7 +54,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "pass",
@@ -77,7 +82,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29523785356"
+          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29523798857"
         },
         "production": {
           "status": "pass",
@@ -92,7 +97,7 @@
       "repository": "AgentsKit-io/agents-playbook",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.3.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -104,7 +109,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agents-playbook/actions/runs/29526377714"
+          "url": "https://github.com/AgentsKit-io/agents-playbook/actions/runs/29369635226"
         },
         "production": {
           "status": "pass",
@@ -119,7 +124,7 @@
       "repository": "AgentsKit-io/doc-bridge",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.3.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -131,7 +136,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29527117397"
+          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29415788817"
         },
         "production": {
           "status": "pass",
@@ -146,7 +151,7 @@
       "repository": "AgentsKit-io/agentskit-registry",
       "surface": "protocol",
       "consumption": "npm",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.3.0",
       "imports": [
         "@agentskit/chat/protocol"
       ],
@@ -156,7 +161,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29526282024"
+          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29380404600"
         },
         "production": {
           "status": "not-applicable"
@@ -178,7 +183,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
         },
         "production": {
           "status": "not-applicable"
@@ -191,16 +196,21 @@
       "classification": "product-chat",
       "repository": "private:akos",
       "surface": "multi-surface",
-      "consumption": "not-adopted",
-      "packageVersion": null,
-      "imports": [],
+      "consumption": "npm",
+      "packageVersion": "0.4.0",
+      "imports": [
+        "@agentskit/chat",
+        "@agentskit/chat/protocol",
+        "@agentskit/chat/react",
+        "@agentskit/chat/ink"
+      ],
       "legacyPackages": [],
-      "status": "inventory-required",
+      "status": "certified",
       "evidence": {
         "visibility": "private-attestation",
-        "ciStatus": "pending",
-        "productionStatus": "pending",
-        "attestation": "pending-private-audit"
+        "ciStatus": "pass",
+        "productionStatus": "pass",
+        "attestation": "chat-convergence-pass"
       }
     }
   ]
