@@ -1,57 +1,91 @@
+import Link from 'next/link'
+
 const BRANCHES = [
-  { title: 'React', detail: 'web apps & design systems' },
-  { title: 'Vue', detail: 'composition API shells' },
-  { title: 'Svelte', detail: 'Svelte 5 native UI' },
-  { title: 'Solid', detail: 'fine-grained reactivity' },
-  { title: 'Angular', detail: 'enterprise web' },
-  { title: 'React Native', detail: 'iOS & Android' },
-  { title: 'Ink', detail: 'terminal / TUI' },
+  { title: 'React', href: '/docs/getting-started/react', meta: '@agentskit/chat/react', detail: 'web apps & design systems' },
+  { title: 'Vue', href: '/docs/getting-started/vue', meta: '@agentskit/chat/vue', detail: 'composition API shells' },
+  { title: 'Svelte', href: '/docs/getting-started/svelte', meta: '@agentskit/chat/svelte', detail: 'Svelte 5 native UI' },
+  { title: 'Solid', href: '/docs/getting-started/solid', meta: '@agentskit/chat/solid', detail: 'fine-grained reactivity' },
+  { title: 'Angular', href: '/docs/getting-started/angular', meta: '@agentskit/chat/angular', detail: 'enterprise web' },
+  { title: 'React Native', href: '/docs/getting-started/react-native', meta: '@agentskit/chat/react-native', detail: 'iOS & Android' },
+  { title: 'Ink', href: '/docs/getting-started/ink', meta: '@agentskit/chat/ink', detail: 'terminal / TUI' },
 ] as const
+
+// Even row centers in viewBox 0–100 for 7 destinations
+const ARC_DESTS = [7.14, 21.43, 35.71, 50, 64.29, 78.57, 92.86]
+const arcPath = (y: number) => `M 22 50 C 42 50, 42 ${y}, 64 ${y}`
 
 export function ArchitectureFanout() {
   return (
-    <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="relative overflow-hidden rounded-2xl border border-ak-border bg-ak-surface p-5 shadow-xl">
-        <div className="mb-3 font-mono text-xs text-ak-graphite">@agentskit/chat</div>
-        <div className="text-3xl font-bold tracking-tight text-ak-foam sm:text-4xl">defineChat</div>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ak-graphite">
-          Routes, policy, components, sessions — one application signature. AgentsKit owns adapters,
-          tools, memory, RAG, and lifecycle.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {['protocol', 'server', 'policy', 'components'].map((tag) => (
-            <span key={tag} className="rounded-full border border-ak-border px-2.5 py-1 font-mono text-[11px] text-ak-blue">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+    <div className="relative mt-4">
+      <svg
+        aria-hidden
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-0 hidden h-full w-full md:block"
+      >
+        {ARC_DESTS.map((y, i) => (
+          <g key={y}>
+            <path
+              d={arcPath(y)}
+              pathLength={100}
+              fill="none"
+              stroke="var(--ak-accent)"
+              strokeWidth={1}
+              strokeOpacity={0.22}
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d={arcPath(y)}
+              pathLength={100}
+              fill="none"
+              stroke="var(--ak-accent)"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              className="ak-flow-out"
+              style={{ animationDelay: `${-Math.floor(i / 2)}s` }}
+            />
+          </g>
+        ))}
+      </svg>
 
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-y-3 left-0 hidden w-8 lg:block" aria-hidden>
-          <svg viewBox="0 0 40 280" className="h-full w-full text-ak-green/50">
-            {BRANCHES.map((_, i) => {
-              const y = 20 + i * 36
-              return <path key={i} d={`M0,140 C18,140 18,${y} 40,${y}`} fill="none" stroke="currentColor" strokeWidth="1.5" />
-            })}
-          </svg>
+      <div className="relative grid gap-8 md:grid-cols-[minmax(0,16rem)_1fr] md:items-stretch md:gap-10">
+        <div className="self-center rounded-2xl border border-ak-border bg-ak-surface/70 p-6">
+          <div className="font-mono text-sm text-ak-graphite">@agentskit/chat</div>
+          <div className="mt-2 font-mono text-3xl font-bold text-ak-foam sm:text-4xl">defineChat</div>
+          <p className="mt-4 text-sm leading-relaxed text-ak-graphite">
+            Routes, policy, components, sessions — one application signature. AgentsKit owns
+            adapters, tools, memory, RAG, and lifecycle.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {['protocol', 'server', 'policy', 'components'].map((tag) => (
+              <span key={tag} className="rounded-full border border-ak-border px-2.5 py-1 font-mono text-[11px] text-ak-blue">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-        <ul className="flex flex-col gap-2 lg:pl-10">
+
+        <ul className="flex flex-col justify-between gap-1.5 md:ml-auto md:w-[min(100%,28rem)]">
           {BRANCHES.map((branch) => (
-            <li
-              key={branch.title}
-              className="flex items-center justify-between gap-3 rounded-xl border border-ak-border bg-ak-surface/80 px-3.5 py-2.5 transition hover:border-ak-blue/50"
-            >
-              <div className="flex items-center gap-3">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-ak-blue/10 font-mono text-xs font-bold text-ak-blue">
+            <li key={branch.title}>
+              <Link
+                href={branch.href}
+                className="group flex items-center gap-2.5 rounded-xl border border-ak-border bg-ak-surface/50 px-3 py-2 transition hover:border-ak-blue/40 hover:bg-ak-surface"
+              >
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ak-surface font-mono text-xs font-bold text-ak-blue transition group-hover:bg-ak-blue group-hover:text-ak-midnight">
                   {branch.title.slice(0, 2)}
                 </span>
-                <div>
-                  <div className="font-mono text-sm font-semibold text-ak-foam">{branch.title}</div>
-                  <div className="text-xs text-ak-graphite">{branch.detail}</div>
-                </div>
-              </div>
-              <span className="hidden font-mono text-[11px] text-ak-graphite sm:inline">@agentskit/chat/{branch.title === 'React Native' ? 'react-native' : branch.title.toLowerCase()}</span>
+                <span className="min-w-0">
+                  <span className="block font-mono text-sm font-medium text-ak-foam transition group-hover:text-ak-blue">
+                    {branch.title}
+                  </span>
+                  <span className="block text-[11px] text-ak-graphite">{branch.detail}</span>
+                </span>
+                <span className="ml-auto hidden text-right font-mono text-[10px] text-ak-graphite sm:inline sm:text-[11px]">
+                  {branch.meta}
+                </span>
+              </Link>
             </li>
           ))}
         </ul>

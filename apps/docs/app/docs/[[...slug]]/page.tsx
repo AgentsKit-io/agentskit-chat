@@ -21,14 +21,14 @@ export default async function DocumentationPage({ params }: { readonly params: P
     {isHome ? (
       <div className="docs-hero-banner not-prose mb-6">
         <div>
-          <p className="m-0 text-sm font-semibold tracking-wide text-fd-muted-foreground uppercase">One definition · seven shells</p>
+          <p className="m-0 text-sm font-semibold tracking-wide text-fd-muted-foreground uppercase">Product docs</p>
           <p>
-            Build AI chat interfaces once and ship them on web, mobile, and terminal with the same
-            application signature — routes, policy, components, and sessions included.
+            Install, run, connect backends, add RAG, style shells, and ship native chat on every
+            AgentsKit surface — without the internal ADR/PRD noise.
           </p>
         </div>
         <div className="docs-surface-pills" aria-label="Supported surfaces">
-          {['React', 'Vue', 'Svelte', 'Solid', 'Angular', 'React Native', 'Ink'].map((surface) => (
+          {['React', 'Vue', 'Svelte', 'Solid', 'Angular', 'RN', 'Ink'].map((surface) => (
             <span key={surface}>{surface}</span>
           ))}
         </div>

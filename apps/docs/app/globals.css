@@ -23,18 +23,39 @@ body {
   font-feature-settings: 'ss01' on, 'cv11' on;
 }
 
-/* Shiki dual-theme — never flatten token colors to gray. */
+/* Shiki — never paint per-token backgrounds (the “black bar” bug). */
 code[data-line] span,
 pre[data-language] span,
-.shiki span {
-  color: var(--shiki-light);
+pre.shiki span,
+.shiki span,
+[data-ak-code-block] span {
+  color: var(--shiki-dark, var(--shiki-light, inherit));
   background-color: transparent !important;
+  background: transparent !important;
 }
-.dark code[data-line] span,
-.dark pre[data-language] span,
-.dark .shiki span {
-  color: var(--shiki-dark);
-  background-color: transparent !important;
+
+pre.shiki,
+pre[data-language],
+[data-ak-code-block] pre {
+  background: #0d1117 !important;
+}
+
+/* Architecture fanout — traveling packets (from agentskit.io) */
+.ak-flow-out {
+  stroke-dasharray: 1.5 398.5;
+  animation: ak-flow-out 4s linear infinite;
+}
+
+@keyframes ak-flow-out {
+  to {
+    stroke-dashoffset: -400;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-flow-out {
+    animation: none;
+  }
 }
 
 html.dark,

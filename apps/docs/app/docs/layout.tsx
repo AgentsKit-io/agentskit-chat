@@ -17,9 +17,8 @@ export default function DocumentationLayout({ children }: { readonly children: R
     }}
     links={[
       { text: 'Home', url: '/' },
-      { text: 'Get started', url: '/docs/getting-started' },
-      { text: 'Stability', url: '/docs/releases/stability' },
-      { text: 'llms.txt', url: '/llms.txt', external: true },
+      { text: 'How to', url: '/docs/guides/install-and-run' },
+      { text: 'CLI', url: '/docs/cli' },
       { text: 'GitHub', url: 'https://github.com/AgentsKit-io/agentskit-chat', external: true },
     ]}
     sidebar={{ defaultOpenLevel: 1, collapsible: true }}

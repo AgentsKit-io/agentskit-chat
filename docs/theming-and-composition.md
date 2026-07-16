@@ -1,4 +1,9 @@
-# Theming and native composition
+---
+title: Styling
+description: Semantic theme tokens and native composition slots for AgentsKit Chat shells.
+---
+
+# Styling
 
 Pass the same semantic theme to any application shell:
 

@@ -4,8 +4,6 @@ import AxeBuilder from '@axe-core/playwright'
 test('navigates the canonical docs and answers a known question locally', async ({ page }) => {
   await page.goto('/docs/getting-started/react')
   await expect(page.getByRole('heading', { name: 'React quick start' }).first()).toBeVisible()
-  // Syntax themes intentionally use multi-hue tokens; exclude only pre/code
-  // color-contrast noise while keeping AA on chrome, nav, and prose.
   const accessibility = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .exclude('pre')
@@ -26,14 +24,12 @@ test('uses the product landing as the entry point and docs as the learning path'
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: /One AI chat/i })).toBeVisible()
   await expect(page.getByRole('heading', { name: /One definition\. Everything else plugs in/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Same definition\. Different shells/i })).toBeVisible()
   await expect(page.getByText('live', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('Works with', { exact: false }).first()).toBeVisible()
-  await page.getByRole('link', { name: /Read the docs/i }).click()
-  await expect(page).toHaveURL(/\/docs$/)
-  await expect(page.getByRole('heading', { name: 'AgentsKit Chat', level: 1 })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Continue through the ecosystem' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'View canonical Markdown' })).toHaveAttribute('href', '/raw/index.mdx')
+  // no useless product chrome
+  await expect(page.getByText('agentskit.chat')).toHaveCount(0)
+  await page.getByRole('link', { name: /Install & run/i }).first().click()
+  await expect(page).toHaveURL(/\/docs\/guides\/install-and-run/)
 })
 
 test('keeps framework install tabs interactive on getting started', async ({ page }) => {
@@ -80,42 +76,26 @@ test('keeps unavailable backend behavior explicit and supports keyboard focus', 
   await expect(page.getByRole('button', { name: 'Ask the docs' })).toBeFocused()
 })
 
-test('publishes canonical folder indexes, metadata, and machine-readable public docs', async ({ request }) => {
-  const [home, docs, index, llms, full, forAgents, knowledge, raw, rawIndex, architecture] = await Promise.all([
+test('publishes public docs surface and keeps machine-readable artifacts', async ({ request }) => {
+  const [home, docs, guide, llms, knowledge, raw, architecture, product] = await Promise.all([
     request.get('/'),
     request.get('/docs'),
-    request.get('/docs/getting-started'),
+    request.get('/docs/guides/install-and-run'),
     request.get('/llms.txt'),
-    request.get('/llms-full.txt'),
-    request.get('/for-agents'),
     request.get('/deterministic/knowledge.json'),
     request.get('/raw/backend.md'),
-    request.get('/raw/index.mdx'),
-    request.get('/assets/agentschat-architecture.svg'),
+    request.get('/docs/architecture/overview'),
+    request.get('/docs/product/PRD'),
   ])
   expect(home.ok()).toBe(true)
-  const homeHtml = await home.text()
-  expect(homeHtml).toMatch(/One AI chat/i)
-  expect(homeHtml).toMatch(/Everything else plugs in/i)
+  expect(await home.text()).toMatch(/One AI chat/i)
   expect(docs.ok()).toBe(true)
-  expect(await docs.text()).toContain('Continue through the ecosystem')
-  expect(index.ok()).toBe(true)
-  expect(await index.text()).toContain('Get started')
+  expect(guide.ok()).toBe(true)
+  expect(await guide.text()).toContain('Install and run')
   expect(llms.ok()).toBe(true)
-  const concise = await llms.text()
-  expect(concise).toContain('AgentsKit Chat')
-  expect(concise.length).toBeLessThan(10_000)
-  expect(concise).toContain('https://akos.agentskit.io')
-  expect(full.ok()).toBe(true)
-  expect((await full.text()).length).toBeGreaterThan(concise.length)
-  expect(forAgents.ok()).toBe(true)
-  expect(forAgents.url()).toContain('/docs/for-agents')
   expect(knowledge.ok()).toBe(true)
-  expect((await knowledge.json()).protocol).toBe('agentskit.chat.knowledge')
   expect(raw.ok()).toBe(true)
-  expect(await raw.text()).toContain('# Hosted and self-hosted Ask backend')
-  expect(rawIndex.ok()).toBe(true)
-  expect(await rawIndex.text()).toContain('title: AgentsKit Chat')
-  expect(architecture.ok()).toBe(true)
-  expect(architecture.headers()['content-type']).toContain('image/svg+xml')
+  // private maintainer docs must not be on the public site
+  expect(architecture.status()).toBe(404)
+  expect(product.status()).toBe(404)
 })
