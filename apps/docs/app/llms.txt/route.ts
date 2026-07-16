@@ -1,5 +1,5 @@
 import { collectCanonicalDocs, publicDocSlug } from '@/lib/docs-index'
-import ecosystem from '../../../ecosystem.json'
+import ecosystem from '../../../../ecosystem.json'
 import { formatEcosystemLlmsBlock } from '@/lib/ecosystem-llms-block'
 
 export const dynamic = 'force-static'
