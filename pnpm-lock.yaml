@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@agentskit/doc-bridge':
-        specifier: 1.1.1
-        version: 1.1.1(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
+        specifier: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz
+        version: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.0
         version: 2.31.0(@types/node@26.1.1)
@@ -697,8 +697,9 @@ packages:
   '@agentskit/core@1.12.3':
     resolution: {integrity: sha512-fNHrzpEoCaWHDK2fwk/BIhcPseN6zCdy3N0WjzdelnmRuh7zy9/Ki0zcukesK5ZAAmXdz2+Dj8FI7AM32JyOKw==}
 
-  '@agentskit/doc-bridge@1.1.1':
-    resolution: {integrity: sha512-gnAu8E2qyOuEmd+hT1MUAYDtYjbGf3THRx3EnwQ6yvPHpu20mkEUazpTLHS3d5D/mXA7iljC1+Qx6JjHoifH1g==}
+  '@agentskit/doc-bridge@https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz':
+    resolution: {tarball: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz}
+    version: 1.2.2
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -6952,8 +6953,9 @@ snapshots:
 
   '@agentskit/core@1.12.3': {}
 
-  '@agentskit/doc-bridge@1.1.1(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
+  '@agentskit/doc-bridge@https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
     dependencies:
+      mermaid: 11.16.0
       zod: 3.25.76
     optionalDependencies:
       '@agentskit/core': 1.12.3
@@ -9686,7 +9688,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.2.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@types/node@22.20.1)(@vitest/coverage-v8@4.1.10)(happy-dom@20.10.6)(vite@8.1.4(@types/node@22.20.1)(esbuild@0.27.7)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.0))
+      vitest: 4.1.10(@types/node@26.1.1)(@vitest/coverage-v8@4.1.10)(happy-dom@20.10.6)(vite@8.1.4(@types/node@26.1.1)(esbuild@0.27.7)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.0))
 
   '@vitest/expect@4.1.10':
     dependencies:

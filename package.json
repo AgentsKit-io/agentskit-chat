@@ -47,7 +47,7 @@
     "test:release-lib": "vitest run scripts/release-lib.test.mjs"
   },
   "devDependencies": {
-    "@agentskit/doc-bridge": "1.1.1",
+    "@agentskit/doc-bridge": "https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz",
     "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.61.0",
     "@vitest/coverage-v8": "^4.1.9",
