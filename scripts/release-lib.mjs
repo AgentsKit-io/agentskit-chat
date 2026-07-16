@@ -28,7 +28,7 @@ const packageManifestSchema = z.object({
     url: z.literal(repositoryUrl),
     directory: z.string(),
   }).strict(),
-  homepage: z.literal('https://github.com/AgentsKit-io/agentskit-chat#readme'),
+  homepage: z.literal('https://chat.agentskit.io/docs'),
   bugs: z.object({
     url: z.literal('https://github.com/AgentsKit-io/agentskit-chat/issues'),
   }).strict(),

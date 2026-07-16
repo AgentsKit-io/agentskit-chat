@@ -9,7 +9,7 @@
     "url": "git+https://github.com/AgentsKit-io/agentskit-chat.git",
     "directory": "packages/server"
   },
-  "homepage": "https://github.com/AgentsKit-io/agentskit-chat#readme",
+  "homepage": "https://chat.agentskit.io/docs",
   "bugs": {
     "url": "https://github.com/AgentsKit-io/agentskit-chat/issues"
   },
