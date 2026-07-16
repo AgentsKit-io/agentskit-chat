@@ -82,5 +82,4 @@ The stable workflow must remain token-free. Its protected publish job uses
 - [x] The exact ten-command dry-run received explicit HITL approval on #103
 - [x] All ten npm deprecations were applied one at a time and all 20 published versions were re-read
 - [x] Canonical replacement subpaths and migration links match on every deprecated version
-- [ ] AKOS has a fresh approved aggregate private attestation and is certified in the current ledger
-- [ ] ADR-0027 and ADR-0030 statuses match the final production and convergence truth
+- [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision
