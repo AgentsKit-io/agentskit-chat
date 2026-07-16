@@ -1,0 +1,55 @@
+---
+title: AgentsKit Chat
+description: Build one versioned chat application and render it natively across every supported AgentsKit client.
+---
+
+Define routes, actions, components, sessions, and backend seams once. AgentsKit Chat composes
+those application concerns over AgentsKit, then each supported framework renders them natively.
+
+<img
+  src="/assets/agentschat-architecture.svg"
+  alt="AgentsKit Chat architecture: one definition, deterministic answers, optional grounded Ask, and seven native renderers"
+/>
+
+## Start with a working shell
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+cd my-chat
+pnpm install
+pnpm test
+```
+
+The CLI creates a shared definition, Web-standard handler, native shell, test, and architecture
+note. Choose another supported renderer in the [framework quick starts](./getting-started/README.md).
+
+## Choose the shortest path
+
+<Cards>
+  <Card title="Architecture" description="Understand ownership and upstream boundaries." href="./architecture/overview" />
+  <Card title="Routes and state" description="Define deterministic conversation paths." href="./conversation/routes-and-state" />
+  <Card title="Action policy" description="Register actions, policy, and confirmation." href="./actions/policy" />
+  <Card title="Grounded backend" description="Connect hosted or self-hosted Ask." href="./backend" />
+  <Card title="API reference" description="Look up exported public contracts." href="./api-reference" />
+  <Card title="Compatibility" description="Verify supported package versions." href="./releases/compatibility" />
+</Cards>
+
+Missing framework-neutral primitives are fixed in AgentsKit first. Chat owns application
+composition and versioned boundaries; it does not copy the controller, lifecycle, tools, memory,
+RAG, or framework bindings.
+
+## Continue through the ecosystem
+
+Every product is optional. Follow the next problem, not a prescribed suite.
+
+<Cards className="lg:grid-cols-3">
+  <Card title="AgentsKit" description="Build or extend the underlying agent." href="https://www.agentskit.io/docs" external />
+  <Card title="Registry" description="Start from a ready-to-adapt agent." href="https://registry.agentskit.io/agents" external />
+  <Card title="Agents Playbook" description="Apply delivery and engineering standards." href="https://playbook.agentskit.io/docs" external />
+  <Card title="Doc Bridge" description="Make repository documentation agent-ready." href="https://agentskit-io.github.io/doc-bridge/" external />
+  <Card title="Code Review" description="Review the implementation before merge." href="https://github.com/AgentsKit-io/code-review-cli#readme" external />
+  <Card title="AKOS" description="Add enterprise orchestration and controls." href="https://akos.agentskit.io/docs" external />
+</Cards>
+
+For agent consumption, use [llms.txt](/llms.txt), the [full corpus](/llms-full.txt), canonical
+Markdown from each page, or the [for-agents handoffs](./for-agents/index.md).

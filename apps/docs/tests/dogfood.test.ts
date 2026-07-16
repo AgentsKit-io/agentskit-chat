@@ -1,7 +1,7 @@
 import { decodeAskEvents, verifyLocalKnowledgeArtifactSync } from '@agentskit/chat/protocol'
 import { describe, expect, it, vi } from 'vitest'
 import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler'
-import { collectCanonicalDocs } from '../lib/docs-index'
+import { collectCanonicalDocs, publicDocSlug } from '../lib/docs-index'
 import { KNOWLEDGE_HASH, localKnowledgeArtifact, verifiedKnowledgeArtifact } from '../lib/knowledge'
 
 const askRequest = (query: string) => new Request('https://chat.agentskit.io/api/ask?corpus=agentskit-chat-public&persona=agentskit-chat-guide', {
@@ -29,7 +29,15 @@ describe('documentation dogfood', () => {
   it('indexes the canonical repository corpus without an app-local prose copy', async () => {
     const documents = await collectCanonicalDocs()
     expect(documents.length).toBeGreaterThan(50)
+    expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.startsWith('Build one versioned'))).toBe(true)
     expect(documents.some(document => document.path === 'backend.md' && document.title === 'Hosted and self-hosted Ask backend')).toBe(true)
+  })
+
+  it('maps canonical index documents to public folder URLs', () => {
+    expect(publicDocSlug('index.mdx')).toBe('')
+    expect(publicDocSlug('getting-started/README.md')).toBe('getting-started')
+    expect(publicDocSlug('for-agents/index.md')).toBe('for-agents')
+    expect(publicDocSlug('backend.md')).toBe('backend')
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {

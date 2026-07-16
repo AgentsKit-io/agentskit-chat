@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { RootProvider } from 'fumadocs-ui/provider'
+import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
 import './globals.css'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
@@ -14,5 +15,8 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
-  return <html lang="en" suppressHydrationWarning><body><RootProvider>{children}</RootProvider></body></html>
+  return <html lang="en" suppressHydrationWarning><body>
+    <SharedEcosystemBar />
+    <RootProvider>{children}</RootProvider>
+  </body></html>
 }

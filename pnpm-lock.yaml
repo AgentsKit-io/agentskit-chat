@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@agentskit/doc-bridge':
-        specifier: 1.0.2
-        version: 1.0.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
+        specifier: 1.1.1
+        version: 1.1.1(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.0
         version: 2.31.0(@types/node@26.1.1)
@@ -694,8 +694,8 @@ packages:
   '@agentskit/core@1.12.3':
     resolution: {integrity: sha512-fNHrzpEoCaWHDK2fwk/BIhcPseN6zCdy3N0WjzdelnmRuh7zy9/Ki0zcukesK5ZAAmXdz2+Dj8FI7AM32JyOKw==}
 
-  '@agentskit/doc-bridge@1.0.2':
-    resolution: {integrity: sha512-kE5oKKvmFOZliMm9Rfr8N+G1RWaBoDabOK3Vqjz7IJLHyTSyYnHxiE08O6HYKudtAbyV8x0o2R/IEsWNohyLVw==}
+  '@agentskit/doc-bridge@1.1.1':
+    resolution: {integrity: sha512-gnAu8E2qyOuEmd+hT1MUAYDtYjbGf3THRx3EnwQ6yvPHpu20mkEUazpTLHS3d5D/mXA7iljC1+Qx6JjHoifH1g==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -6588,7 +6588,7 @@ snapshots:
 
   '@agentskit/core@1.12.3': {}
 
-  '@agentskit/doc-bridge@1.0.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
+  '@agentskit/doc-bridge@1.1.1(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
     dependencies:
       zod: 3.25.76
     optionalDependencies:

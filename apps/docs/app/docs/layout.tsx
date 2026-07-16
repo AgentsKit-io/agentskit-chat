@@ -7,7 +7,7 @@ import { source } from '@/lib/source'
 export default function DocumentationLayout({ children }: { readonly children: ReactNode }) {
   return <DocsLayout
     tree={source.pageTree}
-    nav={{ title: <Link className="font-semibold" href="/">AgentsKit Chat <span className="maturity-badge ml-2">Alpha</span></Link>, url: '/' }}
+    nav={{ title: <Link className="font-semibold" href="/docs">AgentsKit Chat <span className="maturity-badge ml-2">Alpha</span></Link>, url: '/docs' }}
     links={[
       { text: 'Stability', url: '/docs/releases/stability' },
       { text: 'llms.txt', url: '/llms.txt', external: true },
