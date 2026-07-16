@@ -76,4 +76,4 @@ jobs:
         run: pnpm --filter @agentskit/chat-docs test:e2e
       - name: Promote verified production deployment
         if: inputs.target == 'production'
-        run: pnpm dlx vercel@56.2.0 promote "${{ steps.deploy.outputs.url }}" --yes --token="$VERCEL_TOKEN"
+        run: pnpm dlx vercel@56.2.0 promote "${{ steps.deploy.outputs.url }}" --scope="$VERCEL_ORG_ID" --yes --token="$VERCEL_TOKEN"
