@@ -54,20 +54,18 @@ jobs:
           esac
       - run: pnpm install --frozen-lockfile
       - name: Pull immutable Vercel project settings
-        working-directory: apps/docs
         run: pnpm dlx vercel@56.2.0 pull --yes --environment=${{ inputs.target }} --token="$VERCEL_TOKEN"
       - name: Build deployment artifact
-        working-directory: apps/docs
         run: pnpm dlx vercel@56.2.0 build ${{ inputs.target == 'production' && '--prod' || '' }} --token="$VERCEL_TOKEN"
       - name: Deploy prebuilt artifact
         id: deploy
-        working-directory: apps/docs
         run: |
           deployment_flags=()
           if [[ "${{ inputs.target }}" == "production" ]]; then
             deployment_flags+=(--prod --skip-domain)
           fi
-          url="$(pnpm dlx vercel@56.2.0 deploy --prebuilt "${deployment_flags[@]}" --token="$VERCEL_TOKEN")"
+          deployment_json="$(pnpm dlx vercel@56.2.0 deploy --prebuilt --format=json "${deployment_flags[@]}" --token="$VERCEL_TOKEN")"
+          url="$(node -e 'const result = JSON.parse(require("node:fs").readFileSync(0, "utf8")); const url = result.deployment?.url ?? result.url; if (typeof url !== "string" || !url.startsWith("https://")) process.exit(1); process.stdout.write(url)' <<<"$deployment_json")"
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Install browser for deployment smoke
         run: pnpm exec playwright install --with-deps chromium
@@ -78,5 +76,4 @@ jobs:
         run: pnpm --filter @agentskit/chat-docs test:e2e
       - name: Promote verified production deployment
         if: inputs.target == 'production'
-        working-directory: apps/docs
         run: pnpm dlx vercel@56.2.0 promote "${{ steps.deploy.outputs.url }}" --yes --token="$VERCEL_TOKEN"
