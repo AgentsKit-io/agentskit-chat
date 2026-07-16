@@ -1,0 +1,67 @@
+---
+title: Support bot
+description: Production-shaped support chat definition with copy-paste React shell.
+---
+
+# Support bot
+
+A product support assistant: shared definition, policy-ready components, React shell.
+
+## Definition (framework-neutral)
+
+```ts
+import {
+  StandardComponentCatalog,
+  defineChat,
+  defineComponentManifest,
+} from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    components: defineComponentManifest(StandardComponentCatalog),
+    chat: {
+      adapter,
+      systemPrompt: [
+        'You are product support for AgentsKit Chat.',
+        'Prefer short answers with links to docs.',
+        'When offering options, use registered components only.',
+      ].join(' '),
+    },
+  })
+```
+
+## React shell
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+import '@agentskit/react/theme'
+
+export function Support() {
+  return (
+    <AgentChat
+      definition={createSupportChat(adapter)}
+      placeholder="How can we help?"
+      onComponentSelect={(e) => console.log('choice', e.choiceId)}
+      onComponentInteract={(e) => console.log(e.event, e.value)}
+    />
+  )
+}
+```
+
+## Wire a backend
+
+```ts
+import { createChatHandler } from '@agentskit/chat/server'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+export const POST = createChatHandler({
+  definition: createSupportChat(adapter),
+})
+```
+
+See [Connect backend](/docs/guides/connect-backend) and [Sessions](/docs/sessions).

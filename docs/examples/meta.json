@@ -1,0 +1,10 @@
+{
+  "title": "Examples",
+  "pages": [
+    "index",
+    "basic-chat",
+    "components",
+    "support-bot",
+    "multi-surface"
+  ]
+}

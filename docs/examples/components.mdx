@@ -1,0 +1,42 @@
+---
+title: Standard components
+description: Live gallery of AgentsKit Chat catalog components with keys and ready-to-use props.
+---
+
+# Standard components
+
+These are the closed catalog components a model may propose. Invalid keys/props are inert.
+
+<ComponentGallery />
+
+## Register the catalog
+
+```ts
+import { StandardComponentCatalog, defineComponentManifest, defineChat } from '@agentskit/chat'
+
+export const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest(StandardComponentCatalog),
+  chat: { adapter },
+})
+```
+
+## Handle intents
+
+```tsx
+<AgentChat
+  definition={definition}
+  onComponentSelect={(event) => {
+    // ChoiceList only
+    console.log('choice', event.choiceId)
+  }}
+  onComponentInteract={(event) => {
+    // form / confirm / open / download / …
+    console.log(event.event, event.value)
+  }}
+/>
+```
+
+## Full list
+
+See the [component catalog](/docs/components/catalog) for schemas, events, and fallbacks.

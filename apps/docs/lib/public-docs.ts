@@ -52,6 +52,7 @@ export function isPublicDocPath(relativePath: string): boolean {
   if (normalized === 'index.mdx') return true
   if (normalized.startsWith('getting-started/')) return true
   if (normalized.startsWith('guides/')) return true
+  if (normalized.startsWith('examples/')) return true
   if (normalized.startsWith('components/')) return true
   if (normalized === 'theming-and-composition.md') return true
   if (['server.md', 'backend.md', 'sessions.md', 'deployment.md', 'cli.md', 'api-reference.md', 'lifecycle.md'].includes(normalized)) return true

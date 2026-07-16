@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { RootProvider } from 'fumadocs-ui/provider'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
+import '@agentskit/react/theme'
 import './globals.css'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'

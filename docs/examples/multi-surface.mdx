@@ -1,0 +1,73 @@
+---
+title: Multi-surface
+description: One ChatDefinition rendered on React, Vue, and Ink — copy-paste for each shell.
+---
+
+# Multi-surface
+
+One definition. Three shells. Zero forks.
+
+## Shared definition
+
+```ts
+// chat.ts — framework-neutral
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createAppChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'app',
+    chat: {
+      adapter,
+      systemPrompt: 'Help the user ship faster.',
+    },
+  })
+```
+
+## React
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import { createAppChat } from './chat'
+import { adapter } from './adapter'
+import '@agentskit/react/theme'
+
+export const Web = () => (
+  <AgentChat definition={createAppChat(adapter)} placeholder="Ask…" />
+)
+```
+
+## Vue
+
+```vue
+<script setup lang="ts">
+import { AgentChat } from '@agentskit/chat/vue'
+import { createAppChat } from './chat'
+import { adapter } from './adapter'
+const definition = createAppChat(adapter)
+</script>
+
+<template>
+  <AgentChat :definition="definition" placeholder="Ask…" />
+</template>
+```
+
+## Ink (terminal)
+
+```tsx
+import { render } from 'ink'
+import { AgentChat } from '@agentskit/chat/ink'
+import { createAppChat } from './chat'
+import { adapter } from './adapter'
+
+render(<AgentChat definition={createAppChat(adapter)} />)
+```
+
+## Scaffold
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-web --renderer react --yes
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-cli --renderer ink --yes
+```
+
+Share `chat.ts` across projects or monorepo packages — the signature is the product API.

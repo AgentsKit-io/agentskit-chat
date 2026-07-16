@@ -6,6 +6,8 @@ import { InstallCommand } from '@/components/install-command'
 import { Mermaid } from '@/components/mermaid'
 import { Pre } from '@/components/code-block'
 import { SurfaceGrid } from '@/components/surface-grid'
+import { BasicChatExample } from '@/components/examples/basic-chat'
+import { ComponentGallery } from '@/components/examples/component-gallery'
 
 /** Components available inside canonical docs MDX/Markdown. */
 export const docsMdxComponents = {
@@ -19,7 +21,7 @@ export const docsMdxComponents = {
   InstallCommand,
   SurfaceGrid,
   Mermaid,
+  BasicChatExample,
+  ComponentGallery,
   pre: Pre,
-  // Fumadocs may emit mermaid fences as code blocks with language mermaid —
-  // handled via custom remark if needed; authors can also use <Mermaid chart="..." />.
 }

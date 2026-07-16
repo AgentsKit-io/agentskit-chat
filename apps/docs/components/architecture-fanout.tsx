@@ -1,16 +1,16 @@
 import Link from 'next/link'
+import { BrandIcon } from '@/components/brand-icon'
 
 const BRANCHES = [
-  { title: 'React', href: '/docs/getting-started/react', meta: '@agentskit/chat/react', detail: 'web apps & design systems' },
-  { title: 'Vue', href: '/docs/getting-started/vue', meta: '@agentskit/chat/vue', detail: 'composition API shells' },
-  { title: 'Svelte', href: '/docs/getting-started/svelte', meta: '@agentskit/chat/svelte', detail: 'Svelte 5 native UI' },
-  { title: 'Solid', href: '/docs/getting-started/solid', meta: '@agentskit/chat/solid', detail: 'fine-grained reactivity' },
-  { title: 'Angular', href: '/docs/getting-started/angular', meta: '@agentskit/chat/angular', detail: 'enterprise web' },
-  { title: 'React Native', href: '/docs/getting-started/react-native', meta: '@agentskit/chat/react-native', detail: 'iOS & Android' },
-  { title: 'Ink', href: '/docs/getting-started/ink', meta: '@agentskit/chat/ink', detail: 'terminal / TUI' },
+  { title: 'React', href: '/docs/getting-started/react', meta: '@agentskit/chat/react', detail: 'web apps & design systems', slug: 'react' },
+  { title: 'Vue', href: '/docs/getting-started/vue', meta: '@agentskit/chat/vue', detail: 'composition API shells', slug: 'vuedotjs' },
+  { title: 'Svelte', href: '/docs/getting-started/svelte', meta: '@agentskit/chat/svelte', detail: 'Svelte 5 native UI', slug: 'svelte' },
+  { title: 'Solid', href: '/docs/getting-started/solid', meta: '@agentskit/chat/solid', detail: 'fine-grained reactivity', slug: 'solid' },
+  { title: 'Angular', href: '/docs/getting-started/angular', meta: '@agentskit/chat/angular', detail: 'enterprise web', slug: 'angular' },
+  { title: 'React Native', href: '/docs/getting-started/react-native', meta: '@agentskit/chat/react-native', detail: 'iOS & Android', slug: 'expo' },
+  { title: 'Ink', href: '/docs/getting-started/ink', meta: '@agentskit/chat/ink', detail: 'terminal / TUI', slug: null as string | null },
 ] as const
 
-// Even row centers in viewBox 0–100 for 7 destinations
 const ARC_DESTS = [7.14, 21.43, 35.71, 50, 64.29, 78.57, 92.86]
 const arcPath = (y: number) => `M 22 50 C 42 50, 42 ${y}, 64 ${y}`
 
@@ -73,8 +73,8 @@ export function ArchitectureFanout() {
                 href={branch.href}
                 className="group flex items-center gap-2.5 rounded-xl border border-ak-border bg-ak-surface/50 px-3 py-2 transition hover:border-ak-blue/40 hover:bg-ak-surface"
               >
-                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ak-surface font-mono text-xs font-bold text-ak-blue transition group-hover:bg-ak-blue group-hover:text-ak-midnight">
-                  {branch.title.slice(0, 2)}
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ak-surface transition group-hover:bg-ak-blue/15">
+                  <BrandIcon slug={branch.slug} label={branch.title} size={20} imgClass="h-5 w-5" />
                 </span>
                 <span className="min-w-0">
                   <span className="block font-mono text-sm font-medium text-ak-foam transition group-hover:text-ak-blue">
