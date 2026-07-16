@@ -1,0 +1,93 @@
+---
+title: CLI
+description: Full agentskit-chat CLI — init, add component, shell completion.
+---
+
+# CLI
+
+```bash
+pnpm add -g @agentskit/chat-cli
+# or
+pnpm dlx @agentskit/chat-cli@0.4.0 <command>
+```
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `agentskit-chat init [dir]` | Scaffold a complete chat project |
+| `agentskit-chat add component <name>` | Generate a schema-backed component |
+| `agentskit-chat completion <shell>` | Print bash / zsh / fish completion |
+| `--help` / `--version` | Help and version |
+
+## Command map
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  init[init] --> project[Definition + server + shell]\n' +
+      '  add[add component] --> schema[Schema + native files]\n' +
+      '  comp[completion] --> shell[Shell scripts]'
+  }
+/>
+
+## `init`
+
+```bash
+agentskit-chat init [directory] --renderer <name> [--yes]
+```
+
+| Flag | Description |
+| --- | --- |
+| `[directory]` | Target path — must **not** exist |
+| `--renderer` | `react` · `vue` · `svelte` · `solid` · `angular` · `react-native` · `ink` |
+| `--yes` | Non-interactive (CI) |
+
+Without `--renderer`, detects host stack when unambiguous; TTY may prompt once.
+
+**Creates:** `src/chat.ts`, Web-standard `src/server.ts`, native entry, TS config, test, README. Never overwrites.
+
+```bash
+agentskit-chat init my-chat --renderer react --yes
+agentskit-chat init my-mobile --renderer react-native --yes
+agentskit-chat init my-cli --renderer ink --yes
+```
+
+<InstallCommand />
+
+## `add component`
+
+```bash
+agentskit-chat add component <name> --renderer react,vue[,ink...] [--directory .] [--yes]
+```
+
+Writes `src/components/<name>.ts` (schema + fallback) + presentation files per renderer. Checks destinations, rejects symlink traps, rolls back on failure.
+
+```bash
+agentskit-chat add component status-card --renderer react,vue,ink --directory . --yes
+```
+
+Register the export in your component manifest — [Components](/docs/components/catalog).
+
+## `completion`
+
+```bash
+agentskit-chat completion bash
+agentskit-chat completion zsh
+agentskit-chat completion fish
+```
+
+## Errors
+
+| Code | Fix |
+| --- | --- |
+| `RENDERER_REQUIRED` | Pass a supported `--renderer` |
+| `TARGET_EXISTS` | New directory name |
+| `MANIFEST_INVALID` | Fix host `package.json` or pass flags |
+| `COMPONENT_INVALID` | Rename component |
+| `COMPONENT_EXISTS` | Rename or remove collision |
+
+## Related
+
+- [Install guide](/docs/guides/install-and-run)
+- [Examples](/docs/examples)

@@ -1,0 +1,115 @@
+---
+title: File attachment
+description: "Named file with mime, size, and optional URL. Component key `file-attachment`."
+---
+
+# File attachment
+
+`file-attachment` surfaces a file in the transcript: name, mime type, optional size, optional open URL. Emits `open` with the URL when present.
+
+## Live preview
+
+<ComponentDemo componentKey="file-attachment" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Generated reports, exports, or uploaded artifacts
+- When the host should open/download on click
+
+### Prefer something else when
+
+- Generic external links → `link-card`
+- Multi-file citations → `source-list`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `name` | string | File name |
+| `mimeType` | string | MIME type |
+| `sizeBytes` | int ≥ 0? | Optional size |
+| `url` | portable URL? | If set, open/download affordance |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "file-attachment",
+  "instanceId": "file-attachment-fixture",
+  "props": {
+    "name": "report.pdf",
+    "mimeType": "application/pdf",
+    "sizeBytes": 1024,
+    "url": "/report.pdf"
+  },
+  "fallback": {
+    "kind": "file-attachment",
+    "summary": "Attached report.pdf."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `open` | `url` | URL opened (when `url` is set) |
+
+## Host wiring
+
+```tsx
+import { FileAttachmentComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([FileAttachmentComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // event === 'open'; value is url
+        // { type: 'interact', componentKey: 'file-attachment', instanceId, event: 'open', value: url }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `file-attachment` |
+| Export | `FileAttachmentComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `open` (`url`) |
+| Host callback | `onComponentInteract` |
+| Event shape | type always `interact`; `event` is `open`; `value` is url |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Link card](/docs/components/link-card) — Generic navigation
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

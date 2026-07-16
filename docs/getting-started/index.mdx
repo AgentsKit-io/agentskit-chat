@@ -1,0 +1,61 @@
+---
+title: Get started
+description: Scaffold AgentsKit Chat and pick a native renderer.
+---
+
+# Get started
+
+You are creating an **AI chat application** — not a one-off UI demo.
+
+## 1. Scaffold
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+cd my-chat && pnpm install && pnpm test
+```
+
+<InstallCommand />
+
+## 2. Pick a surface
+
+<SurfaceGrid />
+
+| Surface | Guide |
+| --- | --- |
+| React | [React](/docs/getting-started/react) |
+| Vue | [Vue](/docs/getting-started/vue) |
+| Svelte | [Svelte](/docs/getting-started/svelte) |
+| Solid | [Solid](/docs/getting-started/solid) |
+| Angular | [Angular](/docs/getting-started/angular) |
+| React Native | [React Native](/docs/getting-started/react-native) |
+| Ink | [Ink](/docs/getting-started/ink) |
+
+## 3. The signature
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createProductChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'product',
+    chat: { adapter, systemPrompt: 'Be precise.' },
+  })
+```
+
+One definition → server handler + every shell. See [Multi-surface](/docs/examples/multi-surface).
+
+## 4. Live
+
+<BasicChatExample />
+
+## 5. Next paths
+
+<Cards>
+  <Card title="Examples" description="Copy-paste + live demos." href="/docs/examples" />
+  <Card title="Connect backend" description="Handlers and sessions." href="/docs/guides/connect-backend" />
+  <Card title="Components" description="Interactive catalog UI." href="/docs/examples/components" />
+  <Card title="CLI reference" description="Every flag." href="/docs/cli" />
+</Cards>
+
+<AdaptersCallout />

@@ -8,7 +8,7 @@ Native Angular application shell for AgentsKit Chat. Composes `AgentskitChat` an
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [Angular guide](../../docs/getting-started/angular.md) |
+| Quick start | [Angular guide](../../docs/getting-started/angular.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 
 ## Quick start

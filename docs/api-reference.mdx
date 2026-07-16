@@ -1,0 +1,67 @@
+---
+title: API reference
+description: Public packages and primary exports for AgentsKit Chat.
+---
+
+# API reference
+
+All packages use **named exports**. Runtime input must enter through exported schemas, decoders, or resolvers — TypeScript types alone are not a trust boundary.
+
+## Package map
+
+| Package | Primary public API |
+| --- | --- |
+| `@agentskit/chat` | `defineChat`, sessions, controlled driver, routes, component manifest, theme/fallback, action policy/confirmation, Ask + deterministic adapters |
+| `@agentskit/chat/protocol` | Turn/session/component schemas & codecs, Ask events, deterministic contracts |
+| `@agentskit/chat/protocol/fixtures` | Conformance fixtures for tests |
+| `@agentskit/chat/server` | `createChatHandler`, `createAskServiceHandler`, Web `Request` → streaming `Response` |
+| `@agentskit/chat/react` | `AgentChat`, `ChoiceList`, `StandardComponent`, slots, `toChatCssVariables` |
+| `@agentskit/chat/react-native` | `AgentChatNative`, native slots/styles |
+| `@agentskit/chat/ink` | `AgentChat`, semantic fallback, Ink theme helper |
+| `@agentskit/chat/vue` | `AgentChat`, scoped slots |
+| `@agentskit/chat/svelte` | `AgentChat`, typed snippets |
+| `@agentskit/chat/solid` | `AgentChat`, render props |
+| `@agentskit/chat/angular` | `AgentChatComponent`, content templates |
+| `@agentskit/chat/devtools` | Trace capture, renderer outcome compare |
+| `@agentskit/chat-cli` | `init`, `add component`, `completion` |
+
+## Composition shape
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import { createChatHandler } from '@agentskit/chat/server'
+import { AgentChat } from '@agentskit/chat/react'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createApp = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'app',
+    chat: { adapter },
+  })
+
+// server
+export const POST = createChatHandler({
+  resolveDefinition: () => createApp(serverAdapter),
+  authenticate: /* … */,
+  sessionStorage: /* … */,
+})
+
+// client
+export const UI = () => <AgentChat definition={createApp(clientAdapter)} />
+```
+
+## Controlled sessions
+
+`createControlledChatDriver` validates an external serializable snapshot and projects host lifecycle callbacks through the canonical AgentsKit `ChatReturn` shape. React and Ink `AgentChat` accept that via optional `controlled`.
+
+## Where to go next
+
+| Goal | Page |
+| --- | --- |
+| Scaffold | [CLI](/docs/cli) · [Install](/docs/guides/install-and-run) |
+| Live code | [Examples](/docs/examples) |
+| Components | [Catalog](/docs/components/catalog) |
+| Adapters / providers | [AgentsKit providers](https://www.agentskit.io/docs/data/providers) |
+| Tools / integrations | [AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations) |
+
+Generated `.d.ts` in each package `dist/` is the exact signature reference.

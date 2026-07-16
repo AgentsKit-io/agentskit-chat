@@ -1,0 +1,44 @@
+---
+title: Angular quick start
+description: Standalone Angular component shell for AgentsKit Chat.
+---
+
+# Angular quick start
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/angular @angular/core @angular/common rxjs
+```
+
+## Shell
+
+```ts
+import { Component } from '@angular/core'
+import { AgentChatComponent } from '@agentskit/chat/angular'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+@Component({
+  selector: 'app-support',
+  standalone: true,
+  imports: [AgentChatComponent],
+  template: `
+    <ak-agent-chat [definition]="supportChat" placeholder="Ask about the product">
+      <ng-template #message let-message>
+        <article [attr.data-role]="message.role">{{ message.content }}</article>
+      </ng-template>
+    </ak-agent-chat>
+  `,
+})
+export class SupportComponent {
+  readonly supportChat = createSupportChat(adapter)
+}
+```
+
+Delegates to `AgentskitChat` from [@agentskit/angular](https://www.agentskit.io/docs). Content templates: `container`, `message`, `input`, `thinking`, `confirmation`, `choiceList`.
+
+## Next
+
+- [Multi-surface](/docs/examples/multi-surface)
+- [CLI](/docs/cli)

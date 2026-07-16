@@ -1,0 +1,43 @@
+---
+title: Vue quick start
+description: Native Vue shell for the same ChatDefinition.
+---
+
+# Vue quick start
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/vue vue
+```
+
+## Shell
+
+```vue
+<script setup lang="ts">
+import { AgentChat } from '@agentskit/chat/vue'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+const definition = createSupportChat(adapter)
+</script>
+
+<template>
+  <AgentChat :definition="definition" placeholder="Ask about the product">
+    <template #message="{ message }">
+      <article :data-role="message.role">{{ message.content }}</article>
+    </template>
+  </AgentChat>
+</template>
+```
+
+State, streaming, tools, and lifecycle come from [`useChat` in @agentskit/vue](https://www.agentskit.io/docs). Scoped slots: `container`, `message`, `input`, `thinking`, `confirmation`, `choiceList`.
+
+## Shared definition
+
+Keep `createSupportChat` framework-neutral — see [React quick start](/docs/getting-started/react) for the `defineChat` module.
+
+## Next
+
+- [Multi-surface](/docs/examples/multi-surface)
+- [Install & run](/docs/guides/install-and-run)

@@ -1,0 +1,69 @@
+---
+title: Action policy
+description: Capability policy outside the model — deny unknown actions before confirmation.
+---
+
+# Action policy
+
+Compose trusted capability policy into the same `ChatConfig` used by every renderer. Policy runs **outside** the model — prompts cannot grant capabilities.
+
+## Flow
+
+<Mermaid
+  chart={
+    'flowchart TD\n' +
+      '  M[Model or route proposes action] --> P{createCapabilityPolicy}\n' +
+      '  P -->|unknown action| X[Deny]\n' +
+      '  P -->|missing context| X\n' +
+      '  P -->|allowed| C[Confirmation UI]\n' +
+      '  C -->|approve| E{Re-check capabilities}\n' +
+      '  E -->|revoked| X\n' +
+      '  E -->|ok| T[AgentsKit tool execute]'
+  }
+/>
+
+## Compose policy
+
+```ts
+import { createCapabilityPolicy, withActionPolicy } from '@agentskit/chat'
+
+const policy = createCapabilityPolicy({
+  sessionId,
+  getContext: () => authenticatedSession, // trusted host seam only
+  requirements: {
+    'email.send': ['email:send'],
+    'docs.open': [],
+  },
+  onTrace: trace => auditBuffer.push(trace),
+})
+
+const chat = withActionPolicy(baseChat, policy)
+```
+
+### Rules
+
+| Rule | Detail |
+| --- | --- |
+| Trusted context | `getContext` is a host seam — never from prompts, messages, or component props |
+| Deny by default | Unknown actions and missing context fail before confirmation |
+| Double-check | Capabilities re-checked immediately before execution (revocation works after UI shown) |
+| Traces | Immutable and replayable — **not** a durable audit ledger; persist in the host if required |
+
+## Wire with confirmation
+
+```tsx
+<AgentChat
+  definition={definition}
+  onComponentSelect={(event) => {
+    // choice may carry action → policy + confirmation path
+  }}
+/>
+```
+
+See [Typed confirmation](/docs/actions/confirmation) and [Components](/docs/examples/components).
+
+## Related
+
+- [Confirmation](/docs/actions/confirmation)
+- [ChoiceList](/docs/components/choice-list)
+- [AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations)

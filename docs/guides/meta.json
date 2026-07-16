@@ -1,0 +1,9 @@
+{
+  "title": "How to",
+  "pages": [
+    "install-and-run",
+    "add-rag",
+    "connect-backend",
+    "style"
+  ]
+}

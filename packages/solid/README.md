@@ -8,7 +8,7 @@ Solid application shell for AgentsKit Chat. Composes `useChat` and the headless 
 
 | Surface | Evidence |
 |---|---|
-| Quick start | [Solid guide](../../docs/getting-started/solid.md) |
+| Quick start | [Solid guide](../../docs/getting-started/solid.mdx) |
 | Conformance | [matrix row](../../docs/conformance/matrix.generated.md) |
 
 ## Quick start

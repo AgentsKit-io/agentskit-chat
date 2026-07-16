@@ -1,0 +1,63 @@
+---
+title: React quick start
+description: Render an AgentsKit Chat definition with the native React shell.
+---
+
+# React quick start
+
+Define once. Render with `@agentskit/chat/react`.
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/react react
+```
+
+## Definition
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: {
+      adapter,
+      systemPrompt: 'Help users understand the product.',
+    },
+  })
+```
+
+## Shell
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+import '@agentskit/react/theme'
+
+export const Support = () => (
+  <AgentChat
+    definition={createSupportChat(adapter)}
+    placeholder="Ask about the product"
+  />
+)
+```
+
+`AgentChat` passes `definition.chat` to `useChat` from [@agentskit/react](https://www.agentskit.io/docs/ui). Streaming, tools, memory, retry, edit, regenerate, confirmation, and cancel remain AgentsKit behavior.
+
+## Live on this site
+
+<BasicChatExample />
+
+## Adapter
+
+<AdaptersCallout />
+
+## Next
+
+- [Multi-surface](/docs/examples/multi-surface)
+- [Components](/docs/examples/components)
+- [Style](/docs/theming-and-composition)
+- [Server](/docs/server)

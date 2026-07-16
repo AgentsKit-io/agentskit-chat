@@ -1,0 +1,53 @@
+---
+title: Style the chat
+description: Theme tokens and native composition slots.
+---
+
+# Style the chat
+
+Semantic tokens travel with the definition; each renderer maps them natively.
+
+## Quick theme
+
+```ts
+import { resolveChatTheme } from '@agentskit/chat'
+
+const theme = resolveChatTheme({
+  colors: {
+    accent: '#6157ff',
+    background: '#0d1117',
+    surface: '#161b22',
+    text: '#e6edf3',
+  },
+})
+```
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import '@agentskit/react/theme'
+
+<AgentChat definition={definition} theme={theme} />
+```
+
+## Live
+
+<BasicChatExample />
+
+## Slots
+
+Replace presentation without changing the definition:
+
+```tsx
+<AgentChat
+  definition={definition}
+  slots={{ Message: BrandedMessage, Input: BrandedInput }}
+/>
+```
+
+Full matrix: [Styling](/docs/theming-and-composition).
+
+## Related
+
+- [Styling reference](/docs/theming-and-composition)
+- [Multi-surface](/docs/examples/multi-surface)
+- [AgentsKit UI](https://www.agentskit.io/docs/ui)

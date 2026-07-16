@@ -1,21 +1,20 @@
 ---
 title: AgentsKit Chat
-description: Build one versioned chat application and render it natively across every supported AgentsKit client.
+description: One AI chat definition for web, mobile, and terminal — the go-to application framework for cross-surface agent interfaces on AgentsKit.
 ---
 
-**Experience layer (alpha)** on the [AgentsKit foundation](https://www.agentskit.io). Primitives
-(controller, tools, memory, RAG, framework bindings) stay upstream; this product owns application
-composition and versioned boundaries.
+**One agent experience. Every interface.**
 
-Define routes, actions, components, sessions, and backend seams once. AgentsKit Chat composes
-those application concerns over AgentsKit, then each supported framework renders them natively.
+Chat is the product surface your users meet on the web, mobile, and terminal. AgentsKit Chat is the
+application framework for that surface: define routes, actions, components, and sessions once, then
+render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink.
 
-<img
-  src="/assets/agentschat-architecture.svg"
-  alt="AgentsKit Chat architecture: one definition, deterministic answers, optional grounded Ask, and seven native renderers"
-/>
+Controller, tools, memory, RAG, and framework bindings stay upstream in AgentsKit; this product owns
+application composition and versioned boundaries.
 
-## Start with a working shell
+## Start here
+
+<InstallCommand />
 
 ```bash
 pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
@@ -24,36 +23,97 @@ pnpm install
 pnpm test
 ```
 
-The CLI creates a shared definition, Web-standard handler, native shell, test, and architecture
-note. Choose another supported renderer in the [framework quick starts](./getting-started/README.md).
-
-## Choose the shortest path
-
 <Cards>
-  <Card title="Architecture" description="Understand ownership and upstream boundaries." href="./architecture/overview" />
-  <Card title="Routes and state" description="Define deterministic conversation paths." href="./conversation/routes-and-state" />
-  <Card title="Action policy" description="Register actions, policy, and confirmation." href="./actions/policy" />
-  <Card title="Grounded backend" description="Connect hosted or self-hosted Ask." href="./backend" />
-  <Card title="API reference" description="Look up exported public contracts." href="./api-reference" />
-  <Card title="Compatibility" description="Verify supported package versions." href="./releases/compatibility" />
+  <Card title="Install & run" description="Scaffold and start locally." href="/docs/guides/install-and-run" />
+  <Card title="Add RAG" description="Wire retrieval and citations." href="/docs/guides/add-rag" />
+  <Card title="Connect backend" description="Handlers, Ask, sessions." href="/docs/guides/connect-backend" />
+  <Card title="Examples" description="Live shells and component gallery." href="/docs/examples" />
+  <Card title="Components" description="Schema-backed interactive UI." href="/docs/components/catalog" />
+  <Card title="Style" description="Theme tokens and native slots." href="/docs/guides/style" />
+  <Card title="CLI" description="init, add component, completion." href="/docs/cli" />
 </Cards>
 
-Missing framework-neutral primitives are fixed in AgentsKit first. Chat owns application
-composition and versioned boundaries; it does not copy the controller, lifecycle, tools, memory,
-RAG, or framework bindings.
+## Live example
 
-## Continue through the ecosystem
+<BasicChatExample />
 
-Every product is optional. Follow the next problem, not a prescribed suite.
+## Surfaces
+
+<SurfaceGrid />
+
+## Same definition, every shell
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: {
+      adapter,
+      systemPrompt: 'Help users understand the product.',
+    },
+  })
+```
+
+<FrameworkTabs defaultValue="react">
+  <Framework name="react">
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+export const Support = () => (
+  <AgentChat definition={createSupportChat(adapter)} placeholder="Ask about the product" />
+)
+```
+
+  </Framework>
+  <Framework name="vue">
+
+```vue
+<script setup lang="ts">
+import { AgentChat } from '@agentskit/chat/vue'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+const definition = createSupportChat(adapter)
+</script>
+<template>
+  <AgentChat :definition="definition" placeholder="Ask about the product" />
+</template>
+```
+
+  </Framework>
+  <Framework name="ink">
+
+```tsx
+import { render } from 'ink'
+import { AgentChat } from '@agentskit/chat/ink'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+render(<AgentChat definition={createSupportChat(adapter)} />)
+```
+
+  </Framework>
+</FrameworkTabs>
+
+## Ecosystem
+
+Chat composes <AgentsKitRef /> — adapters, tools, memory, and RAG stay upstream.
+
+<EcosystemStrip />
+
+<AdaptersCallout />
 
 <Cards className="lg:grid-cols-3">
-  <Card title="AgentsKit" description="Build or extend the underlying agent." href="https://www.agentskit.io/docs" external />
-  <Card title="Registry" description="Start from a ready-to-adapt agent." href="https://registry.agentskit.io/agents" external />
-  <Card title="Agents Playbook" description="Apply delivery and engineering standards." href="https://playbook.agentskit.io/docs" external />
-  <Card title="Doc Bridge" description="Make repository documentation agent-ready." href="https://agentskit-io.github.io/doc-bridge/" external />
-  <Card title="Code Review" description="Review the implementation before merge." href="https://github.com/AgentsKit-io/code-review-cli#readme" external />
-  <Card title="AKOS" description="Add enterprise orchestration and controls." href="https://akos.agentskit.io/docs" external />
+  <Card title="AgentsKit docs" description="Runtime, adapters, tools, RAG." href="https://www.agentskit.io/docs" external />
+  <Card title="AgentsKit examples" description="Reference demos on the core site." href="https://www.agentskit.io/docs/reference/examples" external />
+  <Card title="Registry" description="Ready-to-adapt agents." href="https://registry.agentskit.io/agents" external />
+  <Card title="Playbook" description="Engineering and delivery discipline." href="https://playbook.agentskit.io/docs" external />
+  <Card title="Doc Bridge" description="Deterministic documentation handoffs." href="https://agentskit-io.github.io/doc-bridge/" external />
+  <Card title="Code Review" description="Focused review before merge." href="https://github.com/AgentsKit-io/code-review-cli#readme" external />
+  <Card title="AKOS" description="Enterprise operation and governance." href="https://akos.agentskit.io/docs" external />
 </Cards>
-
-For agent consumption, use [llms.txt](/llms.txt), the [full corpus](/llms-full.txt), canonical
-Markdown from each page, or the [for-agents handoffs](./for-agents/index.md).

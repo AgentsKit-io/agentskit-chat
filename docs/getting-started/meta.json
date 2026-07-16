@@ -1,0 +1,13 @@
+{
+  "title": "Get started",
+  "pages": [
+    "index",
+    "react",
+    "vue",
+    "svelte",
+    "solid",
+    "angular",
+    "react-native",
+    "ink"
+  ]
+}

@@ -1,0 +1,137 @@
+---
+title: Choice list
+description: Prompt plus choices with optional descriptions and typed actions — the primary interactive component.
+---
+
+# Choice list
+
+`choice-list` is the primary interactive component: one prompt, 1–20 choices, one selection event on every shell.
+
+## Live preview
+
+<ComponentDemo componentKey="choice-list" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Branching product UX (onboarding, triage, “what next?”)
+- Offering options that may trigger a **typed action** (tool) under policy
+- Anything that must work in React **and** Ink without a custom DOM tree
+
+### Prefer something else when
+
+- Compact action toolbar without a prompt → [`button-group`](/docs/components/button-group)
+- Multi-field structured input → [`form`](/docs/components/form)
+- Binary confirm for a side effect under tool policy → [`approval-request`](/docs/components/approval-request)
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `prompt` | string (1–4096) | Shown as the fieldset legend |
+| `choices` | 1–20 items | Each has `id`, `label`, optional `description`, optional `action` |
+| `choices[].id` | id string | Unique within the list |
+| `choices[].description` | string? | Secondary line under the label |
+| `choices[].action` | `{ name, input }` | Optional; resolves through `ChatConfig.tools` only |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "choice-list",
+  "instanceId": "destination-choice",
+  "props": {
+    "prompt": "Where should we go?",
+    "choices": [
+      {
+        "id": "docs",
+        "label": "Documentation",
+        "description": "Read the component guide."
+      },
+      { "id": "demo", "label": "Demo" }
+    ]
+  },
+  "fallback": {
+    "kind": "choice-list",
+    "summary": "Choose Documentation or Demo."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `select` | `id` | Selected choice id |
+
+## Typed actions
+
+A choice may declare:
+
+```ts
+{ action: { name: 'email.send', input: { to: 'ada@example.com' } } }
+```
+
+- Name must exist on `ChatConfig.tools` ([AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations))
+- Tool must opt into confirmation and pass argument validation
+- Selection **proposes** a tool call — it never executes
+
+See [Action policy](/docs/actions/policy) and [Confirmation](/docs/actions/confirmation).
+
+## Host wiring
+
+```tsx
+import { ChoiceListComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ChoiceListComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentSelect={(event) => {
+        // { type: 'select', componentKey: 'choice-list', instanceId, choiceId }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `choice-list` |
+| Export | `ChoiceListComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `select` (value = choice `id`) |
+| Host callback | **`onComponentSelect` only** (not `onComponentInteract`) |
+| Optional | `choices[].action` → proposed tool via `ChatConfig.tools` (never auto-executes) |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent keys or props outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Fieldset + buttons; replaceable slots |
+| React Native | `ChoiceListNative` accessibility roles |
+| Ink | Arrows / number + Enter |
+
+## Related
+
+- [Catalog index](/docs/components/catalog)
+- [Button group](/docs/components/button-group) — compact actions without a long prompt
+- [All components live](/docs/examples/components)
+- [Action policy](/docs/actions/policy)

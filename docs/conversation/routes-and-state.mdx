@@ -1,0 +1,89 @@
+---
+title: Routes and state
+description: Deterministic routes and conversation state machines — before the model runs.
+---
+
+# Deterministic routes and conversation state
+
+Add a `conversation` to the same definition every renderer already consumes. Routes run **before** the model adapter.
+
+## Flow
+
+<Mermaid
+  chart={
+    'flowchart TD\n' +
+      '  U[User input] --> R{Deterministic routes}\n' +
+      '  R -->|match + allowed state| D[Deterministic response]\n' +
+      '  R -->|no match| M[AgentsKit adapter / model]\n' +
+      '  D --> S[Session state transition]\n' +
+      '  M --> S'
+  }
+/>
+
+## Definition
+
+```ts
+import { commandRoute, defineChat } from '@agentskit/chat'
+
+const supportChat = defineChat({
+  id: 'support',
+  chat: { adapter },
+  conversation: {
+    initial: 'idle',
+    states: {
+      idle: { on: { start: 'collecting' }, actions: ['start'] },
+      collecting: { on: { finish: 'complete' }, actions: ['cancel'] },
+      complete: { actions: ['restart'] },
+    },
+    routes: [
+      commandRoute({
+        id: 'start',
+        command: '/start',
+        event: 'start',
+        response: () => 'What is your name?',
+      }),
+      commandRoute({
+        id: 'finish',
+        command: '/name Ada',
+        event: 'finish',
+        states: ['collecting'],
+        response: () => 'Welcome, Ada.',
+      }),
+    ],
+  },
+})
+```
+
+### Behavior
+
+| Case | Result |
+| --- | --- |
+| Route matches + state allows event | Deterministic response; state advances |
+| Unknown input | Delegates to AgentsKit adapter |
+| State-disallowed route | Delegates unchanged |
+| Failing matcher/response | Controller error stream; no state advance |
+
+Conversation definitions compile to [`@agentskit/statechart`](https://www.agentskit.io/docs). Chat owns routes, fallback, traces, and session decision replay — not a second statechart runtime.
+
+## Sessions and replay
+
+`createChatSession(definition)` exposes derived `chat` config and `getConversationSnapshot()` (current state + allowed events/actions).
+
+- Retry / regenerate replay the same deterministic response.
+- Edit recomputes progress from retained history and drops stale decisions.
+- Use `onTrace` for `deterministic` · `agentic` · `repaired` · `fallback` without copying prompts into telemetry.
+
+## Route identity context
+
+Route `response` callbacks receive `(input, context)`:
+
+- `context.messageId` — unique per turn for rendered components
+- `context.sessionId` — fallback when no user message exists
+
+Never use a process-global counter for replayed route output.
+
+## Related
+
+- [Sessions](/docs/sessions)
+- [Lifecycle](/docs/lifecycle)
+- [Support bot example](/docs/examples/support-bot)

@@ -208,7 +208,7 @@
           "evidence": {
             "type": "repository-derivation",
             "repo": "AgentsKit-io/agentskit-chat",
-            "path": "docs/getting-started/*.md",
+            "path": "docs/getting-started/*.mdx",
             "summary": "Framework-specific adoption guides."
           }
         },

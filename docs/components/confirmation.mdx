@@ -1,0 +1,117 @@
+---
+title: Confirmation
+description: "Binary human gate for sensitive steps. Component key `confirmation`."
+---
+
+# Confirmation
+
+`confirmation` is a **confirm / cancel** pair for a sensitive step that is **not** necessarily a full tool approval (see `approval-request` for tool side effects).
+
+## Live preview
+
+<ComponentDemo componentKey="confirmation" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Delete, overwrite, or irreversible product actions
+- When the model must stop until a human picks yes or no
+
+### Prefer something else when
+
+- Tool execution under policy → use durable [Confirmation](/docs/actions/confirmation) + `approval-request` as needed
+- Multi-option branches → `choice-list`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | string | Heading |
+| `message` | string | Body explaining the risk |
+| `confirmLabel` | string | Confirm button |
+| `cancelLabel` | string | Cancel button |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "confirmation",
+  "instanceId": "confirmation-fixture",
+  "props": {
+    "title": "Delete?",
+    "message": "This cannot be undone.",
+    "confirmLabel": "Delete",
+    "cancelLabel": "Cancel"
+  },
+  "fallback": {
+    "kind": "confirmation",
+    "summary": "Confirm deletion."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `confirm` | `none` | User confirmed |
+| `cancel` | `none` | User cancelled |
+
+## Host wiring
+
+```tsx
+import { ConfirmationComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ConfirmationComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // branch on event; no value
+        // { type: 'interact', componentKey: 'confirmation', instanceId, event: 'confirm' | 'cancel' }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `confirmation` |
+| Export | `ConfirmationComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `confirm` (`none`), `cancel` (`none`) |
+| Host callback | `onComponentInteract` |
+| Event shape | type always `interact`; `event` is `confirm` or `cancel` (no value) |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Approval request](/docs/components/approval-request) — Approve/deny tool side effects
+- [Action policy](/docs/actions/policy) — When tools must ask first
+- [Durable confirmation](/docs/actions/confirmation) — Server-side confirm flow
+- [Live lab](/docs/examples/components) — all components side-by-side

@@ -376,7 +376,7 @@
       "quickstarts": [
         {
           "id": "react-chat",
-          "doc": "docs/getting-started/react.md",
+          "doc": "docs/getting-started/react.mdx",
           "test": "tests/e2e/chat-conformance.ts",
           "command": "pnpm test:e2e --project=react",
           "testContains": [
@@ -390,7 +390,7 @@
       ],
       "diagrams": [
         {
-          "path": "docs/backend.md",
+          "path": "docs/protocol/deterministic-answers.md",
           "contains": ["```mermaid"]
         }
       ]

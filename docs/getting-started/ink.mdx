@@ -1,0 +1,44 @@
+---
+title: Ink quick start
+description: Terminal / TUI shell — same definition, keyboard-first UX.
+---
+
+# Ink quick start
+
+Terminal is a first-class surface, not a demotion of the web app.
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/ink ink react
+```
+
+## Shell
+
+```tsx
+import { render } from 'ink'
+import { AgentChat } from '@agentskit/chat/ink'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+render(
+  <AgentChat
+    definition={createSupportChat(adapter)}
+    placeholder="Ask about the product"
+  />,
+)
+```
+
+Semantic fallbacks keep interactive components usable without graphics. Keyboard flows: arrows / numbers + Enter for choices; `/retry`, `/edit`, `/regenerate` for lifecycle.
+
+## Run the monorepo example
+
+```bash
+pnpm --filter @agentskit/chat-example-ink start
+```
+
+## Next
+
+- [Lifecycle](/docs/lifecycle)
+- [Multi-surface](/docs/examples/multi-surface)
+- [Components](/docs/examples/components)

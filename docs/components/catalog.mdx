@@ -1,0 +1,99 @@
+---
+title: Component catalog
+description: Closed catalog of schema-backed UI components a model may propose — index for humans and agents.
+---
+
+# Component catalog
+
+AgentsKit Chat ships a **closed** set of interactive components. The model may only propose registered keys; unknown keys and invalid props stay inert.
+
+## How to read this section
+
+| Surface | Purpose |
+| --- | --- |
+| **This page** | Index + contract matrix (skim / agent handoff) |
+| **One page per key** | Live preview, props schema, frame JSON, correct host callback |
+| **[Examples lab](/docs/examples/components)** | Side-by-side live renders only — not a second catalog |
+
+## Index
+
+Each card opens a dedicated page with preview, props, frame, and agent notes.
+
+<ComponentIndex />
+
+## Contract matrix (for agents)
+
+| Component | Events | Value | A11y role | Capabilities |
+| --- | --- | --- | --- | --- |
+| `button-group` | `select` | `id` | group | display, selection |
+| `choice-list` | `select` | `id` | group | display, selection |
+| `form` | `submit` | `form` | form | display, input |
+| `confirmation` | `confirm`, `cancel` | none | group | display, action |
+| `progress` | — | — | progressbar (live=polite) | display, progress |
+| `source-list` | `open` | `id` | list | display, navigation |
+| `link-card` | `open` | `url` | link | display, navigation |
+| `error-notice` | `retry` | none | alert | display, action |
+| `tool-call` | — | — | status (live=polite) | display |
+| `approval-request` | `approve`, `deny` | none | group | display, action |
+| `table` | — | — | table | display |
+| `file-attachment` | `open` | `url` | link | display, download |
+
+**Host callbacks**
+
+| Keys | Callback |
+| --- | --- |
+| `choice-list` only | `onComponentSelect` |
+| Other interactive keys | `onComponentInteract` |
+| `progress`, `tool-call`, `table` | none (display-only) |
+
+Every key has renderer parity on **react**, **react-native**, **ink**, **vue**, **svelte**, **solid**, and **angular**.
+
+## Register everything
+
+```ts
+import { StandardComponentCatalog, defineComponentManifest, defineChat } from '@agentskit/chat'
+
+export const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest(StandardComponentCatalog),
+  chat: { adapter },
+})
+```
+
+Prefer `StandardComponentCatalog` in production. To ship a subset, pass the named `*Component` exports (see each page).
+
+## Host callbacks
+
+```tsx
+<AgentChat
+  definition={definition}
+  onComponentSelect={(event) => {
+    // choice-list only — { choiceId, instanceId, componentKey }
+  }}
+  onComponentInteract={(event) => {
+    // Always type: 'interact'. Branch on event.event + event.value
+    // e.g. event.event === 'submit' | 'approve' | 'open' | 'select' | ...
+  }}
+/>
+```
+
+## For agents (machine-readable rules)
+
+| Rule | Detail |
+| --- | --- |
+| Protocol | `agentskit.chat.component` version `1` |
+| Envelope | `type: "render"`, `componentKey`, `instanceId`, `props`, `fallback` |
+| Keys | Only keys in `StandardComponentCatalog` unless the host registered custom entries |
+| Props | Schema-bounded JSON — see per-page tables; do not invent fields |
+| Fallback | Always include `fallback.kind` + `fallback.summary` for non-graphical shells |
+| Security | URLs must be relative or `http(s)` without credentials |
+| Inert on error | Unknown keys and invalid props do not render |
+
+Open the **per-key page** for frame JSON and the exact export name.
+
+## Related
+
+- [Examples lab](/docs/examples/components) — side-by-side live demos
+- [Choice list](/docs/components/choice-list) — primary interactive deep dive
+- [Action policy](/docs/actions/policy)
+- [Confirmation](/docs/actions/confirmation)

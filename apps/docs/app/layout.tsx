@@ -2,32 +2,36 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { RootProvider } from 'fumadocs-ui/provider'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
+import '@agentskit/react/theme'
 import './globals.css'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: 'AgentsKit Chat — cross-framework agent applications',
-    template: '%s · AgentsKit Chat',
-  },
+  title: { default: 'AgentsKit Chat', template: '%s · AgentsKit Chat' },
   description:
-    'Experience layer on the AgentsKit foundation — define one agent chat application and render it natively across clients.',
+    'The cross-framework framework for AI chat interfaces — one typed definition, native shells for web, mobile, and terminal.',
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     siteName: 'AgentsKit Chat',
     url: siteUrl,
-    title: 'AgentsKit Chat — cross-framework agent applications',
+    title: 'AgentsKit Chat — One AI chat. Every surface.',
     description:
-      'Built on AgentsKit primitives. Application composition for web, mobile, and terminal chat surfaces.',
+      'Define once. Render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink.',
   },
 }
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
-  return <html lang="en" suppressHydrationWarning><body>
-    <SharedEcosystemBar />
-    <RootProvider>{children}</RootProvider>
-  </body></html>
+  return (
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className="bg-ak-midnight text-ak-foam antialiased">
+        <SharedEcosystemBar />
+        <RootProvider theme={{ defaultTheme: 'dark', enabled: true, enableSystem: false }}>
+          {children}
+        </RootProvider>
+      </body>
+    </html>
+  )
 }

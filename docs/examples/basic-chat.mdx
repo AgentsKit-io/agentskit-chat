@@ -1,0 +1,56 @@
+---
+title: Basic chat
+description: Live AgentsKit Chat shell with streaming and keyboard input — ready to copy.
+---
+
+# Basic chat
+
+The simplest product path: one definition, one shell, streaming replies.
+
+<BasicChatExample />
+
+## Copy-paste (React)
+
+```tsx
+import { defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+import type { AdapterFactory } from '@agentskit/core'
+import '@agentskit/react/theme'
+
+export const createChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'product',
+    chat: {
+      adapter,
+      systemPrompt: 'Be precise. Prefer links to docs over guesses.',
+    },
+  })
+
+export function ProductChat({ adapter }: { adapter: AdapterFactory }) {
+  return (
+    <AgentChat
+      definition={createChat(adapter)}
+      placeholder="Ask about the product"
+    />
+  )
+}
+```
+
+## Notes
+
+<AdaptersCallout />
+
+- Import `@agentskit/react/theme` (or map semantic tokens yourself).
+- The same `createChat(adapter)` feeds Vue, Svelte, Solid, Angular, RN, and Ink.
+
+## AgentsKit substrate
+
+Chat composes <AgentsKitRef /> — it does not replace adapters, tools, memory, or RAG.
+
+<EcosystemStrip />
+
+## Next
+
+- [Standard components](/docs/examples/components)
+- [Multi-surface](/docs/examples/multi-surface)
+- [Connect backend](/docs/guides/connect-backend)

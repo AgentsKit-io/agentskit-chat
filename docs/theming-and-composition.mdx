@@ -1,0 +1,86 @@
+---
+title: Styling
+description: Semantic theme tokens and native composition slots for every AgentsKit Chat shell.
+---
+
+# Styling
+
+Pass the same semantic theme to any application shell. Input is runtime-validated; unknown tokens fail early; missing tokens use accessible defaults.
+
+## Theme object
+
+```ts
+import { resolveChatTheme } from '@agentskit/chat'
+
+const theme = resolveChatTheme({
+  colors: {
+    accent: '#6157ff',
+    background: '#0d1117',
+    surface: '#161b22',
+    text: '#e6edf3',
+    muted: '#8b949e',
+    border: '#30363d',
+    onAccent: '#ffffff',
+    danger: '#f85149',
+  },
+  spacing: { small: 8, medium: 12, large: 16 },
+  radius: { medium: 8, large: 12 },
+})
+```
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import '@agentskit/react/theme'
+
+<AgentChat definition={chat} theme={theme} placeholder="Ask…" />
+```
+
+Live: [Basic chat example](/docs/examples/basic-chat) uses a dark theme on this site.
+
+## Capability map
+
+| Intent | React / Vue / Svelte / Solid / Angular | React Native | Ink |
+| --- | --- | --- | --- |
+| colors | CSS variables | wrapper / text styles | `InkTheme` |
+| spacing | CSS variables | numeric styles | unsupported |
+| radius | CSS variables | border radius | unsupported |
+| font | CSS stack | native / custom family | unsupported |
+
+Helpers: `toChatCssVariables` (DOM), `toChatNativeStyles` (RN), `toChatInkTheme` (terminal).
+
+## Native slots
+
+| Shell | Composition API |
+| --- | --- |
+| React / RN / Ink | `slots` map (`Message`, `Input`, …) |
+| Vue | named scoped slots |
+| Svelte | typed snippets |
+| Solid | render props |
+| Angular | named content templates |
+
+Slots: `container`, `message`, `input`, `thinking`, `confirmation`, `choiceList` (and standard component slot where available). Composition is **never** serialized into `ChatDefinition`.
+
+```tsx
+<AgentChat
+  definition={chat}
+  theme={theme}
+  slots={{ Message: BrandedMessage }}
+/>
+```
+
+Defaults provide live regions, labeled controls, alerts, and one active Ink keyboard owner. Replacements must keep equivalent a11y.
+
+## Fully headless
+
+```ts
+import { useChat } from '@agentskit/react' // or @agentskit/vue, etc.
+const state = useChat(definition.chat)
+```
+
+Streaming, tools, memory, retry/edit/regenerate, and cancel stay on [AgentsKit](https://www.agentskit.io/docs/ui). Chat does not wrap that hook.
+
+## Related
+
+- [Style guide](/docs/guides/style)
+- [Multi-surface examples](/docs/examples/multi-surface)
+- [AgentsKit UI](https://www.agentskit.io/docs/ui)

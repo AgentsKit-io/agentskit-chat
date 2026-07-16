@@ -1,0 +1,116 @@
+---
+title: Link card
+description: "Title, description, and href as one navigation affordance. Component key `link-card`."
+---
+
+# Link card
+
+`link-card` is a single navigation surface: title, optional description, required portable `href`, optional CTA label. Emits `open` with the URL.
+
+## Live preview
+
+<ComponentDemo componentKey="link-card" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Deep-link to docs, tickets, dashboards, or external resources
+- When one destination is enough (not a citation list)
+
+### Prefer something else when
+
+- Multiple citations → `source-list`
+- Downloadable file metadata → `file-attachment`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | string | Card title |
+| `description` | string? | Supporting text |
+| `href` | portable URL | Relative or http(s); no credentials |
+| `label` | string? | Optional CTA label |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "link-card",
+  "instanceId": "link-card-fixture",
+  "props": {
+    "title": "Guide",
+    "description": "Read the guide.",
+    "href": "https://example.com/guide",
+    "label": "Open guide"
+  },
+  "fallback": {
+    "kind": "link-card",
+    "summary": "Guide link."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `open` | `url` | The href that was opened |
+
+## Host wiring
+
+```tsx
+import { LinkCardComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([LinkCardComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // event === 'open'; value is href
+        // { type: 'interact', componentKey: 'link-card', instanceId, event: 'open', value: href }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `link-card` |
+| Export | `LinkCardComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `open` (`url`) |
+| Host callback | `onComponentInteract` |
+| Event shape | type always `interact`; `event` is `open`; `value` is href |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Source list](/docs/components/source-list) — Multiple citations
+- [File attachment](/docs/components/file-attachment) — Downloadable files
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

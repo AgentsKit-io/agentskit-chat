@@ -1,0 +1,41 @@
+---
+title: Solid quick start
+description: Solid shell with typed render props for AgentsKit Chat.
+---
+
+# Solid quick start
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/solid solid-js
+```
+
+## Shell
+
+```tsx
+import { AgentChat } from '@agentskit/chat/solid'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+const definition = createSupportChat(adapter)
+
+export function SupportChat() {
+  return (
+    <AgentChat
+      definition={definition}
+      placeholder="Ask about the product"
+      message={(message) => (
+        <article data-role={message.role}>{message.content}</article>
+      )}
+    />
+  )
+}
+```
+
+Delegates to `useChat` from [@agentskit/solid](https://www.agentskit.io/docs).
+
+## Next
+
+- [Multi-surface](/docs/examples/multi-surface)
+- [React quick start](/docs/getting-started/react) for the shared definition

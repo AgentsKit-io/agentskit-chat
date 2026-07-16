@@ -27,16 +27,24 @@ describe('documentation dogfood', () => {
     })).toEqual(expect.objectContaining({ ok: false, diagnostic: expect.objectContaining({ code: 'DETERMINISTIC_HASH_MISMATCH' }) }))
   })
 
-  it('indexes the canonical repository corpus without an app-local prose copy', async () => {
+  it('indexes the public product corpus without private maintainer trees', async () => {
     const documents = await collectCanonicalDocs()
-    expect(documents.length).toBeGreaterThan(50)
-    expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.startsWith('Build one versioned'))).toBe(true)
-    expect(documents.some(document => document.path === 'backend.md' && document.title === 'Hosted and self-hosted Ask backend')).toBe(true)
+    // Public product surface only (architecture / for-agents / protocol stay repo-only).
+    expect(documents.length).toBeGreaterThan(30)
+    expect(documents.every(document => !document.path.startsWith('architecture/')
+      && !document.path.startsWith('for-agents/')
+      && !document.path.startsWith('product/')
+      && !document.path.startsWith('protocol/'))).toBe(true)
+    expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.includes('AI chat'))).toBe(true)
+    expect(documents.some(document =>
+      document.path === 'backend.mdx'
+      && document.title.includes('Ask backend'),
+    )).toBe(true)
   })
 
   it('maps canonical index documents to public folder URLs', () => {
     expect(publicDocSlug('index.mdx')).toBe('')
-    expect(publicDocSlug('getting-started/README.md')).toBe('getting-started')
+    expect(publicDocSlug('getting-started/index.mdx')).toBe('getting-started')
     expect(publicDocSlug('for-agents/index.md')).toBe('for-agents')
     expect(publicDocSlug('backend.md')).toBe('backend')
   })

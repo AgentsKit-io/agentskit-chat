@@ -1,0 +1,103 @@
+---
+title: Tool call
+description: "Status display for a tool invocation. Component key `tool-call`."
+---
+
+# Tool call
+
+`tool-call` is **display-only**: name, status lifecycle, optional arguments and result. No interaction events.
+
+## Live preview
+
+<ComponentDemo componentKey="tool-call" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Show what the agent is doing mid-turn
+- Surface tool args/result in a consistent panel across shells
+
+### Prefer something else when
+
+- Human must approve the tool → `approval-request` + [action confirmation](/docs/actions/confirmation)
+- Percent progress of a job → `progress`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `name` | string | Tool display name |
+| `status` | `pending` \| `running` \| `complete` \| `error` | Lifecycle |
+| `arguments` | record? | JSON-serializable args |
+| `result` | json? | Optional result payload |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "tool-call",
+  "instanceId": "tool-call-fixture",
+  "props": {
+    "name": "Search",
+    "status": "complete",
+    "arguments": { "q": "AgentsKit" },
+    "result": "Found"
+  },
+  "fallback": {
+    "kind": "tool-call",
+    "summary": "Search completed."
+  }
+}
+```
+
+## Events
+
+**No events.** This key is display-only — do not invent host callbacks.
+
+## Host wiring
+
+Display-only — register the component so the frame resolves; no interact handler is required.
+
+```ts
+import { ToolCallComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ToolCallComponent]),
+  chat: { adapter },
+})
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `tool-call` |
+| Export | `ToolCallComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | none (display-only) |
+| Host callback | none — display only |
+| Interaction | Do not emit user events for this key |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Approval request](/docs/components/approval-request) — Human gate for side effects
+- [Progress](/docs/components/progress) — Percent complete
+- [Action policy](/docs/actions/policy) — Tool execution rules
+- [Live lab](/docs/examples/components) — all components side-by-side

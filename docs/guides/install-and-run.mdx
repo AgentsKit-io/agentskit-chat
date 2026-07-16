@@ -1,0 +1,81 @@
+---
+title: Install and run
+description: Scaffold an AgentsKit Chat app and run it locally.
+---
+
+# Install and run
+
+## Scaffold
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+cd my-chat
+pnpm install
+pnpm test
+```
+
+<InstallCommand />
+
+Renderers: `react` · `vue` · `svelte` · `solid` · `angular` · `react-native` · `ink` — full flags in the [CLI](/docs/cli).
+
+## What the CLI creates
+
+<Mermaid
+  chart={
+    'flowchart LR\n' +
+      '  CLI[agentskit-chat init] --> Def[src/chat.ts definition]\n' +
+      '  CLI --> Srv[src/server.ts handler]\n' +
+      '  CLI --> UI[Native shell entry]\n' +
+      '  CLI --> T[Test + README]'
+  }
+/>
+
+## Run
+
+```bash
+# scaffolded app
+pnpm dev
+
+# monorepo demos
+pnpm --filter @agentskit/chat-example-react dev
+pnpm --filter @agentskit/chat-example-ink start
+```
+
+## Install into an existing app
+
+```bash
+pnpm add @agentskit/chat @agentskit/core
+pnpm add @agentskit/react   # or vue / svelte / solid / angular / react-native / ink
+```
+
+```tsx
+import { defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+import type { AdapterFactory } from '@agentskit/core'
+import '@agentskit/react/theme'
+
+export const createApp = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'app',
+    chat: { adapter, systemPrompt: 'Be precise. Prefer docs links.' },
+  })
+
+export const App = ({ adapter }: { adapter: AdapterFactory }) => (
+  <AgentChat definition={createApp(adapter)} placeholder="Ask…" />
+)
+```
+
+## Adapters (AgentsKit)
+
+<AdaptersCallout />
+
+## Live
+
+<BasicChatExample />
+
+## Next
+
+- [Examples](/docs/examples)
+- [Add RAG](/docs/guides/add-rag)
+- [Connect backend](/docs/guides/connect-backend)
+- [Style](/docs/guides/style)

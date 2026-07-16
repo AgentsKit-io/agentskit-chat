@@ -1,0 +1,125 @@
+---
+title: Approval request
+description: "Human-in-the-loop gate for side effects. Component key `approval-request`."
+---
+
+# Approval request
+
+`approval-request` is an **approve / deny** UI for a proposed side effect. Pair with [Action policy](/docs/actions/policy) and durable [Confirmation](/docs/actions/confirmation).
+
+## Live preview
+
+<ComponentDemo componentKey="approval-request" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Tools that must not run until a human approves
+- Email send, payments, destructive admin actions
+
+### Prefer something else when
+
+- Generic product confirm without tool policy → `confirmation`
+- Choice among many options → `choice-list`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | string | Request title |
+| `description` | string | What will happen if approved |
+| `approveLabel` | string | Approve control |
+| `denyLabel` | string | Deny control |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "approval-request",
+  "instanceId": "approval-request-fixture",
+  "props": {
+    "title": "Approve send?",
+    "description": "Send the email.",
+    "approveLabel": "Approve",
+    "denyLabel": "Deny"
+  },
+  "fallback": {
+    "kind": "approval-request",
+    "summary": "Approval required."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `approve` | `none` | User approved |
+| `deny` | `none` | User denied |
+
+## Host wiring
+
+This component is a **UI intent channel**. Pair it with [Action policy](/docs/actions/policy) and durable [Confirmation](/docs/actions/confirmation) when tools must not run without a human.
+
+```tsx
+import { ApprovalRequestComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ApprovalRequestComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // Always type: 'interact' — branch on event.event
+        if (event.componentKey !== 'approval-request') return
+        if (event.event === 'approve') {
+          // host side-effect or confirmation.approve(token, sessionId)
+        }
+        if (event.event === 'deny') {
+          // confirmation.reject(...) or cancel the proposed action
+        }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `approval-request` |
+| Export | `ApprovalRequestComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `approve` (`none`), `deny` (`none`) |
+| Host callback | `onComponentInteract` |
+| Event shape | type always `interact`; `event` is `approve` or `deny` (no value) |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Confirmation](/docs/components/confirmation) — Non-tool binary gate
+- [Action policy](/docs/actions/policy) — When tools must ask
+- [Durable confirmation](/docs/actions/confirmation) — Server confirm flow
+- [Live lab](/docs/examples/components) — all components side-by-side

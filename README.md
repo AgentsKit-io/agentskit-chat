@@ -58,7 +58,7 @@ pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 ```
 
-Continue with the [seven renderer quick starts](./docs/getting-started/README.md), [API reference](./docs/api-reference.md), and [deployment modes](./docs/deployment.md).
+Continue with the [seven renderer quick starts](./docs/getting-started/index.mdx), [API reference](./docs/api-reference.mdx), and [deployment modes](./docs/deployment.mdx).
 
 ![Deterministic-before-backend flow from one definition through local answers, trusted Ask escalation, and seven native renderers](./docs/assets/agentschat-architecture.svg)
 
@@ -79,7 +79,7 @@ AgentsKit Chat `0.4.1` ships as two public npm packages with provenance: `@agent
 
 ## Documentation
 
-- [Get started in all seven renderers](./docs/getting-started/README.md)
+- [Get started in all seven renderers](./docs/getting-started/index.mdx)
 - [Hosted and self-hosted Ask backend](./docs/backend.md)
 - [Deterministic answer protocol](./docs/protocol/deterministic-answers.md)
 - [DOM renderer parity examples](./docs/examples/dom-renderer-parity.md)

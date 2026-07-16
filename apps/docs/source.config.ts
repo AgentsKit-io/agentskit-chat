@@ -5,11 +5,22 @@ const inferredTitle = (source: string, path: string): string =>
   ?? path.split('/').at(-1)?.replace(/\.mdx?$/, '').replace(/-/g, ' ')
   ?? 'AgentsKit Chat'
 
-// The public repository docs are the canonical corpus. The site compiles them
-// in place so prose cannot drift into an app-specific copy.
 export const docs = defineDocs({
   dir: '../../docs',
-  docs: { schema: context => frontmatterSchema.extend({ title: frontmatterSchema.shape.title.default(inferredTitle(context.source, context.path)) }) },
+  docs: {
+    schema: context => frontmatterSchema.extend({
+      title: frontmatterSchema.shape.title.default(inferredTitle(context.source, context.path)),
+    }),
+  },
 })
 
-export default defineConfig()
+export default defineConfig({
+  mdxOptions: {
+    rehypeCodeOptions: {
+      themes: {
+        light: 'github-dark-default',
+        dark: 'github-dark-default',
+      },
+    },
+  },
+})

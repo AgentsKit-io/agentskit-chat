@@ -23,7 +23,7 @@ export function computeReadmeClaims() {
     .filter(line => line.startsWith('|') && !line.includes('Requirement') && !line.startsWith('|---'))
     .length
   const gettingStartedGuides = readdirSync(join(REPO_ROOT, 'docs/getting-started'))
-    .filter(file => file.endsWith('.md') && file !== 'README.md').length
+    .filter(file => file.endsWith('.mdx') && file !== 'index.mdx').length
   const exampleApps = readdirSync(join(REPO_ROOT, 'apps')).filter(dir => {
     if (!dir.startsWith('example-') || !existsSync(join(REPO_ROOT, 'apps', dir, 'package.json'))) return false
     const scripts = readJson(`apps/${dir}/package.json`).scripts ?? {}

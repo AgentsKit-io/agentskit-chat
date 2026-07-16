@@ -1,0 +1,118 @@
+---
+title: Button group
+description: "A labelled set of action buttons with one select event. Component key `button-group`."
+---
+
+# Button group
+
+`button-group` is a compact action row: a group label plus 1–12 buttons. Use it when the model should offer **quick actions** without a long prompt (unlike `choice-list`).
+
+## Live preview
+
+<ComponentDemo componentKey="button-group" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Save / discard / open style toolbars in chat
+- Primary + secondary + danger variants on the same row
+- When you need `select` by button `id` without free-form input
+
+### Prefer something else when
+
+- Long option lists with descriptions → use `choice-list`
+- Binary delete gates → prefer `confirmation`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `label` | string (1–256) | Group label (fieldset legend) |
+| `buttons` | 1–12 items | Each has `id`, `label`, optional `disabled`, optional `variant` |
+| `buttons[].variant` | `primary` \| `secondary` \| `danger` | Optional schema hint — stock shells do not style by variant; map it in your theme/slots |
+| `buttons[].disabled` | boolean | If true, select is rejected by validation |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "button-group",
+  "instanceId": "button-group-fixture",
+  "props": {
+    "label": "Actions",
+    "buttons": [
+      { "id": "save", "label": "Save", "variant": "primary" },
+      { "id": "discard", "label": "Discard", "variant": "danger" }
+    ]
+  },
+  "fallback": {
+    "kind": "button-group",
+    "summary": "Choose Save or Discard."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `select` | `id` | Selected button id |
+
+## Host wiring
+
+```tsx
+import { ButtonGroupComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ButtonGroupComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // type is always 'interact'; branch on event + value
+        // { protocol, version: 1, type: 'interact', componentKey: 'button-group', instanceId, event: 'select', value: buttonId }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `button-group` |
+| Export | `ButtonGroupComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `select` (`id`) |
+| Host callback | `onComponentInteract` |
+| Event shape | type always `interact`; `event` is `select`; `value` is button id |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Choice list](/docs/components/choice-list) — Prompt + described options
+- [Confirmation](/docs/components/confirmation) — Binary confirm/cancel
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

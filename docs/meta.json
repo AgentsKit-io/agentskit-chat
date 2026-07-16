@@ -2,17 +2,24 @@
   "title": "AgentsKit Chat",
   "pages": [
     "index",
+    "---Start---",
     "getting-started",
-    "architecture",
+    "---Build---",
+    "guides",
+    "examples",
     "components",
+    "theming-and-composition",
     "conversation",
     "actions",
-    "sessions",
+    "---Integrate---",
+    "server",
     "backend",
+    "sessions",
     "deployment",
+    "---Reference---",
+    "cli",
     "api-reference",
-    "devtools",
-    "releases",
-    "for-agents"
+    "lifecycle",
+    "releases"
   ]
 }

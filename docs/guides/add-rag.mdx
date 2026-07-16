@@ -1,0 +1,72 @@
+---
+title: Add RAG
+description: Attach AgentsKit retrieval so answers cite your corpus.
+---
+
+# Add RAG
+
+AgentsKit Chat does **not** reimplement RAG. Wire [AgentsKit retrievers](https://www.agentskit.io/docs/data/rag) into the same `chat` config you pass to `defineChat`.
+
+## Two planes
+
+<Mermaid
+  chart={
+    'flowchart TD\n' +
+      '  Q[User question] --> Det{Deterministic local}\n' +
+      '  Det -->|exact match| Cite[Cited local answer]\n' +
+      '  Det -->|miss| Ask[Ask backend + RAG]\n' +
+      '  Ask --> Ret[AgentsKit Retriever]\n' +
+      '  Ret --> Gen[AgentsKit provider]\n' +
+      '  Gen --> Out[Cited streaming answer]'
+  }
+/>
+
+## Pattern
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createDocsChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'docs',
+    chat: {
+      adapter,
+      systemPrompt: 'Cite sources. Prefer links over guesses.',
+      // attach AgentsKit memory / tools / retriever the same way as any AgentsKit app
+    },
+  })
+```
+
+## Grounded Ask (site assistants)
+
+When you need semantic retrieval with citations:
+
+1. Host [`createAskServiceHandler`](/docs/backend)
+2. Inject retriever + generator adapters
+3. Client uses `createAskAdapter` + optional deterministic artifact
+
+```ts
+import { createAskAdapter, createDeterministicAnswerAdapter, defineChat } from '@agentskit/chat'
+
+const ask = createAskAdapter({ endpoint: '/api/ask', corpus: 'public', persona: 'guide' })
+const adapter = createDeterministicAnswerAdapter({
+  artifact: verifiedKnowledge,
+  fallbackMode: 'backend',
+  fallback: ask,
+})
+
+export const chat = defineChat({ id: 'docs', chat: { adapter } })
+```
+
+## AgentsKit docs
+
+- [RAG package](https://www.agentskit.io/docs/data/rag)
+- [Providers / adapters](https://www.agentskit.io/docs/data/providers)
+- [Memory](https://www.agentskit.io/docs/data/memory)
+
+## Related
+
+- [Backend](/docs/backend)
+- [Connect backend](/docs/guides/connect-backend)
+- [Examples](/docs/examples)
