@@ -95,7 +95,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `retry` (`none`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'interact', componentKey: 'error-notice', instanceId, event: 'retry' }` |
+| Event shape | type always `interact`; `event` is `retry` (no value) |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

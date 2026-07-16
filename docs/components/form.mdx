@@ -106,7 +106,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `submit` (`form`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'interact', componentKey: 'form', instanceId, event: 'submit', value: { [fieldId]: fieldValue } }` |
+| Event shape | type always `interact`; `event` is `submit`; `value` is field-id record |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

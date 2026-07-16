@@ -95,7 +95,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `open` (`url`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'interact', componentKey: 'link-card', instanceId, event: 'open', value: href }` |
+| Event shape | type always `interact`; `event` is `open`; `value` is href |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

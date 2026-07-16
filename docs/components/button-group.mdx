@@ -97,7 +97,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `select` (`id`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ protocol, version: 1, type: 'interact', componentKey: 'button-group', instanceId, event: 'select', value: buttonId }` |
+| Event shape | type always `interact`; `event` is `select`; `value` is button id |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

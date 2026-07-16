@@ -104,7 +104,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `approve` (`none`), `deny` (`none`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'interact', componentKey: 'approval-request', instanceId, event: 'approve' | 'deny' }` |
+| Event shape | type always `interact`; `event` is `approve` or `deny` (no value) |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
