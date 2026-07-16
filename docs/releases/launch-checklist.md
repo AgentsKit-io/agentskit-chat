@@ -50,7 +50,7 @@ and [v0.4.0 release assets](https://github.com/AgentsKit-io/agentskit-chat/relea
 - [x] npm provenance attestations and registry signatures verify
 - [x] Clean external installation, ESM/CJS imports, and CLI scaffolding pass
 - [x] npm Trusted Publishing succeeds for both packages through OIDC
-- [ ] A reviewed `0.4.1` patch aligns both public npm homepages with `https://chat.agentskit.io/docs` (source + pack gates ready; publish pending)
+- [ ] The reviewed `0.4.1` patch aligns both public npm homepages with `https://chat.agentskit.io/docs` (tag verification passed; protected npm approval pending)
 
 Evidence for the clean external consumer path is recorded in
 [clean-install-0.4.0.md](./clean-install-0.4.0.md). Published `0.4.0` registry
@@ -66,8 +66,8 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 - [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline
 - [x] Chat Docs is certified with the canonical production evidence from #102
-- [ ] AKOS is certified through an approved aggregate private attestation
-- [ ] Frozen installs, strict typechecks/tests, and production builds pass for all declared consumers
+- [ ] AKOS is re-certified through a fresh approved aggregate private production attestation
+- [x] Frozen installs, strict typechecks/tests, and production builds pass for the five public product chats
 - [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge
 - [x] No private AKOS behavior, identifier, data, or topology enters public evidence
 
@@ -79,8 +79,7 @@ The stable workflow must remain token-free. Its protected publish job uses
 ## Legacy package retirement
 
 - [x] #102 is closed with canonical deployment evidence and the Chat documentation portal is certified in the ledger
-- [ ] AKOS has an approved aggregate private attestation and is certified in the ledger
-- [ ] `pnpm release:deprecation:plan -- --require-ready` passes on clean `main`
-- [ ] The exact ten-command dry-run receives explicit HITL approval on #103
-- [ ] Each npm mutation is re-read and linked before proceeding to the next package
-- [ ] ADR-0027 and ADR-0030 statuses match the final production and convergence truth
+- [x] The exact ten-command dry-run received explicit HITL approval on #103
+- [x] All ten npm deprecations were applied one at a time and all 20 published versions were re-read
+- [x] Canonical replacement subpaths and migration links match on every deprecated version
+- [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision

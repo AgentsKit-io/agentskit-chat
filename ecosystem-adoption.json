@@ -206,12 +206,12 @@
         "@agentskit/chat/ink"
       ],
       "legacyPackages": [],
-      "status": "certified",
+      "status": "deployment-required",
       "evidence": {
         "visibility": "private-attestation",
         "ciStatus": "pass",
-        "productionStatus": "pass",
-        "attestation": "chat-convergence-pass"
+        "productionStatus": "pending",
+        "attestation": "pending-chat-convergence-audit"
       }
     }
   ]
