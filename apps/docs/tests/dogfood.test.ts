@@ -54,7 +54,7 @@ describe('documentation dogfood', () => {
     expect(ecosystemBarProducts.map(product => product.id)).toEqual(allEcosystemProducts.map(product => product.id))
     expect(allEcosystemProducts.find(product => product.id === 'akos')).toEqual(expect.objectContaining({
       docs: 'https://akos.agentskit.io/docs',
-      maturity: 'alpha',
+      maturity: 'stable',
     }))
   })
 

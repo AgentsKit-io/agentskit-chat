@@ -2,9 +2,9 @@
 
 ## Context
 
-AgentsKit provides framework-neutral chat state and bindings for React, Vue, Svelte, Solid, Angular, React Native, and Ink. Building a product-grade interactive agent experience still requires teams to assemble deterministic routing, structured turns, action policy, component registries, sessions, streaming, persistence, replay, theming, and framework-specific shells.
+AgentsKit owns the foundation primitives: adapters, model invocation, tools, memory, RAG, agent runtime, chat controller, and framework-neutral UI bindings (React, Vue, Svelte, Solid, Angular, React Native, Ink). Building a product-grade interactive agent experience still requires teams to assemble deterministic routing, structured turns, action policy, component registries, sessions, streaming, persistence, replay, theming, and framework-specific shells.
 
-AgentsKit Chat is the opinionated application framework above those primitives.
+**AgentsKit Chat** is the opinionated application layer above those primitives — not a rebrand of AgentsKit itself.
 
 ## Architectural style
 
