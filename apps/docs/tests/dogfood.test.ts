@@ -29,13 +29,13 @@ describe('documentation dogfood', () => {
   it('indexes the canonical repository corpus without an app-local prose copy', async () => {
     const documents = await collectCanonicalDocs()
     expect(documents.length).toBeGreaterThan(50)
-    expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.startsWith('Build one versioned'))).toBe(true)
+    expect(documents.some(document => document.path === 'index.mdx' && document.title === 'AgentsKit Chat' && document.description.includes('AI chat'))).toBe(true)
     expect(documents.some(document => document.path === 'backend.md' && document.title === 'Hosted and self-hosted Ask backend')).toBe(true)
   })
 
   it('maps canonical index documents to public folder URLs', () => {
     expect(publicDocSlug('index.mdx')).toBe('')
-    expect(publicDocSlug('getting-started/README.md')).toBe('getting-started')
+    expect(publicDocSlug('getting-started/index.mdx')).toBe('getting-started')
     expect(publicDocSlug('for-agents/index.md')).toBe('for-agents')
     expect(publicDocSlug('backend.md')).toBe('backend')
   })

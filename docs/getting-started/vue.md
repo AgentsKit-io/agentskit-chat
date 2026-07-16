@@ -1,21 +1,45 @@
+---
+title: Vue quick start
+description: Render an AgentsKit Chat definition with the native Vue shell.
+---
+
 # Vue quick start
 
-Install the application shell and its native peers:
+## Install
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat/vue @agentskit/vue vue
+pnpm add @agentskit/chat @agentskit/core @agentskit/vue vue
 ```
 
-Keep the chat definition in a framework-neutral module, then render it from Vue:
+## Shared definition
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: {
+      adapter,
+      systemPrompt: 'Help users understand the product.',
+    },
+  })
+```
+
+## Vue shell
 
 ```vue
 <script setup lang="ts">
 import { AgentChat } from '@agentskit/chat/vue'
-import { supportChat } from './support-chat'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+const definition = createSupportChat(adapter)
 </script>
 
 <template>
-  <AgentChat :definition="supportChat" placeholder="Ask about the product">
+  <AgentChat :definition="definition" placeholder="Ask about the product">
     <template #message="{ message }">
       <article :data-role="message.role">{{ message.content }}</article>
     </template>
@@ -23,6 +47,12 @@ import { supportChat } from './support-chat'
 </template>
 ```
 
-`AgentChat` delegates state, streaming, tools, confirmation, retry, editing, regeneration, and cancellation to `useChat` from `@agentskit/vue`. Named scoped slots customize the `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList` surfaces without entering the shared definition.
+`AgentChat` delegates state, streaming, tools, confirmation, retry, editing, regeneration, and
+cancellation to `useChat` from `@agentskit/vue`. Named scoped slots customize `container`,
+`message`, `input`, `thinking`, `confirmation`, and `choiceList` without entering the shared
+definition.
 
-The default shell uses a polite log, semantic alerts, labeled controls, and native buttons/fieldset elements. A replacement slot owns equivalent accessibility semantics.
+## Next
+
+- [Get started overview](/docs/getting-started)
+- [Other renderers](/docs/getting-started)

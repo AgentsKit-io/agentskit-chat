@@ -31,4 +31,4 @@ unchanged.
 
 The generated declarations in each package's published `dist` directory are
 the exact signature reference. See the package README and the matching
-[quick start](./getting-started/README.md) for executable composition.
+[quick start](/docs/getting-started) for executable composition.

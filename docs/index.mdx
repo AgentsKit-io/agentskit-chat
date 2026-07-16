@@ -1,42 +1,139 @@
 ---
 title: AgentsKit Chat
-description: Build one versioned chat application and render it natively across every supported AgentsKit client.
+description: One AI chat definition for web, mobile, and terminal — the go-to application framework for cross-surface agent interfaces on AgentsKit.
 ---
 
-Define routes, actions, components, sessions, and backend seams once. AgentsKit Chat composes
-those application concerns over AgentsKit, then each supported framework renders them natively.
+**One agent experience. Every interface.**
+
+In the age of AI, chat is not a single React widget. It is the product surface your users meet on
+the web, in a desktop shell, on mobile, and in the terminal. Rebuilding that experience per framework
+is how teams ship drift: different tools, different policy, different bugs.
+
+AgentsKit Chat is the **application framework** for that problem. You define routes, actions,
+components, sessions, and backend seams once. Then each AgentsKit UI binding renders the same
+signature natively — React, Vue, Svelte, Solid, Angular, React Native, and Ink.
 
 <img
   src="/assets/agentschat-architecture.svg"
   alt="AgentsKit Chat architecture: one definition, deterministic answers, optional grounded Ask, and seven native renderers"
 />
 
-## Start with a working shell
+## Start in sixty seconds
+
+Pick a renderer. The CLI scaffolds a shared definition, Web-standard handler, native shell, and test
+without copying an AgentsKit runtime.
+
+<InstallCommand />
 
 ```bash
-pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
 cd my-chat
 pnpm install
 pnpm test
 ```
 
-The CLI creates a shared definition, Web-standard handler, native shell, test, and architecture
-note. Choose another supported renderer in the [framework quick starts](./getting-started/README.md).
+## Why this is the go-to chat framework
 
-## Choose the shortest path
+| You need | What Chat gives you |
+| --- | --- |
+| One product brain | A framework-neutral `defineChat` definition shared by every shell |
+| Platform-native UX | Renderers over real AgentsKit bindings — not a fake “universal” DOM |
+| Safe agent UI | Closed component registry + action policy outside the model |
+| Deterministic workflows | Routes and conversation state machines when you refuse to gamble on the LLM |
+| Growth path | Sessions, theming, server handlers, Ask backends, traces — without rewriting day one |
+
+Missing framework-neutral primitives are fixed in [AgentsKit](https://www.agentskit.io/docs) first.
+Chat owns **composition and versioned application boundaries**, not a second controller.
+
+## Choose your surface
+
+<SurfaceGrid />
+
+## The shape of a Chat app
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: {
+      adapter,
+      systemPrompt: 'Help users understand the product.',
+    },
+  })
+```
+
+Render the same definition on any supported shell:
+
+<FrameworkTabs defaultValue="react">
+  <Framework name="react">
+
+```tsx
+import { AgentChat } from '@agentskit/chat/react'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+export const Support = () => (
+  <AgentChat
+    definition={createSupportChat(adapter)}
+    placeholder="Ask about the product"
+  />
+)
+```
+
+  </Framework>
+  <Framework name="vue">
+
+```vue
+<script setup lang="ts">
+import { AgentChat } from '@agentskit/chat/vue'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+const definition = createSupportChat(adapter)
+</script>
+
+<template>
+  <AgentChat :definition="definition" placeholder="Ask about the product" />
+</template>
+```
+
+  </Framework>
+  <Framework name="ink">
+
+```tsx
+import { render } from 'ink'
+import { AgentChat } from '@agentskit/chat/ink'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
+
+render(
+  <AgentChat
+    definition={createSupportChat(adapter)}
+    placeholder="Ask about the product"
+  />,
+)
+```
+
+  </Framework>
+</FrameworkTabs>
+
+Streaming, tools, memory, retry, editing, regeneration, confirmation, and cancellation remain
+AgentsKit behavior. Chat keeps those semantics stable across shells.
+
+## Learn by path
 
 <Cards>
-  <Card title="Architecture" description="Understand ownership and upstream boundaries." href="./architecture/overview" />
-  <Card title="Routes and state" description="Define deterministic conversation paths." href="./conversation/routes-and-state" />
-  <Card title="Action policy" description="Register actions, policy, and confirmation." href="./actions/policy" />
-  <Card title="Grounded backend" description="Connect hosted or self-hosted Ask." href="./backend" />
-  <Card title="API reference" description="Look up exported public contracts." href="./api-reference" />
-  <Card title="Compatibility" description="Verify supported package versions." href="./releases/compatibility" />
+  <Card title="Get started" description="CLI + all seven renderer quick starts." href="/docs/getting-started" />
+  <Card title="Why Chat vs AI SDK UI" description="When cross-surface signatures matter." href="/docs/product/positioning" />
+  <Card title="Routes and state" description="Deterministic conversation paths." href="/docs/conversation/routes-and-state" />
+  <Card title="Action policy" description="Register actions, policy, and confirmation." href="/docs/actions/policy" />
+  <Card title="Components" description="Schema-backed interactive UI the model may propose." href="/docs/components/catalog" />
+  <Card title="Deployment" description="Next, Hono, Express, Cloudflare recipes." href="/docs/deployment" />
+  <Card title="Grounded backend" description="Hosted or self-hosted Ask with citations." href="/docs/backend" />
+  <Card title="API reference" description="Public contracts and exports." href="/docs/api-reference" />
 </Cards>
-
-Missing framework-neutral primitives are fixed in AgentsKit first. Chat owns application
-composition and versioned boundaries; it does not copy the controller, lifecycle, tools, memory,
-RAG, or framework bindings.
 
 ## Continue through the ecosystem
 
@@ -51,5 +148,5 @@ Every product is optional. Follow the next problem, not a prescribed suite.
   <Card title="AKOS" description="Add enterprise orchestration and controls." href="https://akos.agentskit.io/docs" external />
 </Cards>
 
-For agent consumption, use [llms.txt](/llms.txt), the [full corpus](/llms-full.txt), canonical
-Markdown from each page, or the [for-agents handoffs](./for-agents/index.md).
+For agents: [llms.txt](/llms.txt), the [full corpus](/llms-full.txt), canonical Markdown on each page,
+or [for-agents handoffs](/docs/for-agents).

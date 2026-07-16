@@ -1,28 +1,55 @@
-# React Native
+---
+title: React Native quick start
+description: Render an AgentsKit Chat definition with Expo / React Native.
+---
 
-Install `@agentskit/chat`, `@agentskit/chat/react-native`, `@agentskit/react-native`, React,
-and React Native. Native dependencies belong to the Expo application, not the renderer package.
+# React Native quick start
+
+Mobile is a first-class surface. Use the same `defineChat` definition as web and terminal.
+
+## Install
+
+```bash
+pnpm add @agentskit/chat @agentskit/core @agentskit/react-native react react-native
+```
+
+Native dependencies belong to the Expo (or RN) application, not the Chat package.
+
+## Shared definition
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: { adapter, systemPrompt: 'Help users on mobile.' },
+  })
+```
+
+## Native shell
 
 ```tsx
 import { AgentChatNative } from '@agentskit/chat/react-native'
-import { chat } from './chat'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
 
 export default function App() {
-  return <AgentChatNative definition={chat} />
+  return <AgentChatNative definition={createSupportChat(adapter)} />
 }
 ```
 
-```ts
-// chat.ts
-import { defineChat } from '@agentskit/chat'
-import { adapter } from './adapter'
+## Example app
 
-export const chat = defineChat({ id: 'hello-world', chat: { adapter } })
+```bash
+pnpm --filter @agentskit/chat-example-react-native start
 ```
 
-The Expo example in this repository keeps its deterministic shared fixture private because it is
-test infrastructure, not a published API.
+The Expo example keeps deterministic fixtures private — they are test infrastructure, not a
+published API.
 
-The renderer consumes `@agentskit/react-native` directly. The shared definition contains no DOM,
-React web, Expo, or React Native imports. Version `0.4.4` or newer is required; the release is
-tested against the published `0.4.x` line for cancellation, native accessibility, and bundle safety.
+## Next
+
+- [Get started overview](/docs/getting-started)
+- [Sessions](/docs/sessions)

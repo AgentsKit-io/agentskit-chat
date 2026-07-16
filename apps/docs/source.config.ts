@@ -12,4 +12,15 @@ export const docs = defineDocs({
   docs: { schema: context => frontmatterSchema.extend({ title: frontmatterSchema.shape.title.default(inferredTitle(context.source, context.path)) }) },
 })
 
-export default defineConfig()
+export default defineConfig({
+  mdxOptions: {
+    // Higher-contrast light theme so syntax colors stay readable while still
+    // looking like real highlighting — not a gray wash.
+    rehypeCodeOptions: {
+      themes: {
+        light: 'github-light-default',
+        dark: 'github-dark-default',
+      },
+    },
+  },
+})

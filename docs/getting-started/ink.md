@@ -1,44 +1,62 @@
+---
+title: Ink quick start
+description: Run the same AgentsKit Chat definition in a terminal with Ink.
+---
+
 # Ink quick start
 
-Install the application shell and its published upstream peers:
+Terminal is a first-class surface — not a demotion of the web app.
+
+## Install
 
 ```bash
-pnpm add @agentskit/chat @agentskit/chat/ink @agentskit/ink ink react
+pnpm add @agentskit/chat @agentskit/core @agentskit/ink ink react
 ```
 
-Define the chat in a framework-neutral module and render it from an Ink entry point:
+## Shared definition
 
-```tsx
+Reuse the same `defineChat` module as your web or mobile shell.
+
+```ts
 import { defineChat } from '@agentskit/chat'
-import { AgentChat } from '@agentskit/chat/ink'
-import { render } from 'ink'
+import type { AdapterFactory } from '@agentskit/core'
 
-import { adapter } from './adapter.js'
-
-const chat = defineChat({ id: 'support', chat: { adapter } })
-
-render(<AgentChat definition={chat} />)
+export const createSupportChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'support',
+    chat: {
+      adapter,
+      systemPrompt: 'Help users understand the product.',
+    },
+  })
 ```
 
-When a trusted terminal host already owns the session, pass the same
-framework-neutral controlled source used by React:
+## Terminal shell
 
 ```tsx
-import type { ControlledChatSource } from '@agentskit/chat'
+import { render } from 'ink'
 import { AgentChat } from '@agentskit/chat/ink'
+import { createSupportChat } from './support-chat'
+import { adapter } from './adapter'
 
-export const mountChat = (source: ControlledChatSource) =>
-  render(<AgentChat definition={chat} controlled={source} />)
+render(
+  <AgentChat
+    definition={createSupportChat(adapter)}
+    placeholder="Ask about the product"
+  />,
+)
 ```
 
-Controlled mode validates the serialized snapshot and delegates input,
-cancellation, lifecycle commands, confirmation, and component interactions to
-the host callbacks. It does not invoke the upstream `useChat` hook or create a
-second controller. The official Ink input, Escape cancellation, confirmation,
-theme, semantic fallback, and single-owner keyboard behavior remain unchanged.
+Semantic fallbacks keep interactive components usable without a graphical renderer. Keyboard flows
+and PTY tests back the Ink path in this repository.
 
-The host must rerender with its next snapshot after a callback and remains
-responsible for authentication, authorization, transport, persistence, and
-business behavior.
+## Run the example
 
-The shell delegates lifecycle, streaming, input history, Escape cancellation, and terminal components to `@agentskit/ink`. Validate unsupported visual output with `parseSemanticFallback` from `@agentskit/chat`, then render it with Ink's `SemanticFallback`; the shared formatter keeps its kind and readable summary stable across platforms.
+```bash
+pnpm --filter @agentskit/chat-example-ink start
+```
+
+## Next
+
+- [Get started overview](/docs/getting-started)
+- [Components & fallbacks](/docs/components/catalog)

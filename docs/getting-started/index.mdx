@@ -1,0 +1,88 @@
+---
+title: Get started
+description: Scaffold an AgentsKit Chat app and render the same definition on web, mobile, or terminal.
+---
+
+You are about to create an **AI chat application** — not a one-off UI demo.
+
+AgentsKit Chat `0.4.0` lets one framework-neutral definition drive a **native** shell on every
+supported surface. Start with the CLI, pick a renderer, then grow into routes, policy, components,
+and sessions without rewriting the product core.
+
+## 1. Scaffold
+
+```bash
+pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes
+cd my-chat
+pnpm install
+pnpm test
+```
+
+Or pick a renderer interactively in the docs:
+
+<InstallCommand />
+
+The CLI supports `react`, `react-native`, `ink`, `vue`, `svelte`, `solid`, and `angular`. It creates:
+
+- a shared chat definition
+- a Web-standard request handler
+- a native shell for your renderer
+- a test and architecture note
+
+It does **not** copy an AgentsKit runtime. Adapters, tools, memory, and streaming stay upstream.
+
+## 2. Understand the signature
+
+Every app has the same shape:
+
+1. **`defineChat`** — application definition (id, AgentsKit `chat` config, optional routes/policy/components)
+2. **Server or local adapter** — how messages stream
+3. **`AgentChat` from a renderer subpath** — how humans see and interact
+
+```ts
+import { defineChat } from '@agentskit/chat'
+import type { AdapterFactory } from '@agentskit/core'
+
+export const createProductChat = (adapter: AdapterFactory) =>
+  defineChat({
+    id: 'product',
+    chat: {
+      adapter,
+      systemPrompt: 'Be precise. Prefer links to docs over guesses.',
+    },
+  })
+```
+
+## 3. Open a renderer guide
+
+Pick the shell you ship first. Keep the definition shared if you add a second surface later.
+
+<SurfaceGrid />
+
+| Surface | Guide |
+| --- | --- |
+| React | [React quick start](/docs/getting-started/react) |
+| React Native / Expo | [React Native quick start](/docs/getting-started/react-native) |
+| Ink (terminal) | [Ink quick start](/docs/getting-started/ink) |
+| Vue | [Vue quick start](/docs/getting-started/vue) |
+| Svelte | [Svelte quick start](/docs/getting-started/svelte) |
+| Solid | [Solid quick start](/docs/getting-started/solid) |
+| Angular | [Angular quick start](/docs/getting-started/angular) |
+
+## 4. What “done” looks like on day one
+
+After `init` + `pnpm test` you should have:
+
+- a chat that streams without inventing a second state machine
+- a path to add tools/actions with confirmation when they matter
+- a definition you can hand to another renderer without rewriting prompts or policy
+
+## 5. Next steps
+
+- [Positioning](/docs/product/positioning) — when to choose Chat over AI SDK UI / assistant-ui
+- [Routes and state](/docs/conversation/routes-and-state) — deterministic workflows
+- [Action policy](/docs/actions/policy) — safe side effects
+- [Components catalog](/docs/components/catalog) — interactive UI the model may propose
+- [Deployment modes](/docs/deployment) — Next, Hono, Express, Cloudflare
+- [API reference](/docs/api-reference) — public contracts
+- [Compatibility matrix](/docs/releases/compatibility) — supported versions

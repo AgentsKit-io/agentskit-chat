@@ -7,8 +7,17 @@ import { source } from '@/lib/source'
 export default function DocumentationLayout({ children }: { readonly children: ReactNode }) {
   return <DocsLayout
     tree={source.pageTree}
-    nav={{ title: <Link className="font-semibold" href="/docs">AgentsKit Chat <span className="maturity-badge ml-2">Alpha</span></Link>, url: '/docs' }}
+    nav={{
+      title: (
+        <Link className="font-semibold" href="/">
+          AgentsKit Chat <span className="maturity-badge ml-2">Alpha</span>
+        </Link>
+      ),
+      url: '/',
+    }}
     links={[
+      { text: 'Home', url: '/' },
+      { text: 'Get started', url: '/docs/getting-started' },
       { text: 'Stability', url: '/docs/releases/stability' },
       { text: 'llms.txt', url: '/llms.txt', external: true },
       { text: 'GitHub', url: 'https://github.com/AgentsKit-io/agentskit-chat', external: true },

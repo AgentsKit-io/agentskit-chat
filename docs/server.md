@@ -3,7 +3,7 @@
 `createChatHandler` mounts one shared chat definition behind the platform `Request`, `Response`, `ReadableStream`, and `AbortSignal` APIs.
 
 For deterministic misses that need cited semantic retrieval, use the sibling
-[`createAskServiceHandler`](./backend.md). Both handlers use Web standards;
+[`createAskServiceHandler`](/docs/backend). Both handlers use Web standards;
 the Ask vertical additionally resolves a complete trusted site policy and
 shares one public request/configuration contract across hosted and self-hosted
 deployments.
@@ -47,5 +47,5 @@ federated AgentsKit retrieval. A successful answer always includes at least one
 safe citation. Rate limiting, provider generation, CAS storage, and telemetry
 are host adapters rather than bundled infrastructure.
 
-See the [complete backend guide](./backend.md) and
-[ADR-0026](./architecture/adrs/0026-trusted-ask-backend-vertical.md).
+See the [complete backend guide](/docs/backend) and
+[ADR-0026](/docs/architecture/adrs/0026-trusted-ask-backend-vertical).
