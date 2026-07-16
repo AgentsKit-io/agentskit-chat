@@ -33,6 +33,7 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      DOCS_ASK_MODE: ${{ vars.DOCS_ASK_MODE || 'unconfigured' }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
@@ -47,6 +48,10 @@ jobs:
           : "${VERCEL_ORG_ID:?Set VERCEL_ORG_ID on the selected GitHub environment}"
           : "${VERCEL_PROJECT_ID:?Set VERCEL_PROJECT_ID on the selected GitHub environment}"
           : "${VERCEL_TOKEN:?Set VERCEL_TOKEN on the selected GitHub environment}"
+          case "$DOCS_ASK_MODE" in
+            configured|unconfigured) ;;
+            *) echo "DOCS_ASK_MODE must be configured or unconfigured" >&2; exit 1 ;;
+          esac
       - run: pnpm install --frozen-lockfile
       - name: Pull immutable Vercel project settings
         working-directory: apps/docs
@@ -58,13 +63,20 @@ jobs:
         id: deploy
         working-directory: apps/docs
         run: |
-          production_flag=""
-          if [[ "${{ inputs.target }}" == "production" ]]; then production_flag="--prod"; fi
-          url="$(pnpm dlx vercel@56.2.0 deploy --prebuilt $production_flag --token="$VERCEL_TOKEN")"
+          deployment_flags=()
+          if [[ "${{ inputs.target }}" == "production" ]]; then
+            deployment_flags+=(--prod --skip-domain)
+          fi
+          url="$(pnpm dlx vercel@56.2.0 deploy --prebuilt "${deployment_flags[@]}" --token="$VERCEL_TOKEN")"
           echo "url=$url" >> "$GITHUB_OUTPUT"
       - name: Install browser for deployment smoke
         run: pnpm exec playwright install --with-deps chromium
       - name: Run remote documentation smoke
         env:
           DOCS_BASE_URL: ${{ steps.deploy.outputs.url }}
+          DOCS_ASK_MODE: ${{ env.DOCS_ASK_MODE }}
         run: pnpm --filter @agentskit/chat-docs test:e2e
+      - name: Promote verified production deployment
+        if: inputs.target == 'production'
+        working-directory: apps/docs
+        run: pnpm dlx vercel@56.2.0 promote "${{ steps.deploy.outputs.url }}" --yes --token="$VERCEL_TOKEN"

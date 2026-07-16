@@ -22,11 +22,19 @@ GitHub environments:
 - `docs-preview` with `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, and `VERCEL_TOKEN`.
 - `docs-production` with the same scoped secrets plus required reviewers.
 
-Production promotion is a human decision. Approvers verify the maturity copy,
-preview evidence, canonical/raw/search/sitemap/robots/LLM routes, deterministic
-Ask, explicit unavailable behavior for an unconfigured grounded backend, and
-the security-header smoke before approving the environment. Provider secrets
-remain server-side and must never use a `NEXT_PUBLIC_` name.
+Set the `DOCS_ASK_MODE` environment variable to `unconfigured` while the
+deployment intentionally exercises fail-closed Ask behavior, or to `configured`
+when `NEXT_PUBLIC_ASK_ENDPOINT` is present and the remote smoke must require a
+cited answer.
+
+Production promotion is a human decision. The workflow creates the production
+artifact with domain assignment disabled, runs the remote smoke against that
+immutable URL, and promotes that exact deployment only after every check passes.
+Approvers verify the maturity copy, preview evidence,
+canonical/raw/search/sitemap/robots/LLM routes, deterministic Ask, the selected
+hosted Ask profile, and the security-header smoke before approving the
+environment. Provider secrets remain server-side and must never use a
+`NEXT_PUBLIC_` name.
 
 Keep the previous successful production deployment available during promotion.
 Rollback reassigns the production alias to that immutable deployment; DNS does
