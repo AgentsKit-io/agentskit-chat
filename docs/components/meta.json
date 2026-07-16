@@ -2,6 +2,17 @@
   "title": "Components",
   "pages": [
     "catalog",
-    "choice-list"
+    "button-group",
+    "choice-list",
+    "form",
+    "confirmation",
+    "progress",
+    "source-list",
+    "link-card",
+    "error-notice",
+    "tool-call",
+    "approval-request",
+    "table",
+    "file-attachment"
   ]
 }

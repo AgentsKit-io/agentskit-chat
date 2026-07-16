@@ -1,0 +1,122 @@
+---
+title: Form
+description: "Schema-backed fields with a single submit event. Component key `form`."
+---
+
+# Form
+
+`form` collects structured input in one submit. Field types are closed: `text`, `email`, `number`, `checkbox`, `select`.
+
+## Live preview
+
+<ComponentDemo componentKey="form" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Contact, signup, or settings-style capture inside the transcript
+- When the host needs a validated record, not free-text chat
+- Select fields with a bounded option list
+
+### Prefer something else when
+
+- Single pick among options → `choice-list` or `button-group`
+- File uploads → `file-attachment` is display/download only
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | string? | Optional form heading |
+| `fields` | 1–30 items | Each has `id`, `label`, `type`, optional `required`, `placeholder`, `options` |
+| `fields[].type` | `text` \| `email` \| `number` \| `checkbox` \| `select` | Closed set |
+| `fields[].options` | array | **Required** when `type` is `select`; forbidden otherwise |
+| `submitLabel` | string | Submit control label |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "form",
+  "instanceId": "form-fixture",
+  "props": {
+    "title": "Contact",
+    "fields": [
+      { "id": "email", "label": "Email", "type": "email", "required": true },
+      { "id": "role", "label": "Role", "type": "select", "options": [
+        { "id": "eng", "label": "Engineering" },
+        { "id": "pm", "label": "Product" }
+      ]}
+    ],
+    "submitLabel": "Send"
+  },
+  "fallback": {
+    "kind": "form",
+    "summary": "Contact form."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `submit` | `form` | Record of field id → value |
+
+## Host wiring
+
+```tsx
+import { FormComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([FormComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // { type: 'submit', componentKey: 'form', instanceId, value: { email: string, ... } }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `form` |
+| Export | `FormComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `submit` (`form`) |
+| Host callback | `onComponentInteract` |
+| Event shape | `{ type: 'submit', componentKey: 'form', instanceId, value: { email: string, ... } }` |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Choice list](/docs/components/choice-list) — Pick-one without multi-field
+- [Error notice](/docs/components/error-notice) — Surface validation failures
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

@@ -1,34 +1,41 @@
 ---
-title: ChoiceList
-description: Schema-backed choice UI — same selection event on every renderer.
+title: Choice list
+description: Prompt plus choices with optional descriptions and typed actions — the primary interactive component.
 ---
 
-# ChoiceList
+# Choice list
 
-`ChoiceList` is the primary interactive component: one prompt, 1–20 choices, one `agentskit.chat.component` v1 selection event on every shell.
+`choice-list` is the primary interactive component: one prompt, 1–20 choices, one selection event on every shell.
 
-## Live
+## Live preview
 
-<ComponentGallery />
+<ComponentDemo componentKey="choice-list" />
 
-(See the **Choice list** card above, or the full [gallery](/docs/examples/components).)
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
 
-## Declare
+## When to use
 
-```ts
-import { ChoiceListComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+- Branching product UX (onboarding, triage, “what next?”)
+- Offering options that may trigger a **typed action** (tool) under policy
+- Anything that must work in React **and** Ink without a custom DOM tree
 
-export const definition = defineChat({
-  id: 'app',
-  components: defineComponentManifest([ChoiceListComponent]),
-  // or StandardComponentCatalog for the full closed set
-  chat: { adapter },
-})
-```
+### Prefer something else when
 
-Only declared keys can render. `resolveComponentFrame(frame, components)` validates envelope + props schema.
+- Compact action toolbar without a prompt → [`button-group`](/docs/components/button-group)
+- Multi-field structured input → [`form`](/docs/components/form)
+- Binary confirm for a side effect under tool policy → [`approval-request`](/docs/components/approval-request)
 
-## Render frame (untrusted)
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `prompt` | string (1–4096) | Shown as the fieldset legend |
+| `choices` | 1–20 items | Each has `id`, `label`, optional `description`, optional `action` |
+| `choices[].id` | id string | Unique within the list |
+| `choices[].description` | string? | Secondary line under the label |
+| `choices[].action` | `{ name, input }` | Optional; resolves through `ChatConfig.tools` only |
+
+## Frame example
 
 ```json
 {
@@ -40,15 +47,26 @@ Only declared keys can render. `resolveComponentFrame(frame, components)` valida
   "props": {
     "prompt": "Where should we go?",
     "choices": [
-      { "id": "docs", "label": "Documentation", "description": "Read the guide." },
+      {
+        "id": "docs",
+        "label": "Documentation",
+        "description": "Read the component guide."
+      },
       { "id": "demo", "label": "Demo" }
     ]
   },
-  "fallback": { "kind": "choice-list", "summary": "Choose Documentation or Demo." }
+  "fallback": {
+    "kind": "choice-list",
+    "summary": "Choose Documentation or Demo."
+  }
 }
 ```
 
-Frames may come from the model or a deterministic route — always resolve before rendering.
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `select` | `id` | Selected choice id |
 
 ## Typed actions
 
@@ -58,37 +76,62 @@ A choice may declare:
 { action: { name: 'email.send', input: { to: 'ada@example.com' } } }
 ```
 
-- Name resolves only through `ChatConfig.tools` ([AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations)).
-- Tool must be executable, opt into confirmation, and pass argument validation.
-- Selection **proposes** a tool call — it never executes.
+- Name must exist on `ChatConfig.tools` ([AgentsKit tools](https://www.agentskit.io/docs/agents/tools/integrations))
+- Tool must opt into confirmation and pass argument validation
+- Selection **proposes** a tool call — it never executes
 
 See [Action policy](/docs/actions/policy) and [Confirmation](/docs/actions/confirmation).
 
-## Host callbacks
+## Host wiring
 
 ```tsx
-<AgentChat
-  definition={definition}
-  onComponentSelect={(event) => {
-    // { type: 'select', componentKey, instanceId, choiceId }
-  }}
-  onComponentInteract={(event) => {
-    // form / confirm / open / download intents
-  }}
-/>
+import { ChoiceListComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ChoiceListComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentSelect={(event) => {
+        // { type: 'select', componentKey: 'choice-list', instanceId, choiceId }
+      }}
+    />
+  )
+}
 ```
 
-## Native renderers
+## For agents
 
-| Shell | Component |
+| Field | Value |
 | --- | --- |
-| React | `<ChoiceList />` fieldset + buttons |
-| Vue / Svelte / Solid / Angular | native fieldset patterns + replaceable slots |
-| React Native | `<ChoiceListNative />` |
-| Ink | arrow keys / number + Enter |
+| `componentKey` | `choice-list` |
+| Export | `ChoiceListComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `select` (value = choice `id`) |
+| Host callback | **`onComponentSelect` only** (not `onComponentInteract`) |
+| Optional | `choices[].action` → proposed tool via `ChatConfig.tools` (never auto-executes) |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent keys or props outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Fieldset + buttons; replaceable slots |
+| React Native | `ChoiceListNative` accessibility roles |
+| Ink | Arrows / number + Enter |
 
 ## Related
 
-- [Component catalog](/docs/components/catalog)
-- [Examples](/docs/examples/components)
+- [Catalog index](/docs/components/catalog)
+- [Button group](/docs/components/button-group) — compact actions without a long prompt
+- [All components live](/docs/examples/components)
 - [Action policy](/docs/actions/policy)

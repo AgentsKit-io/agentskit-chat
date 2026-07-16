@@ -1,0 +1,106 @@
+---
+title: Table
+description: "Captioned columns and rows of scalar cells. Component key `table`."
+---
+
+# Table
+
+`table` is **display-only**: a caption, 1–30 columns, and up to 1000 rows of scalar cells (string, number, boolean, null).
+
+## Live preview
+
+<ComponentDemo componentKey="table" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Compare options, list records, show structured tool results
+- When markdown tables are too fragile for shells
+
+### Prefer something else when
+
+- Interactive selection of a row → use `choice-list` with rows as choices
+- Large free-form documents → markdown message content
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `caption` | string | Table caption |
+| `columns` | 1–30 items | Each has unique `key` + `label` |
+| `rows` | ≤1000 records | Maps column key → scalar cell |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "table",
+  "instanceId": "table-fixture",
+  "props": {
+    "caption": "Users",
+    "columns": [
+      { "key": "name", "label": "Name" },
+      { "key": "role", "label": "Role" }
+    ],
+    "rows": [
+      { "name": "Ada", "role": "Engineer" },
+      { "name": "Grace", "role": "Operator" }
+    ]
+  },
+  "fallback": {
+    "kind": "table",
+    "summary": "Users table with two rows."
+  }
+}
+```
+
+## Events
+
+**No events.** This key is display-only — do not invent host callbacks.
+
+## Host wiring
+
+Display-only — register the component so the frame resolves; no interact handler is required.
+
+```ts
+import { TableComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([TableComponent]),
+  chat: { adapter },
+})
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `table` |
+| Export | `TableComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | none (display-only) |
+| Host callback | none — display only |
+| Interaction | Do not emit user events for this key |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Source list](/docs/components/source-list) — Citations not rows
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

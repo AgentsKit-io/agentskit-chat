@@ -1,0 +1,114 @@
+---
+title: Error notice
+description: "Accessible alert with optional retry. Component key `error-notice`."
+---
+
+# Error notice
+
+`error-notice` is an accessible **alert** for recoverable failures. Optional `retryLabel` enables a `retry` event.
+
+## Live preview
+
+<ComponentDemo componentKey="error-notice" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- Surface adapter/tool failures without crashing the shell
+- When the host can retry the last operation
+
+### Prefer something else when
+
+- Silent progress → `progress`
+- Successful tool status → `tool-call`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `title` | string | Alert title |
+| `message` | string | Human-readable detail |
+| `code` | string? | Optional machine code (≤128) |
+| `retryLabel` | string? | If set, show retry control |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "error-notice",
+  "instanceId": "error-notice-fixture",
+  "props": {
+    "title": "Failed",
+    "message": "Try again.",
+    "code": "E_TEST",
+    "retryLabel": "Retry"
+  },
+  "fallback": {
+    "kind": "error-notice",
+    "summary": "Failed: Try again."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `retry` | `none` | User requested retry (only if retryLabel set) |
+
+## Host wiring
+
+```tsx
+import { ErrorNoticeComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([ErrorNoticeComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // { type: 'retry', componentKey: 'error-notice', instanceId }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `error-notice` |
+| Export | `ErrorNoticeComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `retry` (`none`) |
+| Host callback | `onComponentInteract` |
+| Event shape | `{ type: 'retry', componentKey: 'error-notice', instanceId }` |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Tool call](/docs/components/tool-call) — Tool lifecycle status
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

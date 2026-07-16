@@ -7,7 +7,11 @@ import { Mermaid } from '@/components/mermaid'
 import { Pre } from '@/components/code-block'
 import { SurfaceGrid } from '@/components/surface-grid'
 import { BasicChatExample } from '@/components/examples/basic-chat'
-import { ComponentGallery } from '@/components/examples/component-gallery'
+import {
+  ComponentDemo,
+  ComponentGallery,
+  ComponentIndex,
+} from '@/components/examples/component-demo'
 import { AdaptersCallout, AgentsKitRef, EcosystemStrip } from '@/components/agentskit-ref'
 
 /** Components available inside canonical docs MDX/Markdown. */
@@ -23,7 +27,9 @@ export const docsMdxComponents = {
   SurfaceGrid,
   Mermaid,
   BasicChatExample,
+  ComponentDemo,
   ComponentGallery,
+  ComponentIndex,
   AgentsKitRef,
   AdaptersCallout,
   EcosystemStrip,

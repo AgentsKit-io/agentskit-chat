@@ -1,0 +1,118 @@
+---
+title: Source list
+description: "Cited sources for RAG-style answers. Component key `source-list`."
+---
+
+# Source list
+
+`source-list` presents citations (title, optional URL, optional snippet). Opening a source emits `open` with the source `id`.
+
+## Live preview
+
+<ComponentDemo componentKey="source-list" />
+
+> Demos use **docs host CSS**. Package primitives are intentionally unstyled so your product theme owns the look.
+
+## When to use
+
+- RAG / docs answers that must show provenance
+- When the host should navigate on citation click
+
+### Prefer something else when
+
+- Single deep-link card → `link-card`
+- Structured comparison tables → `table`
+
+## Props (schema)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `label` | string | List heading |
+| `sources` | 1–50 items | `id`, `title`, optional `url`, optional `snippet` |
+| `sources[].url` | portable URL? | Relative or http(s) only |
+
+## Frame example
+
+```json
+{
+  "protocol": "agentskit.chat.component",
+  "version": 1,
+  "type": "render",
+  "componentKey": "source-list",
+  "instanceId": "source-list-fixture",
+  "props": {
+    "label": "Sources",
+    "sources": [
+      {
+        "id": "docs",
+        "title": "Documentation",
+        "url": "/docs",
+        "snippet": "Component protocol overview."
+      }
+    ]
+  },
+  "fallback": {
+    "kind": "source-list",
+    "summary": "Sources: Documentation."
+  }
+}
+```
+
+## Events
+
+| Event | Value | Meaning |
+| --- | --- | --- |
+| `open` | `id` | Source id that was opened |
+
+## Host wiring
+
+```tsx
+import { SourceListComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
+import { AgentChat } from '@agentskit/chat/react'
+
+const definition = defineChat({
+  id: 'app',
+  components: defineComponentManifest([SourceListComponent]),
+  chat: { adapter },
+})
+
+export function App() {
+  return (
+    <AgentChat
+      definition={definition}
+      onComponentInteract={(event) => {
+        // { type: 'open', componentKey: 'source-list', instanceId, value: sourceId }
+      }}
+    />
+  )
+}
+```
+
+## For agents
+
+| Field | Value |
+| --- | --- |
+| `componentKey` | `source-list` |
+| Export | `SourceListComponent` |
+| Protocol | `agentskit.chat.component` v1 |
+| Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
+| Events | `open` (`id`) |
+| Host callback | `onComponentInteract` |
+| Event shape | `{ type: 'open', componentKey: 'source-list', instanceId, value: sourceId }` |
+| Fallback | Always include `fallback.kind` + `fallback.summary` |
+
+Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.
+
+## Shells
+
+| Shell | Notes |
+| --- | --- |
+| React / Vue / Svelte / Solid / Angular | Same frame; replaceable slots |
+| React Native | Accessibility roles from the catalog definition |
+| Ink | Terminal-safe fallback when interactive chrome is limited |
+
+## Related
+
+- [Link card](/docs/components/link-card) — Single navigation card
+- [Catalog index](/docs/components/catalog) — All keys
+- [Live lab](/docs/examples/components) — all components side-by-side

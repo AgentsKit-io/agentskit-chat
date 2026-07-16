@@ -325,42 +325,257 @@ html.dark body {
   padding: .45rem .9rem;
 }
 
-.ak-component-demo [data-ak-component] {
-  display: block;
+/* ── Catalog component demos (unstyled host primitives) ── */
+.ak-component-demo {
+  color: #e6edf3;
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
-.ak-component-demo button,
-.ak-component-demo input,
-.ak-component-demo select {
-  margin: .2rem .25rem .2rem 0;
-  border-radius: .4rem;
+.ak-component-demo [data-ak-component] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.ak-component-demo legend,
+.ak-component-demo h3,
+.ak-component-demo label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: #e6edf3;
+}
+
+.ak-component-demo p {
+  margin: 0;
+  color: #8b949e;
+  font-size: 0.85rem;
+}
+
+/* Choice list / button group: stack options with label + description */
+.ak-component-demo [data-ak-component='choice-list'],
+.ak-component-demo [data-ak-component='button-group'] {
+  gap: 0.5rem;
+}
+
+.ak-component-demo [data-ak-component='choice-list'] button,
+.ak-component-demo [data-ak-component='button-group'] button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  border-radius: 0.65rem;
+  border: 1px solid #30363d;
+  background: #161b22;
+  color: #e6edf3;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.ak-component-demo [data-ak-component='choice-list'] button span {
+  font-weight: 650;
+}
+
+.ak-component-demo [data-ak-component='choice-list'] button small {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #8b949e;
+  line-height: 1.35;
+}
+
+.ak-component-demo [data-ak-component='choice-list'] button:hover,
+.ak-component-demo [data-ak-component='button-group'] button:hover {
+  border-color: #58a6ff;
+  background: #1f2937;
+}
+
+/* Form: stacked fields */
+.ak-component-demo [data-ak-component='form'] label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.ak-component-demo [data-ak-component='form'] input,
+.ak-component-demo [data-ak-component='form'] select {
+  width: 100%;
+  min-height: 2.35rem;
+  margin: 0;
+  border-radius: 0.5rem;
   border: 1px solid #30363d;
   background: #0d1117;
   color: #e6edf3;
-  padding: .35rem .65rem;
-  font-size: .85rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.9rem;
 }
 
-.ak-component-demo button {
-  cursor: pointer;
+.ak-component-demo [data-ak-component='form'] button[type='submit'],
+.ak-component-demo [data-ak-component='confirmation'] button,
+.ak-component-demo [data-ak-component='approval-request'] button,
+.ak-component-demo [data-ak-component='error-notice'] button {
+  align-self: flex-start;
+  margin: 0;
+  border-radius: 0.5rem;
+  border: 1px solid #30363d;
   background: #21262d;
+  color: #e6edf3;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
 }
 
-.ak-component-demo button:hover {
+.ak-component-demo [data-ak-component='form'] button[type='submit'] {
+  background: #58a6ff;
   border-color: #58a6ff;
+  color: #0d1117;
+}
+
+/* confirmation / approval: title+message full width, actions as a row */
+.ak-component-demo [data-ak-component='confirmation'],
+.ak-component-demo [data-ak-component='approval-request'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.55rem;
+  align-items: stretch;
+}
+
+.ak-component-demo [data-ak-component='confirmation'] h3,
+.ak-component-demo [data-ak-component='confirmation'] p,
+.ak-component-demo [data-ak-component='approval-request'] h3,
+.ak-component-demo [data-ak-component='approval-request'] p {
+  flex: 1 1 100%;
+}
+
+.ak-component-demo [data-ak-component='confirmation'] button,
+.ak-component-demo [data-ak-component='approval-request'] button {
+  flex: 1 1 calc(50% - 0.3rem);
+  min-width: 6rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.ak-component-demo [data-ak-component='error-notice'] {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.ak-component-demo [data-ak-component='progress'] label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.ak-component-demo [data-ak-component='progress'] progress {
+  width: 100%;
+  height: 0.65rem;
+}
+
+.ak-component-demo [data-ak-component='source-list'] ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ak-component-demo [data-ak-component='source-list'] a {
+  color: #58a6ff;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.ak-component-demo [data-ak-component='source-list'] a:hover {
+  text-decoration: underline;
+}
+
+.ak-component-demo [data-ak-component='link-card'] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border: 1px solid #30363d;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #161b22;
+  color: #e6edf3;
+  text-decoration: none;
+}
+
+.ak-component-demo [data-ak-component='link-card']:hover {
+  border-color: #58a6ff;
+}
+
+.ak-component-demo [data-ak-component='link-card'] strong {
+  font-size: 0.95rem;
+}
+
+.ak-component-demo [data-ak-component='link-card'] span {
+  color: #8b949e;
+  font-size: 0.85rem;
+}
+
+.ak-component-demo [data-ak-component='tool-call'] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  gap: 0.35rem;
+}
+
+.ak-component-demo [data-ak-component='tool-call'] pre {
+  margin: 0;
+  overflow: auto;
+  border-radius: 0.5rem;
+  border: 1px solid #30363d;
+  background: #0d1117;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+.ak-component-demo [data-ak-component='file-attachment'] {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.ak-component-demo [data-ak-component='file-attachment'] a {
+  color: #58a6ff;
 }
 
 .ak-component-demo table {
   width: 100%;
   border-collapse: collapse;
-  font-size: .8rem;
+  font-size: 0.85rem;
 }
 
 .ak-component-demo th,
 .ak-component-demo td {
   border: 1px solid #30363d;
-  padding: .35rem .5rem;
+  padding: 0.45rem 0.6rem;
   text-align: left;
+}
+
+.ak-component-demo caption {
+  caption-side: top;
+  text-align: left;
+  margin-bottom: 0.4rem;
+  font-weight: 650;
+  color: #e6edf3;
+}
+
+.ak-component-demo code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: #ffa657;
 }
 
 @media (max-width: 640px) {
