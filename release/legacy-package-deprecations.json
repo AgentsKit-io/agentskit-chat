@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "migrationUrl": "https://chat.agentskit.io/docs/releases/migration-to-0.3",
+  "packages": [
+    {
+      "name": "@agentskit/chat-protocol",
+      "replacement": "@agentskit/chat/protocol",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-server",
+      "replacement": "@agentskit/chat/server",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-devtools",
+      "replacement": "@agentskit/chat/devtools",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-react",
+      "replacement": "@agentskit/chat/react",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-react-native",
+      "replacement": "@agentskit/chat/react-native",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-ink",
+      "replacement": "@agentskit/chat/ink",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-vue",
+      "replacement": "@agentskit/chat/vue",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-svelte",
+      "replacement": "@agentskit/chat/svelte",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-solid",
+      "replacement": "@agentskit/chat/solid",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    },
+    {
+      "name": "@agentskit/chat-angular",
+      "replacement": "@agentskit/chat/angular",
+      "expectedLatest": "0.2.0",
+      "expectedVersions": ["0.1.0", "0.2.0"]
+    }
+  ]
+}

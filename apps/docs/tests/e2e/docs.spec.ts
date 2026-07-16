@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
+const askMode = process.env.DOCS_ASK_MODE?.trim() || 'unconfigured'
+
 test('navigates the canonical docs and answers a known question locally', async ({ page }) => {
   await page.goto('/docs/getting-started/react')
   await expect(page.getByRole('heading', { name: 'React quick start' }).first()).toBeVisible()
@@ -65,50 +67,119 @@ test('keeps the interactive assistant usable on a mobile viewport', async ({ pag
   })
 })
 
-test('keeps unavailable backend behavior explicit and supports keyboard focus', async ({ page }) => {
+test('supports keyboard focus and restores it when the assistant closes', async ({ page }) => {
   await page.goto('/docs/backend')
   const assistant = page.getByRole('button', { name: 'Ask the docs' })
   await assistant.focus()
   await expect(assistant).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page.getByRole('button', { name: 'Close documentation assistant' })).toBeFocused()
-  const input = page.getByPlaceholder('Ask about AgentsKit Chat…')
-  await input.fill('Compare every deployment topology')
-  await page.getByRole('button', { name: 'Send', exact: false }).click()
-  await expect(page.getByText('Ask request failed (503).')).toBeVisible()
   await page.getByRole('button', { name: 'Close documentation assistant' }).click()
   await expect(page.getByRole('button', { name: 'Ask the docs' })).toBeFocused()
 })
 
-test('publishes public docs surface and keeps machine-readable artifacts', async ({ request }) => {
-  const [home, docs, guide, llms, llmsFull, knowledge, raw, rawPrivate, architecture, product] = await Promise.all([
+test('enforces the selected hosted Ask smoke profile', async ({ page }) => {
+  await page.goto('/docs/backend')
+  await page.getByRole('button', { name: 'Ask the docs' }).click()
+  const input = page.getByPlaceholder('Ask about AgentsKit Chat…')
+  await input.fill('Compare every deployment topology')
+  await page.getByRole('button', { name: 'Send', exact: false }).click()
+  if (askMode === 'configured') {
+    await expect(page.getByRole('heading', { name: 'Sources' })).toBeVisible()
+    await expect(page.getByText('Ask request failed (503).')).toHaveCount(0)
+  } else {
+    await expect(page.getByText('Ask request failed (503).')).toBeVisible()
+  }
+})
+
+test('publishes public docs surface and machine-readable artifacts', async ({ request }) => {
+  const [
+    home, docs, guide, index, llms, llmsFull, knowledge,
+    raw, rawIndex, rawPrivate, architectureDoc, product,
+    forAgents, search, sitemap, robots, architectureAsset,
+  ] = await Promise.all([
     request.get('/'),
     request.get('/docs'),
     request.get('/docs/guides/install-and-run'),
+    request.get('/docs/getting-started'),
     request.get('/llms.txt'),
     request.get('/llms-full.txt'),
     request.get('/deterministic/knowledge.json'),
     request.get('/raw/backend.mdx'),
+    request.get('/raw/index.mdx'),
     request.get('/raw/architecture/overview.md'),
     request.get('/docs/architecture/overview'),
     request.get('/docs/product/PRD'),
+    request.get('/for-agents'),
+    request.get('/api/search?query=react'),
+    request.get('/sitemap.xml'),
+    request.get('/robots.txt'),
+    request.get('/assets/agentschat-architecture.svg'),
   ])
+
   expect(home.ok()).toBe(true)
   expect(await home.text()).toMatch(/One AI chat/i)
   expect(docs.ok()).toBe(true)
   expect(guide.ok()).toBe(true)
   expect(await guide.text()).toContain('Install and run')
+  expect(index.ok()).toBe(true)
+  expect(await index.text()).toContain('Get started')
+
   expect(llms.ok()).toBe(true)
+  const concise = await llms.text()
+  expect(concise).toContain('AgentsKit Chat')
+  expect(concise.length).toBeLessThan(10_000)
+  expect(concise).not.toContain('architecture/overview')
+  expect(concise).not.toContain('for-agents/index')
+  for (const productUrl of [
+    'https://www.agentskit.io/docs',
+    'https://registry.agentskit.io/docs',
+    'https://chat.agentskit.io/docs',
+    'https://playbook.agentskit.io/docs',
+    'https://agentskit-io.github.io/doc-bridge/',
+    'https://github.com/AgentsKit-io/code-review-cli#readme',
+    'https://akos.agentskit.io/docs',
+  ]) expect(concise).toContain(productUrl)
+
   expect(llmsFull.ok()).toBe(true)
-  const llmsBody = await llms.text()
-  expect(llmsBody).not.toContain('architecture/overview')
-  expect(llmsBody).not.toContain('for-agents/index')
-  expect(await llmsFull.text()).not.toMatch(/<!-- architecture\//)
+  const complete = await llmsFull.text()
+  expect(complete).toContain('canonical documentation corpus')
+  expect(complete.length).toBeGreaterThan(concise.length)
+  expect(complete).not.toMatch(/<!-- architecture\//)
+
+  // Entry point redirects maintainers to the repo tree (not public docs).
+  expect(forAgents.status()).toBeLessThan(400)
+  expect(forAgents.url()).toMatch(/github\.com\/AgentsKit-io\/agentskit-chat/)
+
   expect(knowledge.ok()).toBe(true)
+  expect((await knowledge.json()).protocol).toBe('agentskit.chat.knowledge')
+
   expect(raw.ok()).toBe(true)
-  expect(await raw.text()).toMatch(/createAskServiceHandler|Ask backend/i)
-  // private maintainer docs must not be on the public site (HTML or raw/llms)
+  expect(await raw.text()).toMatch(/createAskServiceHandler|Ask backend|Hosted and self-hosted/i)
+  expect(rawIndex.ok()).toBe(true)
+  expect(await rawIndex.text()).toContain('title: AgentsKit Chat')
   expect(rawPrivate.status()).toBe(404)
-  expect(architecture.status()).toBe(404)
+  expect(architectureDoc.status()).toBe(404)
   expect(product.status()).toBe(404)
+
+  expect(architectureAsset.ok()).toBe(true)
+  expect(architectureAsset.headers()['content-type']).toContain('image/svg+xml')
+  expect(search.ok()).toBe(true)
+  expect(await search.text()).toContain('React quick start')
+  expect(sitemap.ok()).toBe(true)
+  expect(await sitemap.text()).toContain('/docs/getting-started')
+  expect(robots.ok()).toBe(true)
+  expect(await robots.text()).toContain('Sitemap:')
+})
+
+test('serves the public portal with baseline security headers', async ({ request }) => {
+  const response = await request.get('/')
+  expect(response.ok()).toBe(true)
+  expect(response.headers()).toEqual(expect.objectContaining({
+    'content-security-policy': expect.stringContaining("script-src 'self' 'unsafe-inline' https://www.agentskit.io"),
+    'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'DENY',
+  }))
 })

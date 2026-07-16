@@ -25,7 +25,8 @@ or another renderer subpath does not load an unrelated framework. The CLI remain
 the only separate public Chat package because it owns an executable binary.
 
 Legacy renderer package names remain published and supported until a separate
-deprecation and removal phase is approved.
+deprecation phase is approved. Deprecation changes npm guidance metadata only;
+this decision does not authorize unpublish or removal of existing versions.
 
 ## Consequences
 

@@ -1,0 +1,79 @@
+name: Docs deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Vercel environment to deploy
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ inputs.target }}
+  cancel-in-progress: ${{ inputs.target == 'preview' }}
+
+jobs:
+  deploy:
+    name: Deploy and smoke (${{ inputs.target }})
+    runs-on: ubuntu-latest
+    environment:
+      name: docs-${{ inputs.target }}
+      url: ${{ steps.deploy.outputs.url }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      DOCS_ASK_MODE: ${{ vars.DOCS_ASK_MODE || 'unconfigured' }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Validate protected deployment credentials
+        run: |
+          : "${VERCEL_ORG_ID:?Set VERCEL_ORG_ID on the selected GitHub environment}"
+          : "${VERCEL_PROJECT_ID:?Set VERCEL_PROJECT_ID on the selected GitHub environment}"
+          : "${VERCEL_TOKEN:?Set VERCEL_TOKEN on the selected GitHub environment}"
+          case "$DOCS_ASK_MODE" in
+            configured|unconfigured) ;;
+            *) echo "DOCS_ASK_MODE must be configured or unconfigured" >&2; exit 1 ;;
+          esac
+      - run: pnpm install --frozen-lockfile
+      - name: Pull immutable Vercel project settings
+        run: pnpm dlx vercel@56.2.0 pull --yes --environment=${{ inputs.target }} --token="$VERCEL_TOKEN"
+      - name: Build deployment artifact
+        run: pnpm dlx vercel@56.2.0 build ${{ inputs.target == 'production' && '--prod' || '' }} --token="$VERCEL_TOKEN"
+      - name: Deploy prebuilt artifact
+        id: deploy
+        run: |
+          deployment_flags=()
+          if [[ "${{ inputs.target }}" == "production" ]]; then
+            deployment_flags+=(--prod --skip-domain)
+          fi
+          deployment_json="$(pnpm dlx vercel@56.2.0 deploy --prebuilt --format=json "${deployment_flags[@]}" --token="$VERCEL_TOKEN")"
+          url="$(node -e 'const result = JSON.parse(require("node:fs").readFileSync(0, "utf8")); const url = result.deployment?.url ?? result.url; if (typeof url !== "string" || !url.startsWith("https://")) process.exit(1); process.stdout.write(url)' <<<"$deployment_json")"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Install browser for deployment smoke
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run remote documentation smoke
+        env:
+          DOCS_BASE_URL: ${{ steps.deploy.outputs.url }}
+          DOCS_ASK_MODE: ${{ env.DOCS_ASK_MODE }}
+        run: pnpm --filter @agentskit/chat-docs test:e2e
+      - name: Promote verified production deployment
+        if: inputs.target == 'production'
+        run: pnpm dlx vercel@56.2.0 promote "${{ steps.deploy.outputs.url }}" --scope="$VERCEL_ORG_ID" --yes --token="$VERCEL_TOKEN"

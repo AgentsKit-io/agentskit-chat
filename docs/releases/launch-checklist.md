@@ -30,22 +30,27 @@ pnpm docs:bridge:doctor
 pnpm docs:bridge:gate
 pnpm release:gate
 pnpm release:pack
+pnpm release:deprecation:plan
 pnpm test:e2e
 pnpm test:pty
 ```
 
-- [ ] Release and post-merge workflows pass on the `0.4.0` line
-- [ ] Both public tarballs match `SHA256SUMS`
-- [ ] All seven renderer exports pass clean-install verification
-- [ ] Expo web and iOS production exports pass in the release workflow
+- [x] Release and post-merge workflows pass on the `0.4.0` line
+- [x] Both public tarballs match `SHA256SUMS`
+- [x] All seven renderer exports pass clean-install verification
+- [x] Expo web and iOS production exports pass in the release workflow
+
+Immutable evidence: [stable release workflow](https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29431524999)
+and [v0.4.0 release assets](https://github.com/AgentsKit-io/agentskit-chat/releases/tag/v0.4.0).
 
 ## Distribution
 
-- [ ] Immutable `v0.4.0` tag and GitHub release are public
-- [ ] Both packages resolve from npm at exact `0.4.0`
-- [ ] npm provenance attestations and registry signatures verify
+- [x] Immutable `v0.4.0` tag and GitHub release are public
+- [x] Both packages resolve from npm at exact `0.4.0`
+- [x] npm provenance attestations and registry signatures verify
 - [ ] Clean external installation, ESM/CJS imports, and CLI scaffolding pass
-- [ ] npm Trusted Publishing succeeds for both packages through OIDC
+- [x] npm Trusted Publishing succeeds for both packages through OIDC
+- [ ] A reviewed patch aligns both public npm homepages with `https://chat.agentskit.io/docs`
 - [x] Temporary bootstrap `NPM_TOKEN` is absent from the protected `npm` environment
 
 The stable workflow must remain token-free. Its protected publish job uses
@@ -54,13 +59,23 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 ## Dogfood
 
-- [ ] AgentsKit Docs and Registry use the consolidated public package
-- [ ] Registry, Playbook, Doc Bridge, and approved private tracers pass their declared pins
-- [ ] Frozen installs, strict typechecks/tests, and production builds pass
-- [ ] Public browser smoke passes for Docs, Registry, and Playbook
-- [ ] No private behavior, identifier, data, or topology enters public evidence
+- [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline
+- [x] Chat Docs is certified with the canonical production evidence from #102
+- [ ] AKOS is certified through an approved aggregate private attestation
+- [ ] Frozen installs, strict typechecks/tests, and production builds pass for all declared consumers
+- [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge
+- [x] No private AKOS behavior, identifier, data, or topology enters public evidence
 
 ## Product close-out
 
 - [ ] Record release, provenance, checksums, clean install, and host smoke links on #104
 - [ ] Complete the convergence ledger only after every public and private tracer passes
+
+## Legacy package retirement
+
+- [x] #102 is closed with canonical deployment evidence and the Chat documentation portal is certified in the ledger
+- [ ] AKOS has an approved aggregate private attestation and is certified in the ledger
+- [ ] `pnpm release:deprecation:plan -- --require-ready` passes on clean `main`
+- [ ] The exact ten-command dry-run receives explicit HITL approval on #103
+- [ ] Each npm mutation is re-read and linked before proceeding to the next package
+- [ ] ADR-0027 and ADR-0030 statuses match the final production and convergence truth

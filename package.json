@@ -9,7 +9,7 @@
     "build": "pnpm --filter './packages/**' -r --if-present build && node scripts/assemble-chat-package.mjs && pnpm --filter './apps/**' -r --if-present build",
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
     "lint": "pnpm -r --if-present lint",
-    "test": "pnpm -r --workspace-concurrency=1 --if-present test && pnpm test:bundle-budget && pnpm test:ecosystem-adoption",
+    "test": "pnpm -r --workspace-concurrency=1 --if-present test && pnpm test:bundle-budget && pnpm test:ecosystem-adoption && pnpm test:release-deprecation",
     "test:conformance": "vitest run tests/conformance-gate.test.ts",
     "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
     "test:expo": "node scripts/assemble-chat-package.mjs && pnpm --filter @agentskit/chat-example-react-native exec expo export --platform web --output-dir dist-release-web && pnpm --filter @agentskit/chat-example-react-native exec expo export --platform ios --output-dir dist-release-ios",
@@ -39,7 +39,11 @@
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
     "ecosystem:claims": "node scripts/gen-ecosystem-claims.mjs",
     "ecosystem:claims:check": "node scripts/gen-ecosystem-claims.mjs --check",
-    "ecosystem:adoption:check": "node scripts/check-ecosystem-adoption.mjs"
+    "ecosystem:claims:live": "node scripts/check-ecosystem-claims-live.mjs",
+    "ecosystem:adoption:check": "node scripts/check-ecosystem-adoption.mjs",
+    "release:deprecation:plan": "node scripts/legacy-package-deprecation-plan.mjs",
+    "release:deprecation:preflight": "node scripts/legacy-package-deprecation-preflight.mjs",
+    "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs scripts/legacy-package-deprecation-preflight.test.mjs"
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.1.1",
