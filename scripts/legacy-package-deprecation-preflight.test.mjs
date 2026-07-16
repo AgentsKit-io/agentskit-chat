@@ -6,12 +6,15 @@ const adoption = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', i
 const plan = JSON.parse(readFileSync(new URL('../release/legacy-package-deprecations.json', import.meta.url), 'utf8'))
 const response = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body })
 const consolidated = {
-  'dist-tags': { latest: '0.4.0' },
+  'dist-tags': { latest: '0.4.1' },
   versions: {
     '0.3.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },
     '0.4.0': {
+      exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
+    },
+    '0.4.1': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },
   },

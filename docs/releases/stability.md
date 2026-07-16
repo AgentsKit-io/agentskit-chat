@@ -27,7 +27,7 @@ public product site):
 - [Alpha → stable migration](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-from-alpha.md)
 - [0.3 package consolidation](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-to-0.3.md)
 
-Applications already on `0.3.x` can adopt `0.4.0` without changing their
+Applications already on `0.3.x` can adopt `0.4.1` without changing their
 definition-owned sessions; controlled React and Ink modes are additive.
 
 See also [Compatibility](/docs/releases/compatibility).

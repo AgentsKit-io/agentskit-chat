@@ -21,14 +21,14 @@ describe('ecosystem adoption contract', () => {
   it('tracks the current release while retaining the minimum consolidated baseline', async () => {
     const result = await inspectEcosystemAdoption(fileURLToPath(new URL('..', import.meta.url)))
     expect(result.manifest.minimumConsolidatedVersion).toBe('0.3.0')
-    expect(result.manifest.currentFrameworkVersion).toBe('0.4.0')
-    expect(result.manifest.supportedConsolidatedVersions).toEqual(['0.3.0', '0.4.0'])
+    expect(result.manifest.currentFrameworkVersion).toBe('0.4.1')
+    expect(result.manifest.supportedConsolidatedVersions).toEqual(['0.3.0', '0.4.0', '0.4.1'])
     expect(result.diagnostics).toEqual([])
     expect(formatEcosystemAdoptionResult(result.manifest)).toMatchObject({
       schemaVersion: 3,
       minimumConsolidatedVersion: '0.3.0',
-      currentFrameworkVersion: '0.4.0',
-      supportedConsolidatedVersions: ['0.3.0', '0.4.0'],
+      currentFrameworkVersion: '0.4.1',
+      supportedConsolidatedVersions: ['0.3.0', '0.4.0', '0.4.1'],
     })
     expect(formatEcosystemAdoptionResult(result.manifest)).not.toHaveProperty('frameworkVersion')
   })

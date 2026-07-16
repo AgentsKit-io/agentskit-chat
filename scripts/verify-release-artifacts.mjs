@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { loadReleaseManifest, releaseRepositoryUrl } from './release-lib.mjs'
+import { canonicalHomepage, loadReleaseManifest, releaseRepositoryUrl } from './release-lib.mjs'
 
 const artifactDir = resolve(process.argv[2] ?? 'artifacts')
 const expectedVersion = process.argv[3]
@@ -37,6 +37,7 @@ for (const item of release.packages) {
   if (manifest.name !== item.name || manifest.version !== expectedVersion) throw new Error(`${file}: package identity mismatch`)
   if (manifest.license !== 'MIT') throw new Error(`${file}: license metadata is not MIT`)
   if (manifest.repository?.url !== releaseRepositoryUrl) throw new Error(`${file}: repository metadata does not match the public source`)
+  if (manifest.homepage !== canonicalHomepage) throw new Error(`${file}: homepage must be ${canonicalHomepage}`)
   if (manifest.publishConfig?.access !== 'public' || manifest.publishConfig?.provenance !== true) throw new Error(`${file}: public provenance policy is missing`)
 
   const serializedDependencies = JSON.stringify({ ...manifest.dependencies, ...manifest.peerDependencies })

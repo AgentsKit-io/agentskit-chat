@@ -9,12 +9,18 @@ Chat is the product surface your users meet on the web, mobile, and terminal. Ag
 application framework for that surface: define routes, actions, components, and sessions once, then
 render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink.
 
+Controller, tools, memory, RAG, and framework bindings stay upstream in AgentsKit; this product owns
+application composition and versioned boundaries.
+
 ## Start here
 
 <InstallCommand />
 
 ```bash
-cd my-chat && pnpm install && pnpm test
+pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
+cd my-chat
+pnpm install
+pnpm test
 ```
 
 <Cards>

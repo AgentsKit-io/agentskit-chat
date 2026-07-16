@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { z } from 'zod'
 
 const repositoryUrl = 'git+https://github.com/AgentsKit-io/agentskit-chat.git'
+export const canonicalHomepage = 'https://chat.agentskit.io/docs'
 
 const releaseManifestSchema = z.object({
   schemaVersion: z.literal(1),
@@ -28,7 +29,7 @@ const packageManifestSchema = z.object({
     url: z.literal(repositoryUrl),
     directory: z.string(),
   }).strict(),
-  homepage: z.literal('https://chat.agentskit.io/docs'),
+  homepage: z.literal(canonicalHomepage),
   bugs: z.object({
     url: z.literal('https://github.com/AgentsKit-io/agentskit-chat/issues'),
   }).strict(),
@@ -56,6 +57,7 @@ const requiredDocs = [
   'docs/releases/v0.2.0.md',
   'docs/releases/v0.3.0.md',
   'docs/releases/v0.4.0.md',
+  'docs/releases/v0.4.1.md',
   'docs/server.md',
 ]
 

@@ -1,6 +1,6 @@
 # v0.4 compatibility matrix
 
-The two public AgentsKit Chat packages ship as the fixed `0.4.0` group. The peer ranges in
+The two public AgentsKit Chat packages ship as the fixed `0.4.1` group. The peer ranges in
 the published manifests are authoritative; this table summarizes the supported
 minimums and release evidence.
 
