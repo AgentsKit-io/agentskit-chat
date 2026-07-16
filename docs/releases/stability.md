@@ -20,5 +20,5 @@ the changelog and migration guide. Stable `0.1.x` consumers should follow the
 [0.2 migration](./migration-to-0.2.md). Alpha GitHub tarball consumers should
 follow [the alpha migration](./migration-from-alpha.md). Stable `0.2.x`
 consumers should follow the [0.3 package consolidation migration](./migration-to-0.3.md).
-Applications already on `0.3.x` can adopt `0.4.0` without changing their
+Applications already on `0.3.x` can adopt `0.4.1` without changing their
 definition-owned sessions; controlled React and Ink modes are additive.

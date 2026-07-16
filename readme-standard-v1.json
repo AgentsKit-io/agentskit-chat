@@ -141,7 +141,7 @@
         ],
         "maturity": [
           "## Maturity and compatibility",
-          "0.4.0"
+          "0.4.1"
         ],
         "compatibility": [
           "Node.js 22",
@@ -183,7 +183,7 @@
         },
         {
           "id": "init-react",
-          "command": "pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes",
+          "command": "pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes",
           "test": "packages/cli/tests/init.test.ts",
           "testCommand": "pnpm test"
         }
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:bd7918a989ce38da2cc67fcf3764e8a3b7d67328032827c79ed73b97fadb60bc"
+        "sourceHash": "sha256:5f8886b5b87d6da7f5578439b03cbc5714095201eff28a551aa897d603c8c15d"
       },
       "exceptions": []
     },
@@ -241,7 +241,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "stability.md"
         ],
         "compatibility": [
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:bade2e60fb6b11d4439e2c6710bdaed96ebd33566a0bf40217cdecbfd607a9bd"
+        "sourceHash": "sha256:d25d8d62da2c49bfcc7d32615003758e647da83776043958fd0816df18776f1b"
       },
       "exceptions": []
     },
@@ -320,7 +320,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "stability.md"
         ],
         "compatibility": [
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:96b82356358ebf3cb971404e4308c6e3fe95d02700de38a3a7dea42cad315edd"
+        "sourceHash": "sha256:42f6704918d450534a04c455e27de9e71423676c75296e391b0f19ba239cbf55"
       },
       "exceptions": []
     },
@@ -398,7 +398,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "deployment.md"
         ],
         "compatibility": [
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.md"
         ],
-        "sourceHash": "sha256:b57893da9ddacc08be29383eba7c78a9637011456b4f888098d11a9b6dc76f4d"
+        "sourceHash": "sha256:f75583bd9d296fe1e2b681ac148f8dffc7aa7c25107828a326cc927bb3ed2206"
       },
       "exceptions": []
     },
@@ -476,7 +476,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "angular"
         ],
         "compatibility": [
@@ -528,7 +528,7 @@
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.md"
         ],
-        "sourceHash": "sha256:0bc4dbe69b32a687c3643df6dbe36c8110132f67b2833812df772a841cd40e58"
+        "sourceHash": "sha256:6983fa757b9f593696114dcc896e5d1153b6e17038846225b42676e7542645aa"
       },
       "exceptions": []
     },
@@ -553,7 +553,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`",
+          "`0.4.1`",
           "React 18+"
         ],
         "compatibility": [
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.md"
         ],
-        "sourceHash": "sha256:aef828ab32cf1530d64fe455d78862cbd0c97e630916f4f3f888f9678e2fac62"
+        "sourceHash": "sha256:68825b14232781091dab82e4b07a84e77ee57c649f388517ae85e4b2ac1dcde5"
       },
       "exceptions": []
     },
@@ -630,7 +630,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Vue 3.4+",
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.md"
         ],
-        "sourceHash": "sha256:40cb8af23b017e6407467362410d7fd23240e6b671d0a1dee6deb22eabe62687"
+        "sourceHash": "sha256:1ccfcd7275983be550a67828dfbb5521b908c2ed187b0020f365f01b5ce6c137"
       },
       "exceptions": [
         {
@@ -708,7 +708,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Svelte 5+",
@@ -754,7 +754,7 @@
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.md"
         ],
-        "sourceHash": "sha256:5c6987f787d8037ee1a13d70e204eb6729c54d8cc4520d66a4560e007dc52828"
+        "sourceHash": "sha256:a0edb9ae3403fd0f652e6ac67add4db68aa1d28e0fa8f7fa43c817f7dcbfc959"
       },
       "exceptions": [
         {
@@ -786,7 +786,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Solid 1.9+",
@@ -832,7 +832,7 @@
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.md"
         ],
-        "sourceHash": "sha256:be297dcc039b388e290e10f76d64b4db9b09af65834d3dc3c77581bb375d0527"
+        "sourceHash": "sha256:94e868383fe05607c5b458781610c856e3d011ad472399e95a7f692ba1b3a102"
       },
       "exceptions": [
         {
@@ -864,7 +864,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Angular 18.1–21",
@@ -910,7 +910,7 @@
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.md"
         ],
-        "sourceHash": "sha256:decbd5e55c789a96a2e527f0f48db6718ccb721a74938919edf5297e8d1b2570"
+        "sourceHash": "sha256:e7eb659f2260af29d64b1cd6e12c60452abde314fd6271f817b8970e436df60e"
       },
       "exceptions": [
         {
@@ -942,7 +942,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "React 18+",
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.md"
         ],
-        "sourceHash": "sha256:df50ff352cfb1e8e9faf060ff4957fe17c1bea08c17767fe6dc2eaa1ea555e7d"
+        "sourceHash": "sha256:1dd2a31acb2a5ca7e640fc7bf6f1f183279f57d46c94233035570a2b7cf8203a"
       },
       "exceptions": [
         {
@@ -1020,7 +1020,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Ink 7.1+",
@@ -1066,7 +1066,7 @@
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.md"
         ],
-        "sourceHash": "sha256:36f7bc42e42db3987ebc8b5bbeafa69919d9873b919ef9f0fdcf0edb357488e8"
+        "sourceHash": "sha256:f8a2e9c726c1e3d7bacea353277627916b1d70b058dbc10262bf94fc30f22ccd"
       },
       "exceptions": [
         {
@@ -1098,7 +1098,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.4.0`"
+          "`0.4.1`"
         ],
         "compatibility": [
           "Node.js 22+",
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:72cbecf73caafb592e6d558cb2b439e9df69ce28c7362259484de4b4b2996383"
+        "sourceHash": "sha256:913b363d30a8c5cd7841a151bbe153b7915d815d4db71729883c0205ad6d2cfc"
       },
       "exceptions": [
         {

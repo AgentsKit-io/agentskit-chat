@@ -48,9 +48,14 @@ and [v0.4.0 release assets](https://github.com/AgentsKit-io/agentskit-chat/relea
 - [x] Immutable `v0.4.0` tag and GitHub release are public
 - [x] Both packages resolve from npm at exact `0.4.0`
 - [x] npm provenance attestations and registry signatures verify
-- [ ] Clean external installation, ESM/CJS imports, and CLI scaffolding pass
+- [x] Clean external installation, ESM/CJS imports, and CLI scaffolding pass
 - [x] npm Trusted Publishing succeeds for both packages through OIDC
-- [ ] A reviewed patch aligns both public npm homepages with `https://chat.agentskit.io/docs`
+- [ ] A reviewed `0.4.1` patch aligns both public npm homepages with `https://chat.agentskit.io/docs` (source + pack gates ready; publish pending)
+
+Evidence for the clean external consumer path is recorded in
+[clean-install-0.4.0.md](./clean-install-0.4.0.md). Published `0.4.0` registry
+homepages still point at the GitHub readme; the prepared `0.4.1` release notes
+and pack-gate homepage assertion close that gap after Trusted Publishing.
 - [x] Temporary bootstrap `NPM_TOKEN` is absent from the protected `npm` environment
 
 The stable workflow must remain token-free. Its protected publish job uses

@@ -33,7 +33,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.0` with Svelte 5+ and `@agentskit/svelte ^0.4.4`.
+Published in `@agentskit/chat` at `0.4.1` with Svelte 5+ and `@agentskit/svelte ^0.4.4`.
 
 - Svelte 5+
 - SSR evidence in CI

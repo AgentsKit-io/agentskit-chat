@@ -33,7 +33,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.0` with Angular 18.1–21, RxJS 7, and `@agentskit/angular ^0.4.6`.
+Published in `@agentskit/chat` at `0.4.1` with Angular 18.1–21, RxJS 7, and `@agentskit/angular ^0.4.6`.
 
 - Angular 18.1–21
 - Partial-Ivy AOT package test in CI
