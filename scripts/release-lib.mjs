@@ -46,9 +46,9 @@ const packageManifestSchema = z.object({
 const requiredDocs = [
   'CHANGELOG.md',
   'SECURITY.md',
-  'docs/api-reference.md',
+  'docs/api-reference.mdx',
   'docs/deployment.mdx',
-  'docs/getting-started/README.md',
+  'docs/getting-started/index.mdx',
   'docs/releases/compatibility.md',
   'docs/releases/migration-from-alpha.md',
   'docs/releases/release-process.md',
@@ -58,7 +58,7 @@ const requiredDocs = [
   'docs/releases/v0.3.0.md',
   'docs/releases/v0.4.0.md',
   'docs/releases/v0.4.1.md',
-  'docs/server.md',
+  'docs/server.mdx',
 ]
 
 const rendererDocs = ['react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']
