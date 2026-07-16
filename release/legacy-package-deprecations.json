@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "migrationUrl": "https://chat.agentskit.io/docs/releases/migration-to-0.3",
+  "packages": [
+    {
+      "name": "@agentskit/chat-protocol",
+      "replacement": "@agentskit/chat/protocol"
+    },
+    {
+      "name": "@agentskit/chat-server",
+      "replacement": "@agentskit/chat/server"
+    },
+    {
+      "name": "@agentskit/chat-devtools",
+      "replacement": "@agentskit/chat/devtools"
+    },
+    {
+      "name": "@agentskit/chat-react",
+      "replacement": "@agentskit/chat/react"
+    },
+    {
+      "name": "@agentskit/chat-react-native",
+      "replacement": "@agentskit/chat/react-native"
+    },
+    {
+      "name": "@agentskit/chat-ink",
+      "replacement": "@agentskit/chat/ink"
+    },
+    {
+      "name": "@agentskit/chat-vue",
+      "replacement": "@agentskit/chat/vue"
+    },
+    {
+      "name": "@agentskit/chat-svelte",
+      "replacement": "@agentskit/chat/svelte"
+    },
+    {
+      "name": "@agentskit/chat-solid",
+      "replacement": "@agentskit/chat/solid"
+    },
+    {
+      "name": "@agentskit/chat-angular",
+      "replacement": "@agentskit/chat/angular"
+    }
+  ]
+}

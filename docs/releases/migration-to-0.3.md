@@ -4,6 +4,9 @@ AgentsKit Chat `0.3.0` reduces the public npm graph to `@agentskit/chat` and
 `@agentskit/chat-cli`. Remove the former standalone Chat packages after moving
 their imports to the corresponding subpaths.
 
+The current stable release is `0.4.0`. It preserves this package graph and the
+`0.3.0` import contract, so new migrations should install `0.4.0` directly.
+
 | Former package | `0.3.0` import |
 |---|---|
 | `@agentskit/chat-protocol` | `@agentskit/chat/protocol` |
@@ -21,8 +24,8 @@ Install only the consolidated package, the AgentsKit binding, and framework
 peers used by the host:
 
 ```bash
-npm install @agentskit/chat@0.3.0 @agentskit/react react
-npm install --save-dev @agentskit/chat-cli@0.3.0
+npm install @agentskit/chat@0.4.0 @agentskit/react react
+npm install --save-dev @agentskit/chat-cli@0.4.0
 ```
 
 Protocol versions, deterministic answers, Ask requests, session persistence,
@@ -34,7 +37,17 @@ perform a frozen install, and run typecheck, tests, production build, and a real
 streaming interaction smoke test. Do not keep aliases or compatibility
 overrides that hide a remaining legacy import.
 
-## Optional migration for host-owned sessions
+The old `0.2.x` package names remain published and installable. After every
+declared product chat passes the public convergence ledger and the release
+owner approves the deprecation dry-run, those versions receive npm deprecation
+warnings that point here; they are not unpublished. Maintainers can inspect
+that fail-closed report without changing npm state:
+
+```bash
+pnpm release:deprecation:plan
+```
+
+## Optional migration after upgrading to 0.4.0
 
 Hosts that already receive a complete chat snapshot from a trusted session
 service may replace local controller wiring with the additive `controlled` prop
@@ -43,3 +56,6 @@ the canonical AgentsKit lifecycle callbacks. Do not run both modes for one
 mounted chat, and do not move authentication, authorization, persistence,
 transport, or business rules into the public driver. Hosts that use
 `definition.chat` locally need no change.
+
+See the [0.4.0 release notes](./v0.4.0.md) for the controlled-session contract
+and evidence. This capability is not part of the `0.3.0` API.

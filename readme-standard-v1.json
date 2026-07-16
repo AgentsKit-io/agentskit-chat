@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-07-15",
-        "reviewDueOn": "2026-10-13",
+        "reviewedOn": "2026-07-16",
+        "reviewDueOn": "2026-10-14",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:e6f785e8cd8fd0a4a298e5a6c3263e18cd8719f37a69ad44b72c49f3a638f0f5"
+        "sourceHash": "sha256:596c515e6043fbadaef929489f99c1a51e208255dde0b2cd035ee0244feaa6c1"
       },
       "exceptions": []
     },

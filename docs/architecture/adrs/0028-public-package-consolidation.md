@@ -2,6 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-14
+- **Partially superseded by:** [ADR-0029](./0029-renderers-as-chat-subpaths.md)
 
 ## Context
 
@@ -29,12 +30,14 @@ modules with `private: true`. Renderer packages depend only on `@agentskit/chat`
 Release automation must pack and verify the aggregated artifact and must not
 publish private workspace packages.
 
-Previously published package names receive deprecation releases directing users
-to the corresponding subpath. Existing versions are not unpublished.
+Previously published package names receive npm deprecation notices directing
+users to the corresponding subpath only after the separately approved HITL
+gate. Existing versions remain published; no unpublish is authorized.
 
 ## Consequences
 
-- The Chat npm surface drops from twelve packages to nine immediately.
+- The initial Chat npm surface dropped from twelve packages to nine; ADR-0029
+  subsequently consolidated the renderer products into subpaths.
 - Internal ownership and focused tests remain intact.
 - Shared Chat modules use one semver line and one provenance artifact.
 - Consumers migrate imports but do not need behavioral changes.

@@ -34,7 +34,28 @@ See npm's official guidance for
 
 ## Verify
 
-Confirm both npm pages show the version in `release/manifest.json` and provenance, install the package graph
-from npm in a clean directory, run `npm audit signatures`, verify GitHub assets
-against `SHA256SUMS`, and smoke the Docs, Registry, and Playbook hosts. Record
-links and results on issue #30 before closing the milestone.
+Confirm both npm pages show the version in `release/manifest.json` and
+provenance, install the package graph from npm in a clean directory, run
+`npm audit signatures`, verify GitHub assets against `SHA256SUMS`, and smoke the
+declared product-chat hosts. Record links and results on
+[issue #104](https://github.com/AgentsKit-io/agentskit-chat/issues/104) before
+closing the milestone.
+
+## Retire legacy package names
+
+Package retirement is a separate HITL action. `release/legacy-package-deprecations.json`
+owns the exact ten old package names, replacement subpaths, and canonical
+migration route. Generate the dry-run with:
+
+```bash
+pnpm release:deprecation:plan
+```
+
+The command is read-only. Add `-- --require-ready` to fail unless every active
+consumer in `ecosystem-adoption.json` is certified and no legacy package is
+declared. It intentionally provides no mutation mode. The generated report
+includes the exact apply, verify, rollback, and stop procedure for every
+package. Only after that complete artifact receives explicit approval may the
+release owner run its operations manually, one at a time, attaching the npm
+re-read after each mutation and stopping on the first mismatch or registry
+failure.
