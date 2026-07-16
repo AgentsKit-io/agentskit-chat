@@ -10,6 +10,11 @@ evidence, not an alias for the repository's next release version. It advances
 only after those consumers adopt and prove a newer published version. The
 workspace and release manifest versions must still match each other.
 
+Private workspace modules keep internal implementation versions and are not
+independent release identities. Governance metadata agreement applies to the
+two public packages in `release/manifest.json`; the adoption baseline remains a
+separate statement about the exact version proven across consumer repositories.
+
 Validate it locally with:
 
 ```bash

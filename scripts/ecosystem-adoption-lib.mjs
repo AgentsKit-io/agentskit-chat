@@ -28,7 +28,7 @@ const supportedImportSchema = z.enum([
   '@agentskit/chat/solid',
   '@agentskit/chat/angular',
 ])
-const legacyPackageSchema = z.enum([
+export const legacyPackageNames = [
   '@agentskit/chat-protocol',
   '@agentskit/chat-server',
   '@agentskit/chat-devtools',
@@ -39,7 +39,8 @@ const legacyPackageSchema = z.enum([
   '@agentskit/chat-svelte',
   '@agentskit/chat-solid',
   '@agentskit/chat-angular',
-])
+]
+const legacyPackageSchema = z.enum(legacyPackageNames)
 
 const publicCheckSchema = z.object({
   status: z.enum(['pass', 'pending', 'missing', 'not-applicable']),
