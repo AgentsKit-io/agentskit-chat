@@ -132,7 +132,7 @@ export const inspectRelease = async root => {
   for (const renderer of rendererDocs) {
     if (!rendererIds.has(renderer)) diagnostics.push(`renderer ${renderer} is missing from release/manifest.json`)
     try {
-      await access(join(root, `docs/getting-started/${renderer}.md`))
+      await access(join(root, `docs/getting-started/${renderer}.mdx`))
     } catch {
       diagnostics.push(`renderer ${renderer} quick start is missing`)
     }

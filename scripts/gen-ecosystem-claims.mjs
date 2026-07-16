@@ -45,7 +45,7 @@ const claims = {
       id: 'getting-started-guides',
       value: stats.gettingStartedGuides,
       noun: 'renderer quick starts',
-      evidence: repositoryEvidence('docs/getting-started/*.md', 'Framework-specific adoption guides.'),
+      evidence: repositoryEvidence('docs/getting-started/*.mdx', 'Framework-specific adoption guides.'),
     },
     {
       id: 'example-apps',
