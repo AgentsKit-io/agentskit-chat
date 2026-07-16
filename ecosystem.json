@@ -153,8 +153,8 @@
       "shortName": "AKOS",
       "kind": "product",
       "role": "operation",
-      "promise": "Run and govern agents on the path to production.",
-      "maturity": "alpha",
+      "promise": "Run and govern agents in production.",
+      "maturity": "stable",
       "repo": "AgentsKit-io/agentskit-os",
       "accent": "#34D399",
       "surfaces": {
