@@ -63,6 +63,8 @@ description: "Human-in-the-loop gate for side effects. Component key `approval-r
 
 ## Host wiring
 
+This component is a **UI intent channel**. Pair it with [Action policy](/docs/actions/policy) and durable [Confirmation](/docs/actions/confirmation) when tools must not run without a human.
+
 ```tsx
 import { ApprovalRequestComponent, defineComponentManifest, defineChat } from '@agentskit/chat'
 import { AgentChat } from '@agentskit/chat/react'
@@ -78,7 +80,14 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'approve' | 'deny', componentKey: 'approval-request', instanceId }
+        // Always type: 'interact' — branch on event.event
+        if (event.componentKey !== 'approval-request') return
+        if (event.event === 'approve') {
+          // host side-effect or confirmation.approve(token, sessionId)
+        }
+        if (event.event === 'deny') {
+          // confirmation.reject(...) or cancel the proposed action
+        }
       }}
     />
   )
@@ -95,7 +104,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `approve` (`none`), `deny` (`none`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'approve' | 'deny', componentKey: 'approval-request', instanceId }` |
+| Event shape | `{ type: 'interact', componentKey: 'approval-request', instanceId, event: 'approve' | 'deny' }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

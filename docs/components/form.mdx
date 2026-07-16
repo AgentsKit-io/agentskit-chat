@@ -65,7 +65,9 @@ description: "Schema-backed fields with a single submit event. Component key `fo
 
 | Event | Value | Meaning |
 | --- | --- | --- |
-| `submit` | `form` | Record of field id → value |
+| `submit` | `form` | Record of field id → value (no unknown keys) |
+
+**Value rules:** `text`/`email` → string; `checkbox` → boolean; `number` → finite number or numeric string; `select` → option **id** string. Required fields must be present and non-empty.
 
 ## Host wiring
 
@@ -84,7 +86,10 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'submit', componentKey: 'form', instanceId, value: { email: string, ... } }
+        // Always type: 'interact' — never type: 'submit'
+        if (event.componentKey !== 'form' || event.event !== 'submit') return
+        const values = event.value as Record<string, unknown>
+        // e.g. values.email, values.role (select option id)
       }}
     />
   )
@@ -101,7 +106,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `submit` (`form`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'submit', componentKey: 'form', instanceId, value: { email: string, ... } }` |
+| Event shape | `{ type: 'interact', componentKey: 'form', instanceId, event: 'submit', value: { [fieldId]: fieldValue } }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

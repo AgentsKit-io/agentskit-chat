@@ -79,7 +79,8 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'select', componentKey: 'button-group', instanceId, value: buttonId }
+        // type is always 'interact'; branch on event + value
+        // { protocol, version: 1, type: 'interact', componentKey: 'button-group', instanceId, event: 'select', value: buttonId }
       }}
     />
   )
@@ -96,7 +97,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `select` (`id`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'select', componentKey: 'button-group', instanceId, value: buttonId }` |
+| Event shape | `{ protocol, version: 1, type: 'interact', componentKey: 'button-group', instanceId, event: 'select', value: buttonId }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

@@ -78,7 +78,8 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'confirm' | 'cancel', componentKey: 'confirmation', instanceId }
+        // branch on event; no value
+        // { type: 'interact', componentKey: 'confirmation', instanceId, event: 'confirm' | 'cancel' }
       }}
     />
   )
@@ -95,7 +96,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `confirm` (`none`), `cancel` (`none`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'confirm' | 'cancel', componentKey: 'confirmation', instanceId }` |
+| Event shape | `{ type: 'interact', componentKey: 'confirmation', instanceId, event: 'confirm' | 'cancel' }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

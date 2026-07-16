@@ -77,7 +77,8 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'retry', componentKey: 'error-notice', instanceId }
+        // event === 'retry'; no value
+        // { type: 'interact', componentKey: 'error-notice', instanceId, event: 'retry' }
       }}
     />
   )
@@ -94,7 +95,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `retry` (`none`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'retry', componentKey: 'error-notice', instanceId }` |
+| Event shape | `{ type: 'interact', componentKey: 'error-notice', instanceId, event: 'retry' }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

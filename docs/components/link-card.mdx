@@ -77,7 +77,8 @@ export function App() {
     <AgentChat
       definition={definition}
       onComponentInteract={(event) => {
-        // { type: 'open', componentKey: 'link-card', instanceId, value: href }
+        // event === 'open'; value is href
+        // { type: 'interact', componentKey: 'link-card', instanceId, event: 'open', value: href }
       }}
     />
   )
@@ -94,7 +95,7 @@ export function App() {
 | Envelope | `type: "render"` + `instanceId` + `props` + `fallback` |
 | Events | `open` (`url`) |
 | Host callback | `onComponentInteract` |
-| Event shape | `{ type: 'open', componentKey: 'link-card', instanceId, value: href }` |
+| Event shape | `{ type: 'interact', componentKey: 'link-card', instanceId, event: 'open', value: href }` |
 | Fallback | Always include `fallback.kind` + `fallback.summary` |
 
 Do **not** invent props or events outside the schema. Unknown keys and invalid props stay inert.

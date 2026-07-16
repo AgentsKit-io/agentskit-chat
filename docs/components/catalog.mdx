@@ -71,7 +71,8 @@ Prefer `StandardComponentCatalog` in production. To ship a subset, pass the name
     // choice-list only — { choiceId, instanceId, componentKey }
   }}
   onComponentInteract={(event) => {
-    // form / confirm / cancel / open / approve / deny / retry / button-group select
+    // Always type: 'interact'. Branch on event.event + event.value
+    // e.g. event.event === 'submit' | 'approve' | 'open' | 'select' | ...
   }}
 />
 ```
