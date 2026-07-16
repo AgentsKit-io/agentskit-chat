@@ -23,8 +23,14 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
-  return <html lang="en" suppressHydrationWarning><body>
-    <SharedEcosystemBar />
-    <RootProvider>{children}</RootProvider>
-  </body></html>
+  return (
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className="bg-ak-midnight text-ak-foam antialiased">
+        <SharedEcosystemBar />
+        <RootProvider theme={{ defaultTheme: 'dark', enabled: true, enableSystem: false }}>
+          {children}
+        </RootProvider>
+      </body>
+    </html>
+  )
 }
