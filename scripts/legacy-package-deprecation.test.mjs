@@ -21,20 +21,14 @@ describe('legacy package deprecation dry-run', () => {
   it('fails closed while any active consumer is not certified', () => {
     const result = evaluateLegacyDeprecationReadiness(parseEcosystemAdoption(adoption), parseLegacyDeprecationPlan(plan))
     expect(result.ready).toBe(false)
-    expect(result.blockers).toEqual([
-      'agentskit-chat-docs is deployment-required',
-      'akos-product-chats is inventory-required',
-    ])
+    expect(result.blockers).toEqual(['akos-product-chats is inventory-required'])
     expect(result.commands).toHaveLength(10)
     expect(result.operations).toHaveLength(10)
     expect(result.procedure).toHaveLength(4)
   })
 
-  it('becomes ready only after public and private evidence is certified', () => {
+  it('becomes ready only after the remaining private evidence is certified', () => {
     const ready = clone(adoption)
-    const docs = ready.consumers.find(consumer => consumer.id === 'agentskit-chat-docs')
-    docs.status = 'certified'
-    docs.evidence.production = { status: 'pass', url: 'https://chat.agentskit.io/docs' }
     const akos = ready.consumers.find(consumer => consumer.id === 'akos-product-chats')
     akos.status = 'certified'
     akos.consumption = 'npm'

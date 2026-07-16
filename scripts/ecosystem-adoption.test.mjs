@@ -7,20 +7,20 @@ const manifest = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', i
 const clone = value => structuredClone(value)
 
 describe('ecosystem adoption contract', () => {
-  it('accepts the audited baseline without claiming full convergence', () => {
+  it('accepts the public convergence baseline without claiming private convergence', () => {
     const parsed = parseEcosystemAdoption(manifest)
     expect(summarizeEcosystemAdoption(parsed)).toEqual({
       consumers: 8,
       productChats: 6,
-      certifiedProductChats: 4,
+      certifiedProductChats: 5,
       legacyConsumers: 0,
-      pendingConsumers: 2,
+      pendingConsumers: 1,
     })
   })
 
   it('keeps the certified baseline independent from the next framework release', async () => {
     const result = await inspectEcosystemAdoption(fileURLToPath(new URL('..', import.meta.url)))
-    expect(result.manifest.frameworkVersion).toBe('0.3.0')
+    expect(result.manifest.frameworkVersion).toBe('0.4.0')
     expect(result.diagnostics).toEqual([])
   })
 
@@ -40,7 +40,7 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(repository)).toThrow()
 
     const range = clone(manifest)
-    range.consumers[0].packageVersion = '^0.3.0'
+    range.consumers[0].packageVersion = '^0.4.0'
     expect(() => parseEcosystemAdoption(range)).toThrow('exact stable version')
   })
 
@@ -75,7 +75,7 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(product)).toThrow('only low-level binding examples may be excluded')
 
     const adopted = clone(manifest)
-    adopted.consumers.at(-1).packageVersion = '0.3.0'
+    adopted.consumers.at(-1).packageVersion = '0.4.0'
     expect(() => parseEcosystemAdoption(adopted)).toThrow('not-adopted consumers cannot claim a package version')
   })
 })

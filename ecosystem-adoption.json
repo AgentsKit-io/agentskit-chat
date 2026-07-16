@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "frameworkVersion": "0.3.0",
-  "auditedAt": "2026-07-15",
+  "frameworkVersion": "0.4.0",
+  "auditedAt": "2026-07-16",
   "consumers": [
     {
       "id": "agentskit-docs",
@@ -10,7 +10,7 @@
       "repository": "AgentsKit-io/agentskit",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -22,7 +22,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
         },
         "production": {
           "status": "pass",
@@ -37,7 +37,7 @@
       "repository": "AgentsKit-io/agentskit",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -49,7 +49,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
         },
         "production": {
           "status": "pass",
@@ -64,7 +64,7 @@
       "repository": "AgentsKit-io/agentskit-chat",
       "surface": "react",
       "consumption": "workspace",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -72,15 +72,16 @@
         "@agentskit/chat/server"
       ],
       "legacyPackages": [],
-      "status": "deployment-required",
+      "status": "certified",
       "evidence": {
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29365061831"
+          "url": "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/29523785356"
         },
         "production": {
-          "status": "missing"
+          "status": "pass",
+          "url": "https://chat.agentskit.io/docs"
         }
       }
     },
@@ -91,7 +92,7 @@
       "repository": "AgentsKit-io/agents-playbook",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -103,7 +104,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agents-playbook/actions/runs/29369635226"
+          "url": "https://github.com/AgentsKit-io/agents-playbook/actions/runs/29526377714"
         },
         "production": {
           "status": "pass",
@@ -118,7 +119,7 @@
       "repository": "AgentsKit-io/doc-bridge",
       "surface": "react",
       "consumption": "npm",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",
@@ -130,7 +131,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29415788817"
+          "url": "https://github.com/AgentsKit-io/doc-bridge/actions/runs/29527117397"
         },
         "production": {
           "status": "pass",
@@ -145,7 +146,7 @@
       "repository": "AgentsKit-io/agentskit-registry",
       "surface": "protocol",
       "consumption": "npm",
-      "packageVersion": "0.3.0",
+      "packageVersion": "0.4.0",
       "imports": [
         "@agentskit/chat/protocol"
       ],
@@ -155,7 +156,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29380404600"
+          "url": "https://github.com/AgentsKit-io/agentskit-registry/actions/runs/29526282024"
         },
         "production": {
           "status": "not-applicable"
@@ -177,7 +178,7 @@
         "visibility": "public",
         "ci": {
           "status": "pass",
-          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29415738248"
+          "url": "https://github.com/AgentsKit-io/agentskit/actions/runs/29527027100"
         },
         "production": {
           "status": "not-applicable"
