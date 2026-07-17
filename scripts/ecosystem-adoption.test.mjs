@@ -7,14 +7,14 @@ const manifest = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', i
 const clone = value => structuredClone(value)
 
 describe('ecosystem adoption contract', () => {
-  it('fails closed while the private production attestation is pending', () => {
+  it('certifies all product chats after the bounded private attestation passes', () => {
     const parsed = parseEcosystemAdoption(manifest)
     expect(summarizeEcosystemAdoption(parsed)).toEqual({
       consumers: 8,
       productChats: 6,
-      certifiedProductChats: 5,
+      certifiedProductChats: 6,
       legacyConsumers: 0,
-      pendingConsumers: 1,
+      pendingConsumers: 0,
     })
   })
 
@@ -73,7 +73,8 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(privateLeak)).toThrow()
 
     const falseCertification = clone(manifest)
-    falseCertification.consumers.at(-1).status = 'certified'
+    falseCertification.consumers.at(-1).evidence.productionStatus = 'pending'
+    falseCertification.consumers.at(-1).evidence.attestation = 'pending-chat-convergence-audit'
     expect(() => parseEcosystemAdoption(falseCertification)).toThrow('complete Chat convergence attestation')
 
     const completeCertification = clone(manifest)
