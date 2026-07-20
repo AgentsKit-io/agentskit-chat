@@ -136,7 +136,7 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
     'https://registry.agentskit.io/docs',
     'https://chat.agentskit.io/docs',
     'https://playbook.agentskit.io/docs',
-    'https://agentskit-io.github.io/doc-bridge/',
+    'https://doc-bridge.agentskit.io/',
     'https://github.com/AgentsKit-io/code-review-cli#readme',
     'https://akos.agentskit.io/docs',
   ]) expect(concise).toContain(productUrl)

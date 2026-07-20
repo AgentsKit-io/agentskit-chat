@@ -356,7 +356,7 @@
           "paths": ["docs/index.mdx"]
         },
         {
-          "url": "https://agentskit-io.github.io/doc-bridge/",
+          "url": "https://doc-bridge.agentskit.io/",
           "paths": ["README.md", "docs/index.mdx"]
         },
         {

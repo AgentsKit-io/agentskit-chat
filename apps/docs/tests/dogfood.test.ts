@@ -1,4 +1,5 @@
 import { decodeAskEvents, verifyLocalKnowledgeArtifactSync } from '@agentskit/chat/protocol'
+import { readFileSync } from 'node:fs'
 import { describe, expect, it, vi } from 'vitest'
 import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler'
 import { collectCanonicalDocs, publicDocSlug } from '../lib/docs-index'
@@ -12,6 +13,12 @@ const askRequest = (query: string) => new Request('https://chat.agentskit.io/api
 })
 
 describe('documentation dogfood', () => {
+  it('renders framework marks inline without a third-party image origin', () => {
+    const iconSource = readFileSync(new URL('../components/brand-icon.tsx', import.meta.url), 'utf8')
+    expect(iconSource).toContain('<svg')
+    expect(iconSource).not.toContain('cdn.simpleicons.org')
+  })
+
   it('publishes a bounded, self-verifying public knowledge artifact', () => {
     expect(verifiedKnowledgeArtifact).not.toBeNull()
     expect(verifyLocalKnowledgeArtifactSync(localKnowledgeArtifact, {
