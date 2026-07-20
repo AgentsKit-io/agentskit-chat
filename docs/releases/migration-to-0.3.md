@@ -64,4 +64,4 @@ Before merging the migration, run the host's frozen install, tests, build, and
 streaming smoke, then use [AgentsKit Code Review](https://github.com/AgentsKit-io/code-review-cli#readme)
 to inspect the import rewrite. If the repository's documentation ownership is
 unclear, generate an executable handoff with
-[Doc Bridge](https://agentskit-io.github.io/doc-bridge/).
+[Doc Bridge](https://doc-bridge.agentskit.io/).

@@ -73,35 +73,14 @@ html.dark body {
 .ak-ecosystem-fallback {
   position: relative;
   z-index: 60;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  min-height: 2.75rem;
-  border-bottom: 1px solid var(--ak-border);
-  background: #090b10;
-  color: #cbd5e1;
-  font-size: .75rem;
-}
-
-.ak-ecosystem-fallback a {
   display: flex;
   min-height: 2.75rem;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid transparent;
-  padding: .5rem;
-  text-align: center;
-}
-
-.ak-ecosystem-fallback a:hover,
-.ak-ecosystem-fallback a:focus-visible { color: white; border-bottom-color: #64748b; }
-.ak-ecosystem-fallback a[aria-current='page'] {
-  color: white;
-  border-bottom-color: var(--ak-accent);
-  background: rgb(255 255 255 / .05);
-}
-
-@media (min-width: 640px) {
-  .ak-ecosystem-fallback { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  border-bottom: 1px solid var(--ak-border);
+  background: #090b10;
+  color: #cbd5e1;
+  font-size: .75rem;
 }
 
 .maturity-badge {
