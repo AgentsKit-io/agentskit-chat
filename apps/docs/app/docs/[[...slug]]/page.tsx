@@ -1,7 +1,6 @@
 import { source } from '@/lib/source'
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page'
 import { docsMdxComponents } from '@/components/docs-mdx'
-import { SharedEcosystemShowcase } from '@/components/shared-ecosystem-showcase'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -37,7 +36,6 @@ export default async function DocumentationPage({ params }: { readonly params: P
     ) : null}
     <p className="mb-6 text-xs"><Link className="underline" href={`/raw/${rawPath}`}>View canonical Markdown</Link></p>
     <DocsBody><Content components={docsMdxComponents} /></DocsBody>
-    {isHome ? <SharedEcosystemShowcase /> : null}
   </DocsPage>
 }
 

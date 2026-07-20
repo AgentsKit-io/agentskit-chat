@@ -8,6 +8,7 @@ import {
   RENDER_EVERYWHERE_LINES,
 } from '@/components/highlighted-code'
 import { InstallCommand } from '@/components/install-command'
+import { SharedEcosystemShowcase } from '@/components/shared-ecosystem-showcase'
 import { WorksWithLogos } from '@/components/works-with-logos'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
@@ -150,6 +151,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <SharedEcosystemShowcase />
 
       <section className="relative overflow-hidden bg-ak-midnight px-4 py-24 sm:px-6">
         <div className="relative mx-auto max-w-3xl text-center">
