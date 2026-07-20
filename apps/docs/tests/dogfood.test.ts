@@ -19,6 +19,20 @@ describe('documentation dogfood', () => {
     expect(iconSource).not.toContain('cdn.simpleicons.org')
   })
 
+  it('accepts the shared ecosystem bar only when all six public products render', () => {
+    const barSource = readFileSync(new URL('../components/shared-ecosystem-bar.tsx', import.meta.url), 'utf8')
+    expect(ecosystemBarProducts).toHaveLength(6)
+    expect(barSource).toContain('links === ecosystemBarProducts.length')
+    expect(barSource).not.toContain('links > 0')
+  })
+
+  it('lets the product surface follow the system color scheme', () => {
+    const layoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
+    expect(layoutSource).not.toContain('className="dark"')
+    expect(layoutSource).toContain("defaultTheme: 'system'")
+    expect(layoutSource).toContain('enableSystem: true')
+  })
+
   it('publishes a bounded, self-verifying public knowledge artifact', () => {
     expect(verifiedKnowledgeArtifact).not.toBeNull()
     expect(verifyLocalKnowledgeArtifactSync(localKnowledgeArtifact, {

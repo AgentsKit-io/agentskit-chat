@@ -2,6 +2,7 @@
 
 import Script from 'next/script'
 import { useState } from 'react'
+import { ecosystemBarProducts } from '@/lib/ecosystem'
 
 export function SharedEcosystemBar() {
   const [sharedReady, setSharedReady] = useState(false)
@@ -10,7 +11,7 @@ export function SharedEcosystemBar() {
     requestAnimationFrame(() => {
       const shared = document.querySelector<HTMLElement>('#ak-eco')
       const links = shared?.querySelectorAll('a.ak-eco-link:not(.ak-eco-cta)').length ?? 0
-      if (shared && links > 0) {
+      if (shared && links === ecosystemBarProducts.length) {
         setSharedReady(true)
         return
       }

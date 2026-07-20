@@ -28,14 +28,37 @@ test('navigates the canonical docs and answers a known question locally', async 
 test('uses the product landing as the entry point and docs as the learning path', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveURL(/\/$/)
-  await expect(page.getByRole('heading', { name: /One AI chat/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /One agent experience/i })).toBeVisible()
   await expect(page.getByRole('heading', { name: /One definition\. Everything else plugs in/i })).toBeVisible()
   await expect(page.getByText('live', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('Works with', { exact: false }).first()).toBeVisible()
+  const worksWith = page.getByRole('region', { name: 'Works with' })
+  await expect(worksWith.locator('img')).toHaveCount(0)
+  await expect(worksWith.locator('svg')).toHaveCount(7)
+  await expect(page.getByRole('link', { name: 'Build the interface' })).toHaveAttribute('href', '/docs/getting-started')
+  await expect(page.getByRole('link', { name: /See every surface/i })).toHaveAttribute('href', '#surfaces')
+  const footer = page.locator('footer')
+  await expect(footer).toBeVisible()
+  await expect(footer.getByText('One agent experience. Every surface.')).toBeVisible()
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(6)
+  await expect(footer.getByRole('link', { name: 'Code Review' })).toHaveCount(0)
   // no useless product chrome
   await expect(page.getByText('agentskit.chat')).toHaveCount(0)
-  await page.getByRole('link', { name: /Install & run/i }).first().click()
-  await expect(page).toHaveURL(/\/docs\/guides\/install-and-run/)
+  await page.getByRole('link', { name: 'Build the interface' }).click()
+  await expect(page).toHaveURL(/\/docs\/getting-started/)
+})
+
+test('follows the system color scheme without losing product contrast', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.goto('/')
+  await expect.poll(() => page.locator('html').evaluate(element => element.classList.contains('dark'))).toBe(false)
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(255, 255, 255)')
+  await expect.poll(() => page.getByRole('heading', { name: /One agent experience/i }).evaluate(element => getComputedStyle(element).color)).toBe('rgb(13, 17, 23)')
+
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect.poll(() => page.locator('html').evaluate(element => element.classList.contains('dark'))).toBe(true)
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(13, 17, 23)')
+  await expect.poll(() => page.getByRole('heading', { name: /One agent experience/i }).evaluate(element => getComputedStyle(element).color)).toBe('rgb(230, 237, 243)')
 })
 
 test('keeps framework install tabs interactive on getting started', async ({ page }) => {
@@ -118,7 +141,7 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
   ])
 
   expect(home.ok()).toBe(true)
-  expect(await home.text()).toMatch(/One AI chat/i)
+  expect(await home.text()).toMatch(/One agent experience/i)
   expect(docs.ok()).toBe(true)
   expect(guide.ok()).toBe(true)
   expect(await guide.text()).toContain('Install and run')

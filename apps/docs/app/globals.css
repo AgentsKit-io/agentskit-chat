@@ -95,6 +95,17 @@ html.dark body {
 }
 
 .docs-assistant {
+  --ak-bg: #0d1117;
+  --ak-surface: #161b22;
+  --ak-border: #30363d;
+  --ak-fg: #e6edf3;
+  --ak-muted: #8b949e;
+  --ak-blue: #58a6ff;
+  --ak-red: #f85149;
+  --ak-green: #2ea043;
+  --ak-midnight: var(--ak-bg);
+  --ak-foam: var(--ak-fg);
+  --ak-graphite: var(--ak-muted);
   position: fixed;
   right: 1rem;
   bottom: 1rem;
