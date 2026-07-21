@@ -33,6 +33,27 @@ describe('documentation dogfood', () => {
     expect(layoutSource).toContain('enableSystem: true')
   })
 
+  it('ships one semantic product header with the native docs search', () => {
+    const headerSource = readFileSync(new URL('../components/product-header.tsx', import.meta.url), 'utf8')
+    const docsLayoutSource = readFileSync(new URL('../app/docs/layout.tsx', import.meta.url), 'utf8')
+    expect(headerSource).toContain('aria-label="AgentsKit Chat"')
+    expect(headerSource).toContain("fumadocs-ui/components/layout/search-toggle")
+    expect(headerSource).toContain('h-14')
+    expect(headerSource).toContain('min-h-11')
+    expect(docsLayoutSource).not.toMatch(/Alpha|maturity-badge/)
+  })
+
+  it('publishes complete social metadata from a generated OG route', () => {
+    const layoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
+    const landingSource = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8')
+    const imageSource = readFileSync(new URL('../app/opengraph-image.tsx', import.meta.url), 'utf8')
+    expect(layoutSource).toContain("card: 'summary_large_image'")
+    expect(layoutSource).toContain("images: ['/opengraph-image']")
+    expect(landingSource).toContain("siteName: 'AgentsKit Chat'")
+    expect(imageSource).toContain('new ImageResponse')
+    expect(imageSource).toContain('width: 1200, height: 630')
+  })
+
   it('publishes a bounded, self-verifying public knowledge artifact', () => {
     expect(verifiedKnowledgeArtifact).not.toBeNull()
     expect(verifyLocalKnowledgeArtifactSync(localKnowledgeArtifact, {

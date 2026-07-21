@@ -110,7 +110,7 @@ export function FrameworkTabs({
               type="button"
               role="tab"
               aria-selected={selected}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+              className={`min-h-11 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
                 selected
                   ? 'bg-fd-background text-fd-foreground shadow-sm'
                   : 'text-fd-muted-foreground hover:bg-fd-background/70 hover:text-fd-foreground'

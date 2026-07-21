@@ -10,7 +10,7 @@ export default function DocumentationLayout({ children }: { readonly children: R
     nav={{
       title: (
         <Link className="font-semibold" href="/">
-          AgentsKit Chat <span className="maturity-badge ml-2">Alpha</span>
+          AgentsKit Chat
         </Link>
       ),
       url: '/',

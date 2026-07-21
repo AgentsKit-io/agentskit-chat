@@ -24,6 +24,14 @@ export const metadata: Metadata = {
     description: 'Ship AI chat UIs across React, Vue, Svelte, Solid, Angular, React Native, and Ink.',
     url: siteUrl,
     type: 'website',
+    siteName: 'AgentsKit Chat',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'AgentsKit Chat — One agent experience. Every surface.' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AgentsKit Chat — One agent experience. Every surface.',
+    description: 'Ship one typed AI chat experience across web, mobile, and terminal.',
+    images: ['/opengraph-image'],
   },
 }
 

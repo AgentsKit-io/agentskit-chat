@@ -41,7 +41,7 @@ export function InstallCommand({ defaultRenderer = 'react' }: { readonly default
             type="button"
             role="tab"
             aria-selected={renderer.id === active}
-            className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+            className={`min-h-11 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
               renderer.id === active
                 ? 'bg-fd-background text-fd-foreground shadow-sm'
                 : 'text-fd-muted-foreground hover:bg-fd-background/70 hover:text-fd-foreground'
@@ -59,7 +59,7 @@ export function InstallCommand({ defaultRenderer = 'react' }: { readonly default
         <button
           type="button"
           onClick={() => void copy()}
-          className="shrink-0 rounded-lg border border-fd-border bg-fd-background px-3 py-2 text-xs font-semibold text-fd-foreground transition-colors hover:bg-fd-accent"
+          className="min-h-11 shrink-0 rounded-lg border border-fd-border bg-fd-background px-3 py-2 text-xs font-semibold text-fd-foreground transition-colors hover:bg-fd-accent"
         >
           {copied ? 'Copied' : 'Copy'}
         </button>

@@ -48,6 +48,29 @@ test('uses the product landing as the entry point and docs as the learning path'
   await expect(page).toHaveURL(/\/docs\/getting-started/)
 })
 
+test('keeps the product navigation semantic, sticky, searchable, and touch friendly', async ({ page }) => {
+  await page.goto('/')
+  const navigation = page.getByRole('navigation', { name: 'AgentsKit Chat', exact: true })
+  await expect(navigation).toBeVisible()
+  const header = navigation.locator('..')
+  await expect.poll(() => header.evaluate(element => getComputedStyle(element).position)).toBe('sticky')
+  await expect.poll(() => header.evaluate(element => element.getBoundingClientRect().height)).toBe(56)
+
+  const search = navigation.getByRole('button', { name: 'Open Search' })
+  await expect.poll(() => search.evaluate(element => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44)
+  await search.click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await page.keyboard.press('Escape')
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await navigation.getByRole('button', { name: 'Open product navigation' }).click()
+  const mobile = page.getByRole('navigation', { name: 'AgentsKit Chat mobile' })
+  await expect(mobile).toBeVisible()
+  for (const link of await mobile.getByRole('link').all()) {
+    expect((await link.boundingBox())?.height).toBeGreaterThanOrEqual(44)
+  }
+})
+
 test('follows the system color scheme without losing product contrast', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
@@ -66,10 +89,28 @@ test('keeps framework install tabs interactive on getting started', async ({ pag
   await expect(page.getByRole('heading', { name: 'Get started' }).first()).toBeVisible()
   const tablist = page.getByRole('tablist', { name: 'Choose a renderer' }).first()
   await expect(tablist).toBeVisible()
+  for (const tab of await tablist.getByRole('tab').all()) {
+    expect((await tab.boundingBox())?.height).toBeGreaterThanOrEqual(44)
+  }
   await page.getByRole('tab', { name: 'Vue' }).first().click()
   await expect(page.getByText(/--renderer vue/)).toBeVisible()
   await page.locator('a[href="/docs/getting-started/react"]').first().click()
   await expect(page).toHaveURL(/\/docs\/getting-started\/react$/)
+})
+
+test('keeps the animated demo foreground and controls legible', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' })
+  await page.goto('/')
+  const demo = page.locator('[data-hero-demo]')
+  await expect(demo).toBeVisible()
+  await expect.poll(() => demo.evaluate(element => getComputedStyle(element).color)).toBe('rgb(230, 237, 243)')
+  const tabs = demo.getByRole('tablist', { name: 'Interactive agent demos' })
+  await expect(tabs).toBeVisible()
+  for (const tab of await tabs.getByRole('tab').all()) {
+    expect((await tab.boundingBox())?.height).toBeGreaterThanOrEqual(44)
+  }
+  await tabs.getByRole('tab').nth(1).click()
+  await expect(tabs.getByRole('tab').nth(1)).toHaveAttribute('aria-selected', 'true')
 })
 
 test('keeps the interactive assistant usable on a mobile viewport', async ({ page }) => {
@@ -119,7 +160,7 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
   const [
     home, docs, guide, index, llms, llmsFull, knowledge,
     raw, rawIndex, rawPrivate, architectureDoc, product,
-    forAgents, search, sitemap, robots, architectureAsset,
+    forAgents, search, sitemap, robots, architectureAsset, openGraphImage,
   ] = await Promise.all([
     request.get('/'),
     request.get('/docs'),
@@ -138,6 +179,7 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
     request.get('/sitemap.xml'),
     request.get('/robots.txt'),
     request.get('/assets/agentschat-architecture.svg'),
+    request.get('/opengraph-image'),
   ])
 
   expect(home.ok()).toBe(true)
@@ -187,6 +229,8 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
 
   expect(architectureAsset.ok()).toBe(true)
   expect(architectureAsset.headers()['content-type']).toContain('image/svg+xml')
+  expect(openGraphImage.ok()).toBe(true)
+  expect(openGraphImage.headers()['content-type']).toContain('image/png')
   expect(search.ok()).toBe(true)
   expect(await search.text()).toContain('React quick start')
   expect(sitemap.ok()).toBe(true)

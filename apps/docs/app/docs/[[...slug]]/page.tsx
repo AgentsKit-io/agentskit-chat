@@ -47,5 +47,23 @@ export async function generateMetadata({ params }: { readonly params: Promise<{ 
   if (!page) return {}
   const path = (slug ?? []).join('/')
   const canonical = `${siteUrl}/docs${path ? `/${path}` : ''}`
-  return { title: page.data.title, description: page.data.description, alternates: { canonical }, openGraph: { title: page.data.title, description: page.data.description, url: canonical, type: 'article' } }
+  return {
+    title: page.data.title,
+    description: page.data.description,
+    alternates: { canonical },
+    openGraph: {
+      title: page.data.title,
+      description: page.data.description,
+      url: canonical,
+      type: 'article',
+      siteName: 'AgentsKit Chat',
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'AgentsKit Chat — One agent experience. Every surface.' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.data.title,
+      description: page.data.description,
+      images: ['/opengraph-image'],
+    },
+  }
 }
