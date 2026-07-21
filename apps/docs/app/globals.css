@@ -23,6 +23,10 @@ body {
   font-feature-settings: 'ss01' on, 'cv11' on;
 }
 
+:root {
+  --fd-banner-height: 56px;
+}
+
 /* Shiki — never paint per-token backgrounds (the “black bar” bug). */
 code[data-line] span,
 pre[data-language] span,
@@ -81,17 +85,6 @@ html.dark body {
   background: #090b10;
   color: #cbd5e1;
   font-size: .75rem;
-}
-
-.maturity-badge {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-  border-radius: 999px;
-  padding: .2rem .6rem;
-  font-size: .75rem;
-  font-weight: 650;
-  letter-spacing: .01em;
 }
 
 .docs-assistant {

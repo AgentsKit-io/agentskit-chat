@@ -182,7 +182,7 @@ export function HeroDemo() {
   }, [frame])
 
   return (
-    <div className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-ak-border bg-ak-surface shadow-2xl shadow-black/40">
+    <div data-hero-demo className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-ak-border bg-ak-surface text-ak-foam shadow-2xl shadow-black/40">
       <div className="flex items-center justify-between border-b border-ak-border px-4 py-2.5">
         <div className="flex gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-ak-red/70" />
@@ -295,7 +295,7 @@ export function HeroDemo() {
           type="button"
           aria-label="Previous demo"
           onClick={() => selectScene((sceneIdx - 1 + SCENES.length) % SCENES.length)}
-          className="shrink-0 rounded-md p-1 text-ak-graphite transition hover:bg-ak-midnight hover:text-ak-foam"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-ak-graphite transition hover:bg-ak-midnight hover:text-ak-foam"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="m15 18-6-6 6-6" />
@@ -303,14 +303,18 @@ export function HeroDemo() {
         </button>
         <div
           ref={railRef}
+          role="tablist"
+          aria-label="Interactive agent demos"
           className="flex flex-1 gap-1.5 overflow-x-auto [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {SCENES.map((s, i) => (
             <button
               key={s.id}
               type="button"
+              role="tab"
+              aria-selected={i === sceneIdx}
               onClick={() => selectScene(i)}
-              className={`shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 font-mono text-[11px] transition ${
+              className={`min-h-11 shrink-0 whitespace-nowrap rounded-full px-3 py-2 font-mono text-[11px] transition ${
                 i === sceneIdx
                   ? 'bg-ak-blue/20 text-ak-blue'
                   : 'text-ak-graphite hover:text-ak-foam'
@@ -329,7 +333,7 @@ export function HeroDemo() {
           type="button"
           aria-label="Next demo"
           onClick={() => selectScene((sceneIdx + 1) % SCENES.length)}
-          className="shrink-0 rounded-md p-1 text-ak-graphite transition hover:bg-ak-midnight hover:text-ak-foam"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-ak-graphite transition hover:bg-ak-midnight hover:text-ak-foam"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="m9 18 6-6-6-6" />
