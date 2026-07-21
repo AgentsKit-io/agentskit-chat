@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'AgentsKit Chat',
     url: siteUrl,
-    title: 'AgentsKit Chat — One AI chat. Every surface.',
+    title: 'AgentsKit Chat — One agent experience. Every surface.',
     description:
       'Define once. Render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink.',
   },
@@ -25,10 +25,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-ak-midnight text-ak-foam antialiased">
         <SharedEcosystemBar />
-        <RootProvider theme={{ defaultTheme: 'dark', enabled: true, enableSystem: false }}>
+        <RootProvider theme={{ defaultTheme: 'system', enabled: true, enableSystem: true }}>
           {children}
         </RootProvider>
       </body>

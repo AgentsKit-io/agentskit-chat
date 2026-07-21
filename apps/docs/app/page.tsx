@@ -9,17 +9,18 @@ import {
 } from '@/components/highlighted-code'
 import { InstallCommand } from '@/components/install-command'
 import { SharedEcosystemShowcase } from '@/components/shared-ecosystem-showcase'
+import { SiteFooter } from '@/components/site-footer'
 import { WorksWithLogos } from '@/components/works-with-logos'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
 
 export const metadata: Metadata = {
-  title: 'AgentsKit Chat — One AI chat. Every surface.',
+  title: 'AgentsKit Chat — One agent experience. Every surface.',
   description:
     'The cross-framework application layer for AI chat. Define once, render natively on web, mobile, and terminal.',
   alternates: { canonical: siteUrl },
   openGraph: {
-    title: 'AgentsKit Chat — One AI chat. Every surface.',
+    title: 'AgentsKit Chat — One agent experience. Every surface.',
     description: 'Ship AI chat UIs across React, Vue, Svelte, Solid, Angular, React Native, and Ink.',
     url: siteUrl,
     type: 'website',
@@ -28,7 +29,8 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="chat-marketing bg-ak-midnight text-ak-foam">
+    <>
+      <main className="chat-marketing bg-ak-midnight text-ak-foam">
       <section className="relative overflow-hidden px-4 pt-14 pb-16 sm:px-6 sm:pt-20 sm:pb-24 md:pt-24 md:pb-28">
         <div
           className="pointer-events-none absolute inset-0 opacity-70"
@@ -45,7 +47,7 @@ export default function HomePage() {
             </p>
 
             <h1 className="mb-5 max-w-2xl text-[2.1rem] font-bold leading-[1.05] tracking-tight text-ak-foam sm:text-5xl md:text-6xl">
-              One AI chat.
+              One agent experience.
               <span className="mt-1 block text-ak-graphite">Every surface.</span>
             </h1>
 
@@ -63,13 +65,13 @@ export default function HomePage() {
                 href="/docs/getting-started"
                 className="inline-flex items-center gap-2 rounded-md bg-ak-foam px-5 py-2.5 text-sm font-semibold text-ak-midnight transition hover:bg-white"
               >
-                Start building
+                Build the interface
               </Link>
               <Link
-                href="/docs/guides/install-and-run"
+                href="#surfaces"
                 className="inline-flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-ak-graphite transition hover:text-ak-foam"
               >
-                Install & run →
+                See every surface →
               </Link>
               <a
                 href="https://github.com/AgentsKit-io/agentskit-chat"
@@ -90,7 +92,7 @@ export default function HomePage() {
 
       <WorksWithLogos />
 
-      <section className="border-b border-ak-border bg-ak-midnight px-4 py-16 sm:px-6 sm:py-20">
+      <section id="surfaces" className="scroll-mt-12 border-b border-ak-border bg-ak-midnight px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ak-graphite">
             Architecture
@@ -175,6 +177,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+      <SiteFooter />
+    </>
   )
 }
