@@ -16,6 +16,7 @@
   <a href="https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main" /></a>
   <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2563eb" /></a>
   <a href="https://www.npmjs.com/package/@agentskit/chat"><img alt="npm @agentskit/chat" src="https://img.shields.io/npm/v/@agentskit/chat" /></a>
+  <a href="https://www.bestpractices.dev/projects/13874"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/13874/baseline" /></a>
 </p>
 
 Cross-framework application framework for building interactive agent experiences on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit). Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.
