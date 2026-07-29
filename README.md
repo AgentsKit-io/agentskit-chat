@@ -100,7 +100,9 @@ React, Vue, Svelte, and Solid share definitions from `@agentskit/chat-example-sh
 
 ## Contributing
 
-Read [CONTRIBUTING.md](./CONTRIBUTING.md) and [AGENTS.md](./AGENTS.md) before editing. Use doc-bridge for ownership routing:
+Read [CONTRIBUTING.md](./CONTRIBUTING.md), [GOVERNANCE.md](./GOVERNANCE.md),
+[SECURITY.md](./SECURITY.md), and [AGENTS.md](./AGENTS.md) before editing. Use
+doc-bridge for ownership routing:
 
 ```bash
 pnpm docs:bridge:index
