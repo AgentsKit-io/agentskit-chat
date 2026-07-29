@@ -73,6 +73,15 @@ Follow [issue governance](./docs/governance/issues.md). Every implementation iss
 Do not open public issues for vulnerabilities. Use the process in
 [SECURITY.md](./SECURITY.md).
 
+Never commit API keys, tokens, secrets, private prompts, customer data, or
+private host implementation.
+
+## Governance and releases
+
+Project decisions and maintainer responsibilities are documented in
+[GOVERNANCE.md](./GOVERNANCE.md). Stable package publication follows the
+public, provenance-backed [release process](./docs/releases/release-process.md).
+
 ## Code of Conduct
 
 Participation is governed by the [Code of Conduct](./CODE_OF_CONDUCT.md).

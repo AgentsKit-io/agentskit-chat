@@ -7,11 +7,15 @@ upgrade to the latest minor before reporting an issue that is already fixed.
 
 ## Reporting a vulnerability
 
-Do not open a public issue for a suspected vulnerability. Use GitHub's
-**Security → Report a vulnerability** flow for
-`AgentsKit-io/agentskit-chat`. Include the affected package and version, impact,
-minimal reproduction, and any proposed mitigation. Do not include production
-credentials, private prompts, customer data, or private host implementation.
+Do not open a public issue for a suspected vulnerability. Use
+[GitHub private vulnerability reporting](https://github.com/AgentsKit-io/agentskit-chat/security/advisories/new).
+Include the affected package and version, impact, minimal reproduction, and any
+proposed mitigation. Do not include production credentials, private prompts,
+customer data, or private host implementation.
+
+We aim to acknowledge a complete report within 14 days, investigate it, and
+coordinate disclosure and remediation with the reporter before publishing
+details.
 
 ## Application boundary
 
