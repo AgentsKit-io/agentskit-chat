@@ -11,9 +11,9 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/core": "^1.12.2",
-    "@agentskit/vue": "^0.4.4",
-    "vue": "^3.5.38"
+    "@agentskit/core": "^1.12.6",
+    "@agentskit/vue": "^0.5.1",
+    "vue": "^3.5.40"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",

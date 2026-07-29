@@ -33,14 +33,14 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.2"
+    "@agentskit/core": "^1.12.6"
   },
   "peerDependencies": {
-    "@agentskit/solid": "^0.4.4",
+    "@agentskit/solid": "^0.5.1",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
-    "@agentskit/solid": "^0.4.4",
+    "@agentskit/solid": "^0.5.1",
     "@solidjs/testing-library": "^0.8.10",
     "@types/node": "^25.0.0",
     "esbuild-plugin-solid": "^0.6.0",

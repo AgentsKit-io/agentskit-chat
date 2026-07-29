@@ -33,17 +33,17 @@
     "@agentskit/chat": "workspace:*"
   },
   "peerDependencies": {
-    "@agentskit/ink": "^0.10.1",
+    "@agentskit/ink": "^0.10.7",
     "ink": ">=7.1.0",
     "react": ">=18"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.2",
-    "@agentskit/ink": "^0.10.1",
+    "@agentskit/core": "^1.12.6",
+    "@agentskit/ink": "^0.10.7",
     "@types/react": "^19.2.17",
-    "ink": "^7.1.0",
+    "ink": "^7.1.1",
     "ink-testing-library": "^4.0.0",
-    "react": "^19.2.7",
+    "react": "^19.2.8",
     "tsup": "^8.5.1"
   },
   "publishConfig": {},
