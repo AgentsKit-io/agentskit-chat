@@ -61,6 +61,8 @@ pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes
 
 Continue with the [seven renderer quick starts](./docs/getting-started/index.mdx), [API reference](./docs/api-reference.mdx), and [deployment modes](./docs/deployment.mdx).
 
+Prefer Vue? [Generate a repository from the standalone Vue template](https://github.com/AgentsKit-io/chat-vue-template/generate). It streams without an API key and includes reproducible cancellation and error paths.
+
 ![Deterministic-before-backend flow from one definition through local answers, trusted Ask escalation, and seven native renderers](./docs/assets/agentschat-architecture.svg)
 
 ```mermaid
