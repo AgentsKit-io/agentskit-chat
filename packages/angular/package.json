@@ -45,7 +45,7 @@
   "devDependencies": {
     "@agentskit/angular": "^0.4.6",
     "@angular/common": "^21.2.18",
-    "@angular/compiler": "^21.2.18",
+    "@angular/compiler": "^21.2.19",
     "@angular/compiler-cli": "^21.2.18",
     "@angular/core": "^21.2.18",
     "@angular/platform-browser": "^21.2.18",
