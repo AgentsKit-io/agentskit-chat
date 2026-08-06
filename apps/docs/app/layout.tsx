@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { RootProvider } from 'fumadocs-ui/provider'
 import { ProductHeader } from '@/components/product-header'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
+import { serializedChatStructuredData } from '@/lib/structured-data'
 import '@agentskit/react/theme'
 import './globals.css'
 
@@ -39,6 +40,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializedChatStructuredData }}
+        />
+      </head>
       <body className="bg-ak-midnight text-ak-foam antialiased">
         <SharedEcosystemBar />
         <RootProvider theme={{ defaultTheme: 'system', enabled: true, enableSystem: true }}>

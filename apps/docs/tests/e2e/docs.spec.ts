@@ -183,7 +183,15 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
   ])
 
   expect(home.ok()).toBe(true)
-  expect(await home.text()).toMatch(/One agent experience/i)
+  const homeHtml = await home.text()
+  expect(homeHtml).toMatch(/One agent experience/i)
+  const structuredDataMatch = homeHtml.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)
+  expect(structuredDataMatch?.[1]).toBeDefined()
+  const structuredData = JSON.parse(structuredDataMatch?.[1] ?? '{}')
+  expect(structuredData['@graph']).toContainEqual(expect.objectContaining({
+    '@type': 'SoftwareSourceCode',
+    codeRepository: 'https://github.com/AgentsKit-io/agentskit-chat',
+  }))
   expect(docs.ok()).toBe(true)
   expect(guide.ok()).toBe(true)
   expect(await guide.text()).toContain('Install and run')
