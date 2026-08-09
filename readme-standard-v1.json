@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-07-29",
-        "reviewDueOn": "2026-10-27",
+        "reviewedOn": "2026-07-30",
+        "reviewDueOn": "2026-10-28",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:9d83c0f4cd55d341d0d6a447b31a657ebe0fa65f2691bebf0e027e287f447da1"
+        "sourceHash": "sha256:1347f86ca976e1a1d56bffa55b3492506d283fe5e5325708a7cc872b6661d12a"
       },
       "exceptions": []
     },
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:4b9dd3eebd9e4ac60099405fb9d3565ba338bf592abfccc3d9cec4fe2bab4619"
+        "sourceHash": "sha256:f9224e1f20dfa7c13de0076337c857f0ba8dfe6884110c5942a9bb29b8d1ada8"
       },
       "exceptions": [
         {
