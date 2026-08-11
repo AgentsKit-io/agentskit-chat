@@ -5,6 +5,7 @@ import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler
 import { collectCanonicalDocs, publicDocSlug } from '../lib/docs-index'
 import { allEcosystemProducts, ecosystemBarProducts } from '../lib/ecosystem'
 import { KNOWLEDGE_HASH, localKnowledgeArtifact, verifiedKnowledgeArtifact } from '../lib/knowledge'
+import { chatStructuredData, serializedChatStructuredData } from '../lib/structured-data'
 
 const askRequest = (query: string) => new Request('https://chat.agentskit.io/api/ask?corpus=agentskit-chat-public&persona=agentskit-chat-guide', {
   method: 'POST',
@@ -52,6 +53,22 @@ describe('documentation dogfood', () => {
     expect(landingSource).toContain("siteName: 'AgentsKit Chat'")
     expect(imageSource).toContain('new ImageResponse')
     expect(imageSource).toContain('width: 1200, height: 630')
+  })
+
+  it('publishes factual structured data for the public source project', () => {
+    expect(JSON.parse(serializedChatStructuredData)).toEqual(chatStructuredData)
+    expect(chatStructuredData['@graph']).toContainEqual(expect.objectContaining({
+      '@type': 'Organization',
+      '@id': 'https://www.agentskit.io/#organization',
+      sameAs: ['https://github.com/AgentsKit-io'],
+    }))
+    expect(chatStructuredData['@graph']).toContainEqual(expect.objectContaining({
+      '@type': 'SoftwareSourceCode',
+      '@id': 'https://chat.agentskit.io/#software',
+      codeRepository: 'https://github.com/AgentsKit-io/agentskit-chat',
+      license: 'https://github.com/AgentsKit-io/agentskit-chat/blob/main/LICENSE',
+      programmingLanguage: 'TypeScript',
+    }))
   })
 
   it('publishes a bounded, self-verifying public knowledge artifact', () => {
