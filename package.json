@@ -48,8 +48,8 @@
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz",
-    "@changesets/cli": "^2.31.0",
-    "@playwright/test": "^1.61.0",
+    "@changesets/cli": "^2.31.1",
+    "@playwright/test": "^1.62.1",
     "@vitest/coverage-v8": "^4.1.9",
     "node-pty": "^1.1.0",
     "typescript": "^6.0.3",
