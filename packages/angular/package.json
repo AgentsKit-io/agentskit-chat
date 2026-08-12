@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.2",
+    "@agentskit/core": "^1.12.7",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {
