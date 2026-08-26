@@ -126,6 +126,7 @@ export function projectAskMessages(messages: readonly Message[]): Array<{ readon
   for (const message of messages) {
     if (message.role !== 'user' && message.role !== 'assistant') continue
     if (message.role === 'user') {
+      if (message.content.trim() === '') continue
       projected.push({ role: message.role, content: message.content })
       continue
     }
@@ -133,6 +134,7 @@ export function projectAskMessages(messages: readonly Message[]): Array<{ readon
     const content = decoded.ok
       ? decoded.parts.map(part => part.kind === 'text' ? part.text : `[${part.frame.componentKey}]`).join('\n').trim()
       : message.content
+    if (content.trim() === '') continue
     projected.push({ role: message.role, content })
   }
   return projected
