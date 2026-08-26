@@ -3,6 +3,28 @@ import AxeBuilder from '@axe-core/playwright'
 
 const askMode = process.env.DOCS_ASK_MODE?.trim() || 'unconfigured'
 
+const deterministicCases = [
+  ['hi', /I know when not to guess/],
+  ['how can I call you?', 'Call me AgentsKit Chat.'],
+  ['toggle the mode', 'Theme toggled locally. No model call required.'],
+  ['what day is today', 'Resolved without a model call.'],
+] as const
+
+for (const [prompt, expected] of deterministicCases) {
+  test(`answers ${prompt} locally without an API request`, async ({ page }) => {
+    let backendCalls = 0
+    page.on('request', request => {
+      if (new URL(request.url()).pathname === '/api/demo-ask') backendCalls += 1
+    })
+    await page.goto('/demo/deterministic-chat')
+    const input = page.getByPlaceholder('Try a suggestion or ask anything…')
+    await input.fill(prompt)
+    await input.press('Enter')
+    await expect(page.getByText(expected)).toBeVisible()
+    expect(backendCalls).toBe(0)
+  })
+}
+
 test('navigates the canonical docs and answers a known question locally', async ({ page }) => {
   await page.goto('/docs/getting-started/react')
   await expect(page.getByRole('heading', { name: 'React quick start' }).first()).toBeVisible()
@@ -23,6 +45,353 @@ test('navigates the canonical docs and answers a known question locally', async 
   await expect(assistant.getByRole('heading', { name: 'Sources' })).toBeVisible()
   await assistant.getByRole('link', { name: 'Release compatibility' }).click()
   await expect(page).toHaveURL(/\/docs\/releases\/compatibility$/)
+})
+
+test('shows deterministic answers, custom date UI, and the mode switch', async ({ page }) => {
+  await page.goto('/docs/examples/deterministic-chat')
+  await page.getByRole('link', { name: 'Open the live demo →' }).click()
+  const demo = page
+  const accessibility = await new AxeBuilder({ page })
+    .include('[data-demo-shell]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze()
+  expect(accessibility.violations).toEqual([])
+  const chat = demo.locator('[data-ak-app-chat]')
+  await expect(demo.getByRole('heading', { name: 'Know when not to guess.' })).toBeVisible()
+  const fullscreen = demo.getByRole('button', { name: 'Open demo in fullscreen' })
+  await fullscreen.click()
+  await expect(demo.locator('[data-demo-shell]')).toHaveClass(/is-fullscreen/)
+  await demo.getByRole('button', { name: 'Exit demo fullscreen' }).click()
+  await expect(demo.locator('[data-demo-shell]')).not.toHaveClass(/is-fullscreen/)
+  const suggestions = demo.locator('.demo-autocomplete')
+  const suggestionLayout = await suggestions.evaluate(element => {
+    const buttons = [...element.querySelectorAll('button')]
+    const first = buttons[0]?.getBoundingClientRect()
+    const container = element.getBoundingClientRect()
+    const style = getComputedStyle(element)
+    return first === undefined ? undefined : {
+      leftGap: first.left - container.left - Number.parseFloat(style.paddingLeft),
+      alignItems: style.alignItems,
+      paddingBottom: Number.parseFloat(style.paddingBottom),
+    }
+  })
+  expect(suggestionLayout).toEqual(expect.objectContaining({ alignItems: 'center' }))
+  expect(suggestionLayout?.leftGap).toBeLessThan(12)
+  expect(suggestionLayout?.paddingBottom).toBeGreaterThanOrEqual(10)
+  const input = demo.getByPlaceholder('Try a suggestion or ask anything…')
+  const send = demo.getByRole('button', { name: 'Send', exact: true })
+
+  await input.fill('hi')
+  await send.click()
+  await expect(demo.getByText(/I know when not to guess/)).toBeVisible()
+  await expect(demo.getByText('LOCAL · deterministic')).toBeVisible()
+  await expect(demo.getByRole('button', { name: 'Edit last message' })).toHaveCount(0)
+
+  await input.fill('toggle the mode')
+  await send.click()
+  await expect(demo.locator('[data-demo-shell]')).toHaveClass(/is-light/)
+  await expect(demo.getByText('Theme toggled locally. No model call required.')).toBeVisible()
+  const lightAccessibility = await new AxeBuilder({ page })
+    .include('[data-demo-shell]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze()
+  expect(lightAccessibility.violations).toEqual([])
+
+  await input.fill('what day is today')
+  await send.click()
+  await expect(demo.locator('[data-demo-date-card]')).toBeVisible()
+  await expect(demo.getByText('Resolved without a model call.')).toBeVisible()
+
+  const stableHeight = await chat.evaluate(element => element.getBoundingClientRect().height)
+  await page.route('**/api/demo-ask**', async route => route.fulfill({
+    status: 200,
+    contentType: 'application/x-ndjson',
+    body: '{"type":"text","delta":"Backend fallback confirmed."}\n{"type":"done","model":"test-fallback"}\n',
+  }))
+  await input.fill('unknown fallback prompt')
+  await send.click()
+  await expect(demo.getByText('Backend fallback confirmed.')).toBeVisible()
+  await expect(demo.getByText('AI · OpenRouter')).toBeVisible()
+  await expect.poll(() => chat.evaluate(element => element.getBoundingClientRect().height)).toBe(stableHeight)
+
+  await page.unroute('**/api/demo-ask**')
+  await page.route('**/api/demo-ask**', route => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'demo unavailable' }) }))
+  await input.fill('unknown fallback prompt')
+  await send.click()
+  await expect(chat.getByRole('alert')).toContainText('Ask request failed (503).')
+  await expect(chat.locator('[data-ak-message][data-ak-role="assistant"][data-ak-status="error"]')).toHaveCount(0)
+  await expect.poll(() => chat.evaluate(element => element.getBoundingClientRect().height)).toBe(stableHeight)
+})
+
+test('shows five selectable prompts in Deterministic and four in AI mode', async ({ page }) => {
+  await page.goto('/demo/deterministic-chat')
+  const suggestions = page.locator('[aria-label="Prompt suggestions"]')
+  await expect(suggestions.getByRole('button')).toHaveCount(5)
+  await expect(suggestions.getByRole('button', { name: 'Surprise me' })).toBeVisible()
+  await page.getByRole('button', { name: 'AI', exact: true }).click()
+  await expect(suggestions.getByRole('button')).toHaveCount(4)
+  await expect(suggestions.getByRole('button', { name: 'Surprise me' })).toHaveCount(0)
+})
+
+test('uses Surprise me to demonstrate deterministic escalation with a live caption', async ({ page }) => {
+  await page.route('**/api/demo-ask**', route => route.fulfill({
+    status: 200,
+    contentType: 'application/x-ndjson',
+    body: '{"type":"text","delta":"The model handled the surprise."}\n{"type":"done","model":"test-caption"}\n',
+  }))
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const guide = demo.locator('[data-demo-guide]')
+  await expect(guide).toContainText('Pick a known prompt')
+  await demo.getByRole('button', { name: 'Surprise me' }).click()
+  await expect(demo.getByPlaceholder('Try a suggestion or ask anything…')).toHaveValue('Surprise me')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('The model handled the surprise.')).toBeVisible()
+  await expect(guide).toContainText('Escalated to AI')
+  await expect(guide).toContainText('No local rule matched')
+})
+
+test('keeps suggestion and response controls left-aligned, vertically centered, and padded', async ({ page }) => {
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const input = demo.getByPlaceholder('Try a suggestion or ask anything…')
+  const suggestions = demo.locator('.demo-autocomplete')
+  await input.fill('today')
+  await expect(suggestions.getByRole('button')).toHaveCount(1)
+  await suggestions.getByRole('button', { name: 'what day is today' }).click()
+  await expect(input).toHaveValue('what day is today')
+  await input.press('Enter')
+  await expect(demo.locator('[data-demo-date-card]')).toBeVisible()
+
+  const layout = await demo.locator('[data-ak-app-chat]').evaluate(element => {
+    const autocomplete = element.querySelector('.demo-autocomplete')
+    const actions = element.querySelector('[aria-label="Response actions"]')
+    if (!(autocomplete instanceof HTMLElement) || !(actions instanceof HTMLElement)) return undefined
+    const firstSuggestion = autocomplete.querySelector('button')?.getBoundingClientRect()
+    const autocompleteBox = autocomplete.getBoundingClientRect()
+    const suggestionStyle = getComputedStyle(autocomplete)
+    const actionStyle = getComputedStyle(actions)
+    return {
+      suggestionLeftGap: firstSuggestion === undefined ? undefined : firstSuggestion.left - autocompleteBox.left - Number.parseFloat(suggestionStyle.paddingLeft),
+      suggestionAlignItems: suggestionStyle.alignItems,
+      suggestionPaddingBottom: Number.parseFloat(suggestionStyle.paddingBottom),
+      actionAlignItems: actionStyle.alignItems,
+      actionPaddingTop: Number.parseFloat(actionStyle.paddingTop),
+      actionPaddingBottom: Number.parseFloat(actionStyle.paddingBottom),
+    }
+  })
+  expect(layout).toEqual(expect.objectContaining({ suggestionAlignItems: 'center', actionAlignItems: 'center' }))
+  expect(layout?.suggestionLeftGap).toBeLessThan(12)
+  expect(layout?.suggestionPaddingBottom).toBeGreaterThanOrEqual(10)
+  expect(layout?.actionPaddingTop).toBeGreaterThanOrEqual(8)
+  expect(layout?.actionPaddingBottom).toBeGreaterThanOrEqual(10)
+  await expect(demo.getByRole('button', { name: 'Retry response' })).toBeVisible()
+  await expect(demo.getByRole('button', { name: 'Regenerate response' })).toBeVisible()
+  await expect(demo.getByRole('button', { name: 'Edit last message' })).toHaveCount(0)
+})
+
+test('renders AI markdown responses as readable structured content', async ({ page }) => {
+  await page.route('**/api/demo-ask**', route => route.fulfill({
+    status: 200,
+    contentType: 'application/x-ndjson',
+    body: '{"type":"text","delta":"I\\u0027m not sure which mode you\\u0027d like me to toggle.\\n\\n- **Tone/style** (e.g., more formal vs. casual)\\n- **Response format** (e.g., concise vs. detailed answers)"}\n{"type":"done","model":"test-markdown"}\n',
+  }))
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  await demo.getByRole('button', { name: 'AI', exact: true }).click()
+  await demo.getByPlaceholder('Ask the free model anything…').fill('toggle mode')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  const markdown = demo.locator('[data-demo-markdown]')
+  await expect(markdown).toBeVisible()
+  await expect(markdown.locator('strong').first()).toHaveText('Tone/style')
+  await expect(markdown.locator('ul > li')).toHaveCount(2)
+  await expect(markdown.locator('ul > li').nth(1)).toContainText('Response format')
+  await expect(markdown.locator('p')).toContainText("I'm not sure")
+})
+
+test('retries and regenerates the latest response through the lifecycle actions', async ({ page }) => {
+  let attempts = 0
+  await page.route('**/api/demo-ask**', route => {
+    attempts += 1
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/x-ndjson',
+      body: `${JSON.stringify({ type: 'text', delta: `Attempt ${attempts}` })}\n${JSON.stringify({ type: 'done', model: 'test-lifecycle' })}\n`,
+    })
+  })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  await demo.getByPlaceholder('Try a suggestion or ask anything…').fill('unknown lifecycle prompt')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('Attempt 1')).toBeVisible()
+  await demo.getByRole('button', { name: 'Retry response' }).click()
+  await expect(demo.getByText('Attempt 2')).toBeVisible()
+  await demo.getByRole('button', { name: 'Regenerate response' }).click()
+  await expect(demo.getByText('Attempt 3')).toBeVisible()
+  expect(attempts).toBe(3)
+})
+
+test('recovers from a backend error when retry succeeds', async ({ page }) => {
+  let attempts = 0
+  await page.route('**/api/demo-ask**', route => {
+    attempts += 1
+    if (attempts === 1) return route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"temporary"}' })
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/x-ndjson',
+      body: '{"type":"text","delta":"Recovered after retry."}\n{"type":"done","model":"test-recovery"}\n',
+    })
+  })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const chat = demo.locator('[data-ak-app-chat]')
+  await demo.getByPlaceholder('Try a suggestion or ask anything…').fill('temporary backend failure')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(chat.getByRole('alert')).toContainText('Ask request failed (503).')
+  await demo.getByRole('button', { name: 'Retry response' }).click()
+  await expect(demo.getByText('Recovered after retry.')).toBeVisible()
+  await expect(chat.getByRole('alert')).toHaveCount(0)
+})
+
+test('keeps the chat scrolled to the newest content for long responses', async ({ page }) => {
+  const longResponse = Array.from({ length: 48 }, (_, index) => `Line ${index + 1}`).join('\n')
+  await page.route('**/api/demo-ask**', route => route.fulfill({
+    status: 200,
+    contentType: 'application/x-ndjson',
+    body: `${JSON.stringify({ type: 'text', delta: longResponse })}\n{"type":"done","model":"test-scroll"}\n`,
+  }))
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const container = demo.locator('[data-ak-chat-container]')
+  await demo.getByPlaceholder('Try a suggestion or ask anything…').fill('long response')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('Line 48')).toBeVisible()
+  await expect.poll(() => container.evaluate(element => element.scrollTop + element.clientHeight >= element.scrollHeight - 4)).toBe(true)
+})
+
+test('shows the loading state and disables input while an AI response streams', async ({ page }) => {
+  await page.route('**/api/demo-ask**', async route => {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/x-ndjson',
+      body: '{"type":"text","delta":"Stream complete."}\n{"type":"done","model":"test-stream"}\n',
+    })
+  })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const input = demo.getByPlaceholder('Ask the free model anything…')
+  await demo.getByRole('button', { name: 'AI', exact: true }).click()
+  await input.fill('slow response')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('routing the request')).toBeVisible()
+  await expect(input).toBeDisabled()
+  await expect(demo.getByText('Stream complete.')).toBeVisible()
+  await expect(input).toBeEnabled()
+})
+
+test('locks and restores document scrolling when fullscreen is toggled', async ({ page }) => {
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const fullscreen = demo.getByRole('button', { name: 'Open demo in fullscreen' })
+  const initialOverflow = await page.locator('body').evaluate(element => getComputedStyle(element).overflow)
+  await fullscreen.click()
+  await expect(demo.locator('[data-demo-shell]')).toHaveClass(/is-fullscreen/)
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).overflow)).toBe('hidden')
+  await demo.getByRole('button', { name: 'Exit demo fullscreen' }).click()
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).overflow)).toBe(initialOverflow)
+})
+
+test('fits the complete demo at the smallest supported mobile width', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await page.goto('/demo/deterministic-chat')
+  const shell = page.locator('[data-demo-shell]')
+  const chat = page.locator('[data-ak-app-chat]')
+  await expect.poll(() => shell.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await expect.poll(() => chat.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await expect(page.getByRole('button', { name: 'Fullscreen' })).toBeVisible()
+  await expect(page.getByPlaceholder('Try a suggestion or ask anything…')).toBeVisible()
+})
+
+test('submits suggestions from the keyboard and keeps narrow layouts inside the viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const input = demo.getByPlaceholder('Try a suggestion or ask anything…')
+  await input.fill('how can')
+  await expect(demo.locator('.demo-autocomplete').getByRole('button')).toHaveCount(1)
+  await input.fill('how can I call you?')
+  await input.press('Enter')
+  await expect(demo.getByText('Call me AgentsKit Chat.')).toBeVisible()
+  await expect.poll(() => demo.locator('[data-demo-shell]').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await expect.poll(() => demo.locator('[data-ak-app-chat]').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+})
+
+test('starts a clean session when switching between deterministic and AI modes', async ({ page }) => {
+  await page.route('**/api/demo-ask**', route => route.fulfill({
+    status: 200,
+    contentType: 'application/x-ndjson',
+    body: '{"type":"text","delta":"Fresh AI session."}\n{"type":"done","model":"test"}\n',
+  }))
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  await demo.getByPlaceholder('Try a suggestion or ask anything…').fill('hi')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText(/I know when not to guess/)).toBeVisible()
+  await demo.getByRole('button', { name: 'AI', exact: true }).click()
+  await expect(demo.getByText(/I know when not to guess/)).toHaveCount(0)
+  await demo.getByPlaceholder('Ask the free model anything…').fill('hi')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('Fresh AI session.')).toBeVisible()
+  await expect(demo.getByText('AI · OpenRouter')).toBeVisible()
+  await demo.getByRole('button', { name: 'Deterministic', exact: true }).click()
+  await expect(demo.getByText('Fresh AI session.')).toHaveCount(0)
+})
+
+test('honors reduced motion without breaking deterministic interaction', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const motion = await demo.locator('[data-demo-shell]').evaluate(element => ({
+    animationDuration: getComputedStyle(element).animationDuration,
+    scrollBehavior: getComputedStyle(element.querySelector('[data-ak-chat-container]')!).scrollBehavior,
+  }))
+  expect(Number.parseFloat(motion.animationDuration) * 1000).toBeLessThanOrEqual(0.01)
+  expect(motion.scrollBehavior).toBe('auto')
+  await demo.getByPlaceholder('Try a suggestion or ask anything…').fill('hi')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText(/I know when not to guess/)).toBeVisible()
+})
+
+test('keeps the AI path direct and usable on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  let requestBody: { messages?: Array<{ role: string; content: string }> } | undefined
+  await page.route('**/api/demo-ask**', async route => {
+    requestBody = route.request().postDataJSON() as typeof requestBody
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/x-ndjson',
+      body: '{"type":"text","delta":"AI path confirmed."}\n{"type":"done","model":"test"}\n',
+    })
+  })
+  await page.goto('/demo/deterministic-chat')
+  const demo = page
+  const shell = demo.locator('[data-demo-shell]')
+  const chat = demo.locator('[data-ak-app-chat]')
+  await demo.getByRole('button', { name: 'AI', exact: true }).click()
+  const input = demo.getByPlaceholder('Ask the free model anything…')
+  await input.fill('hi')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect(demo.getByText('AI path confirmed.')).toBeVisible()
+  await expect.poll(() => requestBody?.messages).toEqual([{ role: 'user', content: 'hi' }])
+  const box = await shell.boundingBox()
+  expect(box).not.toBeNull()
+  expect(box?.x).toBeGreaterThanOrEqual(0)
+  expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(390)
+  const stableHeight = await chat.evaluate(element => element.getBoundingClientRect().height)
+  await input.fill('hi')
+  await demo.getByRole('button', { name: 'Send', exact: true }).click()
+  await expect.poll(() => chat.evaluate(element => element.getBoundingClientRect().height)).toBe(stableHeight)
 })
 
 test('uses the product landing as the entry point and docs as the learning path', async ({ page }) => {

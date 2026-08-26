@@ -9,6 +9,8 @@ const askOrigin = (() => {
   catch { return undefined }
 })()
 
+const developmentScriptSource = process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -18,7 +20,7 @@ const contentSecurityPolicy = [
   "frame-ancestors 'none'",
   "img-src 'self' data: blob:",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline' https://www.agentskit.io",
+  `script-src 'self' 'unsafe-inline'${developmentScriptSource} https://www.agentskit.io`,
   "style-src 'self' 'unsafe-inline'",
 ].join('; ')
 
@@ -32,11 +34,20 @@ const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
 ]
 
+const demoSecurityHeaders = securityHeaders.map(header => {
+  if (header.key === 'Content-Security-Policy') return { ...header, value: contentSecurityPolicy.replace("frame-ancestors 'none'", "frame-ancestors 'self'") }
+  if (header.key === 'X-Frame-Options') return { ...header, value: 'SAMEORIGIN' }
+  return header
+})
+
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
   async headers() {
-    return [{ source: '/(.*)', headers: securityHeaders }]
+    return [
+      { source: '/demo/deterministic-chat', headers: demoSecurityHeaders },
+      { source: '/((?!demo/deterministic-chat).*)', headers: securityHeaders },
+    ]
   },
   transpilePackages: [
     '@agentskit/chat',

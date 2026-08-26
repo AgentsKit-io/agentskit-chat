@@ -258,6 +258,12 @@ describe('Ask adapter', () => {
       { role: 'assistant', content: 'answer\n[ask-tool]' },
     ])
   })
+
+  it('omits empty assistant placeholders from the upstream request', () => {
+    expect(projectAskMessages([message('user', 'Question'), message('assistant', '')])).toEqual([
+      { role: 'user', content: 'Question' },
+    ])
+  })
 })
 
 class MemoryStorage {
