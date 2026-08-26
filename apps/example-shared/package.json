@@ -17,7 +17,7 @@
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^4.1.11",
     "vitest": "^4.1.9"
   }
 }
