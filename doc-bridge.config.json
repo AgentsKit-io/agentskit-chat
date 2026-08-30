@@ -332,6 +332,14 @@
       "okf-type"
     ]
   },
+  "reconciliation": {
+    "scope": "package",
+    "requiredRelationKinds": ["depends-on"],
+    "requiredRelationTargets": "internal"
+  },
+  "safety": {
+    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**"]
+  },
   "conformance": {
     "documentationStandardV1": {
       "rawSources": [

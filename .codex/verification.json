@@ -22,6 +22,11 @@
         "checks": ["docs-bridge-index", "bridge-discovery", "bridge-report", "agent-retrieval"]
       },
       {
+        "id": "documentation-audit",
+        "statement": "Documentation quality and documentation-to-structure gaps are measured with current evidence.",
+        "checks": ["documentation-audit"]
+      },
+      {
         "id": "http-artifact",
         "statement": "The real chat server HTTP artifact accepts valid requests, rejects invalid boundaries, persists and resumes sessions, streams responses, and recovers from timeout and persistence errors.",
         "checks": ["server-http-contract"]
@@ -53,24 +58,25 @@
     "docs": true
   },
   "checks": [
-    { "id": "lint", "category": "lint", "command": "pnpm lint", "timeoutMs": 240000 },
-    { "id": "build", "category": "build", "command": "pnpm build", "timeoutMs": 300000 },
-    { "id": "tests", "category": "test", "command": "pnpm test", "timeoutMs": 600000 },
-    { "id": "conformance", "category": "logic", "command": "pnpm test:conformance && pnpm conformance:gate", "timeoutMs": 180000 },
-    { "id": "bundle-budget", "category": "build", "command": "pnpm test:bundle-budget", "timeoutMs": 120000 },
-    { "id": "docs-bridge-index", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:index", "timeoutMs": 180000 },
-    { "id": "docs-bridge-doctor", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:doctor", "timeoutMs": 120000 },
-    { "id": "docs-bridge-gate", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:gate", "timeoutMs": 120000 },
-    { "id": "bridge-discovery", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js discover --json --config doc-bridge.config.json", "timeoutMs": 180000 },
-    { "id": "bridge-report", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js map --json --html --output .doc-bridge/report.html --config doc-bridge.config.json", "timeoutMs": 300000 },
-    { "id": "agent-retrieval", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:query ownership chat --agent --json", "timeoutMs": 60000 },
-    { "id": "docs-reference", "category": "docs", "command": "pnpm test:readme-standard && pnpm test:ecosystem-adoption", "timeoutMs": 180000 },
-    { "id": "readme-standard", "category": "docs", "command": "pnpm check:readme-standard", "timeoutMs": 120000 },
-    { "id": "docs-diff-check", "category": "custom", "command": "git diff --check", "timeoutMs": 30000 },
-    { "id": "server-http-contract", "category": "endpoint", "execution": "real", "command": "pnpm --filter @agentskit/chat-server test", "timeoutMs": 180000 },
-    { "id": "cli-real-flow", "category": "cli", "execution": "real", "command": "pnpm --filter @agentskit/chat-cli test", "timeoutMs": 180000 },
-    { "id": "docs-e2e", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/docs-visual-check.mjs", "timeoutMs": 360000 },
-    { "id": "report-ui", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/scripts/report-visual-check.mjs .doc-bridge/report.html --output .codex/verification/ui", "timeoutMs": 240000 }
+    { "id": "lint", "evidence": "structured", "category": "lint", "command": "pnpm lint", "timeoutMs": 240000 },
+    { "id": "build", "evidence": "structured", "category": "build", "command": "pnpm build", "timeoutMs": 300000 },
+    { "id": "tests", "evidence": "structured", "category": "test", "command": "pnpm test", "timeoutMs": 600000 },
+    { "id": "conformance", "evidence": "structured", "category": "logic", "command": "pnpm test:conformance && pnpm conformance:gate", "timeoutMs": 180000 },
+    { "id": "bundle-budget", "evidence": "structured", "category": "build", "command": "pnpm test:bundle-budget", "timeoutMs": 120000 },
+    { "id": "docs-bridge-index", "evidence": "structured", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:index", "timeoutMs": 180000 },
+    { "id": "docs-bridge-doctor", "evidence": "structured", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:doctor", "timeoutMs": 120000 },
+    { "id": "docs-bridge-gate", "evidence": "structured", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:gate", "timeoutMs": 120000 },
+    { "id": "bridge-discovery", "evidence": "structured", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js discover --json --config doc-bridge.config.json", "timeoutMs": 180000 },
+    { "id": "documentation-audit", "evidence": "structured", "category": "docs", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js audit documentation --json --config doc-bridge.config.json", "timeoutMs": 240000 },
+    { "id": "bridge-report", "evidence": "structured", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js map --json --html --output .doc-bridge/report.html --config doc-bridge.config.json", "timeoutMs": 300000 },
+    { "id": "agent-retrieval", "evidence": "structured", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:query ownership chat --agent --json", "timeoutMs": 60000 },
+    { "id": "docs-reference", "evidence": "structured", "category": "docs", "command": "pnpm test:readme-standard && pnpm test:ecosystem-adoption", "timeoutMs": 180000 },
+    { "id": "readme-standard", "evidence": "structured", "category": "docs", "command": "pnpm check:readme-standard", "timeoutMs": 120000 },
+    { "id": "docs-diff-check", "evidence": "structured", "category": "custom", "command": "git diff --check", "timeoutMs": 30000 },
+    { "id": "server-http-contract", "evidence": "structured", "category": "endpoint", "execution": "real", "command": "pnpm --filter @agentskit/chat-server test", "timeoutMs": 180000 },
+    { "id": "cli-real-flow", "evidence": "structured", "category": "cli", "execution": "real", "command": "pnpm --filter @agentskit/chat-cli test", "timeoutMs": 180000 },
+    { "id": "docs-e2e", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/docs-visual-check.mjs", "timeoutMs": 360000 },
+    { "id": "report-ui", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/scripts/report-visual-check.mjs .doc-bridge/report.html --output .codex/verification/ui", "timeoutMs": 240000 }
   ],
   "tracking": {
     "required": false,
