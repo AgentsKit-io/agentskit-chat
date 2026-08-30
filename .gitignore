@@ -17,4 +17,5 @@ artifacts/
 .doc-bridge/vectors/
 .doc-bridge/memory-inbox/*
 !.doc-bridge/memory-inbox/.gitkeep
+.codex/verification/
 .vercel

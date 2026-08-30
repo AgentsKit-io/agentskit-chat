@@ -1,3 +1,112 @@
+---
+docbridge:
+  relations:
+    - from: package:@agentskit/chat
+      to: package:@agentskit/chat-protocol
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-angular
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-cli
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-devtools
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-docs
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-ink
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-ink
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-react
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-react
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-react-native
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-react-native
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-shared
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-solid
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-solid
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-svelte
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-svelte
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-vue
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-example-vue
+      to: package:@agentskit/chat-example-shared
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-ink
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-react
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-react-native
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-server
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-server
+      to: package:@agentskit/chat-protocol
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-solid
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-svelte
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+    - from: package:@agentskit/chat-vue
+      to: package:@agentskit/chat
+      kind: depends-on
+      detection: static
+---
+
 # Architecture handoff
 
 ## Read first

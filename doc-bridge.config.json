@@ -19,7 +19,8 @@
       "options": {
         "contentDir": "docs",
         "include": [
-          "**/*.md"
+          "**/*.md",
+          "**/*.mdx"
         ],
         "urlPrefix": null
       }
@@ -208,6 +209,16 @@
             "pnpm --filter @agentskit/chat-devtools test"
           ]
         },
+        "server": {
+          "path": "packages/server",
+          "purpose": "Web-standard chat and Ask HTTP handlers with authentication, streaming, persistence, and recovery contracts",
+          "agentDoc": "docs/for-agents/packages/server.md",
+          "humanDoc": "server",
+          "checks": [
+            "pnpm --filter @agentskit/chat-server lint",
+            "pnpm --filter @agentskit/chat-server test"
+          ]
+        },
         "example-react": {
           "path": "apps/example-react",
           "purpose": "React surface of support, onboarding, and protected operations references",
@@ -320,6 +331,14 @@
     "exclude": [
       "okf-type"
     ]
+  },
+  "reconciliation": {
+    "scope": "package",
+    "requiredRelationKinds": ["depends-on"],
+    "requiredRelationTargets": "internal"
+  },
+  "safety": {
+    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**"]
   },
   "conformance": {
     "documentationStandardV1": {
