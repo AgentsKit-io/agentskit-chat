@@ -6,7 +6,6 @@ const askMode = process.env.DOCS_ASK_MODE?.trim() || 'unconfigured'
 test.afterEach(async ({ page }, testInfo) => {
   await page.screenshot({ path: testInfo.outputPath('final.png'), fullPage: false })
 })
-
 const deterministicCases = [
   ['hi', /I know when not to guess/],
   ['how can I call you?', 'Call me AgentsKit Chat.'],
