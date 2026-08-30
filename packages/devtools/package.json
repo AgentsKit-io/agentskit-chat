@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/eval": "^0.4.19",
+    "@agentskit/eval": "^0.6.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.2",
+    "@agentskit/core": "^1.12.8",
     "@types/node": "^25.0.0",
     "tsup": "^8.5.1"
   },

@@ -33,19 +33,19 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.2"
+    "@agentskit/core": "^1.12.8"
   },
   "peerDependencies": {
-    "@agentskit/solid": "^0.4.4",
+    "@agentskit/solid": "^0.5.3",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
-    "@agentskit/solid": "^0.4.4",
+    "@agentskit/solid": "^0.5.3",
     "@solidjs/testing-library": "^0.8.10",
     "@types/node": "^25.0.0",
     "esbuild-plugin-solid": "^0.6.0",
     "happy-dom": "^20.10.3",
-    "solid-js": "^1.9.14",
+    "solid-js": "^1.9.15",
     "tsup": "^8.5.1",
     "vite-plugin-solid": "^2.11.12"
   },

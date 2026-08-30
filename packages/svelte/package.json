@@ -33,20 +33,20 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.2"
+    "@agentskit/core": "^1.12.8"
   },
   "peerDependencies": {
-    "@agentskit/svelte": "^0.4.4",
+    "@agentskit/svelte": "^0.5.3",
     "svelte": "^5.0.0"
   },
   "devDependencies": {
-    "@agentskit/svelte": "^0.4.4",
+    "@agentskit/svelte": "^0.5.3",
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.2.0",
     "@testing-library/svelte": "^5.4.2",
     "@types/node": "^25.0.0",
     "happy-dom": "^20.10.3",
-    "svelte": "^5.56.4",
+    "svelte": "^5.56.10",
     "svelte-check": "^4.4.1"
   },
   "publishConfig": {},

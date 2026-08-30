@@ -86,7 +86,7 @@
     "test": "pnpm --filter @agentskit/chat-protocol build && vitest run"
   },
   "peerDependencies": {
-    "@agentskit/core": "^1.12.3",
+    "@agentskit/core": "^1.12.8",
     "@agentskit/angular": "^0.4.6",
     "@agentskit/ink": "^0.10.1",
     "@agentskit/react": "^0.7.1",
@@ -155,14 +155,14 @@
     }
   },
   "dependencies": {
-    "@agentskit/eval": "^0.4.17",
-    "@agentskit/memory": "^0.11.0",
-    "@agentskit/statechart": "^0.2.0",
+    "@agentskit/eval": "^0.6.3",
+    "@agentskit/memory": "^0.11.8",
+    "@agentskit/statechart": "^0.3.0",
     "zod": "^4.3.6",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.3",
+    "@agentskit/core": "^1.12.8",
     "@agentskit/chat-protocol": "workspace:*",
     "@types/node": "^25.0.0",
     "tsup": "^8.5.1"
