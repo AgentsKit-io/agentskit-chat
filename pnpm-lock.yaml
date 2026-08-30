@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@agentskit/doc-bridge':
-        specifier: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz
-        version: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
+        specifier: 1.7.45
+        version: 1.7.45(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.0
         version: 2.31.0(@types/node@26.1.1)
@@ -700,9 +700,8 @@ packages:
   '@agentskit/core@1.12.3':
     resolution: {integrity: sha512-fNHrzpEoCaWHDK2fwk/BIhcPseN6zCdy3N0WjzdelnmRuh7zy9/Ki0zcukesK5ZAAmXdz2+Dj8FI7AM32JyOKw==}
 
-  '@agentskit/doc-bridge@https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz':
-    resolution: {tarball: https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz}
-    version: 1.2.2
+  '@agentskit/doc-bridge@1.7.45':
+    resolution: {integrity: sha512-phEDm6rCDGri2ctA3EjetPgLvmxmEWBehKLIDz+STTwZ4xHy+EttiqfxxD8vRJT8yDzKz3Gt9eT080kIEaatYA==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -1981,6 +1980,9 @@ packages:
 
   '@mermaid-js/parser@1.2.0':
     resolution: {integrity: sha512-oYPyv8A4As1yH5Bx+04iQEQxXuIQDe0GKCNSRgao6z8AM9jixXIfP0vsppRLvGf+nKIOb9/LdpWA4YuJiVvESA==}
+
+  '@mermaid-js/parser@1.2.1':
+    resolution: {integrity: sha512-n12NohV3mrUyUL2o93IgG/ifeW9FTyeJn3zDxkhwa8MJ9Fxg3HQMlA3RiGmD/3UnJvheztkjjQAjA2T4LmUcpw==}
 
   '@napi-rs/nice-android-arm-eabi@1.1.1':
     resolution: {integrity: sha512-kjirL3N6TnRPv5iuHw36wnucNqXAO46dzK9oPb0wj076R5Xm8PfUVA9nAFB5ZNMmfJQJVKACAPd/Z2KYMppthw==}
@@ -3687,6 +3689,10 @@ packages:
     resolution: {integrity: sha512-7oFy703dxfY3/NLxC1fh2SUCQ0H9rmAY+5EpDVfXjUTTs+HEwR2nYaqLv+GWcTsumwxPfiz6CzCNkwXwBUwqCA==}
     engines: {node: 18 || 20 || >=22}
 
+  brace-expansion@5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+    engines: {node: 20 || >=22}
+
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
@@ -4468,6 +4474,9 @@ packages:
 
   fast-uri@3.1.3:
     resolution: {integrity: sha512-i70LwGWUduXqzicKXWshooq+sWL1K3WUU5rKZNG/0i3a1OSoX3HqhH5WbWwTmqWfor4urUakGPiRQcleRZTwOg==}
+
+  fastdom@1.0.12:
+    resolution: {integrity: sha512-LB+xjSTEbjHE1cWsxu+tN2Xqr1kpi+V9aADI7sVM5ZMaXyYGPHULQMzpJMYqOTULK/73pUkWVzzObFRBkPr+hg==}
 
   fastq@1.20.1:
     resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
@@ -5258,6 +5267,9 @@ packages:
   mermaid@11.16.0:
     resolution: {integrity: sha512-Zvm3kbstgdpvIJPPItlL7fppIZ3kibvc1oZIGxdvk9t6UFz6flv+Jw7FtRGKwfcI8OckmH04LqG6LlS6X4B1pA==}
 
+  mermaid@11.17.2:
+    resolution: {integrity: sha512-V6K3C8EBdEsPFZXSKMJe6ppQOENxuHARr9GvHX4hh47lAbhMRD9qf4oEK7LoaRQxULMa80/qt5gHO73aCleBBg==}
+
   metro-babel-transformer@0.84.4:
     resolution: {integrity: sha512-rvCfz8snl9h20VcvpOHxZuHP1SlAkv4HXbzw7nyyVwu6Eqo5PRerbakQ9XmUCOsRy70spJ37O+G1TK8oMzo48g==}
     engines: {node: ^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0}
@@ -5460,6 +5472,10 @@ packages:
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
+    engines: {node: 18 || 20 || >=22}
+
+  minimatch@10.2.6:
+    resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
 
   minipass@7.1.3:
@@ -6305,6 +6321,9 @@ packages:
     resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
     engines: {node: '>= 0.10.0'}
 
+  strictdom@1.0.1:
+    resolution: {integrity: sha512-cEmp9QeXXRmjj/rVp9oyiqcvyocWab/HaoN4+bwFeZ7QzykJD6L3yD4v12K1x0tHpqRqVpJevN3gW7kyM39Bqg==}
+
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
@@ -6956,10 +6975,13 @@ snapshots:
 
   '@agentskit/core@1.12.3': {}
 
-  '@agentskit/doc-bridge@https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
+  '@agentskit/doc-bridge@1.7.45(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(react@19.2.7)':
     dependencies:
-      mermaid: 11.16.0
-      zod: 3.25.76
+      github-slugger: 2.0.0
+      mermaid: 11.17.2
+      minimatch: 10.2.6
+      typescript: 6.0.3
+      zod: 4.4.3
     optionalDependencies:
       '@agentskit/core': 1.12.3
       '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
@@ -8457,6 +8479,10 @@ snapshots:
       - supports-color
 
   '@mermaid-js/parser@1.2.0':
+    dependencies:
+      '@chevrotain/types': 11.1.2
+
+  '@mermaid-js/parser@1.2.1':
     dependencies:
       '@chevrotain/types': 11.1.2
 
@@ -10076,6 +10102,10 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
+  brace-expansion@5.0.9:
+    dependencies:
+      balanced-match: 4.0.4
+
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
@@ -10904,6 +10934,10 @@ snapshots:
       micromatch: 4.0.8
 
   fast-uri@3.1.3: {}
+
+  fastdom@1.0.12:
+    dependencies:
+      strictdom: 1.0.1
 
   fastq@1.20.1:
     dependencies:
@@ -11844,6 +11878,31 @@ snapshots:
       ts-dedent: 2.3.0
       uuid: 14.0.1
 
+  mermaid@11.17.2:
+    dependencies:
+      '@braintree/sanitize-url': 7.1.2
+      '@iconify/utils': 3.1.4
+      '@mermaid-js/parser': 1.2.1
+      '@types/d3': 7.4.3
+      '@upsetjs/venn.js': 2.0.0
+      cytoscape: 3.34.0
+      cytoscape-cose-bilkent: 4.1.0(cytoscape@3.34.0)
+      cytoscape-fcose: 2.2.0(cytoscape@3.34.0)
+      d3: 7.9.0
+      d3-sankey: 0.12.3
+      dagre-d3-es: 7.0.14
+      dayjs: 1.11.21
+      dompurify: 3.4.12
+      es-toolkit: 1.49.0
+      fastdom: 1.0.12
+      katex: 0.16.47
+      khroma: 2.1.0
+      marked: 16.4.2
+      roughjs: 4.6.6
+      stylis: 4.4.0
+      ts-dedent: 2.3.0
+      uuid: 14.0.1
+
   metro-babel-transformer@0.84.4:
     dependencies:
       '@babel/core': 7.29.7
@@ -12310,6 +12369,10 @@ snapshots:
   minimatch@10.2.5:
     dependencies:
       brace-expansion: 5.0.7
+
+  minimatch@10.2.6:
+    dependencies:
+      brace-expansion: 5.0.9
 
   minipass@7.1.3: {}
 
@@ -13332,6 +13395,8 @@ snapshots:
   stdin-discarder@0.3.2: {}
 
   stream-buffers@2.2.0: {}
+
+  strictdom@1.0.1: {}
 
   string-width@4.2.3:
     dependencies:

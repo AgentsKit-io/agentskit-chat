@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "6d5bef457ed2baa03db5969cdbdee00540e8218c3a62ec86d35eb20047671264",
+  "contentHash": "a29bc8dd4769534d42709aed0f81997005dcbb320707652ec05e053d1bfdab2c",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-07-15T02:39:57.388Z",
+  "generatedAt": "2026-08-30T01:19:42.575Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -931,15 +931,15 @@
         "packages/server"
       ],
       "checks": [
-        "pnpm --filter server test",
-        "pnpm --filter server lint"
+        "pnpm --filter @agentskit/chat-server lint",
+        "pnpm --filter @agentskit/chat-server test"
       ],
       "humanDoc": "server",
       "bridge": {
         "humanDoc": "linked"
       },
       "notes": [
-        "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot/Ask streaming, outer deadline/cancellation, trusted site-policy composition, and composition of existing session/message storage."
+        "Web-standard chat and Ask HTTP handlers with authentication, streaming, persistence, and recovery contracts"
       ]
     },
     "solid": {
@@ -1337,10 +1337,10 @@
         "id": "server",
         "path": "packages/server",
         "checks": [
-          "pnpm --filter server test",
-          "pnpm --filter server lint"
+          "pnpm --filter @agentskit/chat-server lint",
+          "pnpm --filter @agentskit/chat-server test"
         ],
-        "purpose": "`packages/server` owns the Web-standard application boundary, trusted host-context seam, request validation, snapshot/Ask streaming, outer deadline/cancellation, trusted site-policy composition, and composition of existing session/message storage.",
+        "purpose": "Web-standard chat and Ask HTTP handlers with authentication, streaming, persistence, and recovery contracts",
         "humanDoc": "server",
         "agentDoc": "docs/for-agents/packages/server.md"
       },

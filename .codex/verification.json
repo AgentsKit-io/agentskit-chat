@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "project": "agentskit-chat",
+  "root": "..",
+  "profile": "strict",
+  "contract": {
+    "intent": "Inspect, improve, and verify AgentsKit Chat documentation, knowledge surfaces, and real application artifacts against the current repository structure using Doc Bridge.",
+    "outcomes": [
+      {
+        "id": "repository-artifact",
+        "statement": "The current repository artifact passes its existing quality, lint, build, conformance, bundle, and test gates.",
+        "checks": ["lint", "build", "tests", "conformance", "bundle-budget"]
+      },
+      {
+        "id": "documentation",
+        "statement": "Human and agent documentation is indexed, quality-checked, current, and consistent with the repository's public package surfaces.",
+        "checks": ["docs-bridge-doctor", "docs-bridge-gate", "docs-reference", "readme-standard", "docs-diff-check"]
+      },
+      {
+        "id": "knowledge-bridge",
+        "statement": "Doc Bridge discovers the repository, compares documented and structural knowledge, and produces an inspectable architecture and evidence report.",
+        "checks": ["docs-bridge-index", "bridge-discovery", "bridge-report", "agent-retrieval"]
+      },
+      {
+        "id": "http-artifact",
+        "statement": "The real chat server HTTP artifact accepts valid requests, rejects invalid boundaries, persists and resumes sessions, streams responses, and recovers from timeout and persistence errors.",
+        "checks": ["server-http-contract"]
+      },
+      {
+        "id": "cli-artifact",
+        "statement": "The real chat CLI package exposes its documented command surface and generated-project flows.",
+        "checks": ["cli-real-flow"]
+      },
+      {
+        "id": "report-ui",
+        "statement": "The generated Doc Bridge report is exercised in a real browser across responsive viewports and themes and awaits human visual approval.",
+        "checks": ["report-ui"]
+      },
+      {
+        "id": "docs-ui",
+        "statement": "The documentation application is exercised in a real browser for navigation, assistant interaction, deterministic behavior, responsive layout, and accessibility.",
+        "checks": ["docs-e2e"]
+      }
+    ]
+  },
+  "surfaces": {
+    "logic": true,
+    "endpoint": { "required": true, "reason": "The repository contains a published chat server HTTP handler and documentation API routes; real request flows are in scope." },
+    "database": { "required": false, "reason": "No database adapter or database-backed persistence is present in the repository; session persistence is supplied through an injected storage contract." },
+    "cli": true,
+    "mcp": { "required": false, "reason": "The repository consumes Doc Bridge tooling but does not publish or own an MCP server runtime." },
+    "ui": true,
+    "docs": true
+  },
+  "checks": [
+    { "id": "lint", "category": "lint", "command": "pnpm lint", "timeoutMs": 240000 },
+    { "id": "build", "category": "build", "command": "pnpm build", "timeoutMs": 300000 },
+    { "id": "tests", "category": "test", "command": "pnpm test", "timeoutMs": 600000 },
+    { "id": "conformance", "category": "logic", "command": "pnpm test:conformance && pnpm conformance:gate", "timeoutMs": 180000 },
+    { "id": "bundle-budget", "category": "build", "command": "pnpm test:bundle-budget", "timeoutMs": 120000 },
+    { "id": "docs-bridge-index", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:index", "timeoutMs": 180000 },
+    { "id": "docs-bridge-doctor", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:doctor", "timeoutMs": 120000 },
+    { "id": "docs-bridge-gate", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:gate", "timeoutMs": 120000 },
+    { "id": "bridge-discovery", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js discover --json --config doc-bridge.config.json", "timeoutMs": 180000 },
+    { "id": "bridge-report", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js map --json --html --output .doc-bridge/report.html --config doc-bridge.config.json", "timeoutMs": 300000 },
+    { "id": "agent-retrieval", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:query ownership chat --agent --json", "timeoutMs": 60000 },
+    { "id": "docs-reference", "category": "docs", "command": "pnpm test:readme-standard && pnpm test:ecosystem-adoption", "timeoutMs": 180000 },
+    { "id": "readme-standard", "category": "docs", "command": "pnpm check:readme-standard", "timeoutMs": 120000 },
+    { "id": "docs-diff-check", "category": "custom", "command": "git diff --check", "timeoutMs": 30000 },
+    { "id": "server-http-contract", "category": "endpoint", "execution": "real", "command": "pnpm --filter @agentskit/chat-server test", "timeoutMs": 180000 },
+    { "id": "cli-real-flow", "category": "cli", "execution": "real", "command": "pnpm --filter @agentskit/chat-cli test", "timeoutMs": 180000 },
+    { "id": "docs-e2e", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/docs-visual-check.mjs", "timeoutMs": 360000 },
+    { "id": "report-ui", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/scripts/report-visual-check.mjs .doc-bridge/report.html --output .codex/verification/ui", "timeoutMs": 240000 }
+  ],
+  "tracking": {
+    "required": false,
+    "reason": "This phase audits and validates the repository locally; no external issue, pull request, merge, or release action is authorized yet."
+  },
+  "cleanup": { "roots": [".codex/verification/tmp"] }
+}

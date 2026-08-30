@@ -44,10 +44,11 @@
     "release:deprecation:plan": "node scripts/legacy-package-deprecation-plan.mjs",
     "release:deprecation:preflight": "node scripts/legacy-package-deprecation-preflight.mjs",
     "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs scripts/legacy-package-deprecation-preflight.test.mjs",
-    "test:release-lib": "vitest run scripts/release-lib.test.mjs"
+    "test:release-lib": "vitest run scripts/release-lib.test.mjs",
+    "postinstall": "node scripts/ensure-node-pty-helper.mjs"
   },
   "devDependencies": {
-    "@agentskit/doc-bridge": "https://github.com/AgentsKit-io/doc-bridge/releases/download/v1.2.2/agentskit-doc-bridge-1.2.2.tgz",
+    "@agentskit/doc-bridge": "1.7.45",
     "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.61.0",
     "@vitest/coverage-v8": "^4.1.9",
@@ -55,10 +56,5 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9",
     "zod": "^4.3.6"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "node-pty"
-    ]
   }
 }
