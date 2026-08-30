@@ -54,7 +54,7 @@
     "happy-dom": "^20.10.3",
     "ng-packagr": "^21.2.5",
     "rxjs": "^7.8.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "zone.js": "^0.16.2"
   },
   "publishConfig": {},
