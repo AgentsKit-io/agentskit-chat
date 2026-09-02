@@ -52,7 +52,7 @@
     "@angular/platform-browser-dynamic": "^21.2.18",
     "@types/node": "^25.0.0",
     "happy-dom": "^20.10.3",
-    "ng-packagr": "^21.2.5",
+    "ng-packagr": "^22.1.1",
     "rxjs": "^7.8.2",
     "typescript": "^5.9.3",
     "zone.js": "^0.16.2"
