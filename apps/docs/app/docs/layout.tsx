@@ -1,5 +1,4 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
-import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { DocsAssistant } from '@/components/docs-assistant'
 import { source } from '@/lib/source'
@@ -8,11 +7,7 @@ export default function DocumentationLayout({ children }: { readonly children: R
   return <DocsLayout
     tree={source.pageTree}
     nav={{
-      title: (
-        <Link className="font-semibold" href="/">
-          AgentsKit Chat
-        </Link>
-      ),
+      title: <span className="font-semibold">AgentsKit Chat</span>,
       url: '/',
     }}
     links={[
