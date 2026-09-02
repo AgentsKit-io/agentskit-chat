@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { invalidComponentFrameFixtures, invalidTurnEventFixtures, validChoiceListFrame, validTurnEventFixtures } from '../src/fixtures.js'
 import {
   ASSISTANT_CONTENT_PREFIX,
+  AgentEventContextSchema,
   AssistantContentPartSchema,
   createAssistantContentEncoder,
   createInteractionEvent,
@@ -38,6 +39,18 @@ describe('v1 turn protocol', () => {
     const fixture = validTurnEventFixtures[0].event
     const decoded = decodeTurnEvent({ ...fixture, future: 'ignored', payload: { ...fixture.payload, future: true } })
     expect(decoded).toEqual({ ok: true, event: fixture })
+  })
+
+  it('round-trips the optional cross-repository correlation envelope', () => {
+    const correlation = AgentEventContextSchema.parse({ operationId: 'op-1', runId: 'run-1', turnId: 'turn-1' })
+    const event = createSnapshotEvent({
+      eventId: 'correlated', sessionId: 'session-conformance', turnId: 'turn-conformance', sequence: 1,
+      emittedAt: '2026-07-11T03:00:00.000Z', messages: [], status: 'idle',
+      usage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 }, correlation,
+    })
+
+    expect(decodeTurnEvent(encodeTurnEvent(event))).toEqual({ ok: true, event })
+    expect(event.correlation?.operationId).toBe('op-1')
   })
 
   it('strips additive structural fields from canonical message records', () => {

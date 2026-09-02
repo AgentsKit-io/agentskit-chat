@@ -292,6 +292,18 @@ export type TurnDiagnostic = z.infer<typeof TurnDiagnosticSchema>
 
 const SafeIdentifierSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/)
 
+/** Optional cross-package identity; local session/turn IDs retain their own semantics. */
+export const AgentEventContextSchema = z.object({
+  operationId: SafeIdentifierSchema,
+  runId: SafeIdentifierSchema.optional(),
+  sessionId: SafeIdentifierSchema.optional(),
+  turnId: SafeIdentifierSchema.optional(),
+  actionId: SafeIdentifierSchema.optional(),
+  traceId: SafeIdentifierSchema.optional(),
+}).strict().readonly()
+
+export type AgentEventContext = z.infer<typeof AgentEventContextSchema>
+
 const EnvelopeFields = {
   protocol: z.literal(TURN_PROTOCOL),
   version: z.literal(TURN_PROTOCOL_VERSION),
@@ -300,6 +312,7 @@ const EnvelopeFields = {
   turnId: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/),
   sequence: z.number().int().nonnegative(),
   emittedAt: z.string().datetime({ offset: true }),
+  correlation: AgentEventContextSchema.optional(),
 }
 
 const MemoryMessagesSchema = z.array(z.unknown()).transform((messages, context): MemoryRecord['messages'] => {
@@ -375,6 +388,7 @@ export interface CreateSnapshotEventOptions {
   readonly messages: readonly Message[]
   readonly status: SnapshotTurnEvent['payload']['status']
   readonly usage: TokenUsage
+  readonly correlation?: AgentEventContext
   readonly lineage?: TurnLineage
   readonly error?: TurnDiagnostic
 }
@@ -387,6 +401,7 @@ export const createSnapshotEvent = (options: CreateSnapshotEventOptions): Snapsh
   turnId: options.turnId,
   sequence: options.sequence,
   emittedAt: options.emittedAt,
+  ...(options.correlation === undefined ? {} : { correlation: options.correlation }),
   event: 'server.turn.snapshot',
   payload: {
     messages: serializeMessages([...options.messages]).messages,

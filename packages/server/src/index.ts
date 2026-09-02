@@ -118,6 +118,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         const event = TurnEventSchema.parse({
           protocol: 'agentskit.chat.turn', version: 1, eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId,
           sequence: session.getCursor() + 1, emittedAt: (options.now?.() ?? new Date()).toISOString(), event: 'server.turn.diagnostic',
+          ...(submission.correlation === undefined ? {} : { correlation: submission.correlation }),
           payload: { version: 1, code, message, retryable: true },
         })
         return encoder.encode(`${encodeTurnEvent(event)}\n`)
@@ -138,6 +139,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
               await withAbort(session.persist(signal), signal)
               const event = createSnapshotEvent({
                 eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId, sequence: session.getCursor(), emittedAt: (options.now?.() ?? new Date()).toISOString(),
+                ...(submission.correlation === undefined ? {} : { correlation: submission.correlation }),
                 messages: state.messages, status: snapshotStatus(state), usage: state.usage, lineage: { operation: 'submit' },
                 ...(state.error ? { error: { version: 1, code: 'CHAT_TURN_FAILED', message: 'The chat turn failed.', retryable: true } } : {}),
               })

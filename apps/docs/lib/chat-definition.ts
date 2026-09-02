@@ -13,7 +13,7 @@ const ask = createAskAdapter({ endpoint, corpus: 'agentskit-chat-public', person
 const memory = createAskSessionMemory({ key: 'agentskit-chat:docs:v1', maxMessages: 20 })
 const adapter = createDeterministicAnswerAdapter({
   artifact: verifiedKnowledgeArtifact,
-  expectedContentHash: verifiedKnowledgeArtifact?.contentHash ?? 'sha256:d80aa1918f799c7824de8ff3a2f32454d07da2b0c815ec04bfceda51f5624382',
+  expectedContentHash: verifiedKnowledgeArtifact?.contentHash ?? 'sha256:252094f4de55723728323bc8426d77b189b154091ae4f4503c898d0028ded2f5',
   expectedSiteId: 'agentskit-chat-docs',
   fallbackMode: 'backend',
   fallback: ask,

@@ -118,6 +118,13 @@ describe('Web-standard chat handler', () => {
     expect(secondEvents.at(-1)?.payload.messages.some(message => message.content === 'Echo: hello')).toBe(true)
   })
 
+  it('propagates the optional correlation envelope to server events', async () => {
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'chat', chat: { adapter: adapter() } }), sessionStorage: () => createStorage() })
+    const events = await lines(await handler(request({ ...submission(), correlation: { operationId: 'op-chat-1', runId: 'run-chat-1' } })))
+    const snapshot = events.find(result => result.ok && result.event.event === 'server.turn.snapshot')
+    expect(snapshot).toMatchObject({ ok: true, event: { correlation: { operationId: 'op-chat-1', runId: 'run-chat-1' } } })
+  })
+
   it('turns a deadline into a typed snapshot and aborts the upstream source', async () => {
     const aborted = vi.fn()
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'chat', chat: { adapter: adapter(aborted) } }), sessionStorage: () => createStorage(), timeoutMs: 10, createId: () => 'timeout-event' })

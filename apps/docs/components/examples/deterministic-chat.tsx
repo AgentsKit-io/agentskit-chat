@@ -28,7 +28,7 @@ const INITIAL_GUIDE: GuideCopy = {
 }
 
 const DARK_THEME = {
-  colors: { background: '#0d1117', surface: '#161b22', border: '#30363d', text: '#e6edf3', muted: '#8b949e', accent: '#b48cff', onAccent: '#0d1117', danger: '#f85149' },
+  colors: { background: '#0d1117', surface: '#161b22', border: '#30363d', text: '#e6edf3', muted: '#c7bdd8', accent: '#b48cff', onAccent: '#0d1117', danger: '#f85149' },
 } as const
 
 const LIGHT_THEME = {

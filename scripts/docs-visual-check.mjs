@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { execFile } from 'node:child_process'
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { promisify } from 'node:util'
 import { join, relative } from 'node:path'
 
@@ -35,5 +35,6 @@ try {
 } catch (error) {
   result.failures.push(error instanceof Error ? error.message : String(error))
 }
+writeFileSync(join(outputDir, 'result.json'), `${JSON.stringify(result)}\n`)
 console.log(JSON.stringify(result))
 if (result.status === 'failed') process.exitCode = 1
