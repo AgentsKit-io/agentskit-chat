@@ -3,13 +3,13 @@
 import { useState } from 'react'
 
 const RENDERERS = [
-  { id: 'react', label: 'React', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react --yes' },
-  { id: 'vue', label: 'Vue', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer vue --yes' },
-  { id: 'svelte', label: 'Svelte', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer svelte --yes' },
-  { id: 'solid', label: 'Solid', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer solid --yes' },
-  { id: 'angular', label: 'Angular', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer angular --yes' },
-  { id: 'react-native', label: 'RN', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer react-native --yes' },
-  { id: 'ink', label: 'Ink', command: 'pnpm dlx @agentskit/chat-cli@0.4.0 init my-chat --renderer ink --yes' },
+  { id: 'react', label: 'React', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react --yes' },
+  { id: 'vue', label: 'Vue', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer vue --yes' },
+  { id: 'svelte', label: 'Svelte', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer svelte --yes' },
+  { id: 'solid', label: 'Solid', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer solid --yes' },
+  { id: 'angular', label: 'Angular', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer angular --yes' },
+  { id: 'react-native', label: 'RN', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer react-native --yes' },
+  { id: 'ink', label: 'Ink', command: 'pnpm dlx @agentskit/chat-cli@0.4.1 init my-chat --renderer ink --yes' },
 ] as const
 
 export function InstallCommand({ defaultRenderer = 'react' }: { readonly defaultRenderer?: string }) {

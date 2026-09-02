@@ -4,7 +4,7 @@ import {
   type VerifiedLocalKnowledgeArtifact,
 } from '@agentskit/chat/protocol'
 
-export const KNOWLEDGE_HASH = 'sha256:d80aa1918f799c7824de8ff3a2f32454d07da2b0c815ec04bfceda51f5624382' as const
+export const KNOWLEDGE_HASH = 'sha256:252094f4de55723728323bc8426d77b189b154091ae4f4503c898d0028ded2f5' as const
 
 export const localKnowledgeArtifact = {
   protocol: 'agentskit.chat.knowledge',
@@ -12,7 +12,7 @@ export const localKnowledgeArtifact = {
   artifactId: 'agentskit-chat-docs-v1',
   siteId: 'agentskit-chat-docs',
   contentHash: KNOWLEDGE_HASH,
-  generatedAt: '2026-07-14T00:00:00.000Z',
+  generatedAt: '2026-09-02T06:09:01.000Z',
   entries: [
     {
       id: 'install-framework',

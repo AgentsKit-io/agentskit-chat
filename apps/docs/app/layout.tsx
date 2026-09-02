@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import { RootProvider } from 'fumadocs-ui/provider'
 import { ProductHeader } from '@/components/product-header'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
 import { serializedChatStructuredData } from '@/lib/structured-data'
+import { AccessibleSearch } from '@/components/accessible-search'
 import '@agentskit/react/theme'
 import './globals.css'
 
@@ -37,6 +38,8 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = { colorScheme: 'dark light', themeColor: '#0b0f14' }
+
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -49,6 +52,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
       <body className="bg-ak-midnight text-ak-foam antialiased">
         <SharedEcosystemBar />
         <RootProvider theme={{ defaultTheme: 'system', enabled: true, enableSystem: true }}>
+          <AccessibleSearch />
           <ProductHeader />
           {children}
         </RootProvider>
