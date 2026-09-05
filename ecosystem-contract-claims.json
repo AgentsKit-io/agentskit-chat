@@ -225,7 +225,7 @@
         },
         {
           "id": "architecture-adrs",
-          "value": 33,
+          "value": 34,
           "noun": "architecture ADRs",
           "evidence": {
             "type": "repository-derivation",
