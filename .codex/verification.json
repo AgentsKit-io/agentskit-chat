@@ -5,13 +5,17 @@
   "stateDir": ".codex/verification/final",
   "profile": "strict",
   "contract": {
-    "intent": "Inspect, improve, and verify AgentsKit Chat documentation, knowledge surfaces, and real application artifacts against the current repository structure using Doc Bridge.",
+    "intent": "Implement and preview-deploy the approved Conf42 observable incident demo in AgentsKit Chat, validate its real fixture flows and visual behavior, and preserve the repository's documentation and artifact verification gates.",
     "scope": {
       "inScope": ["Chat packages, protocol, server, CLI, renderers, examples, documentation, and configured evidence checks"],
-      "outOfScope": ["external issue/PR/release mutations", "provider credentials and production deployment"]
+      "outOfScope": ["unrelated external mutations", "provider credentials", "real infrastructure actions" ]
     },
     "ambiguities": [],
     "outcomes": [
+      { "id": "demo-behavior", "statement": "DEMO-01/02/03: real AgentsKit fixture execution, approval, rejection, replay and safe trace inspection pass integration and browser flows.", "checks": ["demo-integration", "demo-browser"] },
+      { "id": "demo-visual", "statement": "DEMO-04: responsive, accessible, keyboard-operable incident console passes real-browser checks and awaits human visual approval.", "checks": ["demo-browser"] },
+      { "id": "demo-source", "statement": "DEMO-05: source, adapter substitution and rehearsal instructions are documented and typechecked.", "checks": ["demo-integration", "lint", "build"] },
+      { "id": "demo-remote", "statement": "DEMO-06: existing AgentsKit Chat deployment serves the demo and passes the remote approval/replay flows.", "checks": ["demo-remote"] },
       {
         "id": "repository-artifact",
         "statement": "The current repository artifact passes its existing quality, lint, build, conformance, bundle, and test gates.",
@@ -43,7 +47,7 @@
         "checks": ["cli-real-flow"]
       },
       {
-        "id": "report-ui",
+"id": "report-ui",
         "statement": "The generated Doc Bridge report is exercised in a real browser across responsive viewports and themes and awaits human visual approval.",
         "checks": ["report-ui"]
       },
@@ -64,6 +68,9 @@
     "docs": true
   },
   "checks": [
+    { "id": "demo-integration", "evidence": "structured", "category": "logic", "execution": "real", "command": "node scripts/observability-check.mjs integration", "timeoutMs": 120000 },
+    { "id": "demo-browser", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/observability-check.mjs browser", "timeoutMs": 240000 },
+    { "id": "demo-remote", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/observability-check.mjs remote", "timeoutMs": 240000 },
     { "id": "lint", "evidence": "structured", "category": "lint", "command": "pnpm lint && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"repository-artifact\"]}))'", "timeoutMs": 240000 },
     { "id": "build", "evidence": "structured", "category": "build", "command": "pnpm build && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"repository-artifact\"]}))'", "timeoutMs": 300000 },
     { "id": "tests", "evidence": "structured", "category": "test", "command": "pnpm test && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"repository-artifact\"]}))'", "timeoutMs": 600000 },
@@ -74,7 +81,7 @@
     { "id": "docs-bridge-gate", "evidence": "structured", "category": "docs", "execution": "real", "command": "pnpm docs:bridge:gate && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"documentation\"]}))'", "timeoutMs": 120000 },
     { "id": "bridge-discovery", "evidence": "structured", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js discover --json --config doc-bridge.config.json && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"knowledge-bridge\"]}))'", "timeoutMs": 180000 },
     { "id": "documentation-audit", "evidence": "structured", "category": "docs", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js audit documentation --json --config doc-bridge.config.json && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"documentation-audit\"]}))'", "timeoutMs": 240000 },
-    { "id": "bridge-report", "evidence": "structured", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js map --json --html --output .doc-bridge/report.html --config doc-bridge.config.json && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"knowledge-bridge\"]}))'", "timeoutMs": 300000 },
+    { "id": "bridge-report", "evidence": "structured", "category": "cli", "execution": "real", "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/bin/ak-docs.js map --json --html --output .codex/verification/conf42-report.html --config doc-bridge.config.json && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"knowledge-bridge\"]}))'", "timeoutMs": 300000 },
     { "id": "agent-retrieval", "evidence": "structured", "category": "cli", "execution": "real", "command": "pnpm docs:bridge:query ownership chat --agent --json && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"knowledge-bridge\"]}))'", "timeoutMs": 60000 },
     { "id": "docs-reference", "evidence": "structured", "category": "docs", "command": "pnpm test:readme-standard && pnpm test:ecosystem-adoption && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"documentation\"]}))'", "timeoutMs": 180000 },
     { "id": "readme-standard", "evidence": "structured", "category": "docs", "command": "pnpm check:readme-standard && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"documentation\"]}))'", "timeoutMs": 120000 },
@@ -82,11 +89,11 @@
     { "id": "server-http-contract", "evidence": "structured", "category": "endpoint", "execution": "real", "command": "pnpm --filter @agentskit/chat-server test && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"http-artifact\"]}))'", "timeoutMs": 180000 },
     { "id": "cli-real-flow", "evidence": "structured", "category": "cli", "execution": "real", "command": "pnpm --filter @agentskit/chat-cli test && node -e 'console.log(JSON.stringify({status:\"passed\",criteria:[\"cli-artifact\"]}))'", "timeoutMs": 180000 },
     { "id": "docs-e2e", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node scripts/docs-visual-check.mjs && node -e 'const fs=require(\"node:fs\"); const x=JSON.parse(fs.readFileSync(\".codex/verification/docs-ui/result.json\",\"utf8\")); console.log(JSON.stringify({status:x.failures?.length?\"failed\":\"passed\",capability:\"real-browser\",artifacts:x.artifacts,criteria:x.criteria}))'", "timeoutMs": 360000 },
-    { "id": "report-ui", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/scripts/report-visual-check.mjs .doc-bridge/report.html --output .codex/verification/ui && node -e 'const fs=require(\"node:fs\"); const x=JSON.parse(fs.readFileSync(\".codex/verification/ui/result.json\",\"utf8\")); console.log(JSON.stringify({status:x.failures?.length?\"failed\":\"passed\",capability:\"real-browser\",artifacts:x.artifacts,criteria:x.criteria}))'", "timeoutMs": 240000 }
+    { "id": "report-ui", "evidence": "structured", "category": "ui", "execution": "real", "capabilities": ["real-browser", "screenshot"], "command": "node /Users/rebecabraun/workspace/EmersonBraun/doc-bridge/scripts/report-visual-check.mjs .codex/verification/conf42-report.html --output .codex/verification/ui && node -e 'const fs=require(\"node:fs\"); const x=JSON.parse(fs.readFileSync(\".codex/verification/ui/result.json\",\"utf8\")); console.log(JSON.stringify({status:x.failures?.length?\"failed\":\"passed\",capability:\"real-browser\",artifacts:x.artifacts,criteria:x.criteria}))'", "timeoutMs": 240000 }
   ],
   "tracking": {
     "required": false,
-    "reason": "This phase audits and validates the repository locally; no external issue, pull request, merge, or release action is authorized yet."
+    "reason": "Issue #165, focused PR and AgentsKit Chat demo deployment authorized by the speaker. No automatic merge."
   },
   "cleanup": { "roots": [".codex/verification/tmp"] }
 }

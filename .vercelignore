@@ -1,0 +1,6 @@
+.doc-bridge/
+.codex/verification/
+.tmp/
+**/coverage/
+**/test-results/
+**/playwright-report/
