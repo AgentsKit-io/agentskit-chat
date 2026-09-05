@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "project": "agentskit-chat",
   "root": "..",
+  "stateDir": ".codex/verification/final",
   "profile": "strict",
   "contract": {
     "intent": "Implement and preview-deploy the approved Conf42 observable incident demo in AgentsKit Chat, validate its real fixture flows and visual behavior, and preserve the repository's documentation and artifact verification gates.",
