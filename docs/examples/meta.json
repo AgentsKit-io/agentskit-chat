@@ -5,6 +5,7 @@
     "basic-chat",
     "components",
     "support-bot",
-    "multi-surface"
+    "multi-surface",
+    "agent-observability"
   ]
 }
