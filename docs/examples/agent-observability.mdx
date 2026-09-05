@@ -1,0 +1,83 @@
+---
+title: Observable incident demo
+description: Rehearse a privacy-aware incident investigation with real AgentsKit execution and no LLM.
+---
+
+# Make Agents Observable
+
+[Open the demo](/demo/agent-observability).
+
+No live LLM is called. All data is fictional. The application executes actual
+AgentsKit tool calls over fixtures; it is not a prerecorded list of events.
+The application trace is not an OpenTelemetry export. Durations include the
+selected recording pace and must not be presented as provider benchmarks.
+
+## Recording script
+
+1. Choose **Scripted agent**, **Presentation** pace, and **Focus mode**.
+2. Click **Run investigation**. Inspect the versioned context and route selection.
+3. Pause at the two `deploy.get` timeouts; use **Failures** to inspect them.
+4. Follow `deploy.audit` to the recovered evidence.
+5. At **Approve simulated rollback**, explain service, target and host policy.
+   Click the native AgentsKit **Approve** button. Deny is also supported.
+6. Observe `rollback.execute`, `health.check` and `recovery.verified` separately.
+7. Export JSON, then choose **Deterministic runbook** and replay the same fixture.
+8. Open **Compare execution paths**. Do not claim a quality or speed benchmark.
+
+Reset cancels the old recording. Each replay creates a new run ID. Pause holds
+the next fixture boundary. Escape exits focus mode. Mobile, keyboard, light and
+dark themes and reduced motion are supported.
+
+## Implementation and provider seam
+
+Source: `apps/docs/lib/observability-demo.ts` and
+`apps/docs/components/examples/observability-demo.tsx`.
+
+```ts
+import { createInvestigation } from './observability-demo'
+
+const run = createInvestigation({ mode: 'agentic', paceMs: 1400 })
+await run.start()
+// The native confirmation calls run.approve() only after a human click.
+```
+
+The installed AgentsKit `AdapterFactory` contract is the substitution seam.
+After configuring a supported adapter behind your trusted backend, the change is:
+
+```ts
+const run = createInvestigation({ mode: 'agentic', adapter: configuredProviderAdapter })
+```
+
+`configuredProviderAdapter` is an already-created AgentsKit adapter, not an export
+from this demo. Never put provider secrets in this browser page. The one-line
+swap replaces the mock adapter, not server authentication, observability,
+deployment or production authorization. The default page never uses this option.
+With a live adapter, replace the mock-only usage disclosure and instrument provider
+usage separately before recording; production tools require a trusted server.
+
+## Safety and privacy
+
+Read fixtures have a service allowlist. Rollback is a simulated registered tool
+with `requiresConfirmation`, session-bound `createActionConfirmation` and scoped
+target validation. Repeated approvals cannot execute twice. These browser checks
+are a teaching example, not an authorization boundary against malicious clients.
+No arbitrary user payloads are accepted and only fixture evidence is exported.
+Raw log payloads are represented by `[REDACTED]`; real redaction requires an
+allowlist before export and tests for nested error and tool payloads.
+
+When a substituted adapter proposes rollback itself, the UI resolves that original
+AgentsKit call through the controller's native approval API. Host-generated
+proposals use the existing session-bound confirmation coordinator. Neither path
+creates a second request for the same pending action.
+
+## Run and verify
+
+```bash
+pnpm --filter @agentskit/chat-docs dev --port 4190
+node scripts/observability-check.mjs integration
+node scripts/observability-check.mjs browser
+OBSERVABILITY_REMOTE_URL=https://your-preview.vercel.app node scripts/observability-check.mjs remote
+```
+
+See ADR-0034 and issue #165 for the acceptance contract. Screenshots and
+criterion-level results are written under `.codex/verification/observability/`.
