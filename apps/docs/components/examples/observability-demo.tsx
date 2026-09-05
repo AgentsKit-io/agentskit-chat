@@ -31,7 +31,7 @@ export function ObservabilityDemo() {
 
   useEffect(() => () => { unsubscribe.current?.(); run.current?.dispose() }, [])
   useEffect(() => { const key = (event: KeyboardEvent) => { if (event.key === 'Escape') setFocus(false) }; window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key) }, [])
-  useEffect(() => { if (selected === null && timeline.current) timeline.current.scrollTop = timeline.current.scrollHeight }, [state.events.length, selected])
+  useEffect(() => { if (selected === null && timeline.current) timeline.current.scrollTop = timeline.current.scrollHeight }, [state.events.length, selected, failures, focus])
 
   function reset(nextMode = mode) {
     unsubscribe.current?.(); run.current?.dispose(); run.current = null
