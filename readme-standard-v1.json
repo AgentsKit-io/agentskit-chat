@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:0c6132b3e039dc51ea9bd60220f7b4f19b30174cb9f19f26ad14a2130785b5c9"
+        "sourceHash": "sha256:2ba748a98f03837c82794d069ef56e504413e56579696c547a4532e5e2a96786"
       },
       "exceptions": [
         {
