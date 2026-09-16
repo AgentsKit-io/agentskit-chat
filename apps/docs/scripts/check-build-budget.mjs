@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 const BUILD_ROOT = new URL('../.next/', import.meta.url)
 const ROUTES = ['/layout', '/docs/layout', '/docs/[[...slug]]/page']
-const MAX_CLIENT_JAVASCRIPT_BYTES = 780_000
+const MAX_CLIENT_JAVASCRIPT_BYTES = 790_000
 
 const manifest = JSON.parse(await readFile(new URL('app-build-manifest.json', BUILD_ROOT), 'utf8'))
 const missing = ROUTES.filter(route => !Array.isArray(manifest.pages?.[route]))

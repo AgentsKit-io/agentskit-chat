@@ -8,16 +8,16 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.2",
-    "@agentskit/rag": "^0.4.14",
-    "@agentskit/validation": "^0.2.1"
+    "@agentskit/core": "^1.12.9",
+    "@agentskit/rag": "^0.4.16",
+    "@agentskit/validation": "^0.2.12"
   },
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "pnpm --filter @agentskit/chat build && vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.9",
-    "vitest": "^4.1.9"
+    "@vitest/coverage-v8": "^4.1.11",
+    "vitest": "^4.1.11"
   }
 }

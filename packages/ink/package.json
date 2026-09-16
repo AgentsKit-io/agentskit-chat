@@ -38,10 +38,10 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.2",
-    "@agentskit/ink": "^0.10.1",
+    "@agentskit/core": "^1.12.9",
+    "@agentskit/ink": "^0.10.11",
     "@types/react": "^19.2.17",
-    "ink": "^7.1.0",
+    "ink": "^7.1.1",
     "ink-testing-library": "^4.0.0",
     "react": "^19.2.7",
     "tsup": "^8.5.1"
