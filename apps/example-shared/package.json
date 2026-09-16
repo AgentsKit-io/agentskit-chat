@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.9",
-    "@agentskit/rag": "^0.4.16",
-    "@agentskit/validation": "^0.2.12"
+    "@agentskit/core": "^1.12.2",
+    "@agentskit/rag": "^0.4.14",
+    "@agentskit/validation": "^0.2.1"
   },
   "scripts": {
     "lint": "tsc --noEmit",

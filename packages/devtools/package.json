@@ -38,7 +38,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.9",
+    "@agentskit/core": "^1.12.2",
     "@types/node": "^25.9.7",
     "tsup": "^8.5.1"
   },

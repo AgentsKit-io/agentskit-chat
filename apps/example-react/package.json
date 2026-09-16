@@ -11,8 +11,8 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/core": "^1.12.9",
-    "@agentskit/react": "^0.7.6",
+    "@agentskit/core": "^1.12.2",
+    "@agentskit/react": "^0.7.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

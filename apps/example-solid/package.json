@@ -11,8 +11,8 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-example-shared": "workspace:*",
-    "@agentskit/core": "^1.12.9",
-    "@agentskit/solid": "^0.4.6",
+    "@agentskit/core": "^1.12.2",
+    "@agentskit/solid": "^0.4.4",
     "solid-js": "^1.9.15"
   },
   "devDependencies": {

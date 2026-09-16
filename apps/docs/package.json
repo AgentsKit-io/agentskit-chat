@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.9",
-    "@agentskit/react": "^0.7.6",
+    "@agentskit/core": "^1.12.3",
+    "@agentskit/react": "^0.7.4",
     "fumadocs-core": "15.6.5",
     "fumadocs-mdx": "11.6.4",
     "fumadocs-ui": "15.6.5",

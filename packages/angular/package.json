@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/core": "^1.12.9",
+    "@agentskit/core": "^1.12.2",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {
@@ -43,7 +43,7 @@
     "rxjs": "^7.0.0"
   },
   "devDependencies": {
-    "@agentskit/angular": "^0.4.8",
+    "@agentskit/angular": "^0.4.6",
     "@angular/common": "^21.2.23",
     "@angular/compiler": "^21.2.23",
     "@angular/compiler-cli": "^21.2.23",
