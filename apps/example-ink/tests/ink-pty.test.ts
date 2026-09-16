@@ -58,10 +58,13 @@ const waitForSettled = async (read: () => string, quietMs = 200): Promise<void> 
   }
 }
 
-const submit = async (pty: IPty, value: string): Promise<void> => {
-  pty.write(value)
-  await new Promise(resolve => setTimeout(resolve, 25))
-  pty.write('\r')
+const submit = async (app: { readonly pty: IPty; readonly output: () => string }, value: string): Promise<void> => {
+  const offset = app.output().length
+  app.pty.write(value)
+  // Wait for the host to echo what was typed before sending Enter: a fixed delay
+  // lets a loaded machine swallow the carriage return into the input buffer.
+  await waitForAfter(app.output, offset, value)
+  app.pty.write('\r')
   await new Promise(resolve => setTimeout(resolve, 100))
 }
 
@@ -73,27 +76,27 @@ describe('Ink PTY host', () => {
   it('advances the shared deterministic conversation', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    await submit(app.pty, '/start')
+    await submit(app, '/start')
     await waitFor(app.output, 'What is your name?')
-    await submit(app.pty, '/name Ada')
+    await submit(app, '/name Ada')
     await waitFor(app.output, 'Welcome, Ada.')
   })
 
   it('accepts a prompt and prints the deterministic streamed response', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    await submit(app.pty, 'hello')
+    await submit(app, 'hello')
     await waitFor(app.output, 'AgentsKit received: hello')
   })
 
   it('cancels a slow response with Escape without exiting', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    await submit(app.pty, '/slow')
+    await submit(app, '/slow')
     await waitFor(app.output, 'press Esc to stop')
     app.pty.write('\u001b')
     await waitFor(app.output, '↑/↓ to recall previous messages')
-    await submit(app.pty, 'after')
+    await submit(app, 'after')
     await waitFor(app.output, 'AgentsKit received: after')
     expect(app.pty.pid).toBeGreaterThan(0)
   })
@@ -101,14 +104,14 @@ describe('Ink PTY host', () => {
   it('retries, regenerates, and edits through lifecycle commands', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    await submit(app.pty, 'before-edit')
+    await submit(app, 'before-edit')
     await waitFor(app.output, 'AgentsKit received: before-edit')
     await waitForSettled(app.output)
-    await submit(app.pty, '/retry')
+    await submit(app, '/retry')
     await waitForSettled(app.output)
-    await submit(app.pty, '/regenerate')
+    await submit(app, '/regenerate')
     await waitForSettled(app.output)
-    await submit(app.pty, '/edit after-edit')
+    await submit(app, '/edit after-edit')
     await waitFor(app.output, 'AgentsKit received: after-edit')
     await waitForSettled(app.output)
   }, 15_000)
@@ -125,11 +128,11 @@ describe('Ink PTY host', () => {
     const app = startApp('controlled')
     await waitFor(app.output, '[unsupported visual: status] Controlled host session is ready.')
     await waitFor(app.output, 'Controlled host input')
-    await submit(app.pty, '/slow')
+    await submit(app, '/slow')
     await waitFor(app.output, 'Controlled stream: press Esc to stop')
     app.pty.write('\u001b')
     await waitFor(app.output, 'Controlled stream cancelled.')
-    await submit(app.pty, 'after')
+    await submit(app, 'after')
     await waitFor(app.output, 'Controlled host received: after')
     const exited = new Promise<{ exitCode: number; signal?: number }>(resolve => app.pty.onExit(resolve))
     app.pty.write('\u0003')
@@ -139,7 +142,7 @@ describe('Ink PTY host', () => {
   it('opens a support ticket only after terminal confirmation', async () => {
     const app = startApp()
     await waitFor(app.output, 'Ask support or type /support')
-    await submit(app.pty, '/support')
+    await submit(app, '/support')
     await waitFor(app.output, 'Open support ticket')
     app.pty.write('\r')
     await waitFor(app.output, 'Allow create-support-ticket?')
@@ -150,7 +153,7 @@ describe('Ink PTY host', () => {
   it('completes onboarding with keyboard-only form and confirmation controls', async () => {
     const app = startApp('onboarding')
     await waitFor(app.output, 'Type /onboarding to begin')
-    await submit(app.pty, '/onboarding')
+    await submit(app, '/onboarding')
     await waitFor(app.output, 'Primary role')
     const roleOffset = app.output().length
     app.pty.write('\r')
@@ -161,12 +164,12 @@ describe('Ink PTY host', () => {
     const profileOffset = app.output().length
     app.pty.write('\r')
     await waitForAfter(app.output, profileOffset, 'Type /onboarding to begin')
-    await submit(app.pty, '/recommend')
+    await submit(app, '/recommend')
     await waitFor(app.output, 'engineering starter')
     const recommendationOffset = app.output().length
     app.pty.write('\r')
     await waitForAfter(app.output, recommendationOffset, 'Type /onboarding to begin')
-    await submit(app.pty, '/accept')
+    await submit(app, '/accept')
     await waitFor(app.output, 'Complete onboarding')
     app.pty.write('\r')
     await waitFor(app.output, 'Allow complete-onboarding?')
@@ -174,14 +177,14 @@ describe('Ink PTY host', () => {
     app.pty.write('\r')
     await waitForAfter(app.output, confirmationOffset, 'Onboarding confirmed.')
     await waitForAfter(app.output, confirmationOffset, 'Type /onboarding to begin')
-    await submit(app.pty, '/done')
+    await submit(app, '/done')
     await waitFor(app.output, 'Onboarding complete. Your guided workspace is ready.')
   }, 20_000)
 
   it('confirms a protected operation with keyboard controls', async () => {
     const app = startApp('operations')
     await waitFor(app.output, 'Type /operations to begin')
-    await submit(app.pty, '/operations')
+    await submit(app, '/operations')
     await waitFor(app.output, 'Restart operation')
     app.pty.write('\u001b[B')
     app.pty.write('\r')
@@ -193,7 +196,7 @@ describe('Ink PTY host', () => {
   it('renders a grounded answer and source fallback', async () => {
     const app = startApp('rag')
     await waitFor(app.output, 'Ask a grounded question')
-    await submit(app.pty, 'How does AgentsKit Chat work?')
+    await submit(app, 'How does AgentsKit Chat work?')
     await waitFor(app.output, 'AgentsKit Chat overview')
     await waitFor(app.output, 'Grounded answer')
     app.pty.write('\r')
