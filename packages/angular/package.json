@@ -44,18 +44,18 @@
   },
   "devDependencies": {
     "@agentskit/angular": "^0.4.6",
-    "@angular/common": "^21.2.18",
-    "@angular/compiler": "^21.2.18",
-    "@angular/compiler-cli": "^21.2.18",
-    "@angular/core": "^21.2.18",
-    "@angular/platform-browser": "^21.2.18",
-    "@angular/platform-browser-dynamic": "^21.2.18",
-    "@types/node": "^25.0.0",
-    "happy-dom": "^20.10.3",
-    "ng-packagr": "^21.2.5",
+    "@angular/common": "^21.2.23",
+    "@angular/compiler": "^21.2.23",
+    "@angular/compiler-cli": "^21.2.23",
+    "@angular/core": "^21.2.23",
+    "@angular/platform-browser": "^21.2.23",
+    "@angular/platform-browser-dynamic": "^21.2.23",
+    "@types/node": "^25.9.7",
+    "happy-dom": "^20.14.5",
+    "ng-packagr": "^21.2.7",
     "rxjs": "^7.8.2",
     "typescript": "^5.9.3",
-    "zone.js": "^0.16.2"
+    "zone.js": "^0.16.3"
   },
   "publishConfig": {},
   "private": true

@@ -49,12 +49,12 @@
   },
   "devDependencies": {
     "@agentskit/doc-bridge": "1.7.45",
-    "@changesets/cli": "^2.31.0",
-    "@playwright/test": "^1.61.0",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@changesets/cli": "^2.31.1",
+    "@playwright/test": "^1.63.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "node-pty": "^1.1.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9",
+    "vitest": "^4.1.11",
     "zod": "^4.3.6"
   }
 }

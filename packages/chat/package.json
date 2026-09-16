@@ -164,7 +164,7 @@
   "devDependencies": {
     "@agentskit/core": "^1.12.3",
     "@agentskit/chat-protocol": "workspace:*",
-    "@types/node": "^25.0.0",
+    "@types/node": "^25.9.7",
     "tsup": "^8.5.1"
   },
   "publishConfig": {
