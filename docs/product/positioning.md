@@ -59,7 +59,6 @@ bindings. Chat composes those primitives into full interactive applications.
 ## When not to choose it
 
 - You only need a React chat UI and are happy assembling AI SDK pieces.
-- You need a multi-tenant hosted SaaS control plane (out of Chat’s v0 scope — see AKOS for enterprise ops).
 - You need automatic conversion of arbitrary custom components across frameworks (not a goal).
 
 ## Narrative for decision makers

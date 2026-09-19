@@ -15,7 +15,6 @@ every consumer to upgrade in lockstep.
 That is stricter than the deprecation decision requires and obscures production
 truth. AgentsKit Docs, Registry, Playbook, Doc Bridge, and the Registry catalog
 still prove the supported consolidated 0.3 line. The framework-owned portal and
-AKOS prove 0.4. All are free of the legacy standalone package names.
 
 ## Decision
 
@@ -30,7 +29,6 @@ Adoption schema v3 records an audited closed version set:
 
 A certified consumer version must be a member of that closed set. Semver ranges
 and inferred intermediate versions remain forbidden. CI and production evidence remain mandatory, and the
-private AKOS envelope is narrowed to a `chat-convergence-pass` so it cannot be
 misread as certification of unrelated product capabilities.
 
 The legacy-package deprecation gate may become ready when every active consumer
@@ -52,7 +50,6 @@ minor release.
 1. Upgrade every host to 0.4 before deprecation — rejected because 0.3 already
    uses the consolidated package and has no dependency on the legacy names.
 2. Allow semver ranges — rejected because a range is not artifact evidence.
-3. Keep the global field and special-case AKOS — rejected because exceptions
    weaken the schema and hide the actual consumer version.
 
 ## Acceptance

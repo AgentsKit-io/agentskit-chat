@@ -583,7 +583,6 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
     'https://playbook.agentskit.io/docs',
     'https://doc-bridge.agentskit.io/',
     'https://github.com/AgentsKit-io/code-review-cli#readme',
-    'https://akos.agentskit.io/docs',
   ]) expect(concise).toContain(productUrl)
 
   expect(llmsFull.ok()).toBe(true)

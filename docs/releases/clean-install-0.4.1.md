@@ -21,6 +21,5 @@ attestations.
   their `SHA256SUMS`. Those assets become public evidence only when the GitHub
   release is published.
 
-This evidence covers public distribution only. The AKOS consumer is represented
 separately by the fixed aggregate private-attestation envelope; no private
 implementation detail is included here.

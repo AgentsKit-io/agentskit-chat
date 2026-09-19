@@ -116,7 +116,6 @@ describe('documentation dogfood', () => {
       'playbook',
       'doc-bridge',
       'code-review',
-      'akos',
     ])
     expect(ecosystemBarProducts.map(product => product.id)).toEqual([
       'agentskit',
@@ -124,12 +123,8 @@ describe('documentation dogfood', () => {
       'agentskit-chat',
       'playbook',
       'doc-bridge',
-      'akos',
     ])
-    expect(allEcosystemProducts.find(product => product.id === 'akos')).toEqual(expect.objectContaining({
-      docs: 'https://akos.agentskit.io/docs',
-      maturity: 'stable',
-    }))
+    expect(allEcosystemProducts.find(product => product.id === 'akos')).toBeUndefined()
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {
