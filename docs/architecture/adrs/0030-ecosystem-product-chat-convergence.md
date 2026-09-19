@@ -92,7 +92,6 @@ flowchart TD
 2. **Require every educational chat example to use AgentsKit Chat.** Rejected
    because it would prevent AgentsKit from teaching its lower-level bindings
    and would blur the framework/runtime boundary.
-3. **Publish the private AKOS inventory.** Rejected because convergence requires
    contract evidence, not disclosure of private behavior or topology.
 4. **Run network checks in every repository test.** Rejected because ordinary CI
    must remain deterministic; network resolution belongs to the final

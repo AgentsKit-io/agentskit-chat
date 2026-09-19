@@ -125,7 +125,6 @@ pnpm docs:bridge:gate
 | [Playbook](https://playbook.agentskit.io) | Dogfoods deterministic local answers and shared Ask integration |
 | [Doc Bridge](https://doc-bridge.agentskit.io/) | Indexes ownership, gates, and agent handoffs for this repository |
 | [Code Review](https://github.com/AgentsKit-io/code-review-cli#readme) | Reviews changes before merge with the model already in your workflow |
-| [AKOS](https://akos.agentskit.io) | Adds enterprise orchestration, governance, and production controls |
 
 ## License
 

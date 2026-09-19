@@ -68,10 +68,8 @@ The stable workflow must remain token-free. Its protected publish job uses
 
 - [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline
 - [x] Chat Docs is certified with the canonical production evidence from #102
-- [x] AKOS is re-certified through a fresh approved aggregate private production attestation
 - [x] Frozen installs, strict typechecks/tests, and production builds pass for all declared product chats
 - [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge
-- [x] No private AKOS behavior, identifier, data, or topology enters public evidence
 
 ## Product close-out
 

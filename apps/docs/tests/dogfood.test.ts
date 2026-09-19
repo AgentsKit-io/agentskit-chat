@@ -20,9 +20,9 @@ describe('documentation dogfood', () => {
     expect(iconSource).not.toContain('cdn.simpleicons.org')
   })
 
-  it('accepts the shared ecosystem bar only when all six public products render', () => {
+  it('accepts the shared ecosystem bar only when all five public products render', () => {
     const barSource = readFileSync(new URL('../components/shared-ecosystem-bar.tsx', import.meta.url), 'utf8')
-    expect(ecosystemBarProducts).toHaveLength(6)
+    expect(ecosystemBarProducts).toHaveLength(5)
     expect(barSource).toContain('links === ecosystemBarProducts.length')
     expect(barSource).not.toContain('links > 0')
   })
@@ -116,7 +116,6 @@ describe('documentation dogfood', () => {
       'playbook',
       'doc-bridge',
       'code-review',
-      'akos',
     ])
     expect(ecosystemBarProducts.map(product => product.id)).toEqual([
       'agentskit',
@@ -124,12 +123,8 @@ describe('documentation dogfood', () => {
       'agentskit-chat',
       'playbook',
       'doc-bridge',
-      'akos',
     ])
-    expect(allEcosystemProducts.find(product => product.id === 'akos')).toEqual(expect.objectContaining({
-      docs: 'https://akos.agentskit.io/docs',
-      maturity: 'stable',
-    }))
+    expect(allEcosystemProducts.find(product => product.id === 'akos')).toBeUndefined()
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {

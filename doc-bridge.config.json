@@ -381,10 +381,6 @@
         {
           "url": "https://github.com/AgentsKit-io/code-review-cli#readme",
           "paths": ["README.md", "docs/index.mdx"]
-        },
-        {
-          "url": "https://akos.agentskit.io/docs",
-          "paths": ["docs/index.mdx"]
         }
       ],
       "ecosystemContract": {

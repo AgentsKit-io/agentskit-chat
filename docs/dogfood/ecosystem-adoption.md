@@ -48,7 +48,6 @@ pnpm test:ecosystem-adoption
 
 The 2026-07-16 baseline certifies all six declared product chats. The Chat
 portal was promoted through its protected immutable deployment workflow, and
-AKOS passed the bounded aggregate Chat-convergence attestation at exact 0.4.0.
 No private URL, identifier, topology, behavior, business rule, or source
 excerpt is recorded here. Schema
 validity must never be confused with freshness, so the final release gate

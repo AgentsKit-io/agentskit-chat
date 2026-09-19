@@ -412,7 +412,7 @@ test('uses the product landing as the entry point and docs as the learning path'
   const footer = page.locator('footer')
   await expect(footer).toBeVisible()
   await expect(footer.getByText('One agent experience. Every surface.')).toBeVisible()
-  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(6)
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(5)
   await expect(footer.getByRole('link', { name: 'Code Review' })).toHaveCount(0)
   // no useless product chrome
   await expect(page.getByText('agentskit.chat')).toHaveCount(0)
@@ -583,7 +583,6 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
     'https://playbook.agentskit.io/docs',
     'https://doc-bridge.agentskit.io/',
     'https://github.com/AgentsKit-io/code-review-cli#readme',
-    'https://akos.agentskit.io/docs',
   ]) expect(concise).toContain(productUrl)
 
   expect(llmsFull.ok()).toBe(true)
