@@ -412,7 +412,7 @@ test('uses the product landing as the entry point and docs as the learning path'
   const footer = page.locator('footer')
   await expect(footer).toBeVisible()
   await expect(footer.getByText('One agent experience. Every surface.')).toBeVisible()
-  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(6)
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(5)
   await expect(footer.getByRole('link', { name: 'Code Review' })).toHaveCount(0)
   // no useless product chrome
   await expect(page.getByText('agentskit.chat')).toHaveCount(0)
