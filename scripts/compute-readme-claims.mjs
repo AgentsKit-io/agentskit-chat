@@ -1,7 +1,8 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-export const REPO_ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '')
+export const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url)).replace(/\/$/, '')
 
 const readJson = path => JSON.parse(readFileSync(join(REPO_ROOT, path), 'utf8'))
 

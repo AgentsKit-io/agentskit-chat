@@ -40,7 +40,10 @@ jobs:
       - run: pnpm build
       - run: pnpm conformance:gate
       - run: pnpm bundle:budget
+      - run: pnpm docs:bridge:index
+      - run: git diff --exit-code -- doc-bridge.config.json .doc-bridge llms.txt
       - run: pnpm docs:bridge:gate
+      - run: pnpm docs:bridge:conformance
       - run: pnpm docs:bridge:doctor
       - run: pnpm ecosystem:claims:check
       - run: pnpm ecosystem:adoption:check
