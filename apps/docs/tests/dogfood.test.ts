@@ -5,6 +5,7 @@ import { createDocsAskHandler, unavailableAskResponse } from '../lib/ask-handler
 import { collectCanonicalDocs, publicDocSlug } from '../lib/docs-index'
 import { allEcosystemProducts, ecosystemBarProducts } from '../lib/ecosystem'
 import { KNOWLEDGE_HASH, localKnowledgeArtifact, verifiedKnowledgeArtifact } from '../lib/knowledge'
+import { DEFAULT_SHELL_ORIGIN, SHELL_PRODUCT_ID, SHELL_PRODUCT_REPO, resolveShellOrigin, shellScriptSrc, shellStylesheetHref } from '../lib/shell'
 import { chatStructuredData, serializedChatStructuredData } from '../lib/structured-data'
 
 const askRequest = (query: string) => new Request('https://chat.agentskit.io/api/ask?corpus=agentskit-chat-public&persona=agentskit-chat-guide', {
@@ -20,13 +21,52 @@ describe('documentation dogfood', () => {
     expect(iconSource).not.toContain('cdn.simpleicons.org')
   })
 
-  it('accepts the shared ecosystem bar only when all six public products render', () => {
-    const barSource = readFileSync(new URL('../components/shared-ecosystem-bar.tsx', import.meta.url), 'utf8')
+  it('adopts AgentsKit shell v1 from the configurable shell origin', () => {
     const layoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
-    expect(ecosystemBarProducts).toHaveLength(6)
-    expect(barSource).toContain('links === expectedLinkCount')
-    expect(layoutSource).toContain('expectedLinkCount={ecosystemBarProducts.length}')
-    expect(barSource).not.toContain('links > 0')
+    const shellSource = readFileSync(new URL('../components/agentskit-shell.tsx', import.meta.url), 'utf8')
+    expect(resolveShellOrigin(undefined)).toBe(DEFAULT_SHELL_ORIGIN)
+    expect(DEFAULT_SHELL_ORIGIN).toBe('https://www.agentskit.io')
+    expect(resolveShellOrigin('http://localhost:3000/')).toBe('http://localhost:3000')
+    expect(resolveShellOrigin('not a url')).toBe(DEFAULT_SHELL_ORIGIN)
+    expect(shellScriptSrc).toMatch(/\/shell\/v1\.js$/)
+    expect(shellStylesheetHref).toMatch(/\/shell\/v1\.css$/)
+    expect(layoutSource).toContain('href={shellStylesheetHref}')
+    expect(layoutSource).toContain('<AgentsKitShellScript />')
+    expect(shellSource).toContain('data-current={SHELL_PRODUCT_ID}')
+    expect(shellSource).toContain('data-current-repo={SHELL_PRODUCT_REPO}')
+    expect(SHELL_PRODUCT_ID).toBe('agentskit-chat')
+    expect(SHELL_PRODUCT_REPO).toBe('AgentsKit-io/agentskit-chat')
+    expect(layoutSource).not.toContain('ecosystem-bar')
+  })
+
+  it('uses the shell aurora, tour and footer on the home page instead of local copies', () => {
+    const landingSource = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8')
+    const footerSource = readFileSync(new URL('../components/site-footer.tsx', import.meta.url), 'utf8')
+    const showcaseSource = readFileSync(new URL('../components/shared-ecosystem-showcase.tsx', import.meta.url), 'utf8')
+    const shellSource = readFileSync(new URL('../components/agentskit-shell.tsx', import.meta.url), 'utf8')
+    expect(landingSource).toContain('<AgentsKitAurora />')
+    expect(landingSource).not.toMatch(/LiquidCursorGradient|AuroraBackground/)
+    expect(shellSource).toContain("'agentskit-aurora'")
+    expect(footerSource).toContain("'agentskit-footer'")
+    expect(footerSource).toContain('ecosystemBarProducts.map')
+    expect(footerSource).toContain('/blob/main/LICENSE')
+    expect(footerSource).not.toContain('chat-home-footer')
+    expect(showcaseSource).toContain("'agentskit-ecosystem'")
+    expect(showcaseSource).toContain("current: 'agentskit-chat'")
+    expect(showcaseSource).toContain("'data-visual': 'agentskit-home'")
+  })
+
+  it('keeps the GitHub star only in the shell bar and uses the shared product wordmark', () => {
+    const headerSource = readFileSync(new URL('../components/product-header.tsx', import.meta.url), 'utf8')
+    const docsLayoutSource = readFileSync(new URL('../app/docs/layout.tsx', import.meta.url), 'utf8')
+    const shellSource = readFileSync(new URL('../components/agentskit-shell.tsx', import.meta.url), 'utf8')
+    expect(headerSource).not.toMatch(/github\.com|GitHub/)
+    expect(docsLayoutSource).not.toMatch(/github\.com|GitHub/)
+    expect(headerSource).toContain('<ProductWordmark />')
+    expect(docsLayoutSource).toContain('title: <ProductWordmark />')
+    expect(shellSource).toContain('className="ak-product-wordmark"')
+    expect(shellSource).toContain('className="ak-product-wordmark__brand">AgentsKit<')
+    expect(shellSource).toContain('className="ak-product-wordmark__product">Chat<')
   })
 
   it('lets the product surface follow the system color scheme', () => {
@@ -110,7 +150,7 @@ describe('documentation dogfood', () => {
     expect(publicDocSlug('backend.md')).toBe('backend')
   })
 
-  it('derives the six active ecosystem links and direct-only Playbook from the canonical manifest', () => {
+  it('derives the six shell products in fixed order and keeps Playbook out of the bar', () => {
     expect(allEcosystemProducts.map(product => product.id)).toEqual([
       'agentskit',
       'registry',

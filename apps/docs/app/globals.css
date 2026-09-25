@@ -79,19 +79,6 @@ html.dark body {
   letter-spacing: -0.02em;
 }
 
-.ak-ecosystem-fallback {
-  position: relative;
-  z-index: 60;
-  display: flex;
-  min-height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--ak-border);
-  background: #090b10;
-  color: #cbd5e1;
-  font-size: .75rem;
-}
-
 .docs-assistant {
   --ak-bg: #0d1117;
   --ak-surface: #161b22;
@@ -289,7 +276,6 @@ html.dark body {
 .deterministic-demo.is-fullscreen .demo-chat-frame { display: flex; flex: 1 1 0; min-height: 0; padding: 1rem 1rem 3rem; }
 .deterministic-demo.is-fullscreen .demo-chat-frame [data-ak-app-chat] { flex: 1 1 auto; height: auto; }
 body:has(.deterministic-demo.is-fullscreen) { overflow: hidden; }
-body:has(.deterministic-demo-page) > .ak-ecosystem-fallback,
 body:has(.deterministic-demo-page) > #ak-eco,
 body:has(.deterministic-demo-page) > .bg-fd-secondary\/50,
 body:has(.deterministic-demo-page) > .product-header { display: none; }
@@ -766,16 +752,12 @@ body:has(main.chat-marketing) {
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   color-scheme: dark;
   font-family: var(--ak-font-body);
-  background:
-    radial-gradient(70rem 48rem at 78% 12%, color-mix(in srgb, var(--ak-blue) 13%, transparent), transparent 68%),
-    radial-gradient(56rem 42rem at 10% 48%, color-mix(in srgb, var(--ak-green) 8%, transparent), transparent 66%),
-    var(--ak-midnight);
-  background-attachment: fixed;
+  background: var(--ak-midnight);
 }
 
 body:has(main.chat-marketing) > #ak-eco,
 body:has(main.chat-marketing) main.chat-marketing,
-body:has(main.chat-marketing) .chat-home-footer {
+body:has(main.chat-marketing) agentskit-footer {
   position: relative;
   z-index: 1;
 }
@@ -788,46 +770,6 @@ body:has(main.chat-marketing) .product-header {
   backdrop-filter: blur(24px) saturate(145%);
 }
 
-.chat-liquid-cursor {
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: .48;
-  transition: opacity 500ms ease;
-  background:
-    radial-gradient(ellipse 58% 92% at 78% 22%, color-mix(in srgb, var(--ak-blue) 14%, transparent), transparent 74%),
-    radial-gradient(ellipse 48% 72% at 18% 86%, color-mix(in srgb, var(--ak-green) 10%, transparent), transparent 76%);
-}
-
-.chat-liquid-cursor[data-active='true'] { opacity: .68; }
-
-.chat-liquid-cursor__orb {
-  position: absolute;
-  width: min(54rem, 90vw);
-  aspect-ratio: 1;
-  left: 0;
-  top: 0;
-  border-radius: 50%;
-  filter: blur(90px);
-  transform: translate3d(var(--chat-cursor-x, 50vw), var(--chat-cursor-y, 15rem), 0) translate(-50%, -50%);
-  transition: transform 760ms cubic-bezier(.16, 1, .3, 1);
-  will-change: left, top;
-}
-
-.chat-liquid-cursor__orb--blue {
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--ak-blue) 18%, transparent), transparent 68%);
-}
-
-.chat-liquid-cursor__orb--green {
-  width: min(42rem, 72vw);
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--ak-green) 15%, transparent), transparent 68%);
-  transform: translate3d(calc(var(--chat-cursor-x, 50vw) - 5rem), calc(var(--chat-cursor-y, 15rem) + 3rem), 0) translate(-50%, -50%);
-  transition-duration: 1100ms;
-}
-
-.chat-liquid-cursor + main.chat-marketing,
 .chat-marketing > section { position: relative; }
 
 .chat-marketing > section { background-color: transparent !important; }
@@ -842,9 +784,20 @@ body:has(main.chat-marketing) .product-header {
   backdrop-filter: blur(20px) saturate(135%);
 }
 
-.chat-home-footer {
-  background: transparent;
+/* Pre-upgrade footer fallback only; shell v1 owns the upgraded footer styling. */
+agentskit-footer { display: block; }
+agentskit-footer:not(:defined) .ak-footer-fallback {
+  display: grid;
+  gap: .75rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem;
+  color: var(--ak-graphite);
+  font-size: .875rem;
 }
+agentskit-footer:not(:defined) .ak-footer-fallback ul { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: 0; padding: 0; list-style: none; }
+agentskit-footer:not(:defined) .ak-footer-fallback a { color: inherit; }
+agentskit-footer:not(:defined) .ak-footer-fallback a[aria-current='page'] { color: var(--ak-foam); font-weight: 600; }
 
 .chat-framework-reel-item {
   animation: chat-reel-in 420ms cubic-bezier(.16, 1, .3, 1) both;
@@ -888,19 +841,12 @@ body:has(main.chat-marketing) .product-header {
   .chat-code-reveal { animation: none; }
 }
 
-.chat-marketing a:focus-visible,
-.chat-home-footer a:focus-visible {
+.chat-marketing a:focus-visible {
   border-radius: .35rem;
   outline: 2px solid var(--ak-blue);
   outline-offset: 3px;
 }
 
 @media (max-width: 640px) {
-  .chat-liquid-cursor__orb { filter: blur(72px); }
   .chat-marketing [data-hero-demo] { border-radius: 1.15rem; }
-}
-
-@media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .chat-liquid-cursor { display: none; }
-  .chat-liquid-cursor__orb { transition: none; }
 }

@@ -1,5 +1,6 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
 import type { ReactNode } from 'react'
+import { ProductWordmark } from '@/components/agentskit-shell'
 import { DocsAssistant } from '@/components/docs-assistant'
 import { source } from '@/lib/source'
 
@@ -7,14 +8,13 @@ export default function DocumentationLayout({ children }: { readonly children: R
   return <DocsLayout
     tree={source.pageTree}
     nav={{
-      title: <span className="font-semibold">AgentsKit Chat</span>,
+      title: <ProductWordmark />,
       url: '/',
     }}
     links={[
       { text: 'Home', url: '/' },
       { text: 'How to', url: '/docs/guides/install-and-run' },
       { text: 'CLI', url: '/docs/cli' },
-      { text: 'GitHub', url: 'https://github.com/AgentsKit-io/agentskit-chat', external: true },
     ]}
     sidebar={{ defaultOpenLevel: 1, collapsible: true }}
   >
