@@ -324,26 +324,6 @@
       },
       "verification": "declared",
       "claims": []
-    },
-    {
-      "productId": "akos",
-      "source": {
-        "type": "endpoint",
-        "url": "https://akos.agentskit.io/api/stats.json"
-      },
-      "verification": "verified",
-      "claims": [
-        {
-          "id": "registered-verbs",
-          "value": 540,
-          "noun": "registered capability verbs",
-          "evidence": {
-            "type": "endpoint",
-            "url": "https://akos.agentskit.io/api/stats.json",
-            "summary": "Capability-verb count returned by the canonical AKOS stats endpoint on 2026-07-16; this is inventory evidence, not a stability claim."
-          }
-        }
-      ]
     }
   ]
 }

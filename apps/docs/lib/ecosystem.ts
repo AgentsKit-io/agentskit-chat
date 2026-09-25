@@ -26,7 +26,6 @@ export const agentskitDocs = {
 } as const
 
 export const allEcosystemProducts = manifest.products
-  .filter(product => product.id !== 'akos')
   .toSorted((left, right) => left.navigation.order - right.navigation.order)
   .map(product => ({
     id: product.id,

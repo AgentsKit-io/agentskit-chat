@@ -21,9 +21,6 @@ const claimReaders = {
     'delivery-phases': body => body.counts?.phases,
     templates: body => body.counts?.templates,
   },
-  akos: {
-    'registered-verbs': body => body.counts?.verbs,
-  },
 }
 
 export const verifyLiveEndpointClaims = async ({ contract, fetchImpl = fetch }) => {
