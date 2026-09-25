@@ -338,7 +338,7 @@
     "requiredRelationTargets": "internal"
   },
   "safety": {
-    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**"]
+    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**", "apps/docs/.source/**", "apps/docs/test-results/**"]
   },
   "conformance": {
     "documentationStandardV1": {

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "1ffa34106ca72592d529ce7bef95f998cfc90d076b889de2b2a1c9bcbcdf2f4b",
+  "contentHash": "babced4b369487ef193d6467a7fcd46c54bcb47325e1ecd8944b8ff8d7609bd7",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T01:24:59.923Z",
+  "generatedAt": "2026-09-25T03:48:02.077Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -2034,7 +2034,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "a97b9d8f92bae34a880c2d678983a59ee0191719d60dda8fe5fccb799600fd1b"
+      "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18"
     },
     {
       "id": "module:apps/docs/app/llms-full.txt/route.ts",
@@ -2521,7 +2521,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "05556e4e0c033164d03f93474336c32b9ef5ef148fe8bbf3a9e77782d7f304be"
+      "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a"
     },
     {
       "id": "module:apps/docs/components/shared-ecosystem-showcase.tsx",
@@ -2881,7 +2881,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "c214c08bb4cd26a4a9d863f7257a09f2d3512b4abce66deb2e29cf06ced9a8c8"
+      "contentHash": "063e789187560796af67e1e4942f5a13ac3db2ff75ed36de326be03602b437a9"
     },
     {
       "id": "module:apps/docs/tests/e2e/docs.spec.ts",
@@ -3732,7 +3732,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "0ee7b14e1acb903c3282e0791ae7c943001021c9c7cc37fe263899b9802fd8eb"
+      "contentHash": "832bc4e0e01c578f93c2fcfa6070a618fd2ae55fe028b27c3d569345a21d67e8"
     },
     {
       "id": "module:packages/cli/tests/init.test.ts",
@@ -6609,7 +6609,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "abcb5c7f3563ab8bb98694e4dec6a789d6d9ffeeb2ab7bc3bf1bebf0dba4439f",
+    "hash": "8fcecb27f3dd9a0600004b811b3e9a99738277d1e3b6096175efd49b0f573b98",
     "fileCount": 437,
     "projectionVersion": 2
   },
@@ -6632,11 +6632,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "0f944e06e4cb54618133298f98b9cc978a8d6dc70a6a38f264e1dc98090d9600",
+    "contentHash": "0f45a3297e130a315de70d45641ab5c7943d277dde7d5e785625cd4b780568ec",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "39b4c5fa5377fe63726a36082e204bceaaa8bf3b5582a1fc8de0509a1192239b",
+    "snapshotHash": "9dafd2af9bbe0539def88a89f74e710a8b17853476e1210cda137a5d7285c87e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "30687b8239e859d4517a1ddd87ca9f91d104be1dbf4a2891bcf7fb8d89955a7f",
+    "configurationHash": "199218bb3016a16991b4c46b0586571f5cc867e54f8f4367d2be148eabe485c4",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -20398,7 +20398,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a97b9d8f92bae34a880c2d678983a59ee0191719d60dda8fe5fccb799600fd1b",
+        "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21608,7 +21608,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "05556e4e0c033164d03f93474336c32b9ef5ef148fe8bbf3a9e77782d7f304be",
+        "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22587,7 +22587,7 @@
             }
           ]
         },
-        "contentHash": "c214c08bb4cd26a4a9d863f7257a09f2d3512b4abce66deb2e29cf06ced9a8c8",
+        "contentHash": "063e789187560796af67e1e4942f5a13ac3db2ff75ed36de326be03602b437a9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -25271,7 +25271,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0ee7b14e1acb903c3282e0791ae7c943001021c9c7cc37fe263899b9802fd8eb",
+        "contentHash": "832bc4e0e01c578f93c2fcfa6070a618fd2ae55fe028b27c3d569345a21d67e8",
         "provenance": "observed",
         "confidence": "observed"
       },
