@@ -7,7 +7,7 @@
     "name": "agentskit-chat",
     "root": "."
   },
-  "contentHash": "8a5acfdd20c20d88b9ad3deb845617c666409e13d898a65a2e49eeaefa6d5220",
+  "contentHash": "14d9d7f9b7824cab72eeb5ee52e63f2177fe120be86acfb778063eb4dd7fc8cd",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": ".doc-bridge/llms.txt"
