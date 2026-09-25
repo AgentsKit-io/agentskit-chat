@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "39cf3d95dcaf7976fe38089acae08d32fec304d535381a57ddcba9b4878b444b",
+  "contentHash": "8a5acfdd20c20d88b9ad3deb845617c666409e13d898a65a2e49eeaefa6d5220",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T03:33:31.484Z",
+  "generatedAt": "2026-09-25T03:57:25.712Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -314,6 +314,18 @@
         "project"
       ],
       "contentHash": "74e0c44d62a87057e3eceb90546cbd9928c270fa4e7e5318035da1a6dcb4ec3a"
+    },
+    {
+      "id": "document:design.md",
+      "type": "document",
+      "title": "AgentsKit Chat design system",
+      "path": "design.md",
+      "description": "AgentsKit Chat is a product in the AgentsKit ecosystem, with its own purpose and identity: define a chat experience once and render it natively across web, mobile, and terminal. Use the AgentsKit visual language without turning Chat into a copy of the AgentsKit home.",
+      "tags": [
+        "document",
+        "unclassified"
+      ],
+      "contentHash": "d8affb018633897a46e22c12249bbeb0b416e49a385d983609bba0ffede130e9"
     },
     {
       "id": "document:docs/actions/confirmation.mdx",
@@ -1357,7 +1369,7 @@
         "document",
         "human"
       ],
-      "contentHash": "4008417f4544244385d91794c84eb7052c998a1640222f6e9af131ac7473fcf7"
+      "contentHash": "f3267624239e035b7d770b38632757ff7840c494ed045651b0d8478a87fb5e2a"
     },
     {
       "id": "document:docs/lifecycle.mdx",
@@ -1837,7 +1849,7 @@
         "document",
         "project"
       ],
-      "contentHash": "652e07b6c2ecb8698bc85ff34b35f0673f2a15cd45ea1b8055a2db4be0e58522"
+      "contentHash": "2fc8839c9dba4bda546aca697ad3015d9a819e60fe915cb723878e8ace9ad3e0"
     },
     {
       "id": "document:SECURITY.md",
@@ -2022,7 +2034,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "a97b9d8f92bae34a880c2d678983a59ee0191719d60dda8fe5fccb799600fd1b"
+      "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18"
     },
     {
       "id": "module:apps/docs/app/llms-full.txt/route.ts",
@@ -2088,7 +2100,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "7d5f7efabd2e726e0cff2a84e2574a9b52194ea175e8a6a35c6a9de59cfaad39"
+      "contentHash": "892430a0ef250e955d7a87bc55f4ed806baa213eb66c9f838ab945cf52bd81f1"
     },
     {
       "id": "module:apps/docs/app/raw/[...path]/route.ts",
@@ -2412,14 +2424,14 @@
       "symbols": [
         "DEFINE_ONCE_LINES",
         "HighlightedCode",
-        "RENDER_EVERYWHERE_LINES"
+        "RENDERER_EXAMPLES"
       ],
       "tags": [
         "module",
         "tsx",
         "components"
       ],
-      "contentHash": "1d11e6bad1255ac7e27c3c6fa046eacbb17c58f352c83d8e7f5a69c0522e1a2d"
+      "contentHash": "75ea6fbfb92cc06d4a6a330a967f53ed96f4495db846ffb5f3332330ef9b432a"
     },
     {
       "id": "module:apps/docs/components/install-command.tsx",
@@ -2435,6 +2447,21 @@
         "components"
       ],
       "contentHash": "798c9d832d8edee8efe6f9979f39235bd2b465d26c3eaf42f5c4560c3371c2d7"
+    },
+    {
+      "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
+      "type": "module",
+      "title": "liquid-cursor-gradient.tsx",
+      "path": "apps/docs/components/liquid-cursor-gradient.tsx",
+      "symbols": [
+        "LiquidCursorGradient"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "components"
+      ],
+      "contentHash": "42f78ee0fa67e09291fd6270a5bf09b221f6953a2023bc1845a76fcfc86a4a17"
     },
     {
       "id": "module:apps/docs/components/mermaid.tsx",
@@ -2467,6 +2494,21 @@
       "contentHash": "b9f4fd309b05de96f0c5b477260f16b4cecd881c688e1818e1558623b7698002"
     },
     {
+      "id": "module:apps/docs/components/renderer-code-showcase.tsx",
+      "type": "module",
+      "title": "renderer-code-showcase.tsx",
+      "path": "apps/docs/components/renderer-code-showcase.tsx",
+      "symbols": [
+        "RendererCodeShowcase"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "components"
+      ],
+      "contentHash": "d92bf6dc59747bafd556ecfa3b660d17d00b0b54f80a3a979b357249172f069b"
+    },
+    {
       "id": "module:apps/docs/components/shared-ecosystem-bar.tsx",
       "type": "module",
       "title": "shared-ecosystem-bar.tsx",
@@ -2479,7 +2521,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "2fb8489b4a8e5b255f30fa56ffded9f334cd3ebb063f69c2082cfe2093250350"
+      "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a"
     },
     {
       "id": "module:apps/docs/components/shared-ecosystem-showcase.tsx",
@@ -2494,7 +2536,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "deafce84ea212baa2ac1b6c55633b871c1531bcefd70bf6582b9a2b2be390147"
+      "contentHash": "fe6c5c1da8745479ef99b0334f4c97752e19f9a9f74d7c543601ed58427a2fe6"
     },
     {
       "id": "module:apps/docs/components/site-footer.tsx",
@@ -2509,7 +2551,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "3eabca553e5084d4c3c04daf02ca5b9d96fad1eb611c015beb4d537a3f423da8"
+      "contentHash": "8fd8b73536472c2eb1b58c538817f8af5461b9531dc312f85d989814fa1c2fbd"
     },
     {
       "id": "module:apps/docs/components/surface-grid.tsx",
@@ -2539,7 +2581,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "3de22bef1fc0e707bbdb9d0fe7c2bf047fb3f8a971b455e6a5453a99f3c9a70d"
+      "contentHash": "db5fd412cee9e2b9140b685c50bb0d03fb3b9694b319791ed842cab16ec65cbe"
     },
     {
       "id": "module:apps/docs/lib/ask-handler.ts",
@@ -2744,7 +2786,7 @@
         "mjs",
         "docs"
       ],
-      "contentHash": "c9662dbd0140c5cf967f6f4a2c1affccbfd09cdc7c7462a7d9f49a16fd2768ce"
+      "contentHash": "6ad1846f8a114f32b374e814e259c3cf1e875d0916abb60ed8a982f5d2cf9877"
     },
     {
       "id": "module:apps/docs/playwright.config.ts",
@@ -2789,6 +2831,18 @@
       "contentHash": "b9b69a92fa7f513f374892166835d46555c56292a3a73d15c58da9478f5dfbbe"
     },
     {
+      "id": "module:apps/docs/scripts/verify-home-ui.mjs",
+      "type": "module",
+      "title": "verify-home-ui.mjs",
+      "path": "apps/docs/scripts/verify-home-ui.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "39828c7dd2b6460c14397a0cab0d50d5f2cb98ba02339eb7f735d914d9d88cac"
+    },
+    {
       "id": "module:apps/docs/source.config.ts",
       "type": "module",
       "title": "source.config.ts",
@@ -2827,7 +2881,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "bf8e21d77ba6077e71ee61e67e57d610c118aef5e0b05885ca8d566247e95f5e"
+      "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461"
     },
     {
       "id": "module:apps/docs/tests/e2e/docs.spec.ts",
@@ -2840,7 +2894,7 @@
         "test",
         "e2e"
       ],
-      "contentHash": "99792fca65cd31e24317e661856a3cf2b2fa15da155b3f7d91f86e2478f9c6d6"
+      "contentHash": "d9fd74bbe229c0933caaefe4adf90b3c16ac8ca05e0e36bc11dcc83d7a036cd0"
     },
     {
       "id": "module:apps/docs/types/css-modules.d.ts",
@@ -3678,7 +3732,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "0ee7b14e1acb903c3282e0791ae7c943001021c9c7cc37fe263899b9802fd8eb"
+      "contentHash": "832bc4e0e01c578f93c2fcfa6070a618fd2ae55fe028b27c3d569345a21d67e8"
     },
     {
       "id": "module:packages/cli/tests/init.test.ts",
@@ -6555,8 +6609,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "c9040a385af93f2d8a2b7e2b61f0eabe7684cf50d4239d962ef13515e7cc85bc",
-    "fileCount": 433,
+    "hash": "deadba863c7c91186e72406d64d0e7339ac03b0d90320f1f1ca88374f2dfe2f0",
+    "fileCount": 437,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6578,11 +6632,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "47d6e882daed45d1e67bc602e192087c6f373022d385d138cbb09dcf24b437c8",
+    "contentHash": "da3b1e5e708ae938076003636ddfdd2058a6254cd4711475eda99826f7d92c3c",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "8ff6ca84c9f79a60db5ecca10459889b112d5ed2cfc1f9318fbd63904f01270e",
+    "snapshotHash": "7a1959d5ad4ced4f9a9937d7bcce9d2a6c6822691143866075f73f598b16bde3",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "608f8e28734ebc9536ab335def74a862caf92e1c745c1b4a25b93ac23e29031c",
+    "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -6600,7 +6654,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 468,
+      "documentCount": 472,
       "fieldNames": [
         "aliases",
         "body",
@@ -6611,13 +6665,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.1452991452991452,
-        "body": 74.24145299145299,
-        "headings": 4.594017094017094,
-        "path": 6.089743589743589,
-        "summary": 6.1752136752136755,
-        "symbols": 4.944444444444445,
-        "title": 3.574786324786325
+        "aliases": 3.141949152542373,
+        "body": 74.64406779661017,
+        "headings": 4.59957627118644,
+        "path": 6.093220338983051,
+        "summary": 6.194915254237288,
+        "symbols": 4.9173728813559325,
+        "title": 3.5889830508474576
       }
     },
     "entries": [
@@ -7008,7 +7062,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2296dfc18ea2a82a5082df61dbd62640c2dbee85e862feeda91173b142f5dd3e",
+        "contentHash": "a9a4148d9ab82a1aa910ab5ad6b5cc8b9347df46bb0a8651cd24859c57cdc3fa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7040,7 +7094,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "69167d7aab818f80d8cc9f60e853eeb9ef722808bfb0e0c5c590ed2272ff73ef",
+        "contentHash": "849ed775393a223980d1f08c686ddda210e1b95209fe7674665f8dc16f631ee4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9804,6 +9858,54 @@
           ]
         },
         "contentHash": "74e0c44d62a87057e3eceb90546cbd9928c270fa4e7e5318035da1a6dcb4ec3a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:design.md",
+        "kind": "document",
+        "path": "design.md",
+        "title": "AgentsKit Chat design system",
+        "summary": "AgentsKit Chat is a product in the AgentsKit ecosystem, with its own purpose and identity: define a chat experience once and render it natively across web, mobile, and terminal. Use the AgentsKit visual language without turning Chat into a copy of the AgentsKit home.",
+        "aliases": [],
+        "tags": [
+          "document",
+          "unclassified"
+        ],
+        "fields": {
+          "title": "AgentsKit Chat design system",
+          "headings": "AgentsKit Chat design system Color and contrast Typography Home background and glass Borders, surfaces, and radii Motion Responsive behavior and accessibility Reuse boundaries",
+          "path": "design.md",
+          "symbols": "",
+          "summary": "AgentsKit Chat is a product in the AgentsKit ecosystem, with its own purpose and identity: define a chat experience once and render it natively across web, mobile, and terminal. Use the AgentsKit visual language without turning Chat into a copy of the AgentsKit home.",
+          "body": "AgentsKit Chat design system AgentsKit Chat is a product in the AgentsKit ecosystem, with its own purpose and identity: define a chat experience once and render it natively across web, mobile, and terminal. Use the AgentsKit visual language without turning Chat into a copy of the AgentsKit home. Color and contrast - Default to the dark theme. Use the generated apps/docs/app/brand-tokens.css tokens; do not edit generated token output directly. - On the home only, legacy utility aliases map midnight/foam/graphite to the canonical background/foreground/muted tokens. Keep that compatibility mapping route-scoped so Fumadocs pages keep their own surface styling. - Midnight ( 0d1117 ) is the base, surface ( 161b22 ) is for focused controls, foam ( e6edf3 ) is primary text, and graphite ( 8b949e ) is secondary text. - Keep the product accent amber ( f59e0b ) for Chat-specific emphasis. Blue ( 58a6ff ) and green ( 2ea043 ) are quiet ecosystem signals for focus, links, and ambient background light. - Maintain readable text contrast. Do not use low-opacity text for essential labels or body copy. Typography - Use Inter for interface and body copy, Space Grotesk for display headings, and JetBrains Mono for commands, code, and compact uppercase labels. - Keep a clear scale: strong compact labels, readable body text with relaxed line height, and display headings with tight leading and tracking. - Sentence case is preferred. All public interface copy is English. Home background and glass - The / route may use slow, broad blue/green radial light and the pointer-following liquid cursor. Keep the effect behind content, low opacity, pointer-transparent, desktop-only, and absent from documentation and internal routes. - On coarse pointers and when reduced motion is requested, remove the moving cursor layer. Do not make content depend on animation. - Reserve glass for the product header and the hero conversation demo: translucent midnight/surface fills, restrained backdrop blur, a fine border, and a soft shadow only where needed for separation. Keep the footer open and transparent, following the AgentsKit home footer hierarchy. - Keep regular content sections open and transparent. Avoid turning every section into a card. Borders, surfaces, and radii - Use the existing border and surface tokens. Borders should separate content subtly rather than frame every element. - Use 24px corners for the main hero conversation surface, 18px on narrow screens, and smaller radii for controls and code panels. Primary actions may use pill shapes when they remain consistent with their interaction role. - Preserve visible focus rings and clear interactive states. Motion - Motion should explain the product: the existing interactive chat scenes demonstrate one definition across native shells. Preserve scene selection and playback behavior. - The homepage framework reel rotates one framework name and mark at a time using the AgentsKit home cadence and restrained vertical flip. The code showcase cycles through all seven supported renderers; hover, keyboard focus, or manual selection pauses it. - Use CSS transitions/animations for these small home-only transitions; do not add a motion dependency. Both stop under prefers-reduced-motion . - The liquid cursor follows the pointer with a slow, soft transition; it must never obstruct input or content. - Follow prefers-reduced-motion ; avoid relying on continuous motion to communicate information. Responsive behavior and accessibility - Keep the hero, install command, demo, and footer readable without horizontal page overflow. Let framework marks wrap and demo scene tabs scroll within their own rail. - Keep touch targets at least 44px where interactive and preserve keyboard navigation and visible focus. - Check text contrast, keyboard access, narrow-screen overflow, and reduced-motion behavior in a real browser. Reuse boundaries - Reuse the AgentsKit home’s liquid cursor behavior and established brand tokens; do not add a UI or ",
+          "aliases": "document unclassified"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions-symbol",
+              "id": "module:apps/docs/components/hero-demo/hero-demo.tsx",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:apps/docs/components/product-header.tsx",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:apps/docs/components/site-footer.tsx",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "d8affb018633897a46e22c12249bbeb0b416e49a385d983609bba0ffede130e9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -16934,7 +17036,7 @@
           "path": "docs/index.mdx",
           "symbols": "",
           "summary": "One agent experience. Every interface.",
-          "body": "One agent experience. Every interface. Chat is the product surface your users meet on the web, mobile, and terminal. AgentsKit Chat is the application framework for that surface: define routes, actions, components, and sessions once, then render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink. Controller, tools, memory, RAG, and framework bindings stay upstream in AgentsKit; this product owns application composition and versioned boundaries. Start here <InstallCommand / <Cards <Card title=\"Install & run\" description=\"Scaffold and start locally.\" href=\"/docs/guides/install-and-run\" / <Card title=\"Add RAG\" description=\"Wire retrieval and citations.\" href=\"/docs/guides/add-rag\" / <Card title=\"Connect backend\" description=\"Handlers, Ask, sessions.\" href=\"/docs/guides/connect-backend\" / <Card title=\"Examples\" description=\"Live shells and component gallery.\" href=\"/docs/examples\" / <Card title=\"Components\" description=\"Schema-backed interactive UI.\" href=\"/docs/components/catalog\" / <Card title=\"Style\" description=\"Theme tokens and native slots.\" href=\"/docs/guides/style\" / <Card title=\"CLI\" description=\"init, add component, completion.\" href=\"/docs/cli\" / </Cards Live example <BasicChatExample / Surfaces <SurfaceGrid / Same definition, every shell <FrameworkTabs defaultValue=\"react\" <Framework name=\"react\" </Framework <Framework name=\"vue\" </Framework <Framework name=\"ink\" </Framework </FrameworkTabs Ecosystem Chat composes <AgentsKitRef / — adapters, tools, memory, and RAG stay upstream. <EcosystemStrip / <AdaptersCallout / <Cards className=\"lg:grid-cols-3\" <Card title=\"AgentsKit docs\" description=\"Runtime, adapters, tools, RAG.\" href=\"https://www.agentskit.io/docs\" external / <Card title=\"AgentsKit examples\" description=\"Reference demos on the core site.\" href=\"https://www.agentskit.io/docs/reference/examples\" external / <Card title=\"Registry\" description=\"Ready-to-adapt agents.\" href=\"https://registry.agentskit.io/agents\" external / <Card title=\"Playbook\" description=\"Engineering and delivery discipline.\" href=\"https://playbook.agentskit.io/docs\" external / <Card title=\"Doc Bridge\" description=\"Deterministic documentation handoffs.\" href=\"https://doc-bridge.agentskit.io/\" external / <Card title=\"Code Review\" description=\"Focused review before merge.\" href=\"https://github.com/AgentsKit-io/code-review-cli readme\" external / </Cards",
+          "body": "One agent experience. Every interface. Chat is the product surface your users meet on the web, mobile, and terminal. AgentsKit Chat is the application framework for that surface: define routes, actions, components, and sessions once, then render natively on React, Vue, Svelte, Solid, Angular, React Native, and Ink. Controller, tools, memory, RAG, and framework bindings stay upstream in AgentsKit; this product owns application composition and versioned boundaries. Start here <InstallCommand / <Cards <Card title=\"Install & run\" description=\"Scaffold and start locally.\" href=\"/docs/guides/install-and-run\" / <Card title=\"Add RAG\" description=\"Wire retrieval and citations.\" href=\"/docs/guides/add-rag\" / <Card title=\"Connect backend\" description=\"Handlers, Ask, sessions.\" href=\"/docs/guides/connect-backend\" / <Card title=\"Examples\" description=\"Live shells and component gallery.\" href=\"/docs/examples\" / <Card title=\"Components\" description=\"Schema-backed interactive UI.\" href=\"/docs/components/catalog\" / <Card title=\"Style\" description=\"Theme tokens and native slots.\" href=\"/docs/guides/style\" / <Card title=\"CLI\" description=\"init, add component, completion.\" href=\"/docs/cli\" / </Cards Live example <BasicChatExample / Surfaces <SurfaceGrid / Same definition, every shell <FrameworkTabs defaultValue=\"react\" <Framework name=\"react\" </Framework <Framework name=\"vue\" </Framework <Framework name=\"ink\" </Framework </FrameworkTabs Ecosystem Chat composes <AgentsKitRef / — adapters, tools, memory, and RAG stay upstream. <EcosystemStrip / <AdaptersCallout / <Cards className=\"lg:grid-cols-3\" <Card title=\"AgentsKit docs\" description=\"Runtime, adapters, tools, RAG.\" href=\"https://www.agentskit.io/docs\" external / <Card title=\"AgentsKit examples\" description=\"Reference demos on the core site.\" href=\"https://www.agentskit.io/docs/reference/examples\" external / <Card title=\"Registry\" description=\"Ready-to-adapt agents.\" href=\"https://registry.agentskit.io/agents\" external / <Card title=\"Playbook\" description=\"Engineering and delivery discipline.\" href=\"https://playbook.agentskit.io/docs\" external / <Card title=\"Doc Bridge\" description=\"Deterministic documentation handoffs.\" href=\"https://doc-bridge.agentskit.io/\" external / <Card title=\"Code Review\" description=\"Focused review before merge.\" href=\"https://code-review.agentskit.io\" external / <Card title=\"Harness\" description=\"Configurable issue-to-release SDLC loop.\" href=\"https://harness.agentskit.io/\" external / </Cards",
           "aliases": "document human"
         },
         "graph": {
@@ -16953,7 +17055,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4008417f4544244385d91794c84eb7052c998a1640222f6e9af131ac7473fcf7",
+        "contentHash": "f3267624239e035b7d770b38632757ff7840c494ed045651b0d8478a87fb5e2a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19619,7 +19721,7 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Cross-framework application framework for building interactive agent experiences on top of AgentsKit. Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.",
-          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 33 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Prefer Vue? . It streams without an API key and includes reproducible cancellation and error paths. Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow License",
+          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 33 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Prefer Vue? . It streams without an API key and includes reproducible cancellation and error paths. Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
           "aliases": "document project"
         },
         "graph": {
@@ -19776,7 +19878,7 @@
             }
           ]
         },
-        "contentHash": "652e07b6c2ecb8698bc85ff34b35f0673f2a15cd45ea1b8055a2db4be0e58522",
+        "contentHash": "2fc8839c9dba4bda546aca697ad3015d9a819e60fe915cb723878e8ace9ad3e0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20296,7 +20398,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a97b9d8f92bae34a880c2d678983a59ee0191719d60dda8fe5fccb799600fd1b",
+        "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20450,7 +20552,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "7d5f7efabd2e726e0cff2a84e2574a9b52194ea175e8a6a35c6a9de59cfaad39",
+        "contentHash": "892430a0ef250e955d7a87bc55f4ed806baa213eb66c9f838ab945cf52bd81f1",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21108,12 +21210,20 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:design.md"
+          ],
           "areaId": "area:apps/docs/components",
           "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
+          "inbound": [
+            {
+              "kind": "mentions-symbol",
+              "id": "document:design.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": [
             {
               "kind": "imports",
@@ -21242,7 +21352,7 @@
         "symbols": [
           "DEFINE_ONCE_LINES",
           "HighlightedCode",
-          "RENDER_EVERYWHERE_LINES"
+          "RENDERER_EXAMPLES"
         ],
         "tags": [
           "module",
@@ -21253,7 +21363,7 @@
           "title": "highlighted-code.tsx",
           "headings": "",
           "path": "apps/docs/components/highlighted-code.tsx",
-          "symbols": "DEFINE_ONCE_LINES HighlightedCode RENDER_EVERYWHERE_LINES",
+          "symbols": "DEFINE_ONCE_LINES HighlightedCode RENDERER_EXAMPLES",
           "summary": "",
           "body": "",
           "aliases": "module tsx components"
@@ -21268,7 +21378,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "1d11e6bad1255ac7e27c3c6fa046eacbb17c58f352c83d8e7f5a69c0522e1a2d",
+        "contentHash": "75ea6fbfb92cc06d4a6a330a967f53ed96f4495db846ffb5f3332330ef9b432a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21306,6 +21416,43 @@
           "outbound": []
         },
         "contentHash": "798c9d832d8edee8efe6f9979f39235bd2b465d26c3eaf42f5c4560c3371c2d7",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
+        "kind": "module",
+        "path": "apps/docs/components/liquid-cursor-gradient.tsx",
+        "title": "liquid-cursor-gradient.tsx",
+        "aliases": [],
+        "symbols": [
+          "LiquidCursorGradient"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "components"
+        ],
+        "fields": {
+          "title": "liquid-cursor-gradient.tsx",
+          "headings": "",
+          "path": "apps/docs/components/liquid-cursor-gradient.tsx",
+          "symbols": "LiquidCursorGradient",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx components"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/components",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "42f78ee0fa67e09291fd6270a5bf09b221f6953a2023bc1845a76fcfc86a4a17",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21371,6 +21518,51 @@
         },
         "graph": {
           "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:design.md"
+          ],
+          "areaId": "area:apps/docs/components",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [
+            {
+              "kind": "mentions-symbol",
+              "id": "document:design.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "b9f4fd309b05de96f0c5b477260f16b4cecd881c688e1818e1558623b7698002",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/components/renderer-code-showcase.tsx",
+        "kind": "module",
+        "path": "apps/docs/components/renderer-code-showcase.tsx",
+        "title": "renderer-code-showcase.tsx",
+        "aliases": [],
+        "symbols": [
+          "RendererCodeShowcase"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "components"
+        ],
+        "fields": {
+          "title": "renderer-code-showcase.tsx",
+          "headings": "",
+          "path": "apps/docs/components/renderer-code-showcase.tsx",
+          "symbols": "RendererCodeShowcase",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx components"
+        },
+        "graph": {
+          "pagerank": 0,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -21379,7 +21571,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b9f4fd309b05de96f0c5b477260f16b4cecd881c688e1818e1558623b7698002",
+        "contentHash": "d92bf6dc59747bafd556ecfa3b660d17d00b0b54f80a3a979b357249172f069b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21416,7 +21608,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "2fb8489b4a8e5b255f30fa56ffded9f334cd3ebb063f69c2082cfe2093250350",
+        "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21453,7 +21645,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "deafce84ea212baa2ac1b6c55633b871c1531bcefd70bf6582b9a2b2be390147",
+        "contentHash": "fe6c5c1da8745479ef99b0334f4c97752e19f9a9f74d7c543601ed58427a2fe6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21482,15 +21674,23 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:design.md"
+          ],
           "areaId": "area:apps/docs/components",
           "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
+          "inbound": [
+            {
+              "kind": "mentions-symbol",
+              "id": "document:design.md",
+              "confidence": "observed"
+            }
+          ],
           "outbound": []
         },
-        "contentHash": "3eabca553e5084d4c3c04daf02ca5b9d96fad1eb611c015beb4d537a3f423da8",
+        "contentHash": "8fd8b73536472c2eb1b58c538817f8af5461b9531dc312f85d989814fa1c2fbd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21564,7 +21764,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "3de22bef1fc0e707bbdb9d0fe7c2bf047fb3f8a971b455e6a5453a99f3c9a70d",
+        "contentHash": "db5fd412cee9e2b9140b685c50bb0d03fb3b9694b319791ed842cab16ec65cbe",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22112,7 +22312,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "c9662dbd0140c5cf967f6f4a2c1affccbfd09cdc7c7462a7d9f49a16fd2768ce",
+        "contentHash": "6ad1846f8a114f32b374e814e259c3cf1e875d0916abb60ed8a982f5d2cf9877",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22221,6 +22421,40 @@
           "outbound": []
         },
         "contentHash": "b9b69a92fa7f513f374892166835d46555c56292a3a73d15c58da9478f5dfbbe",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/scripts/verify-home-ui.mjs",
+        "kind": "module",
+        "path": "apps/docs/scripts/verify-home-ui.mjs",
+        "title": "verify-home-ui.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "verify-home-ui.mjs",
+          "headings": "",
+          "path": "apps/docs/scripts/verify-home-ui.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/scripts",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "39828c7dd2b6460c14397a0cab0d50d5f2cb98ba02339eb7f735d914d9d88cac",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22353,7 +22587,7 @@
             }
           ]
         },
-        "contentHash": "bf8e21d77ba6077e71ee61e67e57d610c118aef5e0b05885ca8d566247e95f5e",
+        "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22388,7 +22622,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "99792fca65cd31e24317e661856a3cf2b2fa15da155b3f7d91f86e2478f9c6d6",
+        "contentHash": "d9fd74bbe229c0933caaefe4adf90b3c16ac8ca05e0e36bc11dcc83d7a036cd0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -25037,7 +25271,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "0ee7b14e1acb903c3282e0791ae7c943001021c9c7cc37fe263899b9802fd8eb",
+        "contentHash": "832bc4e0e01c578f93c2fcfa6070a618fd2ae55fe028b27c3d569345a21d67e8",
         "provenance": "observed",
         "confidence": "observed"
       },

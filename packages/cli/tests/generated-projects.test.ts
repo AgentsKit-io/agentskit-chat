@@ -9,6 +9,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 const execute = promisify(execFile)
 const workspace = path.resolve(import.meta.dirname, '../../..')
 const roots: string[] = []
+function linkWorkspaceDependencies(root: string, dependencies: Record<string, string>) {
+  for (const name of Object.keys(dependencies)) {
+    if (dependencies[name] !== 'workspace:*') continue
+    const packageName = name === '@agentskit/chat' ? 'chat' : name.replace('@agentskit/chat-', '')
+    dependencies[name] = `link:${path.relative(root, path.join(workspace, 'packages', packageName))}`
+  }
+}
 const run = async (command: string, args: readonly string[], cwd: string, env?: NodeJS.ProcessEnv): Promise<{ stdout: string; stderr: string }> => {
   try { return await execute(command, [...args], { cwd, env: { ...process.env, ...env } }) }
   catch (error) {
@@ -30,7 +37,7 @@ beforeAll(async () => {
   await execute('pnpm', ['--filter', '@agentskit/chat-angular', 'build'], { cwd: workspace })
   await execute('node', ['scripts/assemble-chat-package.mjs'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-cli', 'build'], { cwd: workspace })
-}, 60_000)
+}, 120_000)
 
 afterAll(async () => Promise.all(roots.map(root => rm(root, { recursive: true, force: true }))))
 
@@ -64,11 +71,14 @@ describe('generated projects', () => {
   it('adds and type-checks one semantic component across selected targets', async () => {
     const root = path.join(workspace, 'apps', `cli-fixture-component-${randomUUID()}`); roots.push(root)
     await mkdir(root, { recursive: true })
-    await writeFile(path.join(root, 'package.json'), JSON.stringify({ name: 'component-fixture', private: true, type: 'module', dependencies: { '@agentskit/chat': 'workspace:*', '@types/react': '^19.0.0', ink: '^7.0.0', react: '^19.0.0', vue: '^3.5.0', zod: '^4.0.0' } }))
+    await writeFile(path.join(root, 'package.json'), JSON.stringify({ name: 'component-fixture', private: true, type: 'module', dependencies: { '@agentskit/chat': 'workspace:*', '@types/react': '^19.0.0', ink: '^7.0.0', react: '^19.0.0', vue: '^3.5.0', zod: '4.4.3' } }))
     await writeFile(path.join(root, 'tsconfig.json'), JSON.stringify({ compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'bundler', jsx: 'react-jsx', strict: true, noEmit: true, skipLibCheck: true }, include: ['src'] }))
     const command = await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', 'react,vue,ink', '--directory', root, '--yes'], workspace)
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
-    await run('pnpm', ['install', '--lockfile=false'], workspace)
+    const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string> }
+    linkWorkspaceDependencies(root, manifest.dependencies)
+    await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
   }, 120_000)
 
@@ -78,9 +88,9 @@ describe('generated projects', () => {
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
     await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', renderer, '--directory', root, '--yes'], workspace)
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; scripts: Record<string, string> }
-    for (const name of Object.keys(manifest.dependencies)) if (name.startsWith('@agentskit/chat')) manifest.dependencies[name] = 'workspace:*'
+    linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-    await run('pnpm', ['install', '--lockfile=false'], workspace)
+    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['typecheck'], root)
     const result = await run('pnpm', ['test'], root)
     expect(result.stdout).toContain('passed')

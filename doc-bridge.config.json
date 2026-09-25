@@ -338,7 +338,7 @@
     "requiredRelationTargets": "internal"
   },
   "safety": {
-    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**", "**/.source/**"]
+    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**", "**/.source/**", "apps/docs/test-results/**"]
   },
   "conformance": {
     "documentationStandardV1": {
@@ -379,7 +379,11 @@
           "paths": ["README.md", "docs/index.mdx"]
         },
         {
-          "url": "https://github.com/AgentsKit-io/code-review-cli#readme",
+          "url": "https://code-review.agentskit.io",
+          "paths": ["README.md", "docs/index.mdx"]
+        },
+        {
+          "url": "https://harness.agentskit.io/",
           "paths": ["README.md", "docs/index.mdx"]
         }
       ],

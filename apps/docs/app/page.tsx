@@ -5,12 +5,13 @@ import { HeroDemo } from '@/components/hero-demo/hero-demo'
 import {
   DEFINE_ONCE_LINES,
   HighlightedCode,
-  RENDER_EVERYWHERE_LINES,
 } from '@/components/highlighted-code'
+import { RendererCodeShowcase } from '@/components/renderer-code-showcase'
 import { InstallCommand } from '@/components/install-command'
 import { SharedEcosystemShowcase } from '@/components/shared-ecosystem-showcase'
 import { SiteFooter } from '@/components/site-footer'
 import { WorksWithLogos } from '@/components/works-with-logos'
+import { LiquidCursorGradient } from '@/components/liquid-cursor-gradient'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
 
@@ -38,16 +39,9 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <main className="chat-marketing bg-ak-midnight text-ak-foam">
+      <LiquidCursorGradient />
+      <main className="chat-marketing text-ak-foam">
       <section className="relative overflow-hidden px-4 pt-14 pb-16 sm:px-6 sm:pt-20 sm:pb-24 md:pt-24 md:pb-28">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70"
-          aria-hidden
-          style={{
-            background:
-              'radial-gradient(900px 420px at 15% -10%, color-mix(in srgb, var(--ak-accent) 28%, transparent), transparent 55%), radial-gradient(700px 360px at 90% 0%, color-mix(in srgb, var(--ak-blue) 16%, transparent), transparent 50%)',
-          }}
-        />
         <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-end">
           <div className="min-w-0">
             <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-ak-graphite">
@@ -67,40 +61,24 @@ export default function HomePage() {
             <div className="mb-6 w-full max-w-xl">
               <InstallCommand />
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href="/docs/getting-started"
-                className="inline-flex items-center gap-2 rounded-md bg-ak-foam px-5 py-2.5 text-sm font-semibold text-ak-midnight transition hover:bg-white"
-              >
-                Build the interface
-              </Link>
-              <Link
-                href="#surfaces"
-                className="inline-flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-ak-graphite transition hover:text-ak-foam"
-              >
-                See every surface →
-              </Link>
-              <a
-                href="https://github.com/AgentsKit-io/agentskit-chat"
-                className="inline-flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-ak-graphite transition hover:text-ak-foam"
-                rel="noreferrer"
-                target="_blank"
-              >
-                GitHub
-              </a>
-            </div>
           </div>
 
           <div className="min-w-0">
             <HeroDemo />
           </div>
         </div>
+        <div className="relative mx-auto mt-8 flex max-w-6xl flex-wrap items-center gap-5 sm:gap-7">
+          <Link
+            href="/docs/getting-started"
+            className="inline-flex items-center gap-2 rounded-md bg-ak-foam px-5 py-2.5 text-sm font-semibold text-ak-midnight transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg focus-visible:-translate-y-0.5 active:translate-y-0"
+          >
+            Build the interface
+          </Link>
+          <WorksWithLogos />
+        </div>
       </section>
 
-      <WorksWithLogos />
-
-      <section id="surfaces" className="scroll-mt-12 border-b border-ak-border bg-ak-midnight px-4 py-16 sm:px-6 sm:py-20">
+      <section id="surfaces" className="scroll-mt-12 px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ak-graphite">
             Architecture
@@ -116,7 +94,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-ak-border bg-ak-midnight px-4 py-16 sm:px-6 sm:py-20">
+      <section className="border-b border-ak-border px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ak-graphite">
             Signature
@@ -130,12 +108,12 @@ export default function HomePage() {
           </p>
           <div className="grid gap-4 lg:grid-cols-2">
             <HighlightedCode title="define once" lines={DEFINE_ONCE_LINES} />
-            <HighlightedCode title="render everywhere" lines={RENDER_EVERYWHERE_LINES} />
+            <RendererCodeShowcase />
           </div>
         </div>
       </section>
 
-      <section className="border-b border-ak-border bg-ak-midnight px-4 py-16 sm:px-6 sm:py-20">
+      <section className="border-b border-ak-border px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="max-w-3xl text-[1.75rem] font-bold leading-tight tracking-tight text-ak-foam sm:text-4xl">
             Build the product path
@@ -164,21 +142,28 @@ export default function HomePage() {
 
       <SharedEcosystemShowcase />
 
-      <section className="relative overflow-hidden bg-ak-midnight px-4 py-24 sm:px-6">
-        <div className="relative mx-auto max-w-3xl text-center">
-          <h2 className="text-[2rem] font-bold leading-[1.05] tracking-tight text-ak-foam sm:text-5xl">
-            Ship the chat your product actually runs.
-          </h2>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
+        <div className="chat-home-cta relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] px-6 py-12 shadow-2xl sm:px-12 sm:py-16">
+          <div aria-hidden="true" className="chat-home-cta-light" />
+          <div className="relative max-w-3xl">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ak-blue">One definition · seven native renderers</p>
+            <h2 className="mt-5 text-[2.5rem] font-bold leading-[1.02] tracking-tight text-ak-foam sm:text-6xl">
+              Ship the chat your product actually runs.
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ak-graphite sm:text-lg">
+              Define the experience once. Keep routes, policy, and sessions in sync from web to mobile to terminal.
+            </p>
+          </div>
+          <div className="relative mt-9 flex flex-wrap items-center gap-3">
             <Link
               href="/docs/getting-started"
-              className="inline-flex items-center rounded-md bg-ak-foam px-6 py-3 text-sm font-semibold text-ak-midnight transition hover:bg-white"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-ak-foam px-6 py-3 text-sm font-semibold text-ak-midnight transition hover:-translate-y-0.5 hover:bg-white"
             >
-              Get started
+              Build your chat <span aria-hidden="true">→</span>
             </Link>
             <Link
               href="/docs/cli"
-              className="inline-flex items-center rounded-md border border-ak-border px-5 py-3 text-sm font-medium text-ak-foam transition hover:border-ak-blue"
+              className="inline-flex min-h-12 items-center rounded-full border border-ak-border bg-ak-bg/30 px-5 py-3 text-sm font-medium text-ak-foam transition hover:border-ak-blue/50"
             >
               CLI reference
             </Link>

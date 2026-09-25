@@ -248,6 +248,33 @@
       ]
     },
     {
+      "productId": "doc-bridge",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/doc-bridge"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
+      "productId": "code-review",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/code-review-cli"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
+      "productId": "harness",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/harness"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
       "productId": "playbook",
       "source": {
         "type": "endpoint",
@@ -306,24 +333,6 @@
           }
         }
       ]
-    },
-    {
-      "productId": "doc-bridge",
-      "source": {
-        "type": "repository",
-        "repo": "AgentsKit-io/doc-bridge"
-      },
-      "verification": "declared",
-      "claims": []
-    },
-    {
-      "productId": "code-review",
-      "source": {
-        "type": "repository",
-        "repo": "AgentsKit-io/code-review-cli"
-      },
-      "verification": "declared",
-      "claims": []
     }
   ]
 }

@@ -3,7 +3,7 @@ import { createElement } from 'react'
 export function SharedEcosystemShowcase() {
   return createElement(
     'agentskit-ecosystem',
-    { current: 'agentskit-chat', className: 'not-prose block' },
+    { current: 'agentskit-chat', 'data-visual': 'agentskit-home', className: 'not-prose block' },
     <section className="border-y border-ak-border bg-ak-midnight px-5 py-16 text-ak-foam">
       <div className="mx-auto max-w-4xl">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ak-graphite">The AgentsKit ecosystem</p>

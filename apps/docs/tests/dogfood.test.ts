@@ -20,10 +20,12 @@ describe('documentation dogfood', () => {
     expect(iconSource).not.toContain('cdn.simpleicons.org')
   })
 
-  it('accepts the shared ecosystem bar only when all five public products render', () => {
+  it('accepts the shared ecosystem bar only when all six public products render', () => {
     const barSource = readFileSync(new URL('../components/shared-ecosystem-bar.tsx', import.meta.url), 'utf8')
-    expect(ecosystemBarProducts).toHaveLength(5)
-    expect(barSource).toContain('links === ecosystemBarProducts.length')
+    const layoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
+    expect(ecosystemBarProducts).toHaveLength(6)
+    expect(barSource).toContain('links === expectedLinkCount')
+    expect(layoutSource).toContain('expectedLinkCount={ecosystemBarProducts.length}')
     expect(barSource).not.toContain('links > 0')
   })
 
@@ -108,21 +110,23 @@ describe('documentation dogfood', () => {
     expect(publicDocSlug('backend.md')).toBe('backend')
   })
 
-  it('derives all seven ecosystem links from the canonical manifest', () => {
+  it('derives the six active ecosystem links and direct-only Playbook from the canonical manifest', () => {
     expect(allEcosystemProducts.map(product => product.id)).toEqual([
       'agentskit',
       'registry',
       'agentskit-chat',
-      'playbook',
       'doc-bridge',
       'code-review',
+      'harness',
+      'playbook',
     ])
     expect(ecosystemBarProducts.map(product => product.id)).toEqual([
       'agentskit',
       'registry',
       'agentskit-chat',
-      'playbook',
       'doc-bridge',
+      'code-review',
+      'harness',
     ])
   })
 

@@ -4,6 +4,7 @@ import { RootProvider } from 'fumadocs-ui/provider'
 import { ProductHeader } from '@/components/product-header'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
 import { serializedChatStructuredData } from '@/lib/structured-data'
+import { ecosystemBarProducts } from '@/lib/ecosystem'
 import { AccessibleSearch } from '@/components/accessible-search'
 import '@agentskit/react/theme'
 import './globals.css'
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
         />
       </head>
       <body className="bg-ak-midnight text-ak-foam antialiased">
-        <SharedEcosystemBar />
+        <SharedEcosystemBar expectedLinkCount={ecosystemBarProducts.length} />
         <RootProvider theme={{ defaultTheme: 'system', enabled: true, enableSystem: true }}>
           <AccessibleSearch />
           <ProductHeader />

@@ -404,16 +404,16 @@ test('uses the product landing as the entry point and docs as the learning path'
   await expect(page.getByRole('heading', { name: /One definition\. Everything else plugs in/i })).toBeVisible()
   await expect(page.getByText('live', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('Works with', { exact: false }).first()).toBeVisible()
-  const worksWith = page.getByRole('region', { name: 'Works with' })
-  await expect(worksWith.locator('img')).toHaveCount(0)
-  await expect(worksWith.locator('svg')).toHaveCount(7)
+  const worksWith = page.getByRole('img', { name: /Works with React, Vue, Svelte, Solid, Angular, React Native, Ink, TypeScript/ })
+  await expect(worksWith.locator('[data-reel-item]')).toHaveCount(1)
   await expect(page.getByRole('link', { name: 'Build the interface' })).toHaveAttribute('href', '/docs/getting-started')
-  await expect(page.getByRole('link', { name: /See every surface/i })).toHaveAttribute('href', '#surfaces')
+  await expect(page.getByRole('link', { name: /See every surface/i })).toHaveCount(0)
   const footer = page.locator('footer')
   await expect(footer).toBeVisible()
-  await expect(footer.getByText('One agent experience. Every surface.')).toBeVisible()
-  await expect(footer.getByRole('navigation', { name: 'AgentsKit products' }).getByRole('link')).toHaveCount(5)
-  await expect(footer.getByRole('link', { name: 'Code Review' })).toHaveCount(0)
+  await expect(footer.getByText('One agent experience across web, mobile, and terminal.')).toBeVisible()
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit ecosystem' }).locator('li')).toHaveCount(6)
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit ecosystem' }).getByRole('link')).toHaveCount(5)
+  await expect(footer.getByRole('navigation', { name: 'AgentsKit ecosystem' }).locator('[aria-current="page"]')).toHaveText('Chat')
   // no useless product chrome
   await expect(page.getByText('agentskit.chat')).toHaveCount(0)
   await page.getByRole('link', { name: 'Build the interface' }).click()
@@ -443,16 +443,16 @@ test('keeps the product navigation semantic, sticky, searchable, and touch frien
   }
 })
 
-test('follows the system color scheme without losing product contrast', async ({ page }) => {
+test('keeps the homepage dark across system color schemes', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/')
   await expect.poll(() => page.locator('html').evaluate(element => element.classList.contains('dark'))).toBe(false)
-  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(255, 255, 255)')
-  await expect.poll(() => page.getByRole('heading', { name: /One agent experience/i }).evaluate(element => getComputedStyle(element).color)).toBe('rgb(13, 17, 23)')
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).getPropertyValue('--ak-midnight').trim())).toBe('#0d1117')
+  await expect.poll(() => page.getByRole('heading', { name: /One agent experience/i }).evaluate(element => getComputedStyle(element).color)).toBe('rgb(230, 237, 243)')
 
   await page.emulateMedia({ colorScheme: 'dark' })
   await expect.poll(() => page.locator('html').evaluate(element => element.classList.contains('dark'))).toBe(true)
-  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(13, 17, 23)')
+  await expect.poll(() => page.locator('body').evaluate(element => getComputedStyle(element).getPropertyValue('--ak-midnight').trim())).toBe('#0d1117')
   await expect.poll(() => page.getByRole('heading', { name: /One agent experience/i }).evaluate(element => getComputedStyle(element).color)).toBe('rgb(230, 237, 243)')
 })
 
@@ -582,7 +582,8 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
     'https://chat.agentskit.io/docs',
     'https://playbook.agentskit.io/docs',
     'https://doc-bridge.agentskit.io/',
-    'https://github.com/AgentsKit-io/code-review-cli#readme',
+    'https://code-review.agentskit.io/docs',
+    'https://harness.agentskit.io/docs',
   ]) expect(concise).toContain(productUrl)
 
   expect(llmsFull.ok()).toBe(true)

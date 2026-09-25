@@ -19,7 +19,7 @@
   --ak-blue: #58a6ff;
   --ak-red: #f85149;
   --ak-green: #2ea043;
-  --ak-accent: #6157ff;
+  --ak-accent: #f59e0b;
   --ak-midnight: var(--ak-bg);
   --ak-foam: var(--ak-fg);
   --ak-graphite: var(--ak-muted);
@@ -34,5 +34,5 @@ html:not(.dark) {
   --ak-blue: #0969da;
   --ak-red: #cf222e;
   --ak-green: #1a7f37;
-  --ak-accent: #4338ca;
+  --ak-accent: #b45309;
 }
