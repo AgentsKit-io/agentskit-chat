@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { BrandIcon } from '@/components/brand-icon'
 
 const FRAMEWORKS = [
@@ -11,32 +14,50 @@ const FRAMEWORKS = [
   { slug: 'typescript', label: 'TypeScript' },
 ]
 
-/** Quiet static proof — matches agentskit.io hero "Works with" treatment. */
+/** Framework reel follows the motion and timing used by the AgentsKit home. */
 export function WorksWithLogos() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [reduceMotion, setReduceMotion] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReduceMotion(media.matches)
+    sync()
+    media.addEventListener('change', sync)
+    return () => media.removeEventListener('change', sync)
+  }, [])
+
+  useEffect(() => {
+    if (reduceMotion) return
+    const timer = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % FRAMEWORKS.length)
+    }, 2100)
+    return () => window.clearInterval(timer)
+  }, [reduceMotion])
+
+  const active = FRAMEWORKS[activeIndex] ?? FRAMEWORKS[0]!
+
   return (
-    <section className="border-y border-ak-border bg-ak-midnight px-4 py-12 sm:px-6" aria-label="Works with">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6">
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ak-graphite/70">
-            Works with
-          </span>
-          {FRAMEWORKS.map((fw) => (
-            <span key={fw.label} className="inline-flex items-center gap-2" title={fw.label}>
-              <BrandIcon
-                slug={fw.slug}
-                label={fw.label}
-                size={22}
-                imgClass="h-[22px] w-[22px] opacity-90"
-              />
-              <span className="sr-only">{fw.label}</span>
-            </span>
-          ))}
-        </div>
-        <p className="max-w-xl text-center text-sm text-ak-graphite">
-          One <span className="font-mono text-ak-foam">ChatDefinition</span>. Native shells on every
-          AgentsKit UI binding — web, mobile, and terminal.
-        </p>
-      </div>
-    </section>
+    <div
+      role="img"
+      aria-label={`Works with ${FRAMEWORKS.map(({ label }) => label).join(', ')}`}
+      data-kinetic-reel=""
+      data-current={active.slug ?? 'ink'}
+      className="flex min-h-8 items-center gap-4 sm:gap-5"
+    >
+      <span aria-hidden="true" className="shrink-0 font-mono text-[11px] uppercase tracking-[0.15em] text-ak-graphite">
+        Works with
+      </span>
+      <span aria-hidden="true" className="relative h-8 w-36 overflow-hidden [perspective:360px]">
+        <span
+          key={active.label}
+          data-reel-item=""
+          className="chat-framework-reel-item absolute inset-0 flex items-center gap-2 text-sm font-medium text-ak-foam"
+        >
+          <BrandIcon slug={active.slug} label={active.label} size={20} imgClass="h-5 w-5" />
+          <span>{active.label}</span>
+        </span>
+      </span>
+    </div>
   )
 }

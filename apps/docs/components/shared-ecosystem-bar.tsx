@@ -4,6 +4,10 @@ import Script from 'next/script'
 import { useState } from 'react'
 import { ecosystemBarProducts } from '@/lib/ecosystem'
 
+const sharedScriptSrc = process.env.NODE_ENV === 'development'
+  ? process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC ?? 'https://www.agentskit.io/ecosystem-bar.js'
+  : 'https://www.agentskit.io/ecosystem-bar.js'
+
 export function SharedEcosystemBar() {
   const [sharedReady, setSharedReady] = useState(false)
 
@@ -22,7 +26,7 @@ export function SharedEcosystemBar() {
 
   return <>
     <Script
-      src="https://www.agentskit.io/ecosystem-bar.js"
+      src={sharedScriptSrc}
       strategy="afterInteractive"
       data-current="agentskit-chat"
       onLoad={validateSharedBar}

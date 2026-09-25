@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
+import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import { RootProvider } from 'fumadocs-ui/provider'
 import { ProductHeader } from '@/components/product-header'
 import { SharedEcosystemBar } from '@/components/shared-ecosystem-bar'
@@ -9,6 +10,9 @@ import '@agentskit/react/theme'
 import './globals.css'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://chat.agentskit.io'
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
+const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains', display: 'swap' })
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -49,9 +53,9 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
           dangerouslySetInnerHTML={{ __html: serializedChatStructuredData }}
         />
       </head>
-      <body className="bg-ak-midnight text-ak-foam antialiased">
+      <body className={`${inter.variable} ${jetbrains.variable} ${spaceGrotesk.variable} bg-ak-midnight text-ak-foam antialiased`}>
         <SharedEcosystemBar />
-        <RootProvider theme={{ defaultTheme: 'system', enabled: true, enableSystem: true }}>
+        <RootProvider theme={{ defaultTheme: 'dark', enabled: true, enableSystem: true }}>
           <AccessibleSearch />
           <ProductHeader />
           {children}

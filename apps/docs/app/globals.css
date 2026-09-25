@@ -3,6 +3,14 @@
 @import 'fumadocs-ui/css/preset.css';
 @import './brand-tokens.css';
 
+:root {
+  --ak-font-body: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+  --ak-font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+  --ak-font-display: var(--font-space-grotesk), 'Space Grotesk', Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+body { font-family: var(--ak-font-body); }
+
 @theme {
   --color-ak-midnight: var(--ak-midnight);
   --color-ak-foam: var(--ak-foam);
@@ -737,4 +745,149 @@ body:has(.deterministic-demo-page) { background: #0d1117; }
   --color-fd-foreground: var(--ak-foam);
   --color-fd-muted-foreground: var(--ak-graphite);
   --color-fd-accent: color-mix(in srgb, var(--ak-blue) 18%, transparent);
+}
+
+/* Homepage atmosphere: shared visual language, isolated from Fumadocs routes. */
+body:has(main.chat-marketing) {
+  --ak-midnight: var(--ak-bg);
+  --ak-foam: var(--ak-fg);
+  --ak-graphite: var(--ak-muted);
+  background:
+    radial-gradient(70rem 48rem at 78% 12%, color-mix(in srgb, var(--ak-blue) 13%, transparent), transparent 68%),
+    radial-gradient(56rem 42rem at 10% 48%, color-mix(in srgb, var(--ak-green) 8%, transparent), transparent 66%),
+    var(--ak-midnight);
+  background-attachment: fixed;
+}
+
+body:has(main.chat-marketing) > #ak-eco,
+body:has(main.chat-marketing) .product-header,
+body:has(main.chat-marketing) main.chat-marketing,
+body:has(main.chat-marketing) .chat-home-footer {
+  position: relative;
+  z-index: 1;
+}
+
+body:has(main.chat-marketing) .product-header {
+  border-color: color-mix(in srgb, var(--ak-border) 76%, transparent);
+  background: color-mix(in srgb, var(--ak-midnight) 76%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, white 3%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+  backdrop-filter: blur(24px) saturate(145%);
+}
+
+.chat-liquid-cursor {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: .48;
+  transition: opacity 500ms ease;
+  background:
+    radial-gradient(ellipse 58% 92% at 78% 22%, color-mix(in srgb, var(--ak-blue) 14%, transparent), transparent 74%),
+    radial-gradient(ellipse 48% 72% at 18% 86%, color-mix(in srgb, var(--ak-green) 10%, transparent), transparent 76%);
+}
+
+.chat-liquid-cursor[data-active='true'] { opacity: .68; }
+
+.chat-liquid-cursor__orb {
+  position: absolute;
+  width: min(54rem, 90vw);
+  aspect-ratio: 1;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  filter: blur(90px);
+  transform: translate3d(var(--chat-cursor-x, 50vw), var(--chat-cursor-y, 15rem), 0) translate(-50%, -50%);
+  transition: transform 760ms cubic-bezier(.16, 1, .3, 1);
+  will-change: left, top;
+}
+
+.chat-liquid-cursor__orb--blue {
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--ak-blue) 18%, transparent), transparent 68%);
+}
+
+.chat-liquid-cursor__orb--green {
+  width: min(42rem, 72vw);
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--ak-green) 15%, transparent), transparent 68%);
+  transform: translate3d(calc(var(--chat-cursor-x, 50vw) - 5rem), calc(var(--chat-cursor-y, 15rem) + 3rem), 0) translate(-50%, -50%);
+  transition-duration: 1100ms;
+}
+
+.chat-liquid-cursor + main.chat-marketing,
+.chat-marketing > section { position: relative; }
+
+.chat-marketing > section { background-color: transparent !important; }
+
+.chat-marketing [data-hero-demo] {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ak-border) 80%, white 8%);
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--ak-surface) 78%, transparent);
+  box-shadow: 0 24px 80px color-mix(in srgb, #000 32%, transparent), inset 0 1px 0 color-mix(in srgb, white 5%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(135%);
+}
+
+.chat-home-footer {
+  background: transparent;
+}
+
+.chat-framework-reel-item {
+  animation: chat-reel-in 420ms cubic-bezier(.16, 1, .3, 1) both;
+  transform-origin: center;
+  backface-visibility: hidden;
+}
+
+.chat-code-reveal { animation: chat-code-in 260ms cubic-bezier(.16, 1, .3, 1) both; }
+
+.chat-home-cta {
+  isolation: isolate;
+  background: linear-gradient(125deg, color-mix(in srgb, var(--ak-surface) 80%, transparent), color-mix(in srgb, var(--ak-midnight) 72%, transparent));
+  -webkit-backdrop-filter: blur(26px) saturate(135%);
+  backdrop-filter: blur(26px) saturate(135%);
+}
+
+.chat-home-cta-light {
+  position: absolute;
+  inset: -40% -8% auto auto;
+  width: min(38rem, 78vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ak-blue) 21%, transparent), transparent 68%);
+  filter: blur(54px);
+  opacity: .8;
+  pointer-events: none;
+}
+
+@keyframes chat-reel-in {
+  from { opacity: 0; transform: translateY(12px) rotateX(60deg); }
+  to { opacity: 1; transform: translateY(0) rotateX(0); }
+}
+
+@keyframes chat-code-in {
+  from { opacity: .45; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-framework-reel-item,
+  .chat-code-reveal { animation: none; }
+}
+
+.chat-marketing a:focus-visible,
+.chat-home-footer a:focus-visible {
+  border-radius: .35rem;
+  outline: 2px solid var(--ak-blue);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .chat-liquid-cursor__orb { filter: blur(72px); }
+  .chat-marketing [data-hero-demo] { border-radius: 1.15rem; }
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .chat-liquid-cursor { display: none; }
+  .chat-liquid-cursor__orb { transition: none; }
 }

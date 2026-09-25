@@ -9,7 +9,12 @@ const askOrigin = (() => {
   catch { return undefined }
 })()
 
-const developmentScriptSource = process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
+const ecosystemBarSource = (() => {
+  if (process.env.NODE_ENV !== 'development' || !process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC) return ''
+  try { return ` ${new URL(process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC).origin}` }
+  catch { return '' }
+})()
+const developmentScriptSource = process.env.NODE_ENV === 'development' ? ` 'unsafe-eval'${ecosystemBarSource}` : ''
 
 const contentSecurityPolicy = [
   "default-src 'self'",

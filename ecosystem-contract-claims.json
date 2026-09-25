@@ -248,6 +248,33 @@
       ]
     },
     {
+      "productId": "doc-bridge",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/doc-bridge"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
+      "productId": "code-review",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/code-review"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
+      "productId": "harness",
+      "source": {
+        "type": "repository",
+        "repo": "AgentsKit-io/harness"
+      },
+      "verification": "declared",
+      "claims": []
+    },
+    {
       "productId": "playbook",
       "source": {
         "type": "endpoint",
@@ -303,44 +330,6 @@
             "type": "endpoint",
             "url": "https://playbook.agentskit.io/api/stats.json",
             "summary": "Template count returned by the canonical Playbook stats endpoint on 2026-07-16."
-          }
-        }
-      ]
-    },
-    {
-      "productId": "doc-bridge",
-      "source": {
-        "type": "repository",
-        "repo": "AgentsKit-io/doc-bridge"
-      },
-      "verification": "declared",
-      "claims": []
-    },
-    {
-      "productId": "code-review",
-      "source": {
-        "type": "repository",
-        "repo": "AgentsKit-io/code-review-cli"
-      },
-      "verification": "declared",
-      "claims": []
-    },
-    {
-      "productId": "akos",
-      "source": {
-        "type": "endpoint",
-        "url": "https://akos.agentskit.io/api/stats.json"
-      },
-      "verification": "verified",
-      "claims": [
-        {
-          "id": "registered-verbs",
-          "value": 540,
-          "noun": "registered capability verbs",
-          "evidence": {
-            "type": "endpoint",
-            "url": "https://akos.agentskit.io/api/stats.json",
-            "summary": "Capability-verb count returned by the canonical AKOS stats endpoint on 2026-07-16; this is inventory evidence, not a stability claim."
           }
         }
       ]
