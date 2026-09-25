@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "2e22617d47fc9968881c13e3247c5547a4ac05920ccd3aa994c34e9e0964cb84",
+  "contentHash": "39cf3d95dcaf7976fe38089acae08d32fec304d535381a57ddcba9b4878b444b",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T03:32:24.399Z",
+  "generatedAt": "2026-09-25T03:33:31.484Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1850,21 +1850,6 @@
         "project"
       ],
       "contentHash": "cf922b13937d116e250f1040bde1d0bbb2c2251a5f79936af0e0a0f44c3389ce"
-    },
-    {
-      "id": "module:apps/docs/.source/index.ts",
-      "type": "module",
-      "title": "index.ts",
-      "path": "apps/docs/.source/index.ts",
-      "symbols": [
-        "docs"
-      ],
-      "tags": [
-        "module",
-        "ts",
-        ".source"
-      ],
-      "contentHash": "f69f5e1890e439a43adaa5981d7f73030dd4ed750bfb0fc1ef53d6f2b044e7a8"
     },
     {
       "id": "module:apps/docs/app/api/ask/route.ts",
@@ -6570,8 +6555,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "7d22e7d5c916e533c00b95f82afb50e50bc1e4711b2eec785aae5c9fa4e1502a",
-    "fileCount": 434,
+    "hash": "c9040a385af93f2d8a2b7e2b61f0eabe7684cf50d4239d962ef13515e7cc85bc",
+    "fileCount": 433,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6593,11 +6578,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "5786b7dee890a2a7ddfe96e8190611153cc27c8f2416b26655b85d01f72f6298",
+    "contentHash": "47d6e882daed45d1e67bc602e192087c6f373022d385d138cbb09dcf24b437c8",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "b930350d512a619135e3d0283a388a4f8f17c1f88e0cfe3568306064a65e4d5d",
+    "snapshotHash": "8ff6ca84c9f79a60db5ecca10459889b112d5ed2cfc1f9318fbd63904f01270e",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "30687b8239e859d4517a1ddd87ca9f91d104be1dbf4a2891bcf7fb8d89955a7f",
+    "configurationHash": "608f8e28734ebc9536ab335def74a862caf92e1c745c1b4a25b93ac23e29031c",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -6615,7 +6600,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 470,
+      "documentCount": 468,
       "fieldNames": [
         "aliases",
         "body",
@@ -6626,13 +6611,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.1404255319148935,
-        "body": 73.92553191489361,
-        "headings": 4.574468085106383,
-        "path": 6.087234042553192,
-        "summary": 6.148936170212766,
-        "symbols": 4.925531914893617,
-        "title": 3.5659574468085107
+        "aliases": 3.1452991452991452,
+        "body": 74.24145299145299,
+        "headings": 4.594017094017094,
+        "path": 6.089743589743589,
+        "summary": 6.1752136752136755,
+        "symbols": 4.944444444444445,
+        "title": 3.574786324786325
       }
     },
     "entries": [
@@ -6698,38 +6683,6 @@
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "docs-app"
-      },
-      {
-        "id": "area:apps/docs/.source",
-        "kind": "area",
-        "path": "apps/docs/.source",
-        "title": ".source",
-        "aliases": [],
-        "tags": [
-          "area"
-        ],
-        "fields": {
-          "title": ".source",
-          "headings": "",
-          "path": "apps/docs/.source",
-          "symbols": "",
-          "summary": "",
-          "body": "",
-          "aliases": "area"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs",
-          "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "f51afb3760b7104f2c33cd12bc5c81eb5e1cf7f2e44cc2643014e7faf1aa03da",
-        "provenance": "observed",
-        "confidence": "observed"
       },
       {
         "id": "area:apps/docs/app/api",
@@ -19933,49 +19886,6 @@
         "confidence": "observed"
       },
       {
-        "id": "module:apps/docs/.source/index.ts",
-        "kind": "module",
-        "path": "apps/docs/.source/index.ts",
-        "title": "index.ts",
-        "aliases": [],
-        "symbols": [
-          "docs"
-        ],
-        "tags": [
-          "module",
-          "ts",
-          ".source"
-        ],
-        "fields": {
-          "title": "index.ts",
-          "headings": "",
-          "path": "apps/docs/.source/index.ts",
-          "symbols": "docs",
-          "summary": "",
-          "body": "",
-          "aliases": "module ts .source"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs/.source",
-          "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
-          "outbound": [
-            {
-              "kind": "imports",
-              "id": "module:apps/docs/source.config.ts",
-              "confidence": "observed"
-            }
-          ]
-        },
-        "contentHash": "f69f5e1890e439a43adaa5981d7f73030dd4ed750bfb0fc1ef53d6f2b044e7a8",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "module:apps/docs/app/api/ask/route.ts",
         "kind": "module",
         "path": "apps/docs/app/api/ask/route.ts",
@@ -22345,13 +22255,7 @@
           "mentionedBy": [],
           "areaId": "area:apps/docs",
           "packageId": "package:@agentskit/chat-docs",
-          "inbound": [
-            {
-              "kind": "imports",
-              "id": "module:apps/docs/.source/index.ts",
-              "confidence": "observed"
-            }
-          ],
+          "inbound": [],
           "outbound": []
         },
         "contentHash": "3b66c93c5fc08787383469add69d45eec74ecae79524b9d890fe7fa3380c196a",
