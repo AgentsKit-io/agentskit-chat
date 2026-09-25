@@ -55,7 +55,7 @@ importers:
         version: 4.1.11(@types/node@26.1.1)(@vitest/coverage-v8@4.1.11)(happy-dom@20.14.5)(vite@8.3.0(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.0))
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
 
   apps/docs:
     dependencies:
@@ -91,7 +91,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
@@ -436,7 +436,7 @@ importers:
         version: 3.5.39(typescript@6.0.3)
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
     devDependencies:
       '@agentskit/chat-protocol':
         specifier: workspace:*
@@ -458,7 +458,7 @@ importers:
         version: link:../chat
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: ^25.9.7
@@ -480,7 +480,7 @@ importers:
         version: 0.4.19
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -527,7 +527,7 @@ importers:
         version: 2.2.0
       zod:
         specifier: ^4.3.6
-        version: 4.6.5
+        version: 4.4.3
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -7078,6 +7078,9 @@ packages:
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
   zod@4.6.5:
     resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
@@ -14582,6 +14585,8 @@ snapshots:
   zimmerframe@1.1.4: {}
 
   zod@3.25.76: {}
+
+  zod@4.4.3: {}
 
   zod@4.6.5: {}
 

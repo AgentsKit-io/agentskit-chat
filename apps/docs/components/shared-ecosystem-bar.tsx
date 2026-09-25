@@ -2,20 +2,19 @@
 
 import Script from 'next/script'
 import { useState } from 'react'
-import { ecosystemBarProducts } from '@/lib/ecosystem'
 
 const sharedScriptSrc = process.env.NODE_ENV === 'development'
   ? process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC ?? 'https://www.agentskit.io/ecosystem-bar.js'
   : 'https://www.agentskit.io/ecosystem-bar.js'
 
-export function SharedEcosystemBar() {
+export function SharedEcosystemBar({ expectedLinkCount }: { readonly expectedLinkCount: number }) {
   const [sharedReady, setSharedReady] = useState(false)
 
   function validateSharedBar() {
     requestAnimationFrame(() => {
       const shared = document.querySelector<HTMLElement>('#ak-eco')
       const links = shared?.querySelectorAll('a.ak-eco-link:not(.ak-eco-cta)').length ?? 0
-      if (shared && links === ecosystemBarProducts.length) {
+      if (shared && links === expectedLinkCount) {
         setSharedReady(true)
         return
       }
