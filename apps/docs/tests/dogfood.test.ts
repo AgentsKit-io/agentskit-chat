@@ -22,8 +22,10 @@ describe('documentation dogfood', () => {
 
   it('accepts the shared ecosystem bar only when all six public products render', () => {
     const barSource = readFileSync(new URL('../components/shared-ecosystem-bar.tsx', import.meta.url), 'utf8')
+    const layoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
     expect(ecosystemBarProducts).toHaveLength(6)
-    expect(barSource).toContain('links === ecosystemBarProducts.length')
+    expect(barSource).toContain('links === expectedLinkCount')
+    expect(layoutSource).toContain('expectedLinkCount={ecosystemBarProducts.length}')
     expect(barSource).not.toContain('links > 0')
   })
 
