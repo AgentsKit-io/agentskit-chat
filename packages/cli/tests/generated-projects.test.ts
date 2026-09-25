@@ -9,6 +9,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 const execute = promisify(execFile)
 const workspace = path.resolve(import.meta.dirname, '../../..')
 const roots: string[] = []
+function linkWorkspaceDependencies(root: string, dependencies: Record<string, string>) {
+  for (const name of Object.keys(dependencies)) {
+    if (dependencies[name] !== 'workspace:*') continue
+    const packageName = name === '@agentskit/chat' ? 'chat' : name.replace('@agentskit/chat-', '')
+    dependencies[name] = `link:${path.relative(root, path.join(workspace, 'packages', packageName))}`
+  }
+}
 const run = async (command: string, args: readonly string[], cwd: string, env?: NodeJS.ProcessEnv): Promise<{ stdout: string; stderr: string }> => {
   try { return await execute(command, [...args], { cwd, env: { ...process.env, ...env } }) }
   catch (error) {
@@ -68,6 +75,9 @@ describe('generated projects', () => {
     await writeFile(path.join(root, 'tsconfig.json'), JSON.stringify({ compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'bundler', jsx: 'react-jsx', strict: true, noEmit: true, skipLibCheck: true }, include: ['src'] }))
     const command = await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', 'react,vue,ink', '--directory', root, '--yes'], workspace)
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
+    const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string> }
+    linkWorkspaceDependencies(root, manifest.dependencies)
+    await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
     await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
   }, 120_000)
@@ -78,12 +88,7 @@ describe('generated projects', () => {
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
     await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', renderer, '--directory', root, '--yes'], workspace)
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; scripts: Record<string, string> }
-    for (const name of Object.keys(manifest.dependencies)) {
-      if (manifest.dependencies[name] === 'workspace:*') {
-        const packageName = name === '@agentskit/chat' ? 'chat' : name.replace('@agentskit/chat-', '')
-        manifest.dependencies[name] = `link:${path.relative(root, path.join(workspace, 'packages', packageName))}`
-      }
-    }
+    linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
     await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['typecheck'], root)
