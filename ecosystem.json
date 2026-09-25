@@ -342,7 +342,7 @@
       },
       "navigation": {
         "showInBar": true,
-        "order": 4,
+        "order": 3,
         "next": [
           "agentskit",
           "registry",
@@ -373,8 +373,8 @@
         "chat": "none"
       },
       "navigation": {
-        "showInBar": false,
-        "order": 5,
+        "showInBar": true,
+        "order": 4,
         "next": [
           "agentskit",
           "registry",
@@ -547,8 +547,8 @@
         "chat": "custom"
       },
       "navigation": {
-        "showInBar": true,
-        "order": 3,
+        "showInBar": false,
+        "order": 6,
         "next": [
           "agentskit",
           "registry",
