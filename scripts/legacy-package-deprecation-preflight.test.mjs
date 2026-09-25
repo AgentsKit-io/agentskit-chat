@@ -6,9 +6,9 @@ const adoption = JSON.parse(readFileSync(new URL('../ecosystem-adoption.json', i
 const plan = JSON.parse(readFileSync(new URL('../release/legacy-package-deprecations.json', import.meta.url), 'utf8'))
 const certifiedAdoption = () => {
   const certified = structuredClone(adoption)
-  const akos = certified.consumers.find(consumer => consumer.id === 'akos-product-chats')
-  akos.status = 'certified'
-  akos.evidence = {
+  const privateConsumer = certified.consumers.find(consumer => consumer.id === 'private-product-chats')
+  privateConsumer.status = 'certified'
+  privateConsumer.evidence = {
     visibility: 'private-attestation',
     ciStatus: 'pass',
     productionStatus: 'pass',
@@ -48,7 +48,7 @@ describe('legacy package live preflight', () => {
     const result = await runLegacyDeprecationPreflight({ adoption: certifiedAdoption(), plan, fetchImpl: createFetch() })
     expect(result.ready).toBe(true)
     expect(result.legacyPackages).toHaveLength(10)
-    expect(result.privateAttestations).toEqual([{ id: 'akos-product-chats', attestation: 'chat-convergence-pass' }])
+    expect(result.privateAttestations).toEqual([{ id: 'private-product-chats', attestation: 'chat-convergence-pass' }])
   })
 
   it('fails closed on public evidence or existing npm deprecation metadata', async () => {

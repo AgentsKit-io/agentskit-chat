@@ -124,7 +124,6 @@ describe('documentation dogfood', () => {
       'playbook',
       'doc-bridge',
     ])
-    expect(allEcosystemProducts.find(product => product.id === 'akos')).toBeUndefined()
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {

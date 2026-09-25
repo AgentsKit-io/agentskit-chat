@@ -32,8 +32,7 @@
           "agentskit-chat",
           "playbook",
           "doc-bridge",
-          "code-review",
-          "akos"
+          "code-review"
         ]
       }
     },
@@ -63,8 +62,7 @@
           "agentskit-chat",
           "playbook",
           "doc-bridge",
-          "code-review",
-          "akos"
+          "code-review"
         ]
       }
     },
@@ -93,8 +91,7 @@
           "registry",
           "playbook",
           "doc-bridge",
-          "code-review",
-          "akos"
+          "code-review"
         ]
       }
     },
@@ -124,8 +121,7 @@
           "registry",
           "agentskit-chat",
           "doc-bridge",
-          "code-review",
-          "akos"
+          "code-review"
         ]
       }
     },
@@ -154,8 +150,7 @@
           "registry",
           "agentskit-chat",
           "playbook",
-          "code-review",
-          "akos"
+          "code-review"
         ]
       }
     },
@@ -184,33 +179,8 @@
           "registry",
           "agentskit-chat",
           "playbook",
-          "doc-bridge",
-          "akos"
+          "doc-bridge"
         ]
-      }
-    },
-    {
-      "id": "akos",
-      "name": "AgentsKit OS",
-      "shortName": "AKOS",
-      "kind": "product",
-      "role": "operation",
-      "promise": "Run and govern agents in production.",
-      "maturity": "stable",
-      "repo": "AgentsKit-io/agentskit-os",
-      "accent": "#34D399",
-      "surfaces": {
-        "home": "https://akos.agentskit.io",
-        "docs": "https://akos.agentskit.io/docs",
-        "llms": "https://akos.agentskit.io/llms.txt",
-        "stats": "https://akos.agentskit.io/api/stats.json",
-        "documentation": "fumadocs",
-        "chat": "none"
-      },
-      "navigation": {
-        "showInBar": true,
-        "order": 6,
-        "next": []
       }
     }
   ],
@@ -289,19 +259,6 @@
       "kind": "developer-tool",
       "accent": "#F97316",
       "llms": "https://raw.githubusercontent.com/AgentsKit-io/code-review-cli/main/llms.txt"
-    },
-    {
-      "id": "akos",
-      "name": "AgentsKit OS",
-      "barLabel": "AKOS",
-      "domain": "akos.agentskit.io",
-      "url": "https://akos.agentskit.io",
-      "repo": "AgentsKit-io/agentskit-os",
-      "tagline": "Run and govern agents in production.",
-      "kind": "product",
-      "accent": "#34D399",
-      "llms": "https://akos.agentskit.io/llms.txt",
-      "stats": "https://akos.agentskit.io/api/stats.json"
     }
   ],
   "builder": {

@@ -23,7 +23,7 @@ const publicRepositories = [
   'AgentsKit-io/doc-bridge',
 ]
 
-const repositorySchema = z.enum([...publicRepositories, 'private:akos'])
+const repositorySchema = z.enum([...publicRepositories, 'private'])
 const supportedImportSchema = z.enum([
   '@agentskit/chat',
   '@agentskit/chat/protocol',
@@ -99,7 +99,7 @@ export const requiredConsumerIds = [
   'doc-bridge-docs',
   'registry-catalog',
   'agentskit-binding-examples',
-  'akos-product-chats',
+  'private-product-chats',
 ]
 
 export const ecosystemAdoptionSchema = z.object({
@@ -137,7 +137,7 @@ export const ecosystemAdoptionSchema = z.object({
     }
     seen.add(consumer.id)
 
-    const isPrivate = consumer.repository === 'private:akos'
+    const isPrivate = consumer.repository === 'private'
     if (isPrivate !== (consumer.evidence.visibility === 'private-attestation')) {
       context.addIssue({ code: 'custom', path: [...path, 'evidence'], message: 'private repositories require private attestations and public repositories require public evidence' })
     }
