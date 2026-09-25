@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "type": "doc-bridge-capabilities",
   "package": "@agentskit/doc-bridge",
-  "version": "1.7.45",
+  "version": "1.11.2",
   "project": {
     "name": "agentskit-chat",
     "root": "."
   },
-  "contentHash": "a29bc8dd4769534d42709aed0f81997005dcbb320707652ec05e053d1bfdab2c",
+  "contentHash": "babe3d04b1de8e780ad1b12ca1526883182fc2074d0f6ff32f3fc99abf372269",
   "artifacts": {
     "index": ".doc-bridge/index.json",
     "llmsTxt": ".doc-bridge/llms.txt"
