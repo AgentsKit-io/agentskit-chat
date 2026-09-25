@@ -124,7 +124,8 @@ pnpm docs:bridge:gate
 | [AgentsKit Chat](https://chat.agentskit.io/docs) | This repository: the shared application layer for conversational surfaces |
 | [Playbook](https://playbook.agentskit.io) | Dogfoods deterministic local answers and shared Ask integration |
 | [Doc Bridge](https://doc-bridge.agentskit.io/) | Indexes ownership, gates, and agent handoffs for this repository |
-| [Code Review](https://github.com/AgentsKit-io/code-review-cli#readme) | Reviews changes before merge with the model already in your workflow |
+| [Code Review](https://code-review.agentskit.io) | Reviews changes before merge with the model already in your workflow |
+| [Harness](https://harness.agentskit.io/) | Configurable issue-to-release SDLC loop |
 
 ## License
 

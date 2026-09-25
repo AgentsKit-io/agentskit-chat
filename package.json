@@ -48,7 +48,7 @@
     "postinstall": "node scripts/ensure-node-pty-helper.mjs"
   },
   "devDependencies": {
-    "@agentskit/doc-bridge": "1.7.45",
+    "@agentskit/doc-bridge": "1.11.2",
     "@changesets/cli": "^2.31.1",
     "@playwright/test": "^1.63.0",
     "@vitest/coverage-v8": "^4.1.11",

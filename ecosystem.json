@@ -571,23 +571,9 @@
       "tagline": "Build agents without gluing many libraries together.",
       "kind": "library",
       "accent": "#2EA043",
-      "showInBar": true,
       "llms": "https://www.agentskit.io/llms.txt",
-      "stats": "https://www.agentskit.io/api/stats.json"
-    },
-    {
-      "id": "playbook",
-      "name": "Agents Playbook",
-      "barLabel": "Playbook",
-      "domain": "playbook.agentskit.io",
-      "url": "https://playbook.agentskit.io",
-      "repo": "AgentsKit-io/agents-playbook",
-      "tagline": "Make agents ship code a human would actually merge.",
-      "kind": "methodology",
-      "accent": "#8B5CF6",
-      "showInBar": false,
-      "llms": "https://playbook.agentskit.io/llms.txt",
-      "stats": "https://playbook.agentskit.io/api/stats.json"
+      "stats": "https://www.agentskit.io/api/stats.json",
+      "showInBar": true
     },
     {
       "id": "registry",
@@ -599,9 +585,62 @@
       "tagline": "Copy ready-made agents and own the source.",
       "kind": "registry",
       "accent": "#58A6FF",
-      "showInBar": true,
       "llms": "https://registry.agentskit.io/llms.txt",
-      "stats": "https://registry.agentskit.io/r/index.json"
+      "stats": "https://registry.agentskit.io/r/index.json",
+      "showInBar": true
+    },
+    {
+      "id": "agentskit-chat",
+      "name": "AgentsKit Chat",
+      "barLabel": "Chat",
+      "domain": "chat.agentskit.io",
+      "url": "https://chat.agentskit.io",
+      "repo": "AgentsKit-io/agentskit-chat",
+      "tagline": "Define one agent experience and deliver it across interfaces.",
+      "kind": "framework",
+      "accent": "#F59E0B",
+      "llms": "https://chat.agentskit.io/llms.txt",
+      "showInBar": true
+    },
+    {
+      "id": "playbook",
+      "name": "Agents Playbook",
+      "barLabel": "Playbook",
+      "domain": "playbook.agentskit.io",
+      "url": "https://playbook.agentskit.io",
+      "repo": "AgentsKit-io/agents-playbook",
+      "tagline": "Make agents ship code a human would actually merge.",
+      "kind": "methodology",
+      "accent": "#8B5CF6",
+      "llms": "https://playbook.agentskit.io/llms.txt",
+      "stats": "https://playbook.agentskit.io/api/stats.json",
+      "showInBar": false
+    },
+    {
+      "id": "doc-bridge",
+      "name": "Doc Bridge",
+      "barLabel": "Doc Bridge",
+      "domain": "doc-bridge.agentskit.io",
+      "url": "https://doc-bridge.agentskit.io/",
+      "repo": "AgentsKit-io/doc-bridge",
+      "tagline": "Turn repository documentation into executable agent handoffs.",
+      "kind": "developer-tool",
+      "accent": "#06B6D4",
+      "llms": "https://doc-bridge.agentskit.io/llms.txt",
+      "showInBar": true
+    },
+    {
+      "id": "code-review",
+      "name": "AgentsKit Code Review",
+      "barLabel": "Code Review",
+      "domain": "code-review.agentskit.io",
+      "url": "https://code-review.agentskit.io",
+      "repo": "AgentsKit-io/code-review",
+      "tagline": "Run deep, low-noise review with the model already in use.",
+      "kind": "developer-tool",
+      "accent": "#F97316",
+      "llms": "https://code-review.agentskit.io/llms.txt",
+      "showInBar": true
     }
   ],
   "builder": {
