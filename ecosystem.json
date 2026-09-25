@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "$comment": "Canonical seven-product AgentsKit catalog. The three-entry properties array is the legacy v1 compatibility projection; shared navigation is derived from products[].",
+  "$comment": "Canonical registry of AgentsKit ecosystem products. Stable identity lives in products[] (seven). Numeric values live in the generated ecosystem-claims ledger. The properties array is the full seven-product v1 projection of products[] (same order) for sibling consumers.",
   "parentBrand": {
     "id": "agentskit",
     "name": "AgentsKit"
@@ -342,7 +342,7 @@
       },
       "navigation": {
         "showInBar": true,
-        "order": 3,
+        "order": 4,
         "next": [
           "agentskit",
           "registry",
@@ -363,18 +363,18 @@
       "role": "verification",
       "promise": "Run deep, low-noise review with the model already in use.",
       "maturity": "alpha",
-      "repo": "AgentsKit-io/code-review",
+      "repo": "AgentsKit-io/code-review-cli",
       "accent": "#F97316",
       "surfaces": {
         "home": "https://code-review.agentskit.io",
         "docs": "https://code-review.agentskit.io/docs",
         "llms": "https://code-review.agentskit.io/llms.txt",
-        "documentation": "fumadocs",
+        "documentation": "repository",
         "chat": "none"
       },
       "navigation": {
-        "showInBar": true,
-        "order": 4,
+        "showInBar": false,
+        "order": 5,
         "next": [
           "agentskit",
           "registry",
@@ -547,8 +547,8 @@
         "chat": "custom"
       },
       "navigation": {
-        "showInBar": false,
-        "order": 6,
+        "showInBar": true,
+        "order": 3,
         "next": [
           "agentskit",
           "registry",
@@ -635,7 +635,7 @@
       "barLabel": "Code Review",
       "domain": "code-review.agentskit.io",
       "url": "https://code-review.agentskit.io",
-      "repo": "AgentsKit-io/code-review",
+      "repo": "AgentsKit-io/code-review-cli",
       "tagline": "Run deep, low-noise review with the model already in use.",
       "kind": "developer-tool",
       "accent": "#F97316",

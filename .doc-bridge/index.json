@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "babced4b369487ef193d6467a7fcd46c54bcb47325e1ecd8944b8ff8d7609bd7",
+  "contentHash": "8a5acfdd20c20d88b9ad3deb845617c666409e13d898a65a2e49eeaefa6d5220",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T03:48:02.077Z",
+  "generatedAt": "2026-09-25T03:57:25.712Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -2881,7 +2881,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "063e789187560796af67e1e4942f5a13ac3db2ff75ed36de326be03602b437a9"
+      "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461"
     },
     {
       "id": "module:apps/docs/tests/e2e/docs.spec.ts",
@@ -4987,7 +4987,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "a0a71cf1edb233bf572d41f5a67eca88922f6fdfc48ea64c361d44c10fe5ccef"
+      "contentHash": "59d0ae502d0bab315445e85028db702fe34eef11476242498af01c4e384b8a77"
     },
     {
       "id": "module:scripts/docs-visual-check.mjs",
@@ -5022,7 +5022,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "64c9cb26f80db880717fc9eeefe37c71f19f0a96e270e7a8d003bf23f6204231"
+      "contentHash": "1279752dac198e15b47263bbcc71e41824710033c073035815d73b5a60dbe906"
     },
     {
       "id": "module:scripts/ecosystem-adoption.test.mjs",
@@ -5050,7 +5050,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "2fccbb6861306c5032e39ae5626f4d677d799e3aec288eea2d06f9dbb2786424"
+      "contentHash": "5fd57ae58c9117f0a237aa10ec14ebd89a3b2b0a8691ada70167a2a47bcb8e29"
     },
     {
       "id": "module:scripts/ecosystem-claims-live.test.mjs",
@@ -5063,7 +5063,7 @@
         "test",
         "scripts"
       ],
-      "contentHash": "b85d2c1bd2302f7d0054ddf31c3872c555003de42c3098d1f0aacc076916a58a"
+      "contentHash": "c3d170d935341606bd7fcb1453ab033804b24b4d5bde597ea326f0db4199be6b"
     },
     {
       "id": "module:scripts/ensure-node-pty-helper.mjs",
@@ -5170,7 +5170,7 @@
         "test",
         "scripts"
       ],
-      "contentHash": "1a3f23c7b984d253d1a41f8faff680de853c4383fe59c1d4ab1e653afb21614b"
+      "contentHash": "0e36d421a800c195e373eff44f75be7468d5f5e5e7bd8fef6167c8268f566aa5"
     },
     {
       "id": "module:scripts/legacy-package-deprecation.test.mjs",
@@ -5183,7 +5183,7 @@
         "test",
         "scripts"
       ],
-      "contentHash": "a5ad5f5def9c2d66764a58b5e9195c635fcf119fc6a2ee56e4b842c0910b2551"
+      "contentHash": "cbe7457a6d24299fb3981ea76839b2ad3bfba666d13b0356aa3abfd60177ad1e"
     },
     {
       "id": "module:scripts/lib/readme-claims.mjs",
@@ -6609,7 +6609,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "8fcecb27f3dd9a0600004b811b3e9a99738277d1e3b6096175efd49b0f573b98",
+    "hash": "deadba863c7c91186e72406d64d0e7339ac03b0d90320f1f1ca88374f2dfe2f0",
     "fileCount": 437,
     "projectionVersion": 2
   },
@@ -6632,11 +6632,11 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "0f45a3297e130a315de70d45641ab5c7943d277dde7d5e785625cd4b780568ec",
+    "contentHash": "da3b1e5e708ae938076003636ddfdd2058a6254cd4711475eda99826f7d92c3c",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "9dafd2af9bbe0539def88a89f74e710a8b17853476e1210cda137a5d7285c87e",
+    "snapshotHash": "7a1959d5ad4ced4f9a9937d7bcce9d2a6c6822691143866075f73f598b16bde3",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
-    "configurationHash": "199218bb3016a16991b4c46b0586571f5cc867e54f8f4367d2be148eabe485c4",
+    "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
     "graphMetricsVersion": "1.0.0",
     "weights": {
@@ -22587,7 +22587,7 @@
             }
           ]
         },
-        "contentHash": "063e789187560796af67e1e4942f5a13ac3db2ff75ed36de326be03602b437a9",
+        "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29153,7 +29153,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a0a71cf1edb233bf572d41f5a67eca88922f6fdfc48ea64c361d44c10fe5ccef",
+        "contentHash": "59d0ae502d0bab315445e85028db702fe34eef11476242498af01c4e384b8a77",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29258,7 +29258,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "64c9cb26f80db880717fc9eeefe37c71f19f0a96e270e7a8d003bf23f6204231",
+        "contentHash": "1279752dac198e15b47263bbcc71e41824710033c073035815d73b5a60dbe906",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29347,7 +29347,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2fccbb6861306c5032e39ae5626f4d677d799e3aec288eea2d06f9dbb2786424",
+        "contentHash": "5fd57ae58c9117f0a237aa10ec14ebd89a3b2b0a8691ada70167a2a47bcb8e29",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29388,7 +29388,7 @@
             }
           ]
         },
-        "contentHash": "b85d2c1bd2302f7d0054ddf31c3872c555003de42c3098d1f0aacc076916a58a",
+        "contentHash": "c3d170d935341606bd7fcb1453ab033804b24b4d5bde597ea326f0db4199be6b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29747,7 +29747,7 @@
             }
           ]
         },
-        "contentHash": "1a3f23c7b984d253d1a41f8faff680de853c4383fe59c1d4ab1e653afb21614b",
+        "contentHash": "0e36d421a800c195e373eff44f75be7468d5f5e5e7bd8fef6167c8268f566aa5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29793,7 +29793,7 @@
             }
           ]
         },
-        "contentHash": "a5ad5f5def9c2d66764a58b5e9195c635fcf119fc6a2ee56e4b842c0910b2551",
+        "contentHash": "cbe7457a6d24299fb3981ea76839b2ad3bfba666d13b0356aa3abfd60177ad1e",
         "provenance": "observed",
         "confidence": "observed"
       },

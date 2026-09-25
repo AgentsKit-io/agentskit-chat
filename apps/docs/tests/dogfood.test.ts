@@ -128,7 +128,6 @@ describe('documentation dogfood', () => {
       'code-review',
       'harness',
     ])
-    expect(allEcosystemProducts.find(product => product.id === 'akos')).toBeUndefined()
   })
 
   it('runs the public Ask handler with injected grounded adapters and citations', async () => {

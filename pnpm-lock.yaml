@@ -22,6 +22,11 @@ overrides:
   '@angular/core': '>=21.2.19 <22'
   '@angular/compiler': '>=21.2.19 <22'
   browserslist: '>=4.28.7 <5'
+  '@agentskit/harness>react': 19.2.7
+  '@agentskit/harness>ink': 7.1.0
+  '@agentskit/doc-bridge>react': 19.2.7
+  '@agentskit/doc-bridge>zod': 4.4.3
+  '@agentskit/harness>zod': 4.4.3
 
 patchedDependencies:
   image-size-next@1.2.2:
@@ -34,7 +39,7 @@ importers:
     devDependencies:
       '@agentskit/doc-bridge':
         specifier: 1.11.2
-        version: 1.11.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.3.0)
+        version: 1.11.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.1
         version: 2.31.1(@types/node@26.1.1)
@@ -734,7 +739,7 @@ packages:
       '@agentskit/ink': '>=0.8.0 <1'
       '@agentskit/memory': '>=0.9.0 <1'
       '@agentskit/rag': '>=0.3.0 <1'
-      react: '>=18.0.0'
+      react: 19.2.7
     peerDependenciesMeta:
       '@agentskit/adapters':
         optional: true
@@ -4748,19 +4753,6 @@ packages:
       react-devtools-core:
         optional: true
 
-  ink@7.1.1:
-    resolution: {integrity: sha512-Y43xxa1ZSPvpmfLHcN5o+OdP8Rf8ykkNJEuKYOUNZKT8wXVNLFTtEm1nSDMQkfBH+YANF4Xuu0hhZ4ejqAtN2w==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      '@types/react': '>=19.2.0'
-      react: '>=19.2.0'
-      react-devtools-core: '>=6.1.2'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react-devtools-core:
-        optional: true
-
   inline-style-parser@0.2.7:
     resolution: {integrity: sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA==}
 
@@ -6093,10 +6085,6 @@ packages:
     resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
     engines: {node: '>=0.10.0'}
 
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
-    engines: {node: '>=0.10.0'}
-
   read-yaml-file@1.1.0:
     resolution: {integrity: sha512-VIMnQi/Z4HT2Fxuwg5KrY174U1VdUIASQVWXXyqtNRtxSr9IYkn1rsI6Tb6HsrHCmB7gVpNwX6JxPTHcH6IoTA==}
     engines: {node: '>=6'}
@@ -7082,9 +7070,6 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
-  zod@4.6.5:
-    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
-
   zone.js@0.16.3:
     resolution: {integrity: sha512-ihXL9+vhYyEhXz4TDNpHeAOZN9FVrbog0Il64OIEI28UP/n5AaI6gsccRuOHBfx+206agzyoK527bYIO0Foy6A==}
 
@@ -7106,7 +7091,7 @@ snapshots:
 
   '@agentskit/core@1.12.3': {}
 
-  '@agentskit/doc-bridge@1.11.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.3.0)':
+  '@agentskit/doc-bridge@1.11.2(@agentskit/core@1.12.3)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:
       '@agentskit/harness': 0.11.0(@types/react@19.2.17)(react-devtools-core@6.1.5)
       github-slugger: 2.0.0
@@ -7126,13 +7111,13 @@ snapshots:
       unified: 11.0.5
       unist-util-visit: 5.1.0
       yaml: 2.9.0
-      zod: 4.6.5
+      zod: 4.4.3
     optionalDependencies:
       '@agentskit/core': 1.12.3
-      '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0)
+      '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@agentskit/memory': 0.11.0
       '@agentskit/rag': 0.4.14
-      react: 19.3.0
+      react: 19.2.7
     transitivePeerDependencies:
       - '@types/react'
       - bufferutil
@@ -7148,10 +7133,10 @@ snapshots:
   '@agentskit/harness@0.11.0(@types/react@19.2.17)(react-devtools-core@6.1.5)':
     dependencies:
       commander: 14.0.3
-      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0)
-      react: 19.3.0
+      ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      react: 19.2.7
       yaml: 2.9.0
-      zod: 4.6.5
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@types/react'
       - bufferutil
@@ -7170,20 +7155,6 @@ snapshots:
       - bufferutil
       - react-devtools-core
       - utf-8-validate
-
-  '@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0)':
-    dependencies:
-      '@agentskit/core': 1.12.0
-      ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0)
-      marked: 15.0.12
-      marked-terminal: 7.3.0(marked@15.0.12)
-      react: 19.3.0
-    transitivePeerDependencies:
-      - '@types/react'
-      - bufferutil
-      - react-devtools-core
-      - utf-8-validate
-    optional: true
 
   '@agentskit/memory@0.11.0':
     dependencies:
@@ -11536,77 +11507,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  ink@7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0):
-    dependencies:
-      '@alcalzone/ansi-tokenize': 0.3.0
-      ansi-escapes: 7.3.0
-      ansi-styles: 6.2.3
-      auto-bind: 5.0.1
-      chalk: 5.6.2
-      cli-boxes: 4.0.1
-      cli-cursor: 4.0.0
-      cli-truncate: 6.1.1
-      code-excerpt: 4.0.0
-      es-toolkit: 1.49.0
-      indent-string: 5.0.0
-      is-in-ci: 2.0.0
-      patch-console: 2.0.0
-      react: 19.3.0
-      react-reconciler: 0.33.0(react@19.3.0)
-      scheduler: 0.27.0
-      signal-exit: 3.0.7
-      slice-ansi: 9.0.0
-      stack-utils: 2.0.6
-      string-width: 8.2.2
-      terminal-size: 4.0.1
-      type-fest: 5.8.0
-      widest-line: 6.0.0
-      wrap-ansi: 10.0.0
-      ws: 8.21.0
-      yoga-layout: 3.2.1
-    optionalDependencies:
-      '@types/react': 19.2.17
-      react-devtools-core: 6.1.5
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    optional: true
-
-  ink@7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.3.0):
-    dependencies:
-      '@alcalzone/ansi-tokenize': 0.3.0
-      ansi-escapes: 7.3.0
-      ansi-styles: 6.2.3
-      auto-bind: 5.0.1
-      chalk: 5.6.2
-      cli-boxes: 4.0.1
-      cli-cursor: 4.0.0
-      cli-truncate: 6.1.1
-      code-excerpt: 4.0.0
-      es-toolkit: 1.49.0
-      indent-string: 5.0.0
-      is-in-ci: 2.0.0
-      patch-console: 2.0.0
-      react: 19.3.0
-      react-reconciler: 0.33.0(react@19.3.0)
-      scheduler: 0.27.0
-      signal-exit: 3.0.7
-      slice-ansi: 9.0.0
-      stack-utils: 2.0.6
-      string-width: 8.2.2
-      terminal-size: 4.0.1
-      type-fest: 5.8.0
-      widest-line: 6.0.0
-      wrap-ansi: 10.0.0
-      ws: 8.21.0
-      yoga-layout: 3.2.1
-    optionalDependencies:
-      '@types/react': 19.2.17
-      react-devtools-core: 6.1.5
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   inline-style-parser@0.2.7: {}
 
   inline-style-prefixer@7.0.1:
@@ -13386,11 +13286,6 @@ snapshots:
       react: 19.2.7
       scheduler: 0.27.0
 
-  react-reconciler@0.33.0(react@19.3.0):
-    dependencies:
-      react: 19.3.0
-      scheduler: 0.27.0
-
   react-refresh@0.14.2: {}
 
   react-remove-scroll-bar@2.3.8(@types/react@19.2.17)(react@19.2.7):
@@ -13423,8 +13318,6 @@ snapshots:
   react@19.2.3: {}
 
   react@19.2.7: {}
-
-  react@19.3.0: {}
 
   read-yaml-file@1.1.0:
     dependencies:
@@ -14587,8 +14480,6 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
-
-  zod@4.6.5: {}
 
   zone.js@0.16.3: {}
 

@@ -11,9 +11,9 @@ const plan = JSON.parse(readFileSync(new URL('../release/legacy-package-deprecat
 const clone = value => structuredClone(value)
 const certifiedAdoption = () => {
   const certified = clone(adoption)
-  const akos = certified.consumers.find(consumer => consumer.id === 'akos-product-chats')
-  akos.status = 'certified'
-  akos.evidence = {
+  const privateConsumer = certified.consumers.find(consumer => consumer.id === 'private-product-chats')
+  privateConsumer.status = 'certified'
+  privateConsumer.evidence = {
     visibility: 'private-attestation',
     ciStatus: 'pass',
     productionStatus: 'pass',
@@ -35,12 +35,12 @@ describe('legacy package deprecation dry-run', () => {
     const docs = blocked.consumers.find(consumer => consumer.id === 'agentskit-chat-docs')
     docs.status = 'deployment-required'
     docs.evidence.production = { status: 'missing' }
-    const akos = blocked.consumers.find(consumer => consumer.id === 'akos-product-chats')
-    akos.status = 'inventory-required'
-    akos.consumption = 'not-adopted'
-    akos.packageVersion = null
-    akos.imports = []
-    akos.evidence = {
+    const privateConsumer = blocked.consumers.find(consumer => consumer.id === 'private-product-chats')
+    privateConsumer.status = 'inventory-required'
+    privateConsumer.consumption = 'not-adopted'
+    privateConsumer.packageVersion = null
+    privateConsumer.imports = []
+    privateConsumer.evidence = {
       visibility: 'private-attestation',
       ciStatus: 'pending',
       productionStatus: 'pending',
@@ -51,7 +51,7 @@ describe('legacy package deprecation dry-run', () => {
     expect(result.ready).toBe(false)
     expect(result.blockers).toEqual([
       'agentskit-chat-docs is deployment-required',
-      'akos-product-chats is inventory-required',
+      'private-product-chats is inventory-required',
     ])
     expect(result.commands).toHaveLength(10)
     expect(result.operations).toHaveLength(10)

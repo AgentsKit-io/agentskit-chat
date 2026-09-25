@@ -260,7 +260,7 @@
       "productId": "code-review",
       "source": {
         "type": "repository",
-        "repo": "AgentsKit-io/code-review"
+        "repo": "AgentsKit-io/code-review-cli"
       },
       "verification": "declared",
       "claims": []
