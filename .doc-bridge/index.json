@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "bbd187b7d5e86cada63507a6e3352d30a3c0db0d20555661dfe7b9aa33d555d1",
+  "contentHash": "f224b86d142e03d57c039b87f623169b206092ee5e5138e1e42876a71f831cc5",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T02:04:09.791Z",
+  "generatedAt": "2026-09-26T13:44:46.972Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -760,6 +760,18 @@
       "contentHash": "70e9847c4798e1e66c21debee2922d72bf662557cedc5150cf177ceedee1a32c"
     },
     {
+      "id": "document:docs/architecture/adrs/0034-observability-recording-demo.md",
+      "type": "document",
+      "title": "ADR-0034: Observable incident demo composes AgentsKit",
+      "path": "docs/architecture/adrs/0034-observability-recording-demo.md",
+      "description": "Status: Accepted for implementation by the speaker, 2026-09-04.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "123e7717a9f8a20f3f97a3228a8598171d0c9b033f0cfdb88f8e4d5c337eb8e4"
+    },
+    {
       "id": "document:docs/architecture/overview.md",
       "type": "document",
       "title": "Architecture overview",
@@ -1058,6 +1070,18 @@
         "human"
       ],
       "contentHash": "e102e1cd781ac90ad0b70f7e6812aed7d7ad8004bd9b45a5c0150e7e486394f2"
+    },
+    {
+      "id": "document:docs/examples/agent-observability.mdx",
+      "type": "document",
+      "title": "Make Agents Observable",
+      "path": "docs/examples/agent-observability.mdx",
+      "description": "Open the demo.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "a89e0b2227934cdac099e316aa638b7a137c5284641373ddbb4966c0a120de28"
     },
     {
       "id": "document:docs/examples/basic-chat.mdx",
@@ -1849,7 +1873,7 @@
         "document",
         "project"
       ],
-      "contentHash": "2fc8839c9dba4bda546aca697ad3015d9a819e60fe915cb723878e8ace9ad3e0"
+      "contentHash": "fa2ef81d80af5da9d970baa02c176cca3a799da4b9ec0df8730c73a043f34b87"
     },
     {
       "id": "document:SECURITY.md",
@@ -1924,6 +1948,22 @@
         "[file]"
       ],
       "contentHash": "a6f20e6b8d3bb5ba9d538523ea26f18e7ba88a1c6351b0438782cdd50977bcf7"
+    },
+    {
+      "id": "module:apps/docs/app/demo/agent-observability/page.tsx",
+      "type": "module",
+      "title": "page.tsx",
+      "path": "apps/docs/app/demo/agent-observability/page.tsx",
+      "symbols": [
+        "ObservabilityDemoPage",
+        "metadata"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "agent-observability"
+      ],
+      "contentHash": "66960294bbdaa5aac9bc24bb97d47f42269e9367b6755c36d2ce1add27b61e43"
     },
     {
       "id": "module:apps/docs/app/demo/deterministic-chat/page.tsx",
@@ -2357,6 +2397,21 @@
       "contentHash": "4d43cf61f46cd044c2cc8b128ce6a84c4300ecc6d52859c573ffd8a979071ca3"
     },
     {
+      "id": "module:apps/docs/components/examples/observability-demo.tsx",
+      "type": "module",
+      "title": "observability-demo.tsx",
+      "path": "apps/docs/components/examples/observability-demo.tsx",
+      "symbols": [
+        "ObservabilityDemo"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "examples"
+      ],
+      "contentHash": "689ef44515300e80c12732e6af7927492c273a77fbdb8f7ac02b1b1f17a08f9b"
+    },
+    {
       "id": "module:apps/docs/components/framework-tabs.tsx",
       "type": "module",
       "title": "framework-tabs.tsx",
@@ -2699,6 +2754,38 @@
         "lib"
       ],
       "contentHash": "a83b7642523092c65bb5801184adc599581a88becd3efa7b6aa10dc7ff120c29"
+    },
+    {
+      "id": "module:apps/docs/lib/observability-demo.test.ts",
+      "type": "module",
+      "title": "observability-demo.test.ts",
+      "path": "apps/docs/lib/observability-demo.test.ts",
+      "tags": [
+        "module",
+        "ts",
+        "test",
+        "lib"
+      ],
+      "contentHash": "90be203776e4dc9bc266ac6c58811c59bbba346d677564c9c13335cc4d2d6dd0"
+    },
+    {
+      "id": "module:apps/docs/lib/observability-demo.ts",
+      "type": "module",
+      "title": "observability-demo.ts",
+      "path": "apps/docs/lib/observability-demo.ts",
+      "symbols": [
+        "InvestigationMode",
+        "InvestigationSnapshot",
+        "TraceEvent",
+        "createIncidentAdapter",
+        "createInvestigation"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "lib"
+      ],
+      "contentHash": "022684dad6e89ea6bf8804927a7bd676f48bf69056b7b57854a2c2c76f0d0abc"
     },
     {
       "id": "module:apps/docs/lib/public-docs.ts",
@@ -5229,6 +5316,18 @@
       "contentHash": "c26733930cb4a1d14ad3bf03e24761617e3ac349790ead6d4340a9cfb42d5d68"
     },
     {
+      "id": "module:scripts/observability-check.mjs",
+      "type": "module",
+      "title": "observability-check.mjs",
+      "path": "scripts/observability-check.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "65c06dde8f198c06b01166e5809486cfe4438757d456d45cc12dec452eb0bd96"
+    },
+    {
       "id": "module:scripts/pack-release.mjs",
       "type": "module",
       "title": "pack-release.mjs",
@@ -6617,8 +6716,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "4656de2c132b385c3df37c76cc2fbfdb33d18c1bbe469c5730283112d66637fd",
-    "fileCount": 437,
+    "hash": "18b6ce68d6616988d888980048eeb9c15776b6fb79050a25e4554cbae6387bdf",
+    "fileCount": 444,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6640,9 +6739,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "d2b41c7259a029b643cf8a7211592a9fd30f97cb7205c545305f4e38a3b26c51",
+    "contentHash": "f8b0f42a7e2cbef8df0ea8e48cd69871ee5237d2ff0c3600b8ed8467b207b1ae",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "d272e18ad37615f08e503a25d4bd1f92f042f68462f3bb712c4e5ae3eedefd2c",
+    "snapshotHash": "cca5b552b5b3b9c3ce70999c293904a3b6aa9fcf1524cae177ee9679cce2a248",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6662,7 +6761,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 472,
+      "documentCount": 479,
       "fieldNames": [
         "aliases",
         "body",
@@ -6673,13 +6772,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.141949152542373,
-        "body": 74.64406779661017,
-        "headings": 4.59957627118644,
-        "path": 6.086864406779661,
-        "summary": 6.194915254237288,
-        "symbols": 4.983050847457627,
-        "title": 3.580508474576271
+        "aliases": 3.1419624217119,
+        "body": 75.11899791231733,
+        "headings": 4.590814196242171,
+        "path": 6.106471816283925,
+        "summary": 6.125260960334029,
+        "symbols": 4.960334029227558,
+        "title": 3.594989561586639
       }
     },
     "entries": [
@@ -6741,7 +6840,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "3ba816e35177adf665d8b4db5f18ea04c90eeae6735b8fa3a837d9e0c835419c",
+        "contentHash": "2e282e9a00199b2b33cb2100112510ee101970f17ee6ae36b7a73b5ecbb87c86",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "docs-app"
@@ -6838,7 +6937,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "205c3564881cdb3d250d1c9482f1e05942f0e46f010275a7de3680d6b735cc50",
+        "contentHash": "ece99d72a33ff66e1ca461242b4b9d638c317c9923c38e40dc44677fef610062",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -7070,7 +7169,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "cbbece9215b87b80e70e0390cbb81ad84c88160df393aa87a41104694fc996e5",
+        "contentHash": "a9a4148d9ab82a1aa910ab5ad6b5cc8b9347df46bb0a8651cd24859c57cdc3fa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9069,7 +9168,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "49cd693897fe50ad538a54e6f46c63542fa6c04d20c8b9ca9c956021fd7dafc9",
+        "contentHash": "58ceaf6b69e84d6d00ffe9f0026329e342fa8802a527a6991c175b862dc12b85",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -11909,6 +12008,45 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/architecture/adrs/0034-observability-recording-demo.md",
+        "kind": "document",
+        "path": "docs/architecture/adrs/0034-observability-recording-demo.md",
+        "title": "ADR-0034: Observable incident demo composes AgentsKit",
+        "summary": "Status: Accepted for implementation by the speaker, 2026-09-04.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "ADR-0034: Observable incident demo composes AgentsKit",
+          "headings": "ADR-0034: Observable incident demo composes AgentsKit Contract Upstream adoption Alternatives Verification and delivery",
+          "path": "docs/architecture/adrs/0034-observability-recording-demo.md",
+          "symbols": "",
+          "summary": "Status: Accepted for implementation by the speaker, 2026-09-04.",
+          "body": "ADR-0034: Observable incident demo composes AgentsKit Status: Accepted for implementation by the speaker, 2026-09-04. Contract Implement /demo/agent-observability in the documentation application for the Conf42 recording. English, fictional Checkout API incident, no credentials, no LLM requests, no production actions. A geometric investigation console uses the existing product typography and violet identity, restrained semantic colors, an interactive execution timeline and a host-owned approval pause. Acceptance criteria: - DEMO-01: Both deterministic and scripted-agent paths execute AgentsKit tools, expose context versions, decisions, tool inputs/results, validation, timeout, bounded retry and fallback. Integration tests and real-browser flows. - DEMO-02: Rollback cannot execute before approval; reject ends safely. Repeated approval, reset during execution, fresh run IDs and retries are tested. - DEMO-03: Trace inspection/export, replay, pause and pace controls work. No model usage/cost is invented; no network/provider calls in the fixture execution. - DEMO-04: Real-browser tests at 375, 768, 1280, 1440 and 1920 widths; keyboard, axe accessibility/contrast, overflow, reduced motion, screenshots, console and failed requests. Human visual approval remains required. - DEMO-05: Source and rehearsal instructions document the adapter seam and a one-line substitution of an already-configured provider. Typecheck, build and existing repository checks remain required. - DEMO-06: Deploy to the existing AgentsKit Chat Vercel project and exercise the remote route, approval and replay. No real rollback or organizer uploads. Budget: deterministic local checks first, zero paid model requests; one preview deployment after local acceptance, repair deployments only when necessary. Tracking: issue and PR authorized by speaker; no automatic merge. Preserve the pre-existing .doc-bridge/report.html and .doc-bridge/workflow/ artifacts. Upstream adoption Inspected installed @agentskit/core ChatController, AdapterFactory, ToolDefinition and Observer exports; packages/chat/src/index.ts createActionConfirmation and defineChat; ADR-0002 and ADR-0008. Reuse createChatController for tool execution, proposal and approval, and createActionConfirmation for single-use, session-bound approval. Compose defineChat for the configuration. No copied runtime or custom tool executor. The application owns fictional fixtures, a fixed runbook, a scripted adapter, safe evidence projection and playback pacing. Its timeline is an application trace, not an OpenTelemetry exporter. Adapter runtime events are not presented as real model usage. Tool timing is measured and includes controlled pacing. The demo runs locally in the browser; its approval demonstrates the host API, not a production security boundary. A real provider belongs behind an authenticated backend and production tools require server authorization. Alternatives A static event animation would not prove execution. A custom agent loop would duplicate AgentsKit. A live provider would undermine repeatability and the explicit no-LLM recording constraint. All are rejected. Verification and delivery Preserve the strict project gates and add demo-specific tests. Repository completion requires the verification harness, explicit visual approval and remote evidence. Code readiness is not deployment readiness.",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:packages/chat/src/index.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "123e7717a9f8a20f3f97a3228a8598171d0c9b033f0cfdb88f8e4d5c337eb8e4",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/architecture/overview.md",
         "kind": "document",
         "path": "docs/architecture/overview.md",
@@ -13682,6 +13820,55 @@
           ]
         },
         "contentHash": "e102e1cd781ac90ad0b70f7e6812aed7d7ad8004bd9b45a5c0150e7e486394f2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:docs/examples/agent-observability.mdx",
+        "kind": "document",
+        "path": "docs/examples/agent-observability.mdx",
+        "title": "Make Agents Observable",
+        "summary": "Open the demo.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "Make Agents Observable",
+          "headings": "Make Agents Observable Recording script Implementation and provider seam Safety and privacy Run and verify",
+          "path": "docs/examples/agent-observability.mdx",
+          "symbols": "",
+          "summary": "Open the demo.",
+          "body": "Make Agents Observable . No live LLM is called. All data is fictional. The application executes actual AgentsKit tool calls over fixtures; it is not a prerecorded list of events. The application trace is not an OpenTelemetry export. Durations include the selected recording pace and must not be presented as provider benchmarks. Recording script 1. Choose Scripted agent , Presentation pace, and Focus mode . 2. Click Run investigation . Inspect the versioned context and route selection. 3. Pause at the two deploy.get timeouts; use Failures to inspect them. 4. Follow deploy.audit to the recovered evidence. 5. At Approve simulated rollback , explain service, target and host policy. Click the native AgentsKit Approve button. Deny is also supported. 6. Observe rollback.execute , health.check and recovery.verified separately. 7. Export JSON, then choose Deterministic runbook and replay the same fixture. 8. Open Compare execution paths . Do not claim a quality or speed benchmark. Reset cancels the old recording. Each replay creates a new run ID. Pause holds the next fixture boundary. Escape exits focus mode. Mobile, keyboard, light and dark themes and reduced motion are supported. Implementation and provider seam Source: apps/docs/lib/observability-demo.ts and apps/docs/components/examples/observability-demo.tsx . The installed AgentsKit AdapterFactory contract is the substitution seam. After configuring a supported adapter behind your trusted backend, the change is: configuredProviderAdapter is an already-created AgentsKit adapter, not an export from this demo. Never put provider secrets in this browser page. The one-line swap replaces the mock adapter, not server authentication, observability, deployment or production authorization. The default page never uses this option. With a live adapter, replace the mock-only usage disclosure and instrument provider usage separately before recording; production tools require a trusted server. Safety and privacy Read fixtures have a service allowlist. Rollback is a simulated registered tool with requiresConfirmation , session-bound createActionConfirmation and scoped target validation. Repeated approvals cannot execute twice. These browser checks are a teaching example, not an authorization boundary against malicious clients. No arbitrary user payloads are accepted and only fixture evidence is exported. Raw log payloads are represented by [REDACTED] ; real redaction requires an allowlist before export and tests for nested error and tool payloads. When a substituted adapter proposes rollback itself, the UI resolves that original AgentsKit call through the controller's native approval API. Host-generated proposals use the existing session-bound confirmation coordinator. Neither path creates a second request for the same pending action. Run and verify See ADR-0034 and issue 165 for the acceptance contract. Screenshots and criterion-level results are written under .codex/verification/observability/ .",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:apps/docs/components/examples/observability-demo.tsx",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:apps/docs/lib/observability-demo.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:packages/chat/src/index.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "a89e0b2227934cdac099e316aa638b7a137c5284641373ddbb4966c0a120de28",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19729,7 +19916,7 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Cross-framework application framework for building interactive agent experiences on top of AgentsKit. Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.",
-          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 33 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Prefer Vue? . It streams without an API key and includes reproducible cancellation and error paths. Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
+          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 34 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Prefer Vue? . It streams without an API key and includes reproducible cancellation and error paths. Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
           "aliases": "document project"
         },
         "graph": {
@@ -19886,7 +20073,7 @@
             }
           ]
         },
-        "contentHash": "2fc8839c9dba4bda546aca697ad3015d9a819e60fe915cb723878e8ace9ad3e0",
+        "contentHash": "fa2ef81d80af5da9d970baa02c176cca3a799da4b9ec0df8730c73a043f34b87",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20142,6 +20329,44 @@
           "outbound": []
         },
         "contentHash": "a6f20e6b8d3bb5ba9d538523ea26f18e7ba88a1c6351b0438782cdd50977bcf7",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/app/demo/agent-observability/page.tsx",
+        "kind": "module",
+        "path": "apps/docs/app/demo/agent-observability/page.tsx",
+        "title": "page.tsx",
+        "aliases": [],
+        "symbols": [
+          "ObservabilityDemoPage",
+          "metadata"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "agent-observability"
+        ],
+        "fields": {
+          "title": "page.tsx",
+          "headings": "",
+          "path": "apps/docs/app/demo/agent-observability/page.tsx",
+          "symbols": "ObservabilityDemoPage metadata",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx agent-observability"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/app/demo",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "66960294bbdaa5aac9bc24bb97d47f42269e9367b6755c36d2ce1add27b61e43",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21195,6 +21420,51 @@
         "confidence": "observed"
       },
       {
+        "id": "module:apps/docs/components/examples/observability-demo.tsx",
+        "kind": "module",
+        "path": "apps/docs/components/examples/observability-demo.tsx",
+        "title": "observability-demo.tsx",
+        "aliases": [],
+        "symbols": [
+          "ObservabilityDemo"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "examples"
+        ],
+        "fields": {
+          "title": "observability-demo.tsx",
+          "headings": "",
+          "path": "apps/docs/components/examples/observability-demo.tsx",
+          "symbols": "ObservabilityDemo",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx examples"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/examples/agent-observability.mdx"
+          ],
+          "areaId": "area:apps/docs/components",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/examples/agent-observability.mdx",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "689ef44515300e80c12732e6af7927492c273a77fbdb8f7ac02b1b1f17a08f9b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:apps/docs/components/framework-tabs.tsx",
         "kind": "module",
         "path": "apps/docs/components/framework-tabs.tsx",
@@ -22070,6 +22340,101 @@
           "outbound": []
         },
         "contentHash": "a83b7642523092c65bb5801184adc599581a88becd3efa7b6aa10dc7ff120c29",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/lib/observability-demo.test.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/observability-demo.test.ts",
+        "title": "observability-demo.test.ts",
+        "aliases": [],
+        "tags": [
+          "module",
+          "ts",
+          "test",
+          "lib"
+        ],
+        "fields": {
+          "title": "observability-demo.test.ts",
+          "headings": "",
+          "path": "apps/docs/lib/observability-demo.test.ts",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts test lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/observability-demo.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "90be203776e4dc9bc266ac6c58811c59bbba346d677564c9c13335cc4d2d6dd0",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/lib/observability-demo.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/observability-demo.ts",
+        "title": "observability-demo.ts",
+        "aliases": [],
+        "symbols": [
+          "InvestigationMode",
+          "InvestigationSnapshot",
+          "TraceEvent",
+          "createIncidentAdapter",
+          "createInvestigation"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "lib"
+        ],
+        "fields": {
+          "title": "observability-demo.ts",
+          "headings": "",
+          "path": "apps/docs/lib/observability-demo.ts",
+          "symbols": "InvestigationMode InvestigationSnapshot TraceEvent createIncidentAdapter createInvestigation",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/examples/agent-observability.mdx"
+          ],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/observability-demo.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/examples/agent-observability.mdx",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "022684dad6e89ea6bf8804927a7bd676f48bf69056b7b57854a2c2c76f0d0abc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -24499,9 +24864,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 32,
+          "inboundLinks": 34,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/architecture/adrs/0034-observability-recording-demo.md",
             "document:docs/actions/confirmation.mdx",
             "document:docs/api-reference.mdx",
             "document:docs/architecture/adrs/0002-upstream-first-no-reimplementation.md",
@@ -24516,6 +24882,7 @@
             "document:docs/architecture/upstream-adoption.md",
             "document:docs/deployment.mdx",
             "document:docs/dogfood/registry-playbook.md",
+            "document:docs/examples/agent-observability.mdx",
             "document:docs/examples/index.mdx",
             "document:docs/examples/operations-reference.md",
             "document:docs/examples/support-reference.md",
@@ -24566,6 +24933,11 @@
             {
               "kind": "imports",
               "id": "module:packages/chat/tests/presentation.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/architecture/adrs/0034-observability-recording-demo.md",
               "confidence": "observed"
             },
             {
@@ -24636,6 +25008,11 @@
             {
               "kind": "mentions-symbol",
               "id": "document:docs/dogfood/registry-playbook.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/examples/agent-observability.mdx",
               "confidence": "observed"
             },
             {
@@ -29927,6 +30304,40 @@
           "outbound": []
         },
         "contentHash": "c26733930cb4a1d14ad3bf03e24761617e3ac349790ead6d4340a9cfb42d5d68",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:scripts/observability-check.mjs",
+        "kind": "module",
+        "path": "scripts/observability-check.mjs",
+        "title": "observability-check.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "observability-check.mjs",
+          "headings": "",
+          "path": "scripts/observability-check.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:agentskit-chat",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "65c06dde8f198c06b01166e5809486cfe4438757d456d45cc12dec452eb0bd96",
         "provenance": "observed",
         "confidence": "observed"
       },
