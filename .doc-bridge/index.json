@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8a5acfdd20c20d88b9ad3deb845617c666409e13d898a65a2e49eeaefa6d5220",
+  "contentHash": "bbd187b7d5e86cada63507a6e3352d30a3c0db0d20555661dfe7b9aa33d555d1",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-25T03:57:25.712Z",
+  "generatedAt": "2026-09-26T02:04:09.791Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1561,7 +1561,7 @@
         "document",
         "human"
       ],
-      "contentHash": "0ac7ad49eee2d5e707180d45ce15d8219919dc28b5b38bf4f0befd31e24961a4"
+      "contentHash": "effed05984f3bb496913d7d5429968a5456a5e9cfdf7281048f78047e6ab63ac"
     },
     {
       "id": "document:docs/releases/release-process.md",
@@ -2002,7 +2002,7 @@
         "tsx",
         "docs"
       ],
-      "contentHash": "5ee78556684a11c593900ff77ba806b0638a27e498aa73b8c0495eac8f5fb529"
+      "contentHash": "a0a36bc93a2d8cf322dcaaface91936f36dbb714c09a523f3f53027b0e4a3a50"
     },
     {
       "id": "module:apps/docs/app/for-agents/page.tsx",
@@ -2034,7 +2034,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18"
+      "contentHash": "9fd91fa6110c4e7147ed55f0ef30537981533c6d87c6ccfa1839446f565e3713"
     },
     {
       "id": "module:apps/docs/app/llms-full.txt/route.ts",
@@ -2100,7 +2100,7 @@
         "tsx",
         "app"
       ],
-      "contentHash": "892430a0ef250e955d7a87bc55f4ed806baa213eb66c9f838ab945cf52bd81f1"
+      "contentHash": "08a9893fc9996175174ce3f6c12727f1c1c80c260d8867c311daf096f627a36b"
     },
     {
       "id": "module:apps/docs/app/raw/[...path]/route.ts",
@@ -2180,6 +2180,23 @@
         "components"
       ],
       "contentHash": "6e75fdfcf56be7ffc9810991c4759e90ffa97e133a53656948b7e43cbdc8334a"
+    },
+    {
+      "id": "module:apps/docs/components/agentskit-shell.tsx",
+      "type": "module",
+      "title": "agentskit-shell.tsx",
+      "path": "apps/docs/components/agentskit-shell.tsx",
+      "symbols": [
+        "AgentsKitAurora",
+        "AgentsKitShellScript",
+        "ProductWordmark"
+      ],
+      "tags": [
+        "module",
+        "tsx",
+        "components"
+      ],
+      "contentHash": "a879cdd7755e9a40e7b98f484b27205b4a98a17b15aeaa435428955a69059336"
     },
     {
       "id": "module:apps/docs/components/architecture-fanout.tsx",
@@ -2449,21 +2466,6 @@
       "contentHash": "798c9d832d8edee8efe6f9979f39235bd2b465d26c3eaf42f5c4560c3371c2d7"
     },
     {
-      "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
-      "type": "module",
-      "title": "liquid-cursor-gradient.tsx",
-      "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-      "symbols": [
-        "LiquidCursorGradient"
-      ],
-      "tags": [
-        "module",
-        "tsx",
-        "components"
-      ],
-      "contentHash": "42f78ee0fa67e09291fd6270a5bf09b221f6953a2023bc1845a76fcfc86a4a17"
-    },
-    {
       "id": "module:apps/docs/components/mermaid.tsx",
       "type": "module",
       "title": "mermaid.tsx",
@@ -2491,7 +2493,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "b9f4fd309b05de96f0c5b477260f16b4cecd881c688e1818e1558623b7698002"
+      "contentHash": "9f07a3672f4c8ff0b88614a281e655af0cbc1fa01aa1640e925c772325dc1df3"
     },
     {
       "id": "module:apps/docs/components/renderer-code-showcase.tsx",
@@ -2506,22 +2508,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "d92bf6dc59747bafd556ecfa3b660d17d00b0b54f80a3a979b357249172f069b"
-    },
-    {
-      "id": "module:apps/docs/components/shared-ecosystem-bar.tsx",
-      "type": "module",
-      "title": "shared-ecosystem-bar.tsx",
-      "path": "apps/docs/components/shared-ecosystem-bar.tsx",
-      "symbols": [
-        "SharedEcosystemBar"
-      ],
-      "tags": [
-        "module",
-        "tsx",
-        "components"
-      ],
-      "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a"
+      "contentHash": "5148022eb982bd01c9d13e4f269ca964f3562b3c408a89816655bfacd78c4657"
     },
     {
       "id": "module:apps/docs/components/shared-ecosystem-showcase.tsx",
@@ -2551,7 +2538,7 @@
         "tsx",
         "components"
       ],
-      "contentHash": "8fd8b73536472c2eb1b58c538817f8af5461b9531dc312f85d989814fa1c2fbd"
+      "contentHash": "ffd244c4ccc21e852131ca4d9530d1c061dab8075b71cdd29643a9fda9dfecdf"
     },
     {
       "id": "module:apps/docs/components/surface-grid.tsx",
@@ -2731,6 +2718,27 @@
       "contentHash": "93c38b7d7dfd10db3132a29e07f4bc2640288d34b7438462b1694e7ddecc6597"
     },
     {
+      "id": "module:apps/docs/lib/shell.ts",
+      "type": "module",
+      "title": "shell.ts",
+      "path": "apps/docs/lib/shell.ts",
+      "symbols": [
+        "DEFAULT_SHELL_ORIGIN",
+        "SHELL_PRODUCT_ID",
+        "SHELL_PRODUCT_REPO",
+        "resolveShellOrigin",
+        "shellOrigin",
+        "shellScriptSrc",
+        "shellStylesheetHref"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "lib"
+      ],
+      "contentHash": "35e8078542769d162febabb0408c1945e7d14c8301ec3f7e9c1474e5843c0d48"
+    },
+    {
       "id": "module:apps/docs/lib/source.ts",
       "type": "module",
       "title": "source.ts",
@@ -2786,7 +2794,7 @@
         "mjs",
         "docs"
       ],
-      "contentHash": "6ad1846f8a114f32b374e814e259c3cf1e875d0916abb60ed8a982f5d2cf9877"
+      "contentHash": "3041334131313733d43cacc666f4007e8b76fda1133fa0fad96b0da1336f9545"
     },
     {
       "id": "module:apps/docs/playwright.config.ts",
@@ -2828,7 +2836,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "b9b69a92fa7f513f374892166835d46555c56292a3a73d15c58da9478f5dfbbe"
+      "contentHash": "f6218110fc2fc603bbaffdc8992302396e8f46b1f4d8efbaf29051cd4649cc26"
     },
     {
       "id": "module:apps/docs/scripts/verify-home-ui.mjs",
@@ -2840,7 +2848,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "39828c7dd2b6460c14397a0cab0d50d5f2cb98ba02339eb7f735d914d9d88cac"
+      "contentHash": "f02b550fccee081c1fc2141757355c974c52691ea530b8aeeb74fe7746dd464f"
     },
     {
       "id": "module:apps/docs/source.config.ts",
@@ -2881,7 +2889,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461"
+      "contentHash": "d7a497fe4507d5a8a1585bc01cb3e3aa9401085aed6fc0a60151e9f2498dfb1c"
     },
     {
       "id": "module:apps/docs/tests/e2e/docs.spec.ts",
@@ -2894,7 +2902,7 @@
         "test",
         "e2e"
       ],
-      "contentHash": "d9fd74bbe229c0933caaefe4adf90b3c16ac8ca05e0e36bc11dcc83d7a036cd0"
+      "contentHash": "497590560bf07122aacd5f1c0f59e28f524fdfc417826f3b64165d26578ce73a"
     },
     {
       "id": "module:apps/docs/types/css-modules.d.ts",
@@ -3248,7 +3256,7 @@
         "mjs",
         "examples"
       ],
-      "contentHash": "857c4987bb4f2de91ddce7f6de8a0ca430ca2b8a9d64b3068f213feb0491dc76"
+      "contentHash": "e2a0dd8c0dc0051ad56e1bf9721cf13b30c39cf088d8a263b32648161c04b92b"
     },
     {
       "id": "module:packages/angular/fixtures/readme-example.ts",
@@ -4943,7 +4951,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "bd46a5fff2bd3b161b5b756612ace3ad1076ce218a2fc3a262390346bad4e457"
+      "contentHash": "ead40c911d36353691e5629dccb70906dff495c80ec2b97b0dddf74d7b59cb5e"
     },
     {
       "id": "module:scripts/conformance-gate.mjs",
@@ -6609,7 +6617,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "deadba863c7c91186e72406d64d0e7339ac03b0d90320f1f1ca88374f2dfe2f0",
+    "hash": "4656de2c132b385c3df37c76cc2fbfdb33d18c1bbe469c5730283112d66637fd",
     "fileCount": 437,
     "projectionVersion": 2
   },
@@ -6632,9 +6640,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "da3b1e5e708ae938076003636ddfdd2058a6254cd4711475eda99826f7d92c3c",
+    "contentHash": "d2b41c7259a029b643cf8a7211592a9fd30f97cb7205c545305f4e38a3b26c51",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "7a1959d5ad4ced4f9a9937d7bcce9d2a6c6822691143866075f73f598b16bde3",
+    "snapshotHash": "d272e18ad37615f08e503a25d4bd1f92f042f68462f3bb712c4e5ae3eedefd2c",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6668,10 +6676,10 @@
         "aliases": 3.141949152542373,
         "body": 74.64406779661017,
         "headings": 4.59957627118644,
-        "path": 6.093220338983051,
+        "path": 6.086864406779661,
         "summary": 6.194915254237288,
-        "symbols": 4.9173728813559325,
-        "title": 3.5889830508474576
+        "symbols": 4.983050847457627,
+        "title": 3.580508474576271
       }
     },
     "entries": [
@@ -6733,7 +6741,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4e5bad6ef0b5448b1a8761e4e5197ac05796cbad3948a8f509bd1871ab6229a8",
+        "contentHash": "3ba816e35177adf665d8b4db5f18ea04c90eeae6735b8fa3a837d9e0c835419c",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "docs-app"
@@ -7062,7 +7070,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "a9a4148d9ab82a1aa910ab5ad6b5cc8b9347df46bb0a8651cd24859c57cdc3fa",
+        "contentHash": "cbbece9215b87b80e70e0390cbb81ad84c88160df393aa87a41104694fc996e5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -17993,7 +18001,7 @@
             }
           ]
         },
-        "contentHash": "0ac7ad49eee2d5e707180d45ce15d8219919dc28b5b38bf4f0befd31e24961a4",
+        "contentHash": "effed05984f3bb496913d7d5429968a5456a5e9cfdf7281048f78047e6ab63ac",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20322,7 +20330,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "5ee78556684a11c593900ff77ba806b0638a27e498aa73b8c0495eac8f5fb529",
+        "contentHash": "a0a36bc93a2d8cf322dcaaface91936f36dbb714c09a523f3f53027b0e4a3a50",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20398,7 +20406,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "66552ac07dfe444867063b9850d878725647472a1d8da5af1cdb9cfc95a95c18",
+        "contentHash": "9fd91fa6110c4e7147ed55f0ef30537981533c6d87c6ccfa1839446f565e3713",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20552,7 +20560,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "892430a0ef250e955d7a87bc55f4ed806baa213eb66c9f838ab945cf52bd81f1",
+        "contentHash": "08a9893fc9996175174ce3f6c12727f1c1c80c260d8867c311daf096f627a36b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20742,6 +20750,45 @@
           "outbound": []
         },
         "contentHash": "6e75fdfcf56be7ffc9810991c4759e90ffa97e133a53656948b7e43cbdc8334a",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/components/agentskit-shell.tsx",
+        "kind": "module",
+        "path": "apps/docs/components/agentskit-shell.tsx",
+        "title": "agentskit-shell.tsx",
+        "aliases": [],
+        "symbols": [
+          "AgentsKitAurora",
+          "AgentsKitShellScript",
+          "ProductWordmark"
+        ],
+        "tags": [
+          "module",
+          "tsx",
+          "components"
+        ],
+        "fields": {
+          "title": "agentskit-shell.tsx",
+          "headings": "",
+          "path": "apps/docs/components/agentskit-shell.tsx",
+          "symbols": "AgentsKitAurora AgentsKitShellScript ProductWordmark",
+          "summary": "",
+          "body": "",
+          "aliases": "module tsx components"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/components",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "a879cdd7755e9a40e7b98f484b27205b4a98a17b15aeaa435428955a69059336",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21420,43 +21467,6 @@
         "confidence": "observed"
       },
       {
-        "id": "module:apps/docs/components/liquid-cursor-gradient.tsx",
-        "kind": "module",
-        "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-        "title": "liquid-cursor-gradient.tsx",
-        "aliases": [],
-        "symbols": [
-          "LiquidCursorGradient"
-        ],
-        "tags": [
-          "module",
-          "tsx",
-          "components"
-        ],
-        "fields": {
-          "title": "liquid-cursor-gradient.tsx",
-          "headings": "",
-          "path": "apps/docs/components/liquid-cursor-gradient.tsx",
-          "symbols": "LiquidCursorGradient",
-          "summary": "",
-          "body": "",
-          "aliases": "module tsx components"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs/components",
-          "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "42f78ee0fa67e09291fd6270a5bf09b221f6953a2023bc1845a76fcfc86a4a17",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
         "id": "module:apps/docs/components/mermaid.tsx",
         "kind": "module",
         "path": "apps/docs/components/mermaid.tsx",
@@ -21534,7 +21544,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "b9f4fd309b05de96f0c5b477260f16b4cecd881c688e1818e1558623b7698002",
+        "contentHash": "9f07a3672f4c8ff0b88614a281e655af0cbc1fa01aa1640e925c772325dc1df3",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21571,44 +21581,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "d92bf6dc59747bafd556ecfa3b660d17d00b0b54f80a3a979b357249172f069b",
-        "provenance": "observed",
-        "confidence": "observed"
-      },
-      {
-        "id": "module:apps/docs/components/shared-ecosystem-bar.tsx",
-        "kind": "module",
-        "path": "apps/docs/components/shared-ecosystem-bar.tsx",
-        "title": "shared-ecosystem-bar.tsx",
-        "aliases": [],
-        "symbols": [
-          "SharedEcosystemBar"
-        ],
-        "tags": [
-          "module",
-          "tsx",
-          "components"
-        ],
-        "fields": {
-          "title": "shared-ecosystem-bar.tsx",
-          "headings": "",
-          "path": "apps/docs/components/shared-ecosystem-bar.tsx",
-          "symbols": "SharedEcosystemBar",
-          "summary": "",
-          "body": "",
-          "aliases": "module tsx components"
-        },
-        "graph": {
-          "pagerank": 0,
-          "inboundLinks": 0,
-          "coveredBy": [],
-          "mentionedBy": [],
-          "areaId": "area:apps/docs/components",
-          "packageId": "package:@agentskit/chat-docs",
-          "inbound": [],
-          "outbound": []
-        },
-        "contentHash": "fd20b0e3455ff36758242fa04c56c132ae1f68e7169ad7764238e496abe5404a",
+        "contentHash": "5148022eb982bd01c9d13e4f269ca964f3562b3c408a89816655bfacd78c4657",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21690,7 +21663,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "8fd8b73536472c2eb1b58c538817f8af5461b9531dc312f85d989814fa1c2fbd",
+        "contentHash": "ffd244c4ccc21e852131ca4d9530d1c061dab8075b71cdd29643a9fda9dfecdf",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22151,6 +22124,55 @@
         "confidence": "observed"
       },
       {
+        "id": "module:apps/docs/lib/shell.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/shell.ts",
+        "title": "shell.ts",
+        "aliases": [],
+        "symbols": [
+          "DEFAULT_SHELL_ORIGIN",
+          "SHELL_PRODUCT_ID",
+          "SHELL_PRODUCT_REPO",
+          "resolveShellOrigin",
+          "shellOrigin",
+          "shellScriptSrc",
+          "shellStylesheetHref"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "lib"
+        ],
+        "fields": {
+          "title": "shell.ts",
+          "headings": "",
+          "path": "apps/docs/lib/shell.ts",
+          "symbols": "DEFAULT_SHELL_ORIGIN SHELL_PRODUCT_ID SHELL_PRODUCT_REPO resolveShellOrigin shellOrigin shellScriptSrc shellStylesheetHref",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/tests/dogfood.test.ts",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "35e8078542769d162febabb0408c1945e7d14c8301ec3f7e9c1474e5843c0d48",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:apps/docs/lib/source.ts",
         "kind": "module",
         "path": "apps/docs/lib/source.ts",
@@ -22312,7 +22334,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "6ad1846f8a114f32b374e814e259c3cf1e875d0916abb60ed8a982f5d2cf9877",
+        "contentHash": "3041334131313733d43cacc666f4007e8b76fda1133fa0fad96b0da1336f9545",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22420,7 +22442,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "b9b69a92fa7f513f374892166835d46555c56292a3a73d15c58da9478f5dfbbe",
+        "contentHash": "f6218110fc2fc603bbaffdc8992302396e8f46b1f4d8efbaf29051cd4649cc26",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22454,7 +22476,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "39828c7dd2b6460c14397a0cab0d50d5f2cb98ba02339eb7f735d914d9d88cac",
+        "contentHash": "f02b550fccee081c1fc2141757355c974c52691ea530b8aeeb74fe7746dd464f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22582,12 +22604,17 @@
             },
             {
               "kind": "imports",
+              "id": "module:apps/docs/lib/shell.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
               "id": "module:apps/docs/lib/structured-data.ts",
               "confidence": "observed"
             }
           ]
         },
-        "contentHash": "4f9f5d3f8bb2d7bbb5c2e394d3eaa46062b8262f541d599667c09e622ef0a461",
+        "contentHash": "d7a497fe4507d5a8a1585bc01cb3e3aa9401085aed6fc0a60151e9f2498dfb1c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22622,7 +22649,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "d9fd74bbe229c0933caaefe4adf90b3c16ac8ca05e0e36bc11dcc83d7a036cd0",
+        "contentHash": "497590560bf07122aacd5f1c0f59e28f524fdfc417826f3b64165d26578ce73a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -23588,7 +23615,7 @@
             }
           ]
         },
-        "contentHash": "857c4987bb4f2de91ddce7f6de8a0ca430ca2b8a9d64b3068f213feb0491dc76",
+        "contentHash": "e2a0dd8c0dc0051ad56e1bf9721cf13b30c39cf088d8a263b32648161c04b92b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29026,7 +29053,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "bd46a5fff2bd3b161b5b756612ace3ad1076ce218a2fc3a262390346bad4e457",
+        "contentHash": "ead40c911d36353691e5629dccb70906dff495c80ec2b97b0dddf74d7b59cb5e",
         "provenance": "observed",
         "confidence": "observed"
       },

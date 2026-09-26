@@ -43,7 +43,7 @@ try {
     await page.waitForTimeout(700)
     await check(`${name}-home-loads`, response?.ok() && await page.getByRole('heading', { level: 1 }).count() === 1, { httpStatus: response?.status(), durationMs: Date.now() - startedAt })
     await check(`${name}-dark-default`, await page.locator('html').evaluate(el => el.classList.contains('dark')))
-    await check(`${name}-home-liquid-background`, await page.locator('.chat-liquid-cursor').count() === 1 && await page.locator('body').evaluate(el => getComputedStyle(el).backgroundImage !== 'none'))
+    await check(`${name}-home-shell-aurora`, await page.locator('agentskit-aurora').count() === 1 && await page.locator('agentskit-aurora').getAttribute('aria-hidden') === 'true')
 
     const hero = page.locator('main.chat-marketing > section').first()
     const heroActions = hero.getByRole('link', { name: 'Build the interface' })
@@ -92,10 +92,8 @@ try {
     await check(`${name}-renderer-example-keyboard`, await solidTab.getAttribute('aria-selected') === 'true' && (await page.locator('#renderer-example-panel pre code').innerText()).includes('@agentskit/chat/solid'))
     await page.getByRole('heading', { name: 'Ship the chat your product actually runs.' }).waitFor()
     await check(`${name}-impactful-cta-links`, await page.getByRole('link', { name: 'Build your chat' }).getAttribute('href') === '/docs/getting-started' && await page.getByRole('link', { name: 'CLI reference' }).getAttribute('href') === '/docs/cli')
-    const ecosystemFooter = page.locator('footer.chat-home-footer nav[aria-label="AgentsKit ecosystem"]')
-    await check(`${name}-ecosystem-footer-current-product`, await ecosystemFooter.locator('li').count() === 6 && await ecosystemFooter.locator('a').count() === 5 && (await ecosystemFooter.locator('[aria-current="page"]').innerText()).trim() === 'Chat')
-    const footerColumns = await page.locator('footer.chat-home-footer [data-footer-column]').evaluateAll(elements => elements.map(element => element.getAttribute('data-footer-column')))
-    await check(`${name}-ecosystem-footer-standard-columns`, ['Start', 'Build', 'Ecosystem', 'Community'].every(title => footerColumns.includes(title)), { footerColumns })
+    const shellFooter = page.locator('agentskit-footer')
+    await check(`${name}-shell-footer`, await shellFooter.count() === 1 && await shellFooter.getAttribute('current') === 'agentskit-chat' && await shellFooter.getAttribute('repo') === 'AgentsKit-io/agentskit-chat')
 
     if (!isMobile) {
       await heroActions.hover()
@@ -104,12 +102,6 @@ try {
         const style = getComputedStyle(element)
         return style.transform !== 'none' || style.translate !== 'none'
       }))
-      await page.mouse.move(240, 360)
-      await page.waitForTimeout(200)
-      const active = await page.locator('.chat-liquid-cursor').getAttribute('data-active')
-      await check('desktop-liquid-follows-pointer', active === 'true', { active })
-    } else {
-      await check('mobile-liquid-is-static', await page.locator('.chat-liquid-cursor').evaluate(el => getComputedStyle(el).display === 'none'))
     }
 
     const rendererTabs = page.getByRole('tablist', { name: 'Choose a renderer' })
@@ -146,7 +138,7 @@ try {
     const axe = await new AxeBuilder({ page })
       .include('main.chat-marketing')
       .include('header.product-header')
-      .include('footer.chat-home-footer')
+      .include('agentskit-footer')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze()
     await check(`${name}-axe-accessibility`, axe.violations.length === 0, { violations: axe.violations.map(({ id, impact, description, nodes }) => ({ id, impact, description, count: nodes.length })) })
@@ -162,8 +154,6 @@ try {
 
     if (!isMobile) {
       await page.emulateMedia({ reducedMotion: 'reduce' })
-      await page.mouse.move(400, 500)
-      await check('reduced-motion-disables-liquid', await page.locator('.chat-liquid-cursor').evaluate(el => getComputedStyle(el).display === 'none'))
       await rendererShowcase.getByRole('tab', { name: 'Vue', exact: true }).click()
       await check('reduced-motion-disables-code-transition', await page.locator('#renderer-example-panel').evaluate(el => getComputedStyle(el).animationName === 'none'))
       const reducedReelStart = await reel.getAttribute('data-current')
@@ -174,7 +164,7 @@ try {
   }
   const docsPage = await (await browser.newContext()).newPage()
   const docsResponse = await docsPage.goto(`${baseURL}/docs`, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => null)
-  await check('docs-remain-calm', docsResponse?.ok() === true && await docsPage.locator('.chat-liquid-cursor').count() === 0 && await docsPage.locator('main.chat-marketing').count() === 0, { httpStatus: docsResponse?.status() ?? null, reason: docsResponse ? undefined : 'Internal docs route did not return before browser timeout.' })
+  await check('docs-remain-calm', docsResponse?.ok() === true && await docsPage.locator('agentskit-aurora').count() === 0 && await docsPage.locator('main.chat-marketing').count() === 0, { httpStatus: docsResponse?.status() ?? null, reason: docsResponse ? undefined : 'Internal docs route did not return before browser timeout.' })
 } catch (error) {
   results.push({ id: 'browser-run', status: 'failed', error: error instanceof Error ? error.message : String(error) })
 } finally {

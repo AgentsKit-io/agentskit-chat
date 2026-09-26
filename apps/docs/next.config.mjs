@@ -9,24 +9,26 @@ const askOrigin = (() => {
   catch { return undefined }
 })()
 
-const ecosystemBarSource = (() => {
-  if (process.env.NODE_ENV !== 'development' || !process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC) return ''
-  try { return ` ${new URL(process.env.NEXT_PUBLIC_ECOSYSTEM_BAR_SRC).origin}` }
-  catch { return '' }
+// AgentsKit shell v1 (bar, tour, footer, aurora). Mirrors lib/shell.ts.
+const shellOrigin = (() => {
+  const value = process.env.NEXT_PUBLIC_AGENTSKIT_SHELL_ORIGIN?.trim()
+  if (!value) return 'https://www.agentskit.io'
+  try { return new URL(value).origin }
+  catch { return 'https://www.agentskit.io' }
 })()
-const developmentScriptSource = process.env.NODE_ENV === 'development' ? ` 'unsafe-eval'${ecosystemBarSource}` : ''
+const developmentScriptSource = process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
 
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
-  "connect-src 'self'" + (askOrigin ? ` ${askOrigin}` : ''),
-  "font-src 'self' data:",
+  `connect-src 'self' ${shellOrigin}` + (askOrigin ? ` ${askOrigin}` : ''),
+  `font-src 'self' data: ${shellOrigin} https://fonts.gstatic.com`,
   "form-action 'self'",
   "frame-ancestors 'none'",
   "img-src 'self' data: blob:",
   "object-src 'none'",
-  `script-src 'self' 'unsafe-inline'${developmentScriptSource} https://www.agentskit.io`,
-  "style-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${developmentScriptSource} ${shellOrigin}`,
+  `style-src 'self' 'unsafe-inline' ${shellOrigin} https://fonts.googleapis.com`,
 ].join('; ')
 
 const securityHeaders = [
