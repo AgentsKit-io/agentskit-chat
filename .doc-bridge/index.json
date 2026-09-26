@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ceb43f1a353332a4fe9f7b56090cf10c075214d837a2b3cdb2fcf8143fd72fce",
+  "contentHash": "f80ef98845c613d2d7fc17b0e1ab3269786172d4321eab87a10f3daf2760dce1",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T15:35:58.076Z",
+  "generatedAt": "2026-09-26T16:07:48.459Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -6716,7 +6716,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "76333ddf0f310c2e38525bc6d6378db634fb7542f37d725c88b1afb6a3de12fb",
+    "hash": "066c01ef9ae0fe4e90018ee20ad84354505340f2953da0cb52b9346a5e976595",
     "fileCount": 444,
     "projectionVersion": 2
   },
@@ -6739,9 +6739,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "d64bd8d0a029de93912bb623c91f774e72298a519d5a42e1dff4ab144746c501",
+    "contentHash": "e594147a35d5dea20eee4ed32a41d40d6b9dcbf6c2c8edebfe86924f9e0c7294",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "e8b8ff831e930ea47233acf249752858759b358d5dd84d7cda4f1073132d7cc2",
+    "snapshotHash": "74c45c3eff35fa1bbb79979c2f7a8a385a6ef0465348a32d6fdac2b22b851c53",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -32726,7 +32726,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "e3cc62df7155012988b8265796fcb9311305d65d99610892709d0d6c71c348a6",
+        "contentHash": "a43f0cdf829222bd06817ff449bc763987a1ac9ad9cc03aff4793646dcf31908",
         "provenance": "observed",
         "confidence": "observed"
       }
