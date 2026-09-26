@@ -363,13 +363,13 @@
       "role": "verification",
       "promise": "Run deep, low-noise review with the model already in use.",
       "maturity": "alpha",
-      "repo": "AgentsKit-io/code-review-cli",
+      "repo": "AgentsKit-io/code-review",
       "accent": "#F97316",
       "surfaces": {
         "home": "https://code-review.agentskit.io",
         "docs": "https://code-review.agentskit.io/docs",
         "llms": "https://code-review.agentskit.io/llms.txt",
-        "documentation": "repository",
+        "documentation": "fumadocs",
         "chat": "none"
       },
       "navigation": {
@@ -635,7 +635,7 @@
       "barLabel": "Code Review",
       "domain": "code-review.agentskit.io",
       "url": "https://code-review.agentskit.io",
-      "repo": "AgentsKit-io/code-review-cli",
+      "repo": "AgentsKit-io/code-review",
       "tagline": "Run deep, low-noise review with the model already in use.",
       "kind": "developer-tool",
       "accent": "#F97316",
