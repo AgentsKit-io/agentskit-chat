@@ -21,7 +21,7 @@ const developmentScriptSource = process.env.NODE_ENV === 'development' ? " 'unsa
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
-  `connect-src 'self' ${shellOrigin}` + (askOrigin ? ` ${askOrigin}` : ''),
+  `connect-src 'self' ${shellOrigin} https://fonts.googleapis.com https://fonts.gstatic.com` + (askOrigin ? ` ${askOrigin}` : ''),
   `font-src 'self' data: ${shellOrigin} https://fonts.gstatic.com`,
   "form-action 'self'",
   "frame-ancestors 'none'",
