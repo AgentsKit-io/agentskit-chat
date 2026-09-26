@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve, relative } from 'node:path'
 import { createRequire } from 'node:module'
 
@@ -10,7 +10,8 @@ const revision = spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).s
 const sourceFiles = spawnSync('git', ['ls-files', '-co', '--exclude-standard', 'apps/docs', 'docs/examples', 'docs/architecture/adrs/0034-observability-recording-demo.md', 'scripts/observability-check.mjs', '.codex/verification.json'], { encoding: 'utf8' }).stdout.trim().split('\n').filter(Boolean)
 const sourceHash = createHash('sha256')
 for (const file of [...new Set(sourceFiles)].sort()) sourceHash.update(file).update(readFileSync(file))
-const configurationHash = createHash('sha256').update(readFileSync('.codex/verification.json')).digest('hex')
+// The local harness contract is optional (it is not tracked on main); record null when absent.
+const configurationHash = existsSync('.codex/verification.json') ? createHash('sha256').update(readFileSync('.codex/verification.json')).digest('hex') : null
 const runId = `observability-${mode}-${Date.now()}`
 const output = resolve('.codex/verification/observability', runId)
 mkdirSync(output, { recursive: true })
