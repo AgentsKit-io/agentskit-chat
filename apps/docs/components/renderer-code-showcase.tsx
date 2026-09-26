@@ -60,7 +60,7 @@ export function RendererCodeShowcase() {
         ))}
       </div>
       <div id="renderer-example-panel" role="tabpanel" aria-label={`${active.label} example`} key={active.id} className="chat-code-reveal">
-        <HighlightedCode title={active.label} lines={active.lines} />
+        <HighlightedCode title={`runs everywhere · ${active.label}`} lines={active.lines} />
       </div>
     </div>
   )
