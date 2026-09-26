@@ -287,7 +287,8 @@ html.dark body {
 body:has(.deterministic-demo.is-fullscreen) { overflow: hidden; }
 body:has(.deterministic-demo-page) > #ak-eco,
 body:has(.deterministic-demo-page) > .bg-fd-secondary\/50,
-body:has(.deterministic-demo-page) > .product-header { display: none; }
+body:has(.deterministic-demo-page) > .product-header,
+body:has(.deterministic-demo-page) agentskit-footer { display: none; }
 body:has(.deterministic-demo-page) { background: #0d1117; }
 
 .deterministic-demo.is-light { --demo-bg: #f3effb; --demo-surface: #fff; --demo-raised: #eee8fb; --demo-border: #d9d0ee; --demo-text: #261a3a; --demo-muted: #554467; --demo-accent: #7048c8; }
@@ -741,9 +742,13 @@ body:has(.deterministic-demo-page) { background: #0d1117; }
 
 /* Homepage atmosphere: shared visual language, isolated from Fumadocs routes. */
 body:has(main.chat-marketing) {
+  --ak-bg: #0d1117;
+  --ak-fg: #e6edf3;
+  --ak-muted: #9ea7b3;
+  --ak-red: #f85149;
   --ak-midnight: #0d1117;
   --ak-foam: #e6edf3;
-  --ak-graphite: #8b949e;
+  --ak-graphite: #9ea7b3; /* lifted from #8b949e: keeps AA over the animated aurora */
   --ak-surface: #161b22;
   --ak-border: #30363d;
   --ak-blue: #58a6ff;
@@ -751,7 +756,7 @@ body:has(main.chat-marketing) {
   --ak-accent: #f59e0b;
   --color-ak-midnight: #0d1117;
   --color-ak-foam: #e6edf3;
-  --color-ak-graphite: #8b949e;
+  --color-ak-graphite: #9ea7b3;
   --color-ak-surface: #161b22;
   --color-ak-border: #30363d;
   --color-ak-blue: #58a6ff;
@@ -759,6 +764,7 @@ body:has(main.chat-marketing) {
   --color-ak-accent: #f59e0b;
   --font-display: 'Space Grotesk', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-ak-red: #f85149;
   color-scheme: dark;
   font-family: var(--ak-font-body);
   background: var(--ak-midnight);
@@ -858,4 +864,10 @@ agentskit-footer:not(:defined) .ak-footer-fallback a[aria-current='page'] { colo
 
 @media (max-width: 640px) {
   .chat-marketing [data-hero-demo] { border-radius: 1.15rem; }
+}
+
+/* Light theme: Fumadocs' neutral muted foreground (#737373) falls below WCAG AA on tinted
+   surfaces (docs banner, framework tabs, mobile TOC). Darken it for the light theme only. */
+html:not(.dark) {
+  --color-fd-muted-foreground: #595959;
 }
