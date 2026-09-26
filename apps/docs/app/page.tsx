@@ -9,7 +9,6 @@ import {
 import { RendererCodeShowcase } from '@/components/renderer-code-showcase'
 import { InstallCommand } from '@/components/install-command'
 import { SharedEcosystemShowcase } from '@/components/shared-ecosystem-showcase'
-import { SiteFooter } from '@/components/site-footer'
 import { WorksWithLogos } from '@/components/works-with-logos'
 import { AgentsKitAurora } from '@/components/agentskit-shell'
 
@@ -40,7 +39,7 @@ export default function HomePage() {
   return (
     <>
       <AgentsKitAurora />
-      <main className="chat-marketing text-ak-foam">
+      <main className="chat-marketing text-ak-foam" data-ak-surface="dark">
       <section className="relative overflow-hidden px-4 pt-14 pb-16 sm:px-6 sm:pt-20 sm:pb-24 md:pt-24 md:pb-28">
         <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-end">
           <div className="min-w-0">
@@ -171,7 +170,6 @@ export default function HomePage() {
         </div>
       </section>
       </main>
-      <SiteFooter />
     </>
   )
 }

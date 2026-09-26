@@ -6,6 +6,7 @@ import { AgentsKitShellScript } from '@/components/agentskit-shell'
 import { serializedChatStructuredData } from '@/lib/structured-data'
 import { shellStylesheetHref } from '@/lib/shell'
 import { AccessibleSearch } from '@/components/accessible-search'
+import { SiteFooter } from '@/components/site-footer'
 import '@agentskit/react/theme'
 import './globals.css'
 
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
           <AccessibleSearch />
           <ProductHeader />
           {children}
+          <SiteFooter />
         </RootProvider>
       </body>
     </html>

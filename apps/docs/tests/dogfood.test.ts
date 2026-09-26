@@ -45,6 +45,12 @@ describe('documentation dogfood', () => {
     const showcaseSource = readFileSync(new URL('../components/shared-ecosystem-showcase.tsx', import.meta.url), 'utf8')
     const shellSource = readFileSync(new URL('../components/agentskit-shell.tsx', import.meta.url), 'utf8')
     expect(landingSource).toContain('<AgentsKitAurora />')
+    // The home is dark by design: the shell paints its bar, tour, footer and aurora dark in both themes.
+    expect(landingSource).toContain('data-ak-surface="dark"')
+    // Every page (home and docs) renders the shared footer from the root layout.
+    const rootLayoutSource = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8')
+    expect(rootLayoutSource).toContain('<SiteFooter />')
+    expect(landingSource).not.toContain('<SiteFooter />')
     expect(landingSource).not.toMatch(/LiquidCursorGradient|AuroraBackground/)
     expect(shellSource).toContain("'agentskit-aurora'")
     expect(footerSource).toContain("'agentskit-footer'")
