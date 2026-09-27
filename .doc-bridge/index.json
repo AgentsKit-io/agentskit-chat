@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "f80ef98845c613d2d7fc17b0e1ab3269786172d4321eab87a10f3daf2760dce1",
+  "contentHash": "43e0636526acc882beb58e31ad0bf478c99d1336bd49f31d0f4d1c82b60e362b",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-26T16:07:48.459Z",
+  "generatedAt": "2026-09-27T01:57:19.869Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -2440,7 +2440,7 @@
         "tsx",
         "hero-demo"
       ],
-      "contentHash": "b9c90d724ba1a451604bc6eee49eac56023da3ab16d447ebc239508e49641e68"
+      "contentHash": "d440a0ad79c772be2d8fd1fca50adcf4e3781f4f7bb7cd2b830786c80c5566b9"
     },
     {
       "id": "module:apps/docs/components/hero-demo/scenes.ts",
@@ -2486,7 +2486,7 @@
         "tsx",
         "hero-demo"
       ],
-      "contentHash": "5b4af139544325bc329a82cbfe1c19a069da8c94f86c03270f7e63b8258fb173"
+      "contentHash": "f890317cce4e7d0f50fcea7a000b981d537ccaffec44e31c6ac6fca8d32e2ca4"
     },
     {
       "id": "module:apps/docs/components/highlighted-code.tsx",
@@ -2935,7 +2935,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "f02b550fccee081c1fc2141757355c974c52691ea530b8aeeb74fe7746dd464f"
+      "contentHash": "81b98c4ed32eb61a84b6a25ebf51fa2e0d478988aa80fe0f095a3bd187b38956"
     },
     {
       "id": "module:apps/docs/source.config.ts",
@@ -2989,7 +2989,7 @@
         "test",
         "e2e"
       ],
-      "contentHash": "497590560bf07122aacd5f1c0f59e28f524fdfc417826f3b64165d26578ce73a"
+      "contentHash": "a96453fb1175cec135d35f239dfb51a55d0833edc96e2a3fe5d54fc5105ddde0"
     },
     {
       "id": "module:apps/docs/types/css-modules.d.ts",
@@ -6716,7 +6716,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "066c01ef9ae0fe4e90018ee20ad84354505340f2953da0cb52b9346a5e976595",
+    "hash": "40f0b71226ab82299cee3186de79e038ad28e846252079aadb3aefb397d961e8",
     "fileCount": 444,
     "projectionVersion": 2
   },
@@ -6739,9 +6739,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "e594147a35d5dea20eee4ed32a41d40d6b9dcbf6c2c8edebfe86924f9e0c7294",
+    "contentHash": "6233a1de6917eefdfe7adee3ec5f0a4365c75cea108795ffedd60ba2b83791fa",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "74c45c3eff35fa1bbb79979c2f7a8a385a6ef0465348a32d6fdac2b22b851c53",
+    "snapshotHash": "3ab251f47b6160a8c2093f796aae58443713c24ad509d2705e99436023146015",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6773,7 +6773,7 @@
       ],
       "averageFieldLength": {
         "aliases": 3.1419624217119,
-        "body": 75.11899791231733,
+        "body": 75.31106471816284,
         "headings": 4.590814196242171,
         "path": 6.106471816283925,
         "summary": 6.125260960334029,
@@ -6802,7 +6802,7 @@
           "path": "apps/docs",
           "symbols": "",
           "summary": "Fumadocs portal and full public framework dogfood over the canonical docs corpus",
-          "body": "Fumadocs framework dogfood handoff Ownership apps/docs is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root docs/ directory in place; do not create a second prose corpus inside the app. The host may compose public framework contracts, configure deployment-specific adapters, and style renderer slots. It must not implement model execution, semantic retrieval, memory, controller lifecycle, or protocol validation. Generic gaps belong upstream in AgentsKit. Boundaries - lib/knowledge.ts is a small, bounded public artifact with integrity verification. Exact matching stays in @agentskit/chat . - lib/chat-definition.ts is the single definition rendered by the published React binding. Other clients continue to consume the same framework-neutral definition contract. - lib/ask-handler.ts is the host composition seam around createAskServiceHandler ; retrieval and generation remain injected AgentsKit adapters. - /api/ask fails closed unless the deployment explicitly configures a hosted endpoint or injects self-hosted adapters. - /api/search is Fumadocs navigation search only. It is never a semantic Ask retriever. - /raw , /llms.txt , and /llms-full.txt expose only the canonical public corpus. The maturity claim is governed by Proposed ADR-0027 and needs HITL approval before it becomes Accepted. Checks",
+          "body": "Fumadocs framework dogfood handoff Ownership apps/docs is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root docs/ directory in place; do not create a second prose corpus inside the app. The host may compose public framework contracts, configure deployment-specific adapters, and style renderer slots. It must not implement model execution, semantic retrieval, memory, controller lifecycle, or protocol validation. Generic gaps belong upstream in AgentsKit. Boundaries - lib/knowledge.ts is a small, bounded public artifact with integrity verification. Exact matching stays in @agentskit/chat . - lib/chat-definition.ts is the single definition rendered by the published React binding. Other clients continue to consume the same framework-neutral definition contract. - lib/ask-handler.ts is the host composition seam around createAskServiceHandler ; retrieval and generation remain injected AgentsKit adapters. - /api/ask fails closed unless the deployment explicitly configures a hosted endpoint or injects self-hosted adapters. - /api/search is Fumadocs navigation search only. It is never a semantic Ask retriever. - /raw , /llms.txt , and /llms-full.txt expose only the canonical public corpus. The maturity claim is governed by Proposed ADR-0027 and needs HITL approval before it becomes Accepted. Checks The marketing hero demo has a Pause/Play control. Choosing a scene stops automatic scene advancement; Arrow keys, Home and End select scenes. Reduced motion renders the selected scene without automatic cycling. Verify these behaviors with CHAT BASE URL=http://localhost:4312 node scripts/verify-home-ui.mjs from apps/docs.",
           "aliases": "docs-app area ownership"
         },
         "graph": {
@@ -14737,7 +14737,7 @@
           "path": "docs/for-agents/apps/docs.md",
           "symbols": "",
           "summary": "`apps/docs` is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root `docs/` directory in place; do not create a second prose corpus inside the app.",
-          "body": "Fumadocs framework dogfood handoff Ownership apps/docs is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root docs/ directory in place; do not create a second prose corpus inside the app. The host may compose public framework contracts, configure deployment-specific adapters, and style renderer slots. It must not implement model execution, semantic retrieval, memory, controller lifecycle, or protocol validation. Generic gaps belong upstream in AgentsKit. Boundaries - lib/knowledge.ts is a small, bounded public artifact with integrity verification. Exact matching stays in @agentskit/chat . - lib/chat-definition.ts is the single definition rendered by the published React binding. Other clients continue to consume the same framework-neutral definition contract. - lib/ask-handler.ts is the host composition seam around createAskServiceHandler ; retrieval and generation remain injected AgentsKit adapters. - /api/ask fails closed unless the deployment explicitly configures a hosted endpoint or injects self-hosted adapters. - /api/search is Fumadocs navigation search only. It is never a semantic Ask retriever. - /raw , /llms.txt , and /llms-full.txt expose only the canonical public corpus. The maturity claim is governed by Proposed ADR-0027 and needs HITL approval before it becomes Accepted. Checks",
+          "body": "Fumadocs framework dogfood handoff Ownership apps/docs is the public Fumadocs portal and the complete React dogfood host for AgentsKit Chat. It compiles the repository's root docs/ directory in place; do not create a second prose corpus inside the app. The host may compose public framework contracts, configure deployment-specific adapters, and style renderer slots. It must not implement model execution, semantic retrieval, memory, controller lifecycle, or protocol validation. Generic gaps belong upstream in AgentsKit. Boundaries - lib/knowledge.ts is a small, bounded public artifact with integrity verification. Exact matching stays in @agentskit/chat . - lib/chat-definition.ts is the single definition rendered by the published React binding. Other clients continue to consume the same framework-neutral definition contract. - lib/ask-handler.ts is the host composition seam around createAskServiceHandler ; retrieval and generation remain injected AgentsKit adapters. - /api/ask fails closed unless the deployment explicitly configures a hosted endpoint or injects self-hosted adapters. - /api/search is Fumadocs navigation search only. It is never a semantic Ask retriever. - /raw , /llms.txt , and /llms-full.txt expose only the canonical public corpus. The maturity claim is governed by Proposed ADR-0027 and needs HITL approval before it becomes Accepted. Checks The marketing hero demo has a Pause/Play control. Choosing a scene stops automatic scene advancement; Arrow keys, Home and End select scenes. Reduced motion renders the selected scene without automatic cycling. Verify these behaviors with CHAT BASE URL=http://localhost:4312 node scripts/verify-home-ui.mjs from apps/docs.",
           "aliases": "docs document agent"
         },
         "graph": {
@@ -14775,7 +14775,7 @@
             }
           ]
         },
-        "contentHash": "ffd4e905834723223742f3c21a58f9d27c4269e485f1b5820b146a00ca265032",
+        "contentHash": "ee08ff03084e6e647df7340ae3aa78e65eb4871c4f2e01a72266b4534dd191ff",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21554,7 +21554,7 @@
             }
           ]
         },
-        "contentHash": "b9c90d724ba1a451604bc6eee49eac56023da3ab16d447ebc239508e49641e68",
+        "contentHash": "d440a0ad79c772be2d8fd1fca50adcf4e3781f4f7bb7cd2b830786c80c5566b9",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -21656,7 +21656,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5b4af139544325bc329a82cbfe1c19a069da8c94f86c03270f7e63b8258fb173",
+        "contentHash": "f890317cce4e7d0f50fcea7a000b981d537ccaffec44e31c6ac6fca8d32e2ca4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22841,7 +22841,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "f02b550fccee081c1fc2141757355c974c52691ea530b8aeeb74fe7746dd464f",
+        "contentHash": "81b98c4ed32eb61a84b6a25ebf51fa2e0d478988aa80fe0f095a3bd187b38956",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -23014,7 +23014,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "497590560bf07122aacd5f1c0f59e28f524fdfc417826f3b64165d26578ce73a",
+        "contentHash": "a96453fb1175cec135d35f239dfb51a55d0833edc96e2a3fe5d54fc5105ddde0",
         "provenance": "observed",
         "confidence": "observed"
       },
