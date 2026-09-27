@@ -871,3 +871,6 @@ agentskit-footer:not(:defined) .ak-footer-fallback a[aria-current='page'] { colo
 html:not(.dark) {
   --color-fd-muted-foreground: #595959;
 }
+
+[data-hero-demo][data-paused] * { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) { [data-hero-demo] * { animation: none !important; transition: none !important; } }

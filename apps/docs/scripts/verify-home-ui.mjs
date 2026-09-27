@@ -127,6 +127,15 @@ try {
     await page.getByRole('button', { name: 'Next demo' }).click()
     const after = await demoTabs.getByRole('tab', { selected: true }).innerText()
     await check(`${name}-chat-demo-controls`, before !== after)
+    await page.getByRole('button', { name: 'Pause demo', exact: true }).click()
+    const frozen = await page.locator('[data-hero-demo]').innerText()
+    await page.waitForTimeout(400)
+    await check(`${name}-chat-demo-pauses`, frozen === await page.locator('[data-hero-demo]').innerText())
+    await page.getByRole('button', { name: 'Play demo', exact: true }).click()
+    await page.waitForTimeout(18000)
+    await check(`${name}-chat-demo-manual-selection`, after === await demoTabs.getByRole('tab', { selected: true }).innerText())
+    await demoTabs.getByRole('tab', { selected: true }).press('End')
+    await check(`${name}-chat-demo-keyboard`, await demoTabs.getByRole('tab', { name: 'skills', exact: true }).getAttribute('aria-selected') === 'true')
 
     await page.keyboard.press('Tab')
     await check(`${name}-keyboard-focus-visible`, await page.evaluate(() => {

@@ -27,3 +27,5 @@ pnpm --filter @agentskit/chat-docs test:e2e
 pnpm docs:bridge:index
 pnpm docs:bridge:gate
 ```
+
+The marketing hero demo has a Pause/Play control. Choosing a scene stops automatic scene advancement; Arrow keys, Home and End select scenes. Reduced motion renders the selected scene without automatic cycling. Verify these behaviors with `CHAT_BASE_URL=http://localhost:4312 node scripts/verify-home-ui.mjs` from apps/docs.

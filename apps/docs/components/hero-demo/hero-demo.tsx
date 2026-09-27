@@ -43,11 +43,17 @@ export function HeroDemo() {
   const [sceneIdx, setSceneIdx] = useState(0)
   const [frame, setFrame] = useState<Frame>(EMPTY)
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const pausedRef = useRef(false)
+  const autoAdvance = useRef(true)
   const railRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const m = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReducedMotion(m.matches)
+    const update = () => setReducedMotion(m.matches)
+    update()
+    m.addEventListener('change', update)
+    return () => m.removeEventListener('change', update)
   }, [])
 
   // pin the active scene chip to the start of the single-line carousel so the
@@ -57,8 +63,8 @@ export function HeroDemo() {
     const el = rail?.children[sceneIdx] as HTMLElement | undefined
     if (!rail || !el) return
     const delta = el.getBoundingClientRect().left - rail.getBoundingClientRect().left
-    rail.scrollTo({ left: rail.scrollLeft + delta - 8, behavior: 'smooth' })
-  }, [sceneIdx])
+    rail.scrollTo({ left: rail.scrollLeft + delta - 8, behavior: reducedMotion ? 'auto' : 'smooth' })
+  }, [sceneIdx, reducedMotion])
 
   useEffect(() => {
     let cancelled = false
@@ -72,11 +78,16 @@ export function HeroDemo() {
     const sleep = (ms: number) =>
       new Promise<void>(resolve => {
         if (cancelled) return resolve()
-        activeTimeout = setTimeout(() => {
+        const finish = () => {
+          if (!cancelled && pausedRef.current) {
+            activeTimeout = setTimeout(finish, 100)
+            return
+          }
           activeTimeout = null
           cancelResolve = null
           resolve()
-        }, ms)
+        }
+        activeTimeout = setTimeout(finish, reducedMotion ? 0 : ms)
         cancelResolve = resolve
       })
 
@@ -148,7 +159,7 @@ export function HeroDemo() {
         if (cancelled) return
       }
       await sleep(200)
-      if (!cancelled) {
+      if (!cancelled && autoAdvance.current && !reducedMotion) {
         setSceneIdx(i => (i + 1) % SCENES.length)
       }
     }
@@ -169,6 +180,7 @@ export function HeroDemo() {
   }, [sceneIdx, reducedMotion])
 
   const selectScene = (i: number) => {
+    autoAdvance.current = false
     if (i === sceneIdx) return
     setFrame(EMPTY)
     setSceneIdx(i)
@@ -182,7 +194,7 @@ export function HeroDemo() {
   }, [frame])
 
   return (
-    <div data-hero-demo className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-ak-border bg-ak-surface text-ak-foam shadow-2xl shadow-black/40">
+    <div data-hero-demo data-paused={paused || undefined} className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-ak-border bg-ak-surface text-ak-foam shadow-2xl shadow-black/40">
       <div className="flex items-center justify-between border-b border-ak-border px-4 py-2.5">
         <div className="flex gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-ak-red/70" />
@@ -190,10 +202,10 @@ export function HeroDemo() {
           <span className="h-2.5 w-2.5 rounded-full bg-ak-green/70" />
         </div>
         <span className="font-mono text-xs text-ak-graphite">chat.agentskit.io</span>
-        <span className="flex items-center gap-1.5 font-mono text-xs text-ak-green">
-          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-ak-green" />
-          live
-        </span>
+        <button type="button" className="min-h-11 rounded-md border border-ak-border px-3 font-mono text-xs text-ak-foam" aria-pressed={paused} onClick={() => {
+          pausedRef.current = !pausedRef.current
+          setPaused(pausedRef.current)
+        }}>{paused ? 'Play demo' : 'Pause demo'}</button>
       </div>
 
       <div className="flex h-[380px] min-w-0 flex-col overflow-hidden bg-ak-midnight font-sans text-sm sm:h-[440px] md:h-[460px]">
@@ -313,6 +325,14 @@ export function HeroDemo() {
               type="button"
               role="tab"
               aria-selected={i === sceneIdx}
+              tabIndex={i === sceneIdx ? 0 : -1}
+              onKeyDown={event => {
+                const next = event.key === 'Home' ? 0 : event.key === 'End' ? SCENES.length - 1 : event.key === 'ArrowRight' ? (i + 1) % SCENES.length : event.key === 'ArrowLeft' ? (i - 1 + SCENES.length) % SCENES.length : -1
+                if (next < 0) return
+                event.preventDefault()
+                selectScene(next)
+                ;(railRef.current?.children[next] as HTMLButtonElement | undefined)?.focus()
+              }}
               onClick={() => selectScene(i)}
               className={`min-h-11 shrink-0 whitespace-nowrap rounded-full px-3 py-2 font-mono text-[11px] transition ${
                 i === sceneIdx
