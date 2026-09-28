@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs'
 import { readFile, readdir } from 'node:fs/promises'
 import { join, normalize, relative } from 'node:path'
+import { toPosix } from '@agentskit/cross-platform/pure'
 import { isPublicDocPath } from '@/lib/public-docs'
 
 export const dynamic = 'force-static'
@@ -16,7 +17,7 @@ const resolvePublicDoc = (segments: readonly string[]): string | undefined => {
   const file = candidates.find(existsSync)
   if (!file) return undefined
 
-  const relativePath = relative(root, file).replace(/\\/g, '/')
+  const relativePath = toPosix(relative(root, file))
   if (!isPublicDocPath(relativePath)) return undefined
   return file
 }

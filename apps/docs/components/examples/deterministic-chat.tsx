@@ -6,6 +6,7 @@ import type { ComponentRenderFrame } from '@agentskit/chat/protocol'
 import type { ComponentProps } from 'react'
 import { Fragment, useMemo, useRef, useState, type ReactNode } from 'react'
 import { InputBar, Message, ThinkingIndicator } from '@agentskit/react'
+import { splitLines } from '@agentskit/cross-platform/pure'
 import {
   createDemoDeterministicAdapter,
   DateCardPropsSchema,
@@ -110,7 +111,7 @@ const renderMarkdownInline = (value: string): ReactNode[] => {
 }
 
 const renderMarkdown = (content: string): ReactNode[] => {
-  const lines = content.replaceAll('\r\n', '\n').split('\n')
+  const lines = splitLines(content, { dropTrailingEmpty: false })
   const blocks: ReactNode[] = []
   let paragraph: string[] = []
   let list: { ordered: boolean, items: string[] } | undefined

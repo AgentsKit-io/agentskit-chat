@@ -1,5 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { splitFrontmatter, splitLines } from '@agentskit/cross-platform/pure'
 import { isPublicDocPath } from './public-docs'
 
 const root = join(process.cwd(), '..', '..', 'docs')
@@ -33,7 +34,7 @@ export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
           ?? body.match(/^#\s+(.+)$/m)?.[1]?.trim()
           ?? entry.name.replace(/\.mdx?$/, '')
         const description = frontmatterValue(body, 'description')
-          ?? body.replace(/^---\n[\s\S]*?\n---\n?/, '').split('\n').find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
+          ?? splitLines(splitFrontmatter(body).body).find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
           ?? ''
         documents.push({ path, title, description, body })
       }

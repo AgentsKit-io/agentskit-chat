@@ -1,5 +1,6 @@
-import { lstat, mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises'
+import { lstat, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { removePath, renamePath } from '@agentskit/cross-platform'
 import { STANDARD_COMPONENT_KEYS } from '@agentskit/chat'
 import { z } from 'zod'
 
@@ -190,9 +191,9 @@ export const initChatProject = async (options: InitChatProjectOptions): Promise<
     }))
     const failure = writes.find(result => result.status === 'rejected')
     if (failure?.status === 'rejected') throw failure.reason
-    await rename(staging, targetDir)
+    await renamePath(staging, targetDir)
   } catch (error) {
-    await rm(staging, { recursive: true, force: true })
+    await removePath(staging)
     const code = (error as NodeJS.ErrnoException).code
     if (code === 'EEXIST' || code === 'ENOTEMPTY' || code === 'EISDIR' || code === 'ENOTDIR') throw new ChatCliError('TARGET_EXISTS', `Refusing to overwrite existing path: ${targetDir}`)
     throw error
