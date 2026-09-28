@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "include": [
+    "packages",
+    "apps",
+    "scripts",
+    "tests",
+    "examples"
+  ],
+  "exclude": [],
+  "entries": {
+    "apps/docs/app/api/demo-ask/route.ts": {
+      "split-newline": 1
+    },
+    "packages/cli/tests/generated-projects.test.ts": {
+      "child-process-import": 1
+    },
+    "packages/protocol/src/index.ts": {
+      "split-newline": 1
+    },
+    "packages/server/tests/handler.test.ts": {
+      "split-newline": 2
+    },
+    "scripts/compute-readme-claims.mjs": {
+      "split-newline": 1
+    },
+    "scripts/create-demo-video.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/docs-visual-check.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/observability-check.mjs": {
+      "child-process-import": 1,
+      "split-newline": 1
+    },
+    "scripts/pack-release.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/readme-standard.test.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/verify-alpha-artifacts.mjs": {
+      "child-process-import": 1
+    },
+    "scripts/verify-release-artifacts.mjs": {
+      "child-process-import": 1,
+      "split-newline": 1
+    }
+  }
+}

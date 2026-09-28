@@ -8,7 +8,8 @@
   "scripts": {
     "build": "pnpm --filter './packages/**' -r --if-present build && node scripts/assemble-chat-package.mjs && pnpm --filter './apps/**' -r --if-present build",
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
-    "lint": "pnpm -r --if-present lint",
+    "lint": "pnpm -r --if-present lint && pnpm check:cross-platform",
+    "check:cross-platform": "agentskit-cross-platform check",
     "test": "pnpm -r --workspace-concurrency=1 --if-present test && pnpm test:bundle-budget && pnpm test:ecosystem-adoption && pnpm test:release-deprecation && pnpm test:release-lib",
     "test:conformance": "vitest run tests/conformance-gate.test.ts",
     "test:pty": "pnpm --filter @agentskit/chat-example-ink test:pty",
@@ -48,6 +49,7 @@
     "postinstall": "node scripts/ensure-node-pty-helper.mjs"
   },
   "devDependencies": {
+    "@agentskit/cross-platform": "^0.1.0",
     "@agentskit/doc-bridge": "1.12.0",
     "@changesets/cli": "^2.31.1",
     "@playwright/test": "^1.63.0",

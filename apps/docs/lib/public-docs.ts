@@ -3,6 +3,9 @@
  * Everything else under docs/ stays in the repository for maintainers/agents
  * but is not compiled into the public site tree.
  */
+
+import { toPosix } from '@agentskit/cross-platform/pure'
+
 export const PUBLIC_DOC_GLOBS = [
   'index.mdx',
   'getting-started/**/*',
@@ -69,7 +72,7 @@ const PUBLIC_TOP_LEVEL = new Set([
 ])
 
 export function isPublicDocPath(relativePath: string): boolean {
-  const normalized = relativePath.replace(/\\/g, '/').replace(/^\.?\//, '')
+  const normalized = toPosix(relativePath).replace(/^\.?\//, '')
 
   if (
     PRIVATE_DOC_PREFIXES.some(
