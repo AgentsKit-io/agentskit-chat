@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",
-    "@agentskit/chat-protocol": "workspace:*"
+    "@agentskit/chat-protocol": "workspace:*",
+    "@agentskit/net": "^0.1.0"
   },
   "peerDependencies": {
     "@agentskit/core": "^1.12.2"

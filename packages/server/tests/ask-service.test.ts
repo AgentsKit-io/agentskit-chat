@@ -1,5 +1,6 @@
 import { decodeAskEvents, type AskBackendMetric, type AskBackendSiteConfig } from '@agentskit/chat-protocol'
 import { createServer } from 'node:http'
+import { Readable } from 'node:stream'
 import { describe, expect, it, vi } from 'vitest'
 
 import {
@@ -127,13 +128,13 @@ describe('trusted Ask backend vertical', () => {
     const body = { protocol: 'agentskit.chat.ask', version: 1, messages: [{ role: 'user', content: 'portable' }] }
     const hosted = await events(await handler(ask(body)))
     const server = createServer(async (incoming, outgoing) => {
-      const chunks: Buffer[] = []
-      for await (const chunk of incoming) chunks.push(Buffer.from(chunk))
+      const bodyStream = Readable.toWeb(incoming) as ReadableStream<Uint8Array>
       const response = await handler(new Request(`http://127.0.0.1${incoming.url ?? '/'}`, {
         method: incoming.method,
         headers: incoming.headers as HeadersInit,
-        ...(chunks.length === 0 ? {} : { body: Buffer.concat(chunks) }),
-      }))
+        body: bodyStream,
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' }))
       outgoing.writeHead(response.status, Object.fromEntries(response.headers))
       if (response.body === null) return outgoing.end()
       for await (const chunk of response.body) outgoing.write(chunk)

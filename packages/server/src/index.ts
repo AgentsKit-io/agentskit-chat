@@ -1,3 +1,4 @@
+import { anySignal } from '@agentskit/net'
 import { createChatController } from '@agentskit/core'
 import type { ChatState, Message } from '@agentskit/core'
 import { resumeChatSession, SessionConflictError } from '@agentskit/chat'
@@ -60,7 +61,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
 
   return async request => {
     const deadline = AbortSignal.timeout(timeoutMs)
-    const signal = AbortSignal.any([request.signal, deadline])
+    const signal = anySignal([request.signal, deadline])
     try {
       if (request.method !== 'POST') fail(405, 'REQUEST_METHOD_NOT_ALLOWED', 'Only POST is supported.')
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) fail(415, 'REQUEST_UNSUPPORTED_MEDIA_TYPE', 'Content-Type must be application/json.')
