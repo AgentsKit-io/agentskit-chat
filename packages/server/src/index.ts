@@ -83,7 +83,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       if (!(await withTimeout(callbackSignal => session.claimTurn(submission.turnId, leaseMs, callbackSignal), timeoutMs, signal))) return json({ version: 1, code: 'SESSION_BUSY', message: 'Another turn is active for this session.', retryable: true }, 409)
       cleanupAfterClaim = async () => {
         const releaseSignal = AbortSignal.timeout(cleanupTimeoutMs)
-        await withTimeout(callbackSignal => session.releaseTurn(submission.turnId, 'completed', callbackSignal), cleanupTimeoutMs, releaseSignal)
+        await withTimeout(callbackSignal => session.releaseTurn(submission.turnId, 'indeterminate', callbackSignal), cleanupTimeoutMs, releaseSignal)
       }
 
       const memory = definition.chat.memory

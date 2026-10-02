@@ -276,33 +276,33 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
                 emit({ type: 'text', delta: chunk.delta })
               }
               if (answer.trim() === '') fail(502, 'ASK_GENERATION_FAILED', 'The grounded answer was empty.', true)
-              emit({
-                type: 'tool', id: `sources-${requestId}`, name: 'cite',
-                args: { sources: sources.map(source => ({ id: source.id, title: source.title, path: source.href })) },
-              })
-              if (key !== undefined && options.sessionStore !== undefined) {
-                const persistenceStarted = clock()
-                const revision = (stored?.revision ?? 0) + 1
-                const saved = await withTimeout(async callbackSignal => options.sessionStore!.save(key, {
-                  revision,
-                  messages: [...messages, { role: 'assistant' as const, content: answer }].slice(-64),
-                }, stored?.revision ?? 0, callbackSignal), resolvedSite.limits.requestTimeoutMs, callbackSignal)
-                metric('persistence.total_ms', clock() - persistenceStarted, 'ms', saved ? 'ok' : 'error')
-                if (!saved) {
-                  metric('conflict.count', 1, 'count', 'error')
-                  fail(409, 'ASK_PERSISTENCE_CONFLICT', 'The Ask session changed concurrently.', true)
-                }
-              }
-              if (usage?.inputTokens !== undefined) metric('usage.input_tokens', usage.inputTokens, 'tokens', 'ok')
-              if (usage?.outputTokens !== undefined) metric('usage.output_tokens', usage.outputTokens, 'tokens', 'ok')
-              if (usage?.totalTokens !== undefined) metric('usage.total_tokens', usage.totalTokens, 'tokens', 'ok')
-              if (usage?.costUsd !== undefined) metric('cost.usd', usage.costUsd, 'usd', 'ok')
-              emit({ type: 'done', ...(usage?.model === undefined ? {} : { model: usage.model }) })
-              metric('stream.bytes', bytes, 'bytes', 'ok')
-              metric('stream.events', events, 'count', 'ok')
-              metric('stream.snapshots', 0, 'count', 'ok')
-              metric('request.total_ms', clock() - startedAt, 'ms', 'ok')
             }, resolvedSite.limits.generationTimeoutMs, signal)
+            emit({
+              type: 'tool', id: `sources-${requestId}`, name: 'cite',
+              args: { sources: sources.map(source => ({ id: source.id, title: source.title, path: source.href })) },
+            })
+            if (key !== undefined && options.sessionStore !== undefined) {
+              const persistenceStarted = clock()
+              const revision = (stored?.revision ?? 0) + 1
+              const saved = await withTimeout(async callbackSignal => options.sessionStore!.save(key, {
+                revision,
+                messages: [...messages, { role: 'assistant' as const, content: answer }].slice(-64),
+              }, stored?.revision ?? 0, callbackSignal), resolvedSite.limits.requestTimeoutMs, signal)
+              metric('persistence.total_ms', clock() - persistenceStarted, 'ms', saved ? 'ok' : 'error')
+              if (!saved) {
+                metric('conflict.count', 1, 'count', 'error')
+                fail(409, 'ASK_PERSISTENCE_CONFLICT', 'The Ask session changed concurrently.', true)
+              }
+            }
+            if (usage?.inputTokens !== undefined) metric('usage.input_tokens', usage.inputTokens, 'tokens', 'ok')
+            if (usage?.outputTokens !== undefined) metric('usage.output_tokens', usage.outputTokens, 'tokens', 'ok')
+            if (usage?.totalTokens !== undefined) metric('usage.total_tokens', usage.totalTokens, 'tokens', 'ok')
+            if (usage?.costUsd !== undefined) metric('cost.usd', usage.costUsd, 'usd', 'ok')
+            emit({ type: 'done', ...(usage?.model === undefined ? {} : { model: usage.model }) })
+            metric('stream.bytes', bytes, 'bytes', 'ok')
+            metric('stream.events', events, 'count', 'ok')
+            metric('stream.snapshots', 0, 'count', 'ok')
+            metric('request.total_ms', clock() - startedAt, 'ms', 'ok')
           } catch (error) {
             const timeout = !request.signal.aborted && (requestDeadline.aborted || (generationSignal?.aborted === true && !signal.aborted))
             const interrupted = signal.aborted || generationSignal?.aborted === true

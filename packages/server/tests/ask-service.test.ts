@@ -154,6 +154,53 @@ describe('trusted Ask backend vertical', () => {
     }
   })
 
+  it('persists and emits done when a slow save follows generation just before its deadline over HTTP', async () => {
+    const config = {
+      ...site(),
+      limits: { requestTimeoutMs: 2_000, retrievalTimeoutMs: 500, generationTimeoutMs: 250, maxSources: 5 },
+    } satisfies AskBackendSiteConfig
+    const { store, records } = createStore()
+    const handler = createAskServiceHandler(baseOptions(config, {
+      sessionStore: {
+        ...store,
+        save: async (key, record, expected) => {
+          await new Promise<void>(resolve => setTimeout(resolve, 180))
+          return store.save(key, record, expected)
+        },
+      },
+      generator: {
+        async *generate() {
+          await new Promise<void>(resolve => setTimeout(resolve, 180))
+          yield { type: 'text', delta: 'Grounded answer.' }
+        },
+      },
+    }))
+    const server = createServer(async (incoming, outgoing) => {
+      const response = await handler(new Request(`http://127.0.0.1${incoming.url ?? '/v1/ask'}`, {
+        method: incoming.method,
+        headers: incoming.headers as HeadersInit,
+        body: Readable.toWeb(incoming) as ReadableStream<Uint8Array>,
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' }))
+      outgoing.writeHead(response.status, Object.fromEntries(response.headers))
+      outgoing.end(await response.text())
+    })
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+    if (address === null || typeof address === 'string') throw new Error('server address unavailable')
+    try {
+      const response = await fetch(`http://127.0.0.1:${address.port}/v1/ask`, {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer valid' },
+        body: JSON.stringify({ sessionId: 'slow-save', messages: [{ role: 'user', content: 'hello' }] }),
+      })
+      expect(response.status).toBe(200)
+      expect(decodeAskEvents(await response.text()).events.at(-1)?.type).toBe('done')
+      expect(records.get('docs:user-1:slow-save')?.messages.at(-1)).toEqual({ role: 'assistant', content: 'Grounded answer.' })
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
+    }
+  })
+
   it('aborts real localhost authentication and retrieval fetches when the client socket closes, then recovers', async () => {
     const started = new Set<string>()
     const closed = new Set<string>()
