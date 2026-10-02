@@ -1,3 +1,4 @@
+import { anySignal } from '@agentskit/net'
 import {
   AskBackendDiagnosticSchema,
   AskBackendMetricSchema,
@@ -144,7 +145,7 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
       : crypto.randomUUID()
     const startedAt = clock()
     const bootstrap = AbortSignal.timeout(bootstrapTimeoutMs)
-    const bootstrapSignal = AbortSignal.any([request.signal, bootstrap])
+    const bootstrapSignal = anySignal([request.signal, bootstrap])
     let site: AskBackendSiteConfig | undefined
     let workDeadline: AbortSignal | undefined
     let emittedErrorMetric = false
@@ -182,7 +183,7 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
       const requestDeadline = AbortSignal.timeout(site.limits.requestTimeoutMs)
       workDeadline = requestDeadline
       const responseAbort = new AbortController()
-      const signal = AbortSignal.any([request.signal, requestDeadline, responseAbort.signal])
+      const signal = anySignal([request.signal, requestDeadline, responseAbort.signal])
       const limited: AskServiceRateLimitDecision = await withAbort(
         options.rateLimit?.({ context: authenticated.context, site, subjectId, signal }) ?? { allowed: true },
         signal,
@@ -215,7 +216,7 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
       const retriever = options.retrievers[site.corpus.mode]
         ?? fail(500, 'ASK_INTERNAL', 'The configured Ask retriever is unavailable.')
       const retrievalStarted = clock()
-      const retrievalSignal = AbortSignal.any([signal, AbortSignal.timeout(site.limits.retrievalTimeoutMs)])
+      const retrievalSignal = anySignal([signal, AbortSignal.timeout(site.limits.retrievalTimeoutMs)])
       const sources: readonly AskBackendSource[] = await (async () => {
         try {
           const candidates = await withAbort(retriever.retrieve({ query, messages, site, signal: retrievalSignal }), retrievalSignal)
@@ -242,7 +243,7 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
           let answer = ''
           let usage: AskBackendUsage | undefined
           const generationDeadline = AbortSignal.timeout(site!.limits.generationTimeoutMs)
-          const generationSignal = AbortSignal.any([signal, generationDeadline])
+          const generationSignal = anySignal([signal, generationDeadline])
           const emit = (candidate: AskEvent): void => {
             const event = AskEventSchema.parse(candidate)
             const chunk = encoder.encode(`${JSON.stringify(event)}\n`)

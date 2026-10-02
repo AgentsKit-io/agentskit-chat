@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "86ee5b725980f325c756fb24773f82480355601989d76b4ae984bc70a60ff2cd",
+  "contentHash": "12bc66dc7a6bdf0bb5329b442e7e2b6ebd93487bac71663f67bbe292b7af3722",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T03:10:37.233Z",
+  "generatedAt": "2026-10-02T12:17:21.484Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1825,7 +1825,7 @@
         "document",
         "project"
       ],
-      "contentHash": "6907499752611df11b2805de407c5ba6bea5889520c30b8d309f6e3da400a3ec"
+      "contentHash": "c5f8c0c0a00dc87921325a3d8515375e5771cf7c2ba2bbf5945fa10d48c6216b"
     },
     {
       "id": "document:packages/solid/README.md",
@@ -4536,7 +4536,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "736c7e468ab0592cbb54ce544c7b7f09c320ecc9815aad7b3c86a59fca79fa89"
+      "contentHash": "e316677b21458299e35e4c85bfce120959518a3d0073db666f5ec6e4d0db945c"
     },
     {
       "id": "module:packages/server/src/index.ts",
@@ -4555,7 +4555,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "05aef3701260ebd05e7709ea24f42e69991e88a0831a436219309c66cc9b3d39"
+      "contentHash": "f5c656f501015602b27910b73c3d49f8d51906cda76cb953fe1a826c8185d01e"
     },
     {
       "id": "module:packages/server/src/internal.ts",
@@ -4571,7 +4571,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "17f17b54338b594fbaecee440b4241ac761f96250325191f6e18b20c6d7d4bd5"
+      "contentHash": "729d6d063777b14ef15ccb2abab4f4ecede600bed63954056b7388ee5c4ed26c"
     },
     {
       "id": "module:packages/server/tests/ask-service.test.ts",
@@ -4584,7 +4584,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "91f9d88eff1d3ca1579ed881e05d84e68d3a84dd38ec20648481db56fb009a9a"
+      "contentHash": "f2ccf8a88756b582b6ed043d15da8105ea7ea0a06f29d009bc4341ee3d381bd4"
     },
     {
       "id": "module:packages/server/tests/handler.test.ts",
@@ -4597,7 +4597,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "169c89da94ed3c46f4ae108314665f1e8887db7c8f68aa6fbf68f55d2a48cf63"
+      "contentHash": "44025c065196d185631750c47a1494ac298e43ab29a4c4a92d0e58222826e852"
     },
     {
       "id": "module:packages/solid/fixtures/readme-example.ts",
@@ -6759,7 +6759,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "37922a0230ecfeb61024bf556e615641100b41117c367a8f0caddd2fc75bd4d5",
+    "hash": "babbe8e6ad57ac21f5e1f5af55c2e9fa685ba1ee3e97bc4f10f28fc1c7da6af8",
     "fileCount": 447,
     "projectionVersion": 2
   },
@@ -6782,9 +6782,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "c1769d853bd2464c0bd8be747ddc7a7b601d98ae09ab5cb7db884176246125d2",
+    "contentHash": "96468c884f42acf98254b6ba85964de99b403a446c6bf28db7ed13f546e06280",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "fbc0a4d8c91eebdecf4cfb773a3c9d63761e966d3bcc6f36dec8b3d40c22a3e8",
+    "snapshotHash": "04cb4b8fe6b8b629e25c9a07853a8dc516285c342b1a7598d84f6438325153bc",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6816,7 +6816,7 @@
       ],
       "averageFieldLength": {
         "aliases": 3.141078838174274,
-        "body": 74.84232365145228,
+        "body": 74.96265560165975,
         "headings": 4.562240663900415,
         "path": 6.1120331950207465,
         "summary": 6.087136929460581,
@@ -19673,7 +19673,7 @@
           "path": "packages/server/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. Maturity and compatibility Published in @agentskit/chat at 0.4.1 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of .",
+          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. The existing 64 KiB request limit is enforced by the published @agentskit/net JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Other callback promises still use the server's existing withAbort boundary: composing signals does not stop work that ignores its signal, and published @agentskit/net@0.1.0 does not yet expose a generic withTimeout helper. Maturity and compatibility Published in @agentskit/chat at 0.4.1 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of .",
           "aliases": "document project"
         },
         "graph": {
@@ -19727,10 +19727,15 @@
               "kind": "mentions-symbol",
               "id": "module:packages/server/src/ask-service.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:packages/server/src/internal.ts",
+              "confidence": "observed"
             }
           ]
         },
-        "contentHash": "6907499752611df11b2805de407c5ba6bea5889520c30b8d309f6e3da400a3ec",
+        "contentHash": "c5f8c0c0a00dc87921325a3d8515375e5771cf7c2ba2bbf5945fa10d48c6216b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -27891,7 +27896,7 @@
             }
           ]
         },
-        "contentHash": "736c7e468ab0592cbb54ce544c7b7f09c320ecc9815aad7b3c86a59fca79fa89",
+        "contentHash": "e316677b21458299e35e4c85bfce120959518a3d0073db666f5ec6e4d0db945c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -27980,7 +27985,7 @@
             }
           ]
         },
-        "contentHash": "05aef3701260ebd05e7709ea24f42e69991e88a0831a436219309c66cc9b3d39",
+        "contentHash": "f5c656f501015602b27910b73c3d49f8d51906cda76cb953fe1a826c8185d01e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28010,9 +28015,11 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 0,
+          "inboundLinks": 1,
           "coveredBy": [],
-          "mentionedBy": [],
+          "mentionedBy": [
+            "document:packages/server/README.md"
+          ],
           "areaId": "area:packages/server",
           "packageId": "package:@agentskit/chat-server",
           "inbound": [
@@ -28025,11 +28032,16 @@
               "kind": "imports",
               "id": "module:packages/server/src/index.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:packages/server/README.md",
+              "confidence": "observed"
             }
           ],
           "outbound": []
         },
-        "contentHash": "17f17b54338b594fbaecee440b4241ac761f96250325191f6e18b20c6d7d4bd5",
+        "contentHash": "729d6d063777b14ef15ccb2abab4f4ecede600bed63954056b7388ee5c4ed26c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28070,7 +28082,7 @@
             }
           ]
         },
-        "contentHash": "91f9d88eff1d3ca1579ed881e05d84e68d3a84dd38ec20648481db56fb009a9a",
+        "contentHash": "f2ccf8a88756b582b6ed043d15da8105ea7ea0a06f29d009bc4341ee3d381bd4",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28111,7 +28123,7 @@
             }
           ]
         },
-        "contentHash": "169c89da94ed3c46f4ae108314665f1e8887db7c8f68aa6fbf68f55d2a48cf63",
+        "contentHash": "44025c065196d185631750c47a1494ac298e43ab29a4c4a92d0e58222826e852",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31660,7 +31672,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "e38cefc789e31088d71d90c3d11feb4056416b0a3990dbf683bc4772555d6dc0",
+        "contentHash": "bf1781adfae7f99e79260e035743b2ae570333c2c116009bc36df6f97019353e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32629,7 +32641,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4c53cebbab8d2feeb7146c0c046a0071d66f24e31f1c70cd935be45bcabe6713",
+        "contentHash": "4a7916e36a50f430e5f8d4d4e52fc36e3aa1d0d8629f6fadccd6671803c2587d",
         "provenance": "observed",
         "confidence": "observed"
       },
