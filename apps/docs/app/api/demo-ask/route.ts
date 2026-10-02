@@ -4,9 +4,9 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const MODELS = [
-  'stealth/ox-alpha',
-  'cohere/north-mini-code:free',
   'google/gemma-4-31b-it:free',
+  'qwen/qwen3.8-27b:free',
+  'cohere/north-mini-code:free',
   'openrouter/free',
 ] as const
 
