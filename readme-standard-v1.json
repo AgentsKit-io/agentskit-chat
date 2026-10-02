@@ -286,8 +286,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-09-26",
-        "reviewDueOn": "2027-01-24",
+        "reviewedOn": "2026-10-02",
+        "reviewDueOn": "2027-01-30",
         "sources": [
           "packages/chat/README.md",
           "packages/chat/package.json",
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:fa74b77998abe03e2672cbc9ed955fe05eedfeed312689c801b41c208744eefc"
+        "sourceHash": "sha256:ac3d2e4316dc9cef0fcec11832260f77823329130c2da06552571c0722cdffe6"
       },
       "exceptions": []
     },
@@ -442,8 +442,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-09-26",
-        "reviewDueOn": "2027-01-24",
+        "reviewedOn": "2026-10-02",
+        "reviewDueOn": "2027-01-30",
         "sources": [
           "packages/server/README.md",
           "packages/server/package.json",
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:d9c3fa92fe8b05e11c0bf834085880169d3bffaf193e18f1a7bcf43a76ad26f3"
+        "sourceHash": "sha256:f874aaf6ab5031a9d675248ebe2612e24012aeb9f06945041aa1722dca0d5256"
       },
       "exceptions": []
     },
@@ -867,7 +867,7 @@
           "`0.4.1`"
         ],
         "compatibility": [
-          "Angular 18.1\u201321",
+          "Angular 18.1–21",
           "Partial-Ivy AOT package test in CI"
         ],
         "contribution": [
