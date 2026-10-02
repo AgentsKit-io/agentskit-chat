@@ -10,12 +10,5 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  "services": [
-    { "binding": "WORKER_SELF_REFERENCE", "service": "agentskit-chat-docs" }
-  ],
-  "kv_namespaces": [
-    // Route-handler / prerender cache (OpenNext incremental cache).
-    { "binding": "NEXT_INC_CACHE_KV", "id": "ca9d10aca2cb4fef9c8d05e036eb96a0" }
-  ],
   "observability": { "enabled": true }
 }
