@@ -2,7 +2,8 @@ import { createInMemoryMemory } from '@agentskit/core'
 import type { AdapterFactory } from '@agentskit/core'
 import type { SessionSnapshot } from '@agentskit/chat/protocol'
 import { decodeTurnEvent } from '@agentskit/chat/protocol'
-import { createServer } from 'node:http'
+import { createServer, request as httpRequest } from 'node:http'
+import { Readable } from 'node:stream'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { createChatHandler } from '../src/index.js'
@@ -74,6 +75,141 @@ describe('Web-standard chat handler', () => {
     const init = { method: 'POST', headers: { 'content-type': 'application/json' }, body, duplex: 'half' } as RequestInit & { duplex: 'half' }
     expect((await handler(new Request('http://localhost/chat', init))).status).toBe(413)
     expect(cancelled).toHaveBeenCalledOnce()
+  })
+
+  it('keeps bounded JSON diagnostics on a real Node HTTP request stream', async () => {
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'chat', chat: { adapter: adapter() } }), sessionStorage: () => createStorage(), maxBodyBytes: 512 })
+    const server = createServer(async (incoming, outgoing) => {
+      const body = Readable.toWeb(incoming) as ReadableStream<Uint8Array>
+      const incomingRequest = new Request(`http://127.0.0.1${incoming.url ?? '/chat'}`, {
+        method: incoming.method ?? 'POST',
+        headers: incoming.headers as HeadersInit,
+        body,
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' })
+      try {
+        const response = await handler(incomingRequest)
+        outgoing.writeHead(response.status, Object.fromEntries(response.headers))
+        outgoing.end(await response.text())
+      } catch {
+        outgoing.destroy()
+      }
+    })
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+    if (address === null || typeof address === 'string') throw new Error('server address unavailable')
+    try {
+      const url = `http://127.0.0.1:${address.port}/chat`
+      const valid = await fetch(url, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submission()),
+      })
+      expect(valid.status).toBe(200)
+      await valid.body?.cancel()
+
+      const malformed = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{' })
+      expect(malformed.status).toBe(400)
+      expect(await malformed.json()).toEqual({ error: { version: 1, code: 'REQUEST_INVALID_JSON', message: 'Request body is not valid JSON.', retryable: false } })
+
+      const declaredLarge = await fetch(url, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ value: 'x'.repeat(600) }),
+      })
+      expect(declaredLarge.status).toBe(413)
+      expect(await declaredLarge.json()).toEqual({ error: { version: 1, code: 'REQUEST_TOO_LARGE', message: 'Request body is too large.', retryable: false } })
+
+      const declaredWithoutBody = await new Promise<{ status: number; body: unknown }>((resolve, reject) => {
+        const client = httpRequest(url, {
+          method: 'POST', headers: { 'content-type': 'application/json', 'content-length': '513' },
+        }, response => {
+          const chunks: Buffer[] = []
+          response.on('data', chunk => chunks.push(Buffer.from(chunk)))
+          response.on('end', () => {
+            client.destroy()
+            resolve({ status: response.statusCode ?? 0, body: JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown })
+          })
+        })
+        client.on('error', reject)
+        client.flushHeaders()
+      })
+      expect(declaredWithoutBody).toEqual({
+        status: 413,
+        body: { error: { version: 1, code: 'REQUEST_TOO_LARGE', message: 'Request body is too large.', retryable: false } },
+      })
+
+      const chunked = new ReadableStream<Uint8Array>({
+        start(controller) { controller.enqueue(new TextEncoder().encode(`{"value":"${'x'.repeat(600)}"}`)); controller.close() },
+      })
+      const chunkedLarge = await fetch(url, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: chunked, duplex: 'half',
+      } as RequestInit & { duplex: 'half' })
+      expect(chunkedLarge.status).toBe(413)
+      expect(await chunkedLarge.json()).toEqual({ error: { version: 1, code: 'REQUEST_TOO_LARGE', message: 'Request body is too large.', retryable: false } })
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
+    }
+  })
+
+  it('cancels stalled native HTTP request streams on deadline and parent abort, then recovers', async () => {
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'chat', chat: { adapter: adapter() } }), sessionStorage: () => createStorage(), timeoutMs: 200 })
+    const paths = ['/timeout', '/parent']
+    const states = new Map<string, { aborted: boolean; destroyed: boolean; parentSignalAborted: boolean }>()
+    const completions = new Map<string, Promise<void>>()
+    const complete = new Map<string, () => void>()
+    for (const path of paths) {
+      let resolve!: () => void
+      completions.set(path, new Promise<void>(done => { resolve = done }))
+      complete.set(path, resolve)
+    }
+    const server = createServer(async (incoming, outgoing) => {
+      const path = incoming.url ?? ''
+      const parent = new AbortController()
+      const parentAbort = path === '/parent' ? setTimeout(() => parent.abort(new DOMException('Host cancelled request', 'AbortError')), 25) : undefined
+      const body = Readable.toWeb(incoming) as ReadableStream<Uint8Array>
+      try {
+        const incomingRequest = new Request(`http://127.0.0.1${path}`, {
+          method: incoming.method ?? 'POST', headers: incoming.headers as HeadersInit, body, duplex: 'half', signal: parent.signal,
+        } as RequestInit & { duplex: 'half' })
+        const response = await handler(incomingRequest)
+        outgoing.writeHead(response.status, Object.fromEntries(response.headers))
+        outgoing.end(await response.text())
+      } catch {
+        outgoing.destroy()
+      } finally {
+        if (parentAbort !== undefined) clearTimeout(parentAbort)
+        if (paths.includes(path)) {
+          states.set(path, { aborted: incoming.aborted, destroyed: incoming.destroyed, parentSignalAborted: parent.signal.aborted })
+          complete.get(path)?.()
+        }
+      }
+    })
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+    if (address === null || typeof address === 'string') throw new Error('server address unavailable')
+    const url = `http://127.0.0.1:${address.port}`
+    try {
+      for (const path of paths) {
+        const client = httpRequest(url + path, {
+          method: 'POST', headers: { 'content-type': 'application/json', 'transfer-encoding': 'chunked' },
+        })
+        client.on('error', () => undefined)
+        client.write('{')
+        await vi.waitFor(async () => {
+          expect(states.has(path)).toBe(true)
+          await completions.get(path)
+        }, { timeout: 2_000 })
+        const state = states.get(path)
+        expect(state?.aborted || state?.destroyed).toBe(true)
+        if (path === '/parent') expect(state?.parentSignalAborted).toBe(true)
+        client.destroy()
+      }
+
+      const recovery = await fetch(url + '/chat', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(submission()),
+      })
+      expect(recovery.status).toBe(200)
+      await recovery.body?.cancel()
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
+    }
   })
 
   it('resolves trusted context before parsing and ignores spoofed payload context', async () => {
