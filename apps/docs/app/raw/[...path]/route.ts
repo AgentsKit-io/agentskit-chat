@@ -3,6 +3,7 @@ import { readFile, readdir } from 'node:fs/promises'
 import { join, normalize, relative } from 'node:path'
 import { toPosix } from '@agentskit/cross-platform/pure'
 import { isPublicDocPath } from '@/lib/public-docs'
+import { readPublicDocSources } from '@/lib/docs-index'
 
 export const dynamic = 'force-static'
 const root = join(process.cwd(), '..', '..', 'docs')
@@ -22,10 +23,21 @@ const resolvePublicDoc = (segments: readonly string[]): string | undefined => {
   return file
 }
 
+// Workers (OpenNext) have no filesystem: the same candidates, looked up in the build-time index.
+const resolveFromIndex = async (segments: readonly string[]): Promise<string | undefined> => {
+  const base = segments.map(segment => segment.replace(/\.mdx?$/i, '')).join('/')
+  if (base.split('/').includes('..')) return undefined
+  const sources = await readPublicDocSources()
+  const candidate = [`${base}.md`, `${base}.mdx`, `${base}/README.md`, `${base}/index.mdx`].find(path => path in sources)
+  return candidate === undefined ? undefined : sources[candidate]
+}
+
 export async function GET(_request: Request, context: { readonly params: Promise<{ readonly path: string[] }> }) {
-  const file = resolvePublicDoc((await context.params).path)
-  if (!file) return new Response('Not found', { status: 404 })
-  return new Response(await readFile(file, 'utf8'), {
+  const segments = (await context.params).path
+  const file = resolvePublicDoc(segments)
+  const body = file ? await readFile(file, 'utf8') : await resolveFromIndex(segments)
+  if (body === undefined) return new Response('Not found', { status: 404 })
+  return new Response(body, {
     headers: {
       'content-type': 'text/markdown; charset=utf-8',
       'cache-control': 'public, max-age=300, s-maxage=3600',

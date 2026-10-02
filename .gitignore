@@ -19,3 +19,9 @@ artifacts/
 !.doc-bridge/memory-inbox/.gitkeep
 .codex/verification/
 .vercel
+
+# Cloudflare (OpenNext / wrangler)
+.open-next/
+.wrangler/
+.dev.vars
+apps/docs/lib/docs-index.generated.json
