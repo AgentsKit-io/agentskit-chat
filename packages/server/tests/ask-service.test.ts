@@ -1,5 +1,5 @@
-import { decodeAskEvents, type AskBackendMetric, type AskBackendSiteConfig } from '@agentskit/chat-protocol'
-import { createServer } from 'node:http'
+import { decodeAskEvents, type AskBackendMetric, type AskBackendSiteConfig, type AskBackendSource } from '@agentskit/chat-protocol'
+import { createServer, request as httpRequest } from 'node:http'
 import { Readable } from 'node:stream'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -154,6 +154,158 @@ describe('trusted Ask backend vertical', () => {
     }
   })
 
+  it('persists and emits done when a slow save follows generation just before its deadline over HTTP', async () => {
+    const config = {
+      ...site(),
+      limits: { requestTimeoutMs: 2_000, retrievalTimeoutMs: 500, generationTimeoutMs: 250, maxSources: 5 },
+    } satisfies AskBackendSiteConfig
+    const { store, records } = createStore()
+    const handler = createAskServiceHandler(baseOptions(config, {
+      sessionStore: {
+        ...store,
+        save: async (key, record, expected) => {
+          await new Promise<void>(resolve => setTimeout(resolve, 180))
+          return store.save(key, record, expected)
+        },
+      },
+      generator: {
+        async *generate() {
+          await new Promise<void>(resolve => setTimeout(resolve, 180))
+          yield { type: 'text', delta: 'Grounded answer.' }
+        },
+      },
+    }))
+    const server = createServer(async (incoming, outgoing) => {
+      const response = await handler(new Request(`http://127.0.0.1${incoming.url ?? '/v1/ask'}`, {
+        method: incoming.method,
+        headers: incoming.headers as HeadersInit,
+        body: Readable.toWeb(incoming) as ReadableStream<Uint8Array>,
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' }))
+      outgoing.writeHead(response.status, Object.fromEntries(response.headers))
+      outgoing.end(await response.text())
+    })
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+    if (address === null || typeof address === 'string') throw new Error('server address unavailable')
+    try {
+      const response = await fetch(`http://127.0.0.1:${address.port}/v1/ask`, {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer valid' },
+        body: JSON.stringify({ sessionId: 'slow-save', messages: [{ role: 'user', content: 'hello' }] }),
+      })
+      expect(response.status).toBe(200)
+      expect(decodeAskEvents(await response.text()).events.at(-1)?.type).toBe('done')
+      expect(records.get('docs:user-1:slow-save')?.messages.at(-1)).toEqual({ role: 'assistant', content: 'Grounded answer.' })
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
+    }
+  })
+
+  it('aborts real localhost authentication and retrieval fetches when the client socket closes, then recovers', async () => {
+    const started = new Set<string>()
+    const closed = new Set<string>()
+    const appCompleted = new Set<string>()
+    const upstream = createServer((incoming, outgoing) => {
+      const path = incoming.url ?? ''
+      started.add(path)
+      const timer = setTimeout(() => {
+        const source: AskBackendSource = { id: 'local-guide', title: 'Local guide', href: '/docs/start', excerpt: 'Local source' }
+        outgoing.end(path === '/retrieve' ? JSON.stringify([source]) : 'authenticated')
+      }, 1_000)
+      outgoing.once('close', () => {
+        clearTimeout(timer)
+        if (!outgoing.writableEnded) closed.add(path)
+      })
+    })
+    await new Promise<void>(resolve => upstream.listen(0, '127.0.0.1', resolve))
+    const upstreamAddress = upstream.address()
+    if (upstreamAddress === null || typeof upstreamAddress === 'string') throw new Error('upstream address unavailable')
+    const upstreamUrl = `http://127.0.0.1:${upstreamAddress.port}`
+    let blockAuthentication = true
+    let blockRetrieval = false
+    const source: AskBackendSource = { id: 'local-guide', title: 'Local guide', href: '/docs/start', excerpt: 'Local source' }
+    const handler = createAskServiceHandler(baseOptions(site('local', 'disabled'), {
+      authenticate: async (_request, signal) => {
+        if (blockAuthentication) await (await fetch(`${upstreamUrl}/authenticate`, { signal })).text()
+        return { ok: true, context: { subjectId: 'user-1', siteId: 'docs' } }
+      },
+      retrievers: { local: { retrieve: async ({ signal }) => {
+        if (blockRetrieval) return await (await fetch(`${upstreamUrl}/retrieve`, { signal })).json() as AskBackendSource[]
+        return [source]
+      } } },
+    }))
+    const app = createServer(async (incoming, outgoing) => {
+      const disconnected = new AbortController()
+      const abort = (): void => {
+        if (!outgoing.writableEnded && !disconnected.signal.aborted) disconnected.abort(new DOMException('Client disconnected', 'AbortError'))
+      }
+      incoming.once('aborted', abort)
+      outgoing.once('close', abort)
+      let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
+      try {
+        const requestBody = Readable.toWeb(incoming) as ReadableStream<Uint8Array>
+        const response = await handler(new Request(`http://127.0.0.1${incoming.url ?? '/v1/ask'}`, {
+          method: incoming.method,
+          headers: incoming.headers as HeadersInit,
+          body: requestBody,
+          duplex: 'half',
+          signal: disconnected.signal,
+        } as RequestInit & { duplex: 'half' }))
+        if (outgoing.destroyed) return
+        outgoing.writeHead(response.status, Object.fromEntries(response.headers))
+        if (response.body === null) return outgoing.end()
+        reader = response.body.getReader()
+        while (true) {
+          const result = await reader.read()
+          if (result.done) break
+          outgoing.write(result.value)
+        }
+        outgoing.end()
+      } finally {
+        if (disconnected.signal.aborted) await reader?.cancel().catch(() => undefined)
+        incoming.removeListener('aborted', abort)
+        outgoing.removeListener('close', abort)
+        appCompleted.add(incoming.url ?? '')
+      }
+    })
+    await new Promise<void>(resolve => app.listen(0, '127.0.0.1', resolve))
+    const appAddress = app.address()
+    if (appAddress === null || typeof appAddress === 'string') throw new Error('app address unavailable')
+    const appUrl = `http://127.0.0.1:${appAddress.port}`
+    const disconnect = async (path: string): Promise<void> => {
+      const client = httpRequest(`${appUrl}${path}`, {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer valid' },
+      })
+      client.on('error', () => undefined)
+      client.end(JSON.stringify({ messages: [{ role: 'user', content: 'hello' }] }))
+      await vi.waitFor(() => expect(started.has(path === '/authenticate' ? path : '/retrieve')).toBe(true), { timeout: 2_000 })
+      client.destroy()
+      const upstreamPath = path === '/authenticate' ? path : '/retrieve'
+      await vi.waitFor(() => expect(closed.has(upstreamPath)).toBe(true), { timeout: 2_000 })
+      await vi.waitFor(() => expect(appCompleted.has(path)).toBe(true), { timeout: 2_000 })
+    }
+
+    try {
+      await disconnect('/authenticate')
+      blockAuthentication = false
+      blockRetrieval = true
+      await disconnect('/retrieval')
+
+      blockRetrieval = false
+      const recovered = await fetch(`${appUrl}/recovery`, {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer valid' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: 'hello' }] }),
+      })
+      expect(recovered.status).toBe(200)
+      expect((await events(recovered)).at(-1)?.type).toBe('done')
+    } finally {
+      await Promise.all([
+        new Promise<void>((resolve, reject) => app.close(error => error ? reject(error) : resolve())),
+        new Promise<void>((resolve, reject) => upstream.close(error => error ? reject(error) : resolve())),
+      ])
+    }
+  })
+
   it('fails closed for rate limits, unsafe sources, retrieval errors, and private diagnostics', async () => {
     const disabled = site('local', 'disabled')
     const limited = createAskServiceHandler(baseOptions(disabled, { rateLimit: () => ({ allowed: false, retryAfterSeconds: 15 }) }))
@@ -182,7 +334,7 @@ describe('trusted Ask backend vertical', () => {
       limits: { requestTimeoutMs: 100, retrievalTimeoutMs: 500, generationTimeoutMs: 500, maxSources: 5 },
     } satisfies AskBackendSiteConfig
     const outer = createAskServiceHandler(baseOptions(outerConfig, { retrievers: { local: {
-      retrieve: ({ signal }) => new Promise(resolve => signal.addEventListener('abort', () => resolve([]), { once: true })),
+      retrieve: () => new Promise<readonly AskBackendSource[]>(() => undefined),
     } } }))
     const outerResponse = await outer(ask({ messages: [{ role: 'user', content: 'slow' }] }))
     expect(outerResponse.status).toBe(408)
@@ -193,15 +345,25 @@ describe('trusted Ask backend vertical', () => {
       limits: { requestTimeoutMs: 500, retrievalTimeoutMs: 500, generationTimeoutMs: 100, maxSources: 5 },
     } satisfies AskBackendSiteConfig
     const generation = createAskServiceHandler(baseOptions(generationConfig, { generator: {
-      async *generate({ signal }) {
-        await new Promise<void>(resolve => signal.addEventListener('abort', resolve, { once: true }))
-        throw signal.reason
+      async *generate() {
+        await new Promise<void>(() => undefined)
+        yield { type: 'text', delta: 'unreachable' }
       },
     } }))
     const generationEvents = await events(await generation(ask({ messages: [{ role: 'user', content: 'slow' }] })))
     expect(generationEvents).toEqual([{
       type: 'error', code: 'ASK_TIMEOUT', message: 'The Ask request timed out.', retryable: true,
     }])
+  })
+
+  it('returns 499 without invoking authentication when the request is already cancelled', async () => {
+    const authenticate = vi.fn()
+    const handler = createAskServiceHandler(baseOptions(site('local', 'disabled'), { authenticate }))
+    const cancelled = new AbortController()
+    cancelled.abort(new DOMException('Host cancelled request', 'AbortError'))
+    const response = await handler(ask({ messages: [{ role: 'user', content: 'hello' }] }, '/v1/ask', cancelled.signal))
+    expect(response.status).toBe(499)
+    expect(authenticate).not.toHaveBeenCalled()
   })
 
   it('resumes canonical stored history and reports persistence conflicts as typed stream diagnostics', async () => {
