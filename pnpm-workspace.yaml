@@ -3,22 +3,39 @@ packages:
   - "apps/*"
 
 overrides:
-  fast-uri: "3.1.5"
+  # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
+  # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
+  fast-uri: "3.1.8"
   next: ">=15.5.27 <16"
   sharp: ">=0.35.0 <1"
   postcss: ">=8.5.23 <9"
   nanoid: "3.3.18"
   image-size: "npm:image-size-next@1.2.2"
-  brace-expansion: ">=5.0.9 <6"
+  # GHSA-q2hr-2g5m-vwhr
+  brace-expansion: ">=5.0.12 <6"
   # @opennextjs/cloudflare (devDependency, build-time only) -> glob@9 -> minimatch@8 needs the
   # CJS default export of brace-expansion 2.x; pinned to the latest 2.x release (2.1.7).
   "minimatch@8>brace-expansion": "2.1.7"
-  dompurify: "3.4.13"
+  # GHSA-p98j-92pf-mc4p
+  dompurify: "3.4.16"
+  # GHSA-j22f-vq7h-c4qm, GHSA-mcm9-63f2-9j32, GHSA-x5rw-q4pp-hg5g,
+  # GHSA-4q55-j62x-fr9h, GHSA-9rgm-9g3h-6x36, GHSA-hx4r-w6wj-j8fg
+  devalue: "5.9.3"
+  # GHSA-67c8-pqhq-4rmx
+  piscina: "5.3.2"
   mermaid: "11.17.2"
   uuid: "11.1.1"
   esbuild: ">=0.28.1 <1"
-  'js-yaml@<4': "3.15.1"
-  'js-yaml@>=4 <5': "4.3.1"
+  # GHSA-2883-xcg3-v3hh
+  'js-yaml@<4': "3.15.2"
+  'js-yaml@>=4 <5': "4.3.2"
+  # GHSA-c7q8-3ch8-vqpv, GHSA-93r5-fhx6-vmg9, GHSA-w2rr-34g9-rvrj,
+  # GHSA-x4fp-j954-r2f4, GHSA-27p8-2357-5qqv, GHSA-8344-3jmq-59r6,
+  # GHSA-965w-775f-mr7g, GHSA-4w3w-2rp5-g8jm, GHSA-3px3-54cx-rmw9,
+  # GHSA-g53g-w8rj-fmg7, GHSA-6mj3-qw4j-hgrw, GHSA-vr34-hp96-76pp,
+  # GHSA-6h8r-xr42-gp59, GHSA-6gmq-8vp8-gcm6
+  '@xmldom/xmldom@<0.9': "0.8.15"
+  '@xmldom/xmldom@>=0.9 <1': "0.9.12"
   '@angular/common': ">=21.2.19 <22"
   '@angular/core': ">=21.2.19 <22"
   '@angular/compiler': ">=21.2.19 <22"
