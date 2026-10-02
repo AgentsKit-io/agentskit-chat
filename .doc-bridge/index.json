@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "35ca7c1bf013117a3f4c61fedd7fa1683061de47b1ba708c59ef51af9e016ec2",
+  "contentHash": "86ee5b725980f325c756fb24773f82480355601989d76b4ae984bc70a60ff2cd",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-09-28T00:33:19.041Z",
+  "generatedAt": "2026-10-02T03:10:37.233Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1918,7 +1918,7 @@
         "ts",
         "demo-ask"
       ],
-      "contentHash": "4b1dc5e7894b3f219688bc95558232cea22ddda2efbdcb5a37943e2531750646"
+      "contentHash": "7bde1530c2d1dad9bb198a3c50c0ca26604217132117421933479a063d50758d"
     },
     {
       "id": "module:apps/docs/app/api/search/route.ts",
@@ -2157,7 +2157,7 @@
         "ts",
         "[...path]"
       ],
-      "contentHash": "f4f31ce7f170044ce12571989294b577704688144eba8998dcbf99d6f9af2103"
+      "contentHash": "de9e493c3c7cb9ed278d411c0b95ad7e66f7073f367adc4feb16603dc2655c8c"
     },
     {
       "id": "module:apps/docs/app/robots.ts",
@@ -2686,6 +2686,21 @@
       "contentHash": "c56aaefec3845a023c2c663627a0e42ac45e2469b10bcdbbb5b1f3616fa75910"
     },
     {
+      "id": "module:apps/docs/lib/docs-index-generated.d.ts",
+      "type": "module",
+      "title": "docs-index-generated.d.ts",
+      "path": "apps/docs/lib/docs-index-generated.d.ts",
+      "symbols": [
+        "default"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "lib"
+      ],
+      "contentHash": "d0a6eaca49eb57f19e94de81f264a1054ca4dbcccdd39991a94eb063573bcba9"
+    },
+    {
       "id": "module:apps/docs/lib/docs-index.ts",
       "type": "module",
       "title": "docs-index.ts",
@@ -2693,14 +2708,15 @@
       "symbols": [
         "CanonicalDoc",
         "collectCanonicalDocs",
-        "publicDocSlug"
+        "publicDocSlug",
+        "readPublicDocSources"
       ],
       "tags": [
         "module",
         "ts",
         "lib"
       ],
-      "contentHash": "9fc96ccf12f52c13b82d4d8d78354b20061568809049c5cdf9f69e5c5d4e2cd4"
+      "contentHash": "01b3543d8ffe84bb53bf53d676d893660384cb652513f3d4163eda9003b93253"
     },
     {
       "id": "module:apps/docs/lib/ecosystem-llms-block.ts",
@@ -2884,6 +2900,21 @@
       "contentHash": "2bc763607d0b8db6363413f491d897b94751b4c7a41770cb12f56735c37350a5"
     },
     {
+      "id": "module:apps/docs/open-next.config.ts",
+      "type": "module",
+      "title": "open-next.config.ts",
+      "path": "apps/docs/open-next.config.ts",
+      "symbols": [
+        "default"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "docs"
+      ],
+      "contentHash": "0496764a7dae6ede4be112b72f19a7bd7ce08bce2582eec22d294ebdd6a24099"
+    },
+    {
       "id": "module:apps/docs/playwright.config.ts",
       "type": "module",
       "title": "playwright.config.ts",
@@ -2912,6 +2943,18 @@
         "docs"
       ],
       "contentHash": "86e5307895a6424e166106895f17f5f33451ebfee23fee0be313dca0993ee034"
+    },
+    {
+      "id": "module:apps/docs/scripts/build-docs-index.mjs",
+      "type": "module",
+      "title": "build-docs-index.mjs",
+      "path": "apps/docs/scripts/build-docs-index.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "944e127c46efadec95d51603cc4626153bce13028562a9b59639987b2c2fc526"
     },
     {
       "id": "module:apps/docs/scripts/check-build-budget.mjs",
@@ -6716,8 +6759,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "9e36746a2f289271f649de1204b2637faf24d8405de843c94739ad8726a613d3",
-    "fileCount": 444,
+    "hash": "37922a0230ecfeb61024bf556e615641100b41117c367a8f0caddd2fc75bd4d5",
+    "fileCount": 447,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6739,9 +6782,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "263aee1cbe92755633c7da956f01f3f8aca122198f887a29219d3b5935451b38",
+    "contentHash": "c1769d853bd2464c0bd8be747ddc7a7b601d98ae09ab5cb7db884176246125d2",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "1b7ba5fe61e0755246783f5a811c01679b4f1bdf6f8e8b5a82316b2169632a41",
+    "snapshotHash": "fbc0a4d8c91eebdecf4cfb773a3c9d63761e966d3bcc6f36dec8b3d40c22a3e8",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6761,7 +6804,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 479,
+      "documentCount": 482,
       "fieldNames": [
         "aliases",
         "body",
@@ -6772,13 +6815,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.1419624217119,
-        "body": 75.31106471816284,
-        "headings": 4.590814196242171,
-        "path": 6.106471816283925,
-        "summary": 6.125260960334029,
-        "symbols": 4.960334029227558,
-        "title": 3.594989561586639
+        "aliases": 3.141078838174274,
+        "body": 74.84232365145228,
+        "headings": 4.562240663900415,
+        "path": 6.1120331950207465,
+        "summary": 6.087136929460581,
+        "symbols": 4.943983402489627,
+        "title": 3.603734439834025
       }
     },
     "entries": [
@@ -6840,7 +6883,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2e282e9a00199b2b33cb2100112510ee101970f17ee6ae36b7a73b5ecbb87c86",
+        "contentHash": "bbdfbd6f493d7d959499db82da16c3bd484d7216318920a64add17127b75f20c",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "docs-app"
@@ -7201,7 +7244,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "849ed775393a223980d1f08c686ddda210e1b95209fe7674665f8dc16f631ee4",
+        "contentHash": "1943aa4a03f09967eb60e24e9119b50799718f3066d5c45170e757fffb859086",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20255,7 +20298,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "4b1dc5e7894b3f219688bc95558232cea22ddda2efbdcb5a37943e2531750646",
+        "contentHash": "7bde1530c2d1dad9bb198a3c50c0ca26604217132117421933479a063d50758d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20824,7 +20867,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "f4f31ce7f170044ce12571989294b577704688144eba8998dcbf99d6f9af2103",
+        "contentHash": "de9e493c3c7cb9ed278d411c0b95ad7e66f7073f367adc4feb16603dc2655c8c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22150,6 +22193,43 @@
         "confidence": "observed"
       },
       {
+        "id": "module:apps/docs/lib/docs-index-generated.d.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/docs-index-generated.d.ts",
+        "title": "docs-index-generated.d.ts",
+        "aliases": [],
+        "symbols": [
+          "default"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "lib"
+        ],
+        "fields": {
+          "title": "docs-index-generated.d.ts",
+          "headings": "",
+          "path": "apps/docs/lib/docs-index-generated.d.ts",
+          "symbols": "default",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "d0a6eaca49eb57f19e94de81f264a1054ca4dbcccdd39991a94eb063573bcba9",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:apps/docs/lib/docs-index.ts",
         "kind": "module",
         "path": "apps/docs/lib/docs-index.ts",
@@ -22158,7 +22238,8 @@
         "symbols": [
           "CanonicalDoc",
           "collectCanonicalDocs",
-          "publicDocSlug"
+          "publicDocSlug",
+          "readPublicDocSources"
         ],
         "tags": [
           "module",
@@ -22169,7 +22250,7 @@
           "title": "docs-index.ts",
           "headings": "",
           "path": "apps/docs/lib/docs-index.ts",
-          "symbols": "CanonicalDoc collectCanonicalDocs publicDocSlug",
+          "symbols": "CanonicalDoc collectCanonicalDocs publicDocSlug readPublicDocSources",
           "summary": "",
           "body": "",
           "aliases": "module ts lib"
@@ -22196,7 +22277,7 @@
             }
           ]
         },
-        "contentHash": "9fc96ccf12f52c13b82d4d8d78354b20061568809049c5cdf9f69e5c5d4e2cd4",
+        "contentHash": "01b3543d8ffe84bb53bf53d676d893660384cb652513f3d4163eda9003b93253",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22480,6 +22561,11 @@
               "kind": "imports",
               "id": "module:apps/docs/lib/source.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/scripts/build-docs-index.mjs",
+              "confidence": "observed"
             }
           ],
           "outbound": []
@@ -22704,6 +22790,43 @@
         "confidence": "observed"
       },
       {
+        "id": "module:apps/docs/open-next.config.ts",
+        "kind": "module",
+        "path": "apps/docs/open-next.config.ts",
+        "title": "open-next.config.ts",
+        "aliases": [],
+        "symbols": [
+          "default"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "docs"
+        ],
+        "fields": {
+          "title": "open-next.config.ts",
+          "headings": "",
+          "path": "apps/docs/open-next.config.ts",
+          "symbols": "default",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts docs"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "0496764a7dae6ede4be112b72f19a7bd7ce08bce2582eec22d294ebdd6a24099",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:apps/docs/playwright.config.ts",
         "kind": "module",
         "path": "apps/docs/playwright.config.ts",
@@ -22774,6 +22897,46 @@
           "outbound": []
         },
         "contentHash": "86e5307895a6424e166106895f17f5f33451ebfee23fee0be313dca0993ee034",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/scripts/build-docs-index.mjs",
+        "kind": "module",
+        "path": "apps/docs/scripts/build-docs-index.mjs",
+        "title": "build-docs-index.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "build-docs-index.mjs",
+          "headings": "",
+          "path": "apps/docs/scripts/build-docs-index.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/scripts",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/public-docs.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "944e127c46efadec95d51603cc4626153bce13028562a9b59639987b2c2fc526",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31752,7 +31915,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "82ea5e2ce9b003daf02d5669341315ad3656102d0d941f9235d28f5c03e4df0c",
+        "contentHash": "81c9b2537e806f6f0e445d9ed33f1351dd5a8ddcb067a31e0ec649f1bbfebb42",
         "provenance": "observed",
         "confidence": "observed"
       },
