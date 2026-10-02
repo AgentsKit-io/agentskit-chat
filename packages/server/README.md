@@ -41,7 +41,7 @@ export const createTenantHandler = (options: TenantHandlerOptions) => createChat
 
 The returned function accepts a standard `Request` and returns a streaming `Response`. Semantic escalations use `createAskServiceHandler` with trusted site resolution.
 
-The existing 64 KiB request limit is enforced by the published `@agentskit/net` JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Other callback promises still use the server's existing `withAbort` boundary: composing signals does not stop work that ignores its signal, and published `@agentskit/net@0.1.0` does not yet expose a generic `withTimeout` helper.
+The existing 64 KiB request limit is enforced by the published `@agentskit/net` JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Callback factories use the published `@agentskit/net@0.2.0` `withTimeout` helper with their existing configured deadlines and the parent request signal. This ends the handler's wait when a callback ignores its signal, but arbitrary callback work cannot be forcibly stopped; callbacks should honor the signal to cancel fetches and other cooperative work.
 
 ![Server handlers bridge definitions to HTTP and Ask](./../../docs/assets/agentschat-architecture.svg)
 

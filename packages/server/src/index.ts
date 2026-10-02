@@ -1,4 +1,4 @@
-import { anySignal } from '@agentskit/net'
+import { anySignal, withTimeout } from '@agentskit/net'
 import { createChatController } from '@agentskit/core'
 import type { ChatState, Message } from '@agentskit/core'
 import { resumeChatSession, SessionConflictError } from '@agentskit/chat'
@@ -6,7 +6,7 @@ import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
 import { createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TurnEventSchema } from '@agentskit/chat-protocol'
 import type { TurnDiagnostic } from '@agentskit/chat-protocol'
 
-import { readBoundedJson, withAbort } from './internal.js'
+import { readBoundedJson } from './internal.js'
 
 export * from './ask-service.js'
 
@@ -14,11 +14,13 @@ export type ChatHandler = (request: Request) => Promise<Response>
 export type AuthenticationResult<TContext> = { readonly ok: true; readonly context: TContext } | { readonly ok: false; readonly response: Response }
 
 export interface ChatHandlerOptions<TContext = undefined> {
+  /** Absolute deadline shared by request work; callback promises still need to honor their signal to stop their own work. */
+  readonly timeoutMs?: number
+  /** Deadline for each cleanup phase: settle, save memory, and release the active turn. */
+  readonly cleanupTimeoutMs?: number
   readonly authenticate?: (request: Request, signal: AbortSignal) => AuthenticationResult<TContext> | Promise<AuthenticationResult<TContext>>
   readonly resolveDefinition: (context: TContext | undefined, sessionId: string, signal: AbortSignal) => ChatDefinition | Promise<ChatDefinition>
   readonly sessionStorage: (context: TContext | undefined, signal: AbortSignal) => SessionStorage
-  readonly timeoutMs?: number
-  readonly cleanupTimeoutMs?: number
   readonly maxBodyBytes?: number
   readonly now?: () => Date
   readonly createId?: () => string
@@ -62,25 +64,30 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
   return async request => {
     const deadline = AbortSignal.timeout(timeoutMs)
     const signal = anySignal([request.signal, deadline])
+    let cleanupAfterClaim: (() => Promise<void>) | undefined
     try {
       if (request.method !== 'POST') fail(405, 'REQUEST_METHOD_NOT_ALLOWED', 'Only POST is supported.')
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) fail(415, 'REQUEST_UNSUPPORTED_MEDIA_TYPE', 'Content-Type must be application/json.')
       let context: TContext | undefined
       if (options.authenticate) {
-        const authenticated = await withAbort(options.authenticate(request, signal), signal)
+        const authenticated = await withTimeout(callbackSignal => Promise.resolve(options.authenticate!(request, callbackSignal)), timeoutMs, signal)
         if (!authenticated.ok) return authenticated.response
         context = authenticated.context
       }
       const decoded = decodeTurnEvent(await readBody(request, maxBodyBytes, signal))
       if (!decoded.ok || decoded.event.event !== 'client.turn.submit') return fail(400, 'REQUEST_INVALID_EVENT', 'Request body must be a valid turn submission.')
       const submission = decoded.event
-      const definition = await withAbort(options.resolveDefinition(context, submission.sessionId, signal), signal)
+      const definition = await withTimeout(callbackSignal => Promise.resolve(options.resolveDefinition(context, submission.sessionId, callbackSignal)), timeoutMs, signal)
       const storage = options.sessionStorage(context, signal)
-      const session = await withAbort(resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal, ...(options.now ? { now: options.now } : {}) }), signal)
-      if (!(await withAbort(session.claimTurn(submission.turnId, leaseMs, signal), signal))) return json({ version: 1, code: 'SESSION_BUSY', message: 'Another turn is active for this session.', retryable: true }, 409)
+      const session = await withTimeout(callbackSignal => resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal: callbackSignal, ...(options.now ? { now: options.now } : {}) }), timeoutMs, signal)
+      if (!(await withTimeout(callbackSignal => session.claimTurn(submission.turnId, leaseMs, callbackSignal), timeoutMs, signal))) return json({ version: 1, code: 'SESSION_BUSY', message: 'Another turn is active for this session.', retryable: true }, 409)
+      cleanupAfterClaim = async () => {
+        const releaseSignal = AbortSignal.timeout(cleanupTimeoutMs)
+        await withTimeout(callbackSignal => session.releaseTurn(submission.turnId, 'completed', callbackSignal), cleanupTimeoutMs, releaseSignal)
+      }
 
       const memory = definition.chat.memory
-      const loaded = memory ? await withAbort(memory.load({ signal }), signal) : definition.chat.initialMessages ?? []
+      const loaded = memory ? await withTimeout(async callbackSignal => memory.load({ signal: callbackSignal }), timeoutMs, signal) : definition.chat.initialMessages ?? []
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
       const controller = createChatController(session.updateChat({ ...chat, initialMessages: [...messages] }))
@@ -105,16 +112,17 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         unsubscribe(); signal.removeEventListener('abort', abort)
         if (stop && !signal.aborted) controller.stop()
         const settleSignal = AbortSignal.timeout(cleanupTimeoutMs)
-        await withAbort(send.catch(() => undefined), settleSignal).catch(() => undefined)
+        await withTimeout(() => send.catch(() => undefined), cleanupTimeoutMs, settleSignal).catch(() => undefined)
         const saveSignal = AbortSignal.timeout(cleanupTimeoutMs)
         let outcome: 'completed' | 'indeterminate' = 'completed'
-        try { await withAbort(memory?.save(controller.getState().messages, { signal: saveSignal }), saveSignal) }
+        try { await withTimeout(callbackSignal => Promise.resolve(memory?.save(controller.getState().messages, { signal: callbackSignal })), cleanupTimeoutMs, saveSignal) }
         catch (error) { outcome = 'indeterminate'; throw error }
         finally {
           const releaseSignal = AbortSignal.timeout(cleanupTimeoutMs)
-          await withAbort(session.releaseTurn(submission.turnId, outcome, releaseSignal), releaseSignal)
+          await withTimeout(callbackSignal => session.releaseTurn(submission.turnId, outcome, callbackSignal), cleanupTimeoutMs, releaseSignal)
         }
       }
+      cleanupAfterClaim = () => cleanup(true)
       const diagnosticLine = (code: string, message: string): Uint8Array => {
         const event = TurnEventSchema.parse({
           protocol: 'agentskit.chat.turn', version: 1, eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId,
@@ -137,7 +145,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
             }
             if (pending) {
               const state = pending; pending = undefined
-              await withAbort(session.persist(signal), signal)
+              await withTimeout(callbackSignal => session.persist(callbackSignal), timeoutMs, signal)
               const event = createSnapshotEvent({
                 eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId, sequence: session.getCursor(), emittedAt: (options.now?.() ?? new Date()).toISOString(),
                 ...(submission.correlation === undefined ? {} : { correlation: submission.correlation }),
@@ -158,8 +166,11 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         },
         async cancel() { await cleanup(true).catch(() => undefined) },
       })
-      return new Response(body, { status: 200, headers: { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } })
+      const response = new Response(body, { status: 200, headers: { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } })
+      cleanupAfterClaim = undefined
+      return response
     } catch (error) {
+      await cleanupAfterClaim?.().catch(() => undefined)
       if (signal.aborted) return json({ version: 1, code: deadline.aborted ? 'SERVER_TIMEOUT' : 'REQUEST_CANCELLED', message: deadline.aborted ? 'The chat request timed out.' : 'The chat request was cancelled.', retryable: true }, deadline.aborted ? 408 : 499)
       const safe = safeError(error)
       return json(safe.diagnostic, safe.status)

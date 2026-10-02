@@ -405,8 +405,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
       '@agentskit/net':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@agentskit/react':
         specifier: '>=0.7.1 <1'
         version: 0.7.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -634,8 +634,8 @@ importers:
         specifier: workspace:*
         version: link:../protocol
       '@agentskit/net':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
     devDependencies:
       '@agentskit/core':
         specifier: ^1.12.2
@@ -803,8 +803,8 @@ packages:
   '@agentskit/memory@0.11.0':
     resolution: {integrity: sha512-sTAVVmaHIKLUYH3nFfbjmWwm3zfQ1Ljy1ct4mVhOlrvqfequ+sekrA+dzStX4PrQEtGob3MEy3qZlwwA+oxsqw==}
 
-  '@agentskit/net@0.1.0':
-    resolution: {integrity: sha512-BGJe9JuoeDzlYslSzhWgb1weyCQqWzfMbWLUl10iQWm3Py0bqzgxjGOEmmiVAo3QhTU+Unvxt9NQcewg8koKwQ==}
+  '@agentskit/net@0.2.0':
+    resolution: {integrity: sha512-GKagBMg+fUY5QEKTy7wmXVqVjV1xn1J1iuEzDoaU6cJwzupZDHbXdZhFq8YXuuknofPwLyNounPfJ4YNy+4Eug==}
     engines: {node: '>=20.19'}
 
   '@agentskit/rag@0.4.14':
@@ -8131,7 +8131,7 @@ snapshots:
     dependencies:
       '@agentskit/core': 1.12.3
 
-  '@agentskit/net@0.1.0':
+  '@agentskit/net@0.2.0':
     dependencies:
       '@agentskit/core': 1.13.0
       eventsource-parser: 4.1.1

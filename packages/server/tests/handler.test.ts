@@ -283,6 +283,28 @@ describe('Web-standard chat handler', () => {
     expect(calls).toHaveBeenCalledOnce()
   })
 
+  it('releases a claimed turn when loading memory fails, allowing the next turn to recover', async () => {
+    const storage = createStorage()
+    let failLoad = true
+    const memory = {
+      load: async () => {
+        if (failLoad) { failLoad = false; throw new Error('private memory failure') }
+        return []
+      },
+      save: async () => undefined,
+      clear: async () => undefined,
+    }
+    const handler = createChatHandler({
+      resolveDefinition: () => ({ id: 'chat', chat: { adapter: adapter(), memory } }),
+      sessionStorage: () => storage,
+    })
+
+    expect((await handler(request(submission()))).status).toBe(500)
+    const recovered = await handler(request({ ...submission(), eventId: 'submit-2', turnId: 'turn-2' }))
+    expect(recovered.status).toBe(200)
+    await recovered.text()
+  })
+
   it('cleans up on deadline even when the response remains unread under backpressure', async () => {
     const storage = createStorage()
     const saved = vi.fn()

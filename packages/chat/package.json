@@ -160,7 +160,7 @@
     "@agentskit/statechart": "^0.2.0",
     "zod": "^4.3.6",
     "tslib": "^2.8.1",
-    "@agentskit/net": "^0.1.0"
+    "@agentskit/net": "^0.2.0"
   },
   "devDependencies": {
     "@agentskit/core": "^1.12.3",

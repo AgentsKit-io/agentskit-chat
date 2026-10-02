@@ -1,16 +1,5 @@
 import { NetError, NetErrorCodes, readJson } from '@agentskit/net'
 
-/** Races an arbitrary callback promise against abort; the callback must honor its signal to stop its own work. */
-export const withAbort = async <T>(operation: Promise<T> | T, signal: AbortSignal): Promise<T> => {
-  if (signal.aborted) throw signal.reason
-  let rejectAbort: ((reason?: unknown) => void) | undefined
-  const abort = (): void => rejectAbort?.(signal.reason)
-  const aborted = new Promise<never>((_resolve, reject) => { rejectAbort = reject })
-  signal.addEventListener('abort', abort, { once: true })
-  try { return await Promise.race([Promise.resolve(operation), aborted]) }
-  finally { signal.removeEventListener('abort', abort) }
-}
-
 /** Preserves the server's declared and streamed request-size boundary while using the published bounded JSON reader. */
 export const readBoundedJson = async (
   request: Request,

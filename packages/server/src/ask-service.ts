@@ -1,4 +1,4 @@
-import { anySignal } from '@agentskit/net'
+import { anySignal, withTimeout } from '@agentskit/net'
 import {
   AskBackendDiagnosticSchema,
   AskBackendMetricSchema,
@@ -18,7 +18,7 @@ import {
   type AskEvent,
 } from '@agentskit/chat-protocol'
 
-import { readBoundedJson, withAbort } from './internal.js'
+import { readBoundedJson } from './internal.js'
 
 export type AskServiceHandler = (request: Request) => Promise<Response>
 export type AskServiceAuthenticationResult<TContext> =
@@ -29,6 +29,7 @@ export interface AskServiceRetrieverInput {
   readonly query: string
   readonly messages: readonly AskBackendMessage[]
   readonly site: AskBackendSiteConfig
+  /** Aborted when the request or the configured retrieval deadline expires. */
   readonly signal: AbortSignal
 }
 
@@ -47,6 +48,7 @@ export interface AskServiceGeneratorInput extends AskServiceRetrieverInput {
 
 /** Implement with an AgentsKit provider/adapter; the server owns only bounded projection. */
 export interface AskServiceGenerator {
+  /** Honor the signal to stop provider work; the handler ends its response when the configured deadline expires. */
   readonly generate: (input: AskServiceGeneratorInput) => AsyncIterable<AskServiceGenerationChunk>
 }
 
@@ -72,6 +74,7 @@ export interface AskServiceHandlerOptions<TContext> {
   readonly rateLimit?: (input: { readonly context: TContext; readonly site: AskBackendSiteConfig; readonly subjectId: string; readonly signal: AbortSignal }) => AskServiceRateLimitDecision | Promise<AskServiceRateLimitDecision>
   readonly onMetric?: (metric: AskBackendMetric) => void | Promise<void>
   readonly maxBodyBytes?: number
+  /** Deadline shared by authentication and trusted site resolution. */
   readonly bootstrapTimeoutMs?: number
   readonly createId?: () => string
   readonly now?: () => Date
@@ -170,22 +173,24 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
         fail(415, 'ASK_INVALID_REQUEST', 'Content-Type must be application/json.')
       }
-      const authenticated = await withAbort(options.authenticate(request, bootstrapSignal), bootstrapSignal)
+      const authenticated = await withTimeout(callbackSignal => Promise.resolve(options.authenticate(request, callbackSignal)), bootstrapTimeoutMs, bootstrapSignal)
       if (!authenticated.ok) return authenticated.response
-      site = AskBackendSiteConfigSchema.parse(await withAbort(options.resolveSite(authenticated.context, bootstrapSignal), bootstrapSignal))
+      const resolvedSite = AskBackendSiteConfigSchema.parse(await withTimeout(callbackSignal => Promise.resolve(options.resolveSite(authenticated.context, callbackSignal)), bootstrapTimeoutMs, bootstrapSignal))
+      site = resolvedSite
       const subjectId = stableSubject(options.resolveSubjectId(authenticated.context))
       const url = new URL(request.url)
       const corpusHint = url.searchParams.get('corpus')
       const personaHint = url.searchParams.get('persona')
-      if ((corpusHint !== null && corpusHint !== site.corpus.id) || (personaHint !== null && personaHint !== site.assistant.id)) {
+      if ((corpusHint !== null && corpusHint !== resolvedSite.corpus.id) || (personaHint !== null && personaHint !== resolvedSite.assistant.id)) {
         fail(403, 'ASK_FORBIDDEN', 'The requested assistant or corpus is not authorized for this site.')
       }
-      const requestDeadline = AbortSignal.timeout(site.limits.requestTimeoutMs)
+      const requestDeadline = AbortSignal.timeout(resolvedSite.limits.requestTimeoutMs)
       workDeadline = requestDeadline
       const responseAbort = new AbortController()
       const signal = anySignal([request.signal, requestDeadline, responseAbort.signal])
-      const limited: AskServiceRateLimitDecision = await withAbort(
-        options.rateLimit?.({ context: authenticated.context, site, subjectId, signal }) ?? { allowed: true },
+      const limited: AskServiceRateLimitDecision = await withTimeout(
+        callbackSignal => Promise.resolve(options.rateLimit?.({ context: authenticated.context, site: resolvedSite, subjectId, signal: callbackSignal }) ?? { allowed: true }),
+        resolvedSite.limits.requestTimeoutMs,
         signal,
       )
       if (!limited.allowed) fail(429, 'ASK_RATE_LIMITED', 'The Ask rate limit was exceeded.', true, limited.retryAfterSeconds)
@@ -197,15 +202,15 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
         ? parsed.data
         : fail(400, 'ASK_INVALID_REQUEST', 'The Ask request payload is invalid.')
       metric('deterministic.fallback', input.deterministic === undefined ? 0 : 1, 'count', 'ok')
-      if (site.persistence.mode === 'required' && (input.sessionId === undefined || options.sessionStore === undefined)) {
+      if (resolvedSite.persistence.mode === 'required' && (input.sessionId === undefined || options.sessionStore === undefined)) {
         fail(500, 'ASK_INTERNAL', 'Required Ask persistence is not configured.')
       }
 
-      const key = input.sessionId === undefined ? undefined : { siteId: site.siteId, subjectId, sessionId: input.sessionId }
+      const key = input.sessionId === undefined ? undefined : { siteId: resolvedSite.siteId, subjectId, sessionId: input.sessionId }
       let stored: AskServiceSessionRecord | undefined
       if (key !== undefined && options.sessionStore !== undefined) {
         const persistenceStarted = clock()
-        const loaded = await withAbort(options.sessionStore.load(key, signal), signal)
+        const loaded = await withTimeout(async callbackSignal => options.sessionStore!.load(key, callbackSignal), resolvedSite.limits.requestTimeoutMs, signal)
         stored = loaded === undefined
           ? undefined
           : AskBackendSessionRecordSchema.parse(loaded)
@@ -213,20 +218,23 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
       }
       const messages = stored === undefined ? input.messages : mergeSessionMessages(stored.messages, input.messages)
       const query = latestQuestion(messages)
-      const retriever = options.retrievers[site.corpus.mode]
+      const retriever = options.retrievers[resolvedSite.corpus.mode]
         ?? fail(500, 'ASK_INTERNAL', 'The configured Ask retriever is unavailable.')
       const retrievalStarted = clock()
-      const retrievalSignal = anySignal([signal, AbortSignal.timeout(site.limits.retrievalTimeoutMs)])
+      let retrievalSignal: AbortSignal | undefined
       const sources: readonly AskBackendSource[] = await (async () => {
         try {
-          const candidates = await withAbort(retriever.retrieve({ query, messages, site, signal: retrievalSignal }), retrievalSignal)
+          const candidates = await withTimeout(callbackSignal => {
+            retrievalSignal = callbackSignal
+            return Promise.resolve(retriever.retrieve({ query, messages, site: resolvedSite, signal: callbackSignal }))
+          }, resolvedSite.limits.retrievalTimeoutMs, signal)
           return candidates.flatMap(candidate => {
             const decoded = AskBackendSourceSchema.safeParse(candidate)
             return decoded.success ? [decoded.data] : []
-          }).slice(0, site.limits.maxSources)
+          }).slice(0, resolvedSite.limits.maxSources)
         } catch (error) {
           if (signal.aborted) throw error
-          if (retrievalSignal.aborted) fail(408, 'ASK_TIMEOUT', 'Grounded retrieval timed out.', true)
+          if (retrievalSignal?.aborted) fail(408, 'ASK_TIMEOUT', 'Grounded retrieval timed out.', true)
           return fail(502, 'ASK_RETRIEVAL_FAILED', 'Grounded retrieval is temporarily unavailable.', true)
         }
       })()
@@ -242,8 +250,7 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
           let firstToken = false
           let answer = ''
           let usage: AskBackendUsage | undefined
-          const generationDeadline = AbortSignal.timeout(site!.limits.generationTimeoutMs)
-          const generationSignal = anySignal([signal, generationDeadline])
+          let generationSignal: AbortSignal | undefined
           const emit = (candidate: AskEvent): void => {
             const event = AskEventSchema.parse(candidate)
             const chunk = encoder.encode(`${JSON.stringify(event)}\n`)
@@ -254,48 +261,51 @@ export const createAskServiceHandler = <TContext>(options: AskServiceHandlerOpti
             controller.enqueue(chunk)
           }
           try {
-            const generation = options.generator.generate({ query, messages, site: site!, sources, signal: generationSignal })
-            for await (const chunk of generation) {
-              if (generationSignal.aborted) throw generationSignal.reason
-              if (chunk.type === 'usage') {
-                usage = AskBackendUsageSchema.parse(chunk.usage)
-                continue
+            await withTimeout(async callbackSignal => {
+              generationSignal = callbackSignal
+              const generation = options.generator.generate({ query, messages, site: resolvedSite, sources, signal: callbackSignal })
+              for await (const chunk of generation) {
+                if (callbackSignal.aborted) throw callbackSignal.reason
+                if (chunk.type === 'usage') {
+                  usage = AskBackendUsageSchema.parse(chunk.usage)
+                  continue
+                }
+                if (chunk.delta === '') continue
+                answer += chunk.delta
+                if (answer.length > 16_384) fail(502, 'ASK_GENERATION_FAILED', 'The grounded answer exceeded its safe limit.', true)
+                emit({ type: 'text', delta: chunk.delta })
               }
-              if (chunk.delta === '') continue
-              answer += chunk.delta
-              if (answer.length > 16_384) fail(502, 'ASK_GENERATION_FAILED', 'The grounded answer exceeded its safe limit.', true)
-              emit({ type: 'text', delta: chunk.delta })
-            }
-            if (answer.trim() === '') fail(502, 'ASK_GENERATION_FAILED', 'The grounded answer was empty.', true)
-            emit({
-              type: 'tool', id: `sources-${requestId}`, name: 'cite',
-              args: { sources: sources.map(source => ({ id: source.id, title: source.title, path: source.href })) },
-            })
-            if (key !== undefined && options.sessionStore !== undefined) {
-              const persistenceStarted = clock()
-              const revision = (stored?.revision ?? 0) + 1
-              const saved = await withAbort(options.sessionStore.save(key, {
-                revision,
-                messages: [...messages, { role: 'assistant' as const, content: answer }].slice(-64),
-              }, stored?.revision ?? 0, signal), signal)
-              metric('persistence.total_ms', clock() - persistenceStarted, 'ms', saved ? 'ok' : 'error')
-              if (!saved) {
-                metric('conflict.count', 1, 'count', 'error')
-                fail(409, 'ASK_PERSISTENCE_CONFLICT', 'The Ask session changed concurrently.', true)
+              if (answer.trim() === '') fail(502, 'ASK_GENERATION_FAILED', 'The grounded answer was empty.', true)
+              emit({
+                type: 'tool', id: `sources-${requestId}`, name: 'cite',
+                args: { sources: sources.map(source => ({ id: source.id, title: source.title, path: source.href })) },
+              })
+              if (key !== undefined && options.sessionStore !== undefined) {
+                const persistenceStarted = clock()
+                const revision = (stored?.revision ?? 0) + 1
+                const saved = await withTimeout(async callbackSignal => options.sessionStore!.save(key, {
+                  revision,
+                  messages: [...messages, { role: 'assistant' as const, content: answer }].slice(-64),
+                }, stored?.revision ?? 0, callbackSignal), resolvedSite.limits.requestTimeoutMs, callbackSignal)
+                metric('persistence.total_ms', clock() - persistenceStarted, 'ms', saved ? 'ok' : 'error')
+                if (!saved) {
+                  metric('conflict.count', 1, 'count', 'error')
+                  fail(409, 'ASK_PERSISTENCE_CONFLICT', 'The Ask session changed concurrently.', true)
+                }
               }
-            }
-            if (usage?.inputTokens !== undefined) metric('usage.input_tokens', usage.inputTokens, 'tokens', 'ok')
-            if (usage?.outputTokens !== undefined) metric('usage.output_tokens', usage.outputTokens, 'tokens', 'ok')
-            if (usage?.totalTokens !== undefined) metric('usage.total_tokens', usage.totalTokens, 'tokens', 'ok')
-            if (usage?.costUsd !== undefined) metric('cost.usd', usage.costUsd, 'usd', 'ok')
-            emit({ type: 'done', ...(usage?.model === undefined ? {} : { model: usage.model }) })
-            metric('stream.bytes', bytes, 'bytes', 'ok')
-            metric('stream.events', events, 'count', 'ok')
-            metric('stream.snapshots', 0, 'count', 'ok')
-            metric('request.total_ms', clock() - startedAt, 'ms', 'ok')
+              if (usage?.inputTokens !== undefined) metric('usage.input_tokens', usage.inputTokens, 'tokens', 'ok')
+              if (usage?.outputTokens !== undefined) metric('usage.output_tokens', usage.outputTokens, 'tokens', 'ok')
+              if (usage?.totalTokens !== undefined) metric('usage.total_tokens', usage.totalTokens, 'tokens', 'ok')
+              if (usage?.costUsd !== undefined) metric('cost.usd', usage.costUsd, 'usd', 'ok')
+              emit({ type: 'done', ...(usage?.model === undefined ? {} : { model: usage.model }) })
+              metric('stream.bytes', bytes, 'bytes', 'ok')
+              metric('stream.events', events, 'count', 'ok')
+              metric('stream.snapshots', 0, 'count', 'ok')
+              metric('request.total_ms', clock() - startedAt, 'ms', 'ok')
+            }, resolvedSite.limits.generationTimeoutMs, signal)
           } catch (error) {
-            const timeout = !request.signal.aborted && (requestDeadline.aborted || generationDeadline.aborted || generationSignal.aborted)
-            const interrupted = signal.aborted || generationSignal.aborted
+            const timeout = !request.signal.aborted && (requestDeadline.aborted || (generationSignal?.aborted === true && !signal.aborted))
+            const interrupted = signal.aborted || generationSignal?.aborted === true
             const diagnostic = timeout
               ? AskBackendDiagnosticSchema.parse({ code: 'ASK_TIMEOUT', message: 'The Ask request timed out.', retryable: true })
               : interrupted
