@@ -18,28 +18,41 @@ export function publicDocSlug(path: string): string {
     .replace(/(^|\/)(?:README|index)$/, '')
 }
 
+/** Public doc sources by path: docs/ on disk, else the build-time index (Workers have no filesystem). */
+export async function readPublicDocSources(): Promise<Readonly<Record<string, string>>> {
+  try {
+    const files: Record<string, string> = {}
+    const walk = async (directory: string, prefix: string[]): Promise<void> => {
+      for (const entry of await readdir(directory, { withFileTypes: true })) {
+        if (entry.name.startsWith('.')) continue
+        const full = join(directory, entry.name)
+        if (entry.isDirectory()) await walk(full, [...prefix, entry.name])
+        else if (/\.mdx?$/.test(entry.name)) {
+          const path = [...prefix, entry.name].join('/')
+          if (isPublicDocPath(path)) files[path] = await readFile(full, 'utf8')
+        }
+      }
+    }
+    await walk(root, [])
+    return files
+  } catch {
+    const { default: files } = await import('@/lib/docs-index.generated.json')
+    return Object.fromEntries(Object.entries(files).filter(([path]) => isPublicDocPath(path)))
+  }
+}
+
 /** Public product docs only — never ships private maintainer trees (architecture, PRD, ADRs, …). */
 export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
   const documents: CanonicalDoc[] = []
-  const walk = async (directory: string, prefix: string[]): Promise<void> => {
-    for (const entry of await readdir(directory, { withFileTypes: true })) {
-      if (entry.name.startsWith('.')) continue
-      const full = join(directory, entry.name)
-      if (entry.isDirectory()) await walk(full, [...prefix, entry.name])
-      else if (/\.mdx?$/.test(entry.name)) {
-        const path = [...prefix, entry.name].join('/')
-        if (!isPublicDocPath(path)) continue
-        const body = await readFile(full, 'utf8')
-        const title = frontmatterValue(body, 'title')
-          ?? body.match(/^#\s+(.+)$/m)?.[1]?.trim()
-          ?? entry.name.replace(/\.mdx?$/, '')
-        const description = frontmatterValue(body, 'description')
-          ?? splitLines(splitFrontmatter(body).body).find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
-          ?? ''
-        documents.push({ path, title, description, body })
-      }
-    }
+  for (const [path, body] of Object.entries(await readPublicDocSources())) {
+    const name = path.split('/').at(-1) ?? path
+    const title = frontmatterValue(body, 'title')
+      ?? body.match(/^#\s+(.+)$/m)?.[1]?.trim()
+      ?? name.replace(/\.mdx?$/, '')
+    const description = frontmatterValue(body, 'description')
+      ?? splitLines(splitFrontmatter(body).body).find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
+      ?? ''
+    documents.push({ path, title, description, body })
   }
-  await walk(root, [])
   return documents.sort((left, right) => left.path.localeCompare(right.path))
 }

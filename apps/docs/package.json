@@ -5,8 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node --experimental-strip-types scripts/build-docs-index.mjs",
     "build": "next build && node scripts/check-build-budget.mjs",
     "start": "next start",
+    "cf:build": "cd ../.. && pnpm --filter \"./packages/**\" -r --if-present build && node scripts/assemble-chat-package.mjs && cd apps/docs && opennextjs-cloudflare build",
+    "cf:preview": "cd ../.. && pnpm --filter \"./packages/**\" -r --if-present build && node scripts/assemble-chat-package.mjs && cd apps/docs && opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "cd ../.. && pnpm --filter \"./packages/**\" -r --if-present build && node scripts/assemble-chat-package.mjs && cd apps/docs && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "postinstall": "fumadocs-mdx",
     "lint": "tsc --noEmit",
     "test": "vitest run",
@@ -21,7 +25,7 @@
     "fumadocs-mdx": "11.6.4",
     "fumadocs-ui": "15.6.5",
     "mermaid": "^11.17.2",
-    "next": "^15.5.25",
+    "next": "^15.5.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^4.3.6"
@@ -35,6 +39,8 @@
     "@types/react-dom": "^19.0.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "@opennextjs/cloudflare": "1.20.7",
+    "wrangler": "^4.146.0"
   }
 }

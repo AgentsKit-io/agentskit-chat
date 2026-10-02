@@ -4,9 +4,9 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const MODELS = [
-  'stealth/ox-alpha',
-  'cohere/north-mini-code:free',
   'google/gemma-4-31b-it:free',
+  'qwen/qwen3.8-27b:free',
+  'cohere/north-mini-code:free',
   'openrouter/free',
 ] as const
 
@@ -27,7 +27,9 @@ type OpenRouterChunk = {
 }
 
 const requestIp = (request: Request): string =>
-  request.headers.get('x-real-ip')?.trim()
+  // cf-connecting-ip on Cloudflare Workers; x-real-ip / x-forwarded-for on Vercel.
+  request.headers.get('cf-connecting-ip')?.trim()
+  ?? request.headers.get('x-real-ip')?.trim()
   ?? request.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()
   ?? 'unknown'
 
