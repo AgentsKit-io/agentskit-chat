@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "12bc66dc7a6bdf0bb5329b442e7e2b6ebd93487bac71663f67bbe292b7af3722",
+  "contentHash": "47e77b89041c6c4fce6a13b903d9fa42af93eecc522c6e2ed2cca983846b6742",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T12:17:21.484Z",
+  "generatedAt": "2026-10-02T13:51:20.442Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1918,7 +1918,7 @@
         "ts",
         "demo-ask"
       ],
-      "contentHash": "7bde1530c2d1dad9bb198a3c50c0ca26604217132117421933479a063d50758d"
+      "contentHash": "e0faee8eec3c1ce2f80c35600fa34ed959c79ee7d76e68c7d602ae36a4049aad"
     },
     {
       "id": "module:apps/docs/app/api/search/route.ts",
@@ -6759,7 +6759,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "babbe8e6ad57ac21f5e1f5af55c2e9fa685ba1ee3e97bc4f10f28fc1c7da6af8",
+    "hash": "a0adb1da2c1a7b0a6a8e842ca536b2373f2f5acecfb68cd65e48f64ca4fcbd1e",
     "fileCount": 447,
     "projectionVersion": 2
   },
@@ -6782,9 +6782,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "96468c884f42acf98254b6ba85964de99b403a446c6bf28db7ed13f546e06280",
+    "contentHash": "afdfdfb63f1db26bf742262c8d94802ee7b3f8e08fc0dbf99f36ad7be51280d4",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "04cb4b8fe6b8b629e25c9a07853a8dc516285c342b1a7598d84f6438325153bc",
+    "snapshotHash": "d9a9f0fee0f4793b7cb06f570761a2355f2cc206cb8bc1ac42233b6d84631c71",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -20303,7 +20303,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "7bde1530c2d1dad9bb198a3c50c0ca26604217132117421933479a063d50758d",
+        "contentHash": "e0faee8eec3c1ce2f80c35600fa34ed959c79ee7d76e68c7d602ae36a4049aad",
         "provenance": "observed",
         "confidence": "observed"
       },
