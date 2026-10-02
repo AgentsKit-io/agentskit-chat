@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "5ea97399f03ac1f5f2b26089d8f2be38c4db85f1276ea83d55ffbcc168056f82",
+  "contentHash": "ed088e0a5ce7f5b579de430895379b0d05c4c2883d0c8ba4a0fc3206df75c204",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T20:00:16.714Z",
+  "generatedAt": "2026-10-02T20:52:46.276Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1304,12 +1304,12 @@
       "type": "document",
       "title": "Vue quick start",
       "path": "docs/getting-started/vue.mdx",
-      "description": "To inspect a complete application first, generate a repository from the standalone Vue template. The template uses a credential-free streaming adapter, so cancellation and error handling work before you configure a model provider.",
+      "description": "State, streaming, tools, and lifecycle come from useChat in @agentskit/vue. Scoped slots: container, message, input, thinking, confirmation, choiceList.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "eb81cde2e0878dc737a3841cd5fa1f47fc1756d47176418c956974a5032cc5c5"
+      "contentHash": "2e504e699c231f23c7568384ee7eba8cf05f2da68c99d097586f51321add2e19"
     },
     {
       "id": "document:docs/governance/ecosystem-docs-tracer.md",
@@ -1873,7 +1873,7 @@
         "document",
         "project"
       ],
-      "contentHash": "fa2ef81d80af5da9d970baa02c176cca3a799da4b9ec0df8730c73a043f34b87"
+      "contentHash": "75599723d44a54ecc06e254bccd527bc113f825116b67209bc2a2402c32b9e96"
     },
     {
       "id": "document:SECURITY.md",
@@ -6758,7 +6758,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "ef29d97c3f49b7d8c84b510e059fb46084b383dd13bfed3fbdcffb8b5a7dce0b",
+    "hash": "ebf6af72fbd58e07612b1eababfb43849429f03c7fc2cb159fba9fa1a9c20a07",
     "fileCount": 447,
     "projectionVersion": 2
   },
@@ -6781,9 +6781,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "8f54bfe1d6159f94ca09abbfae26c0e388efdc69ea2114a9908e2bfd065731dc",
+    "contentHash": "6ee2a90efd7d2e0a731e2affc0e0c68a9b6d1032366694545a0c9eb4753a3247",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "f7b2731d77b3384d312618251493093e7c52fff6b9a9f15ab604d484d8128fa3",
+    "snapshotHash": "72eb38415f96de8f3025b4f6c701c75722dfedc7359f345ead5404d0ceeaff73",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6815,10 +6815,10 @@
       ],
       "averageFieldLength": {
         "aliases": 3.141078838174274,
-        "body": 74.98340248962656,
+        "body": 74.92323651452283,
         "headings": 4.562240663900415,
         "path": 6.1120331950207465,
-        "summary": 6.087136929460581,
+        "summary": 6.08298755186722,
         "symbols": 4.939834024896266,
         "title": 3.603734439834025
       }
@@ -16782,7 +16782,7 @@
         "kind": "document",
         "path": "docs/getting-started/vue.mdx",
         "title": "Vue quick start",
-        "summary": "To inspect a complete application first, generate a repository from the standalone Vue template. The template uses a credential-free streaming adapter, so cancellation and error handling work before you configure a model provider.",
+        "summary": "State, streaming, tools, and lifecycle come from useChat in @agentskit/vue. Scoped slots: container, message, input, thinking, confirmation, choiceList.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -16794,8 +16794,8 @@
           "headings": "Vue quick start Install Shell Shared definition Next",
           "path": "docs/getting-started/vue.mdx",
           "symbols": "",
-          "summary": "To inspect a complete application first, generate a repository from the standalone Vue template. The template uses a credential-free streaming adapter, so cancellation and error handling work before you configure a model provider.",
-          "body": "Vue quick start Install To inspect a complete application first, . The template uses a credential-free streaming adapter, so cancellation and error handling work before you configure a model provider. Shell State, streaming, tools, and lifecycle come from . Scoped slots: container , message , input , thinking , confirmation , choiceList . Shared definition Keep createSupportChat framework-neutral — see for the defineChat module. Next - -",
+          "summary": "State, streaming, tools, and lifecycle come from useChat in @agentskit/vue. Scoped slots: container, message, input, thinking, confirmation, choiceList.",
+          "body": "Vue quick start Install Shell State, streaming, tools, and lifecycle come from . Scoped slots: container , message , input , thinking , confirmation , choiceList . Shared definition Keep createSupportChat framework-neutral — see for the defineChat module. Next - -",
           "aliases": "document human"
         },
         "graph": {
@@ -16833,7 +16833,7 @@
             }
           ]
         },
-        "contentHash": "eb81cde2e0878dc737a3841cd5fa1f47fc1756d47176418c956974a5032cc5c5",
+        "contentHash": "2e504e699c231f23c7568384ee7eba8cf05f2da68c99d097586f51321add2e19",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19958,7 +19958,7 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Cross-framework application framework for building interactive agent experiences on top of AgentsKit. Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.",
-          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 34 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Prefer Vue? . It streams without an API key and includes reproducible cancellation and error paths. Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
+          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 34 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
           "aliases": "document project"
         },
         "graph": {
@@ -20115,7 +20115,7 @@
             }
           ]
         },
-        "contentHash": "fa2ef81d80af5da9d970baa02c176cca3a799da4b9ec0df8730c73a043f34b87",
+        "contentHash": "75599723d44a54ecc06e254bccd527bc113f825116b67209bc2a2402c32b9e96",
         "provenance": "observed",
         "confidence": "observed"
       },
