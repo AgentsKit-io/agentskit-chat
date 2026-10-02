@@ -3,11 +3,11 @@ import { z } from 'zod'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
+// The OpenRouter account enforces Zero Data Retention: only models with ZDR endpoints route.
+// Free first, then a cheap paid fallback on a capped key (owner-approved 2026-10-02).
 const MODELS = [
-  'google/gemma-4-31b-it:free',
   'qwen/qwen3.8-27b:free',
-  'cohere/north-mini-code:free',
-  'openrouter/free',
+  'z-ai/glm-5.3-flash',
 ] as const
 
 const MessageSchema = z.object({
