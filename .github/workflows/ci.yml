@@ -39,6 +39,7 @@ jobs:
       - name: Run tests and package coverage floors
         run: pnpm test
       - run: pnpm build
+      - run: pnpm check:public-api
       - run: pnpm conformance:gate
       - run: pnpm bundle:budget
       # Freshness compares content hashes. Re-running `ak-docs index` and diffing flips the snapshot

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "ff61f7f65c5107c519a42c68fb2263845960cbbe70ed2543a9b3a9cb35e9b2c6",
+  "contentHash": "30055bfdea94bcd9a3a971c4e1f5f70febe311818652148c25fe435bb11cb65c",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T23:46:09.280Z",
+  "generatedAt": "2026-10-03T02:00:21.331Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -313,7 +313,7 @@
         "document",
         "project"
       ],
-      "contentHash": "74e0c44d62a87057e3eceb90546cbd9928c270fa4e7e5318035da1a6dcb4ec3a"
+      "contentHash": "9b59ff2c4d752c673798b8d7d008efcb6362c1774c3acb558d55d5afe8422806"
     },
     {
       "id": "document:design.md",
@@ -5043,6 +5043,18 @@
       "contentHash": "6d00f1c061a2525b1f558f80499796cb629bac984e8c760dd828860c8314540a"
     },
     {
+      "id": "module:scripts/check-public-api.mjs",
+      "type": "module",
+      "title": "check-public-api.mjs",
+      "path": "scripts/check-public-api.mjs",
+      "tags": [
+        "module",
+        "mjs",
+        "scripts"
+      ],
+      "contentHash": "757c3186ea7e72cc4076f941bc92c8701fdaf8ac9ba62aa54bfe3b37060718a8"
+    },
+    {
       "id": "module:scripts/check-publication-surface.mjs",
       "type": "module",
       "title": "check-publication-surface.mjs",
@@ -6773,8 +6785,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "8a6419abde5080ddfee848b7e6de4958c6f01d1c9ef02322498a50ea7536c4bf",
-    "fileCount": 448,
+    "hash": "20c94999224ffaed2770d1b57de1721f8ccee35b2d97d54409f0aacf0053f2af",
+    "fileCount": 449,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6796,9 +6808,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "258f1b05545023967f506f9c1f978c590143159a4adb29d0f38302c84aa4a8fb",
+    "contentHash": "fd977855093a2440d67beb2425ef2623c0c04a9fb9ccc874ff11f9e38cb526d2",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "884e958dbf999e48a2fcdee2feda4b13ae827d9c5c747b77e11c3f0de594c079",
+    "snapshotHash": "52c516ca68a0575abf038a11b4845742b75104e254d7f0897c880ca765f09f35",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6818,7 +6830,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 483,
+      "documentCount": 484,
       "fieldNames": [
         "aliases",
         "body",
@@ -6829,13 +6841,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.1387163561076603,
-        "body": 74.76811594202898,
-        "headings": 4.552795031055901,
-        "path": 6.105590062111801,
-        "summary": 6.070393374741201,
-        "symbols": 4.933747412008281,
-        "title": 3.6024844720496896
+        "aliases": 3.1384297520661155,
+        "body": 74.66735537190083,
+        "headings": 4.543388429752066,
+        "path": 6.105371900826446,
+        "summary": 6.0578512396694215,
+        "symbols": 4.9235537190082646,
+        "title": 3.605371900826446
       }
     },
     "entries": [
@@ -9225,7 +9237,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "58ceaf6b69e84d6d00ffe9f0026329e342fa8802a527a6991c175b862dc12b85",
+        "contentHash": "5ff0c36767c533f35dd89f3de9b34c9e6f3514dc69d65bcfc5a88ccaeb50683d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -9814,7 +9826,7 @@
           "path": "CONTRIBUTING.md",
           "symbols": "",
           "summary": "Thanks for helping improve AgentsKit Chat. This repository is the cross-framework application layer on top of AgentsKit. Read AGENTS.md before changing modules.",
-          "body": "Contributing to AgentsKit Chat Thanks for helping improve AgentsKit Chat. This repository is the cross-framework application layer on top of AgentsKit. Read before changing modules. Non-negotiable rules 1. Upstream-first ( ): inspect and reuse AgentsKit before writing a primitive. Never reimplement the controller, lifecycle, adapters, tools, confirmation, generative UI, memory, RAG, replay, eval, or framework bindings here. 2. Shared behavior must not depend on the DOM, JSX, React hooks, or a framework-specific reactive primitive. 3. UI events and render frames cross boundaries as versioned, runtime-validated data. 4. Models may propose only registered actions and components. Unknown output is inert. 5. Side-effecting actions require explicit policy outside the model. 6. TypeScript strict mode, no any , and named exports only. 7. New public contracts need an ADR. Breaking public contracts need an RFC and migration path. Find ownership with doc-bridge MCP tools: handoff.resolve , doc.search , doc.get , gate.status , memory.classify , memory.promoteDraft , and retriever.query . Optional Layer 1 corpus chat (local model peers required): Development workflow Useful local demos: Pull requests 1. Branch from main ( feat/… , fix/… , docs/… ). 2. Keep the slice vertical: contract → runtime/app behavior → renderer impact → tests → docs/handoffs. 3. Add a for public package changes. 4. Include an upstream-adoption note: inspected source, reused exports, local application behavior, linked upstream work when required. 5. Ensure CI is green: lint, tests, conformance, doc-bridge gate, release gate, browser e2e, Ink PTY when relevant. Issue structure Follow . Every implementation issue needs acceptance criteria, dependencies, test plan, documentation impact, delivery mode (AFK/HITL), and Definition of Done. Security Do not open public issues for vulnerabilities. Use the process in . Never commit API keys, tokens, secrets, private prompts, customer data, or private host implementation. Governance and releases Project decisions and maintainer responsibilities are documented in . Stable package publication follows the public, provenance-backed . Code of Conduct Participation is governed by the .",
+          "body": "Contributing to AgentsKit Chat Thanks for helping improve AgentsKit Chat. This repository is the cross-framework application layer on top of AgentsKit. Read before changing modules. Non-negotiable rules 1. Upstream-first ( ): inspect and reuse AgentsKit before writing a primitive. Never reimplement the controller, lifecycle, adapters, tools, confirmation, generative UI, memory, RAG, replay, eval, or framework bindings here. 2. Shared behavior must not depend on the DOM, JSX, React hooks, or a framework-specific reactive primitive. 3. UI events and render frames cross boundaries as versioned, runtime-validated data. 4. Models may propose only registered actions and components. Unknown output is inert. 5. Side-effecting actions require explicit policy outside the model. 6. TypeScript strict mode, no any , and named exports only. 7. New public contracts need an ADR. Breaking public contracts need an RFC and migration path. Find ownership with doc-bridge MCP tools: handoff.resolve , doc.search , doc.get , gate.status , memory.classify , memory.promoteDraft , and retriever.query . Optional Layer 1 corpus chat (local model peers required): Development workflow Useful local demos: Pull requests 1. Branch from main ( feat/… , fix/… , docs/… ). 2. Keep the slice vertical: contract → runtime/app behavior → renderer impact → tests → docs/handoffs. 3. Add a for public package changes. 4. Include an upstream-adoption note: inspected source, reused exports, local application behavior, linked upstream work when required. 5. When an intentional public export changes, run pnpm check:public-api:update , review docs/stability/public-api-v1.json , and include the snapshot change with the implementation. 6. Ensure CI is green: lint, tests, public API snapshot, conformance, doc-bridge gate, release gate, browser e2e, Ink PTY when relevant. Issue structure Follow . Every implementation issue needs acceptance criteria, dependencies, test plan, documentation impact, delivery mode (AFK/HITL), and Definition of Done. Security Do not open public issues for vulnerabilities. Use the process in . Never commit API keys, tokens, secrets, private prompts, customer data, or private host implementation. Governance and releases Project decisions and maintainer responsibilities are documented in . Stable package publication follows the public, provenance-backed . Code of Conduct Participation is governed by the .",
           "aliases": "document project"
         },
         "graph": {
@@ -10021,7 +10033,7 @@
             }
           ]
         },
-        "contentHash": "74e0c44d62a87057e3eceb90546cbd9928c270fa4e7e5318035da1a6dcb4ec3a",
+        "contentHash": "9b59ff2c4d752c673798b8d7d008efcb6362c1774c3acb558d55d5afe8422806",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -29481,6 +29493,40 @@
         "confidence": "observed"
       },
       {
+        "id": "module:scripts/check-public-api.mjs",
+        "kind": "module",
+        "path": "scripts/check-public-api.mjs",
+        "title": "check-public-api.mjs",
+        "aliases": [],
+        "tags": [
+          "module",
+          "mjs",
+          "scripts"
+        ],
+        "fields": {
+          "title": "check-public-api.mjs",
+          "headings": "",
+          "path": "scripts/check-public-api.mjs",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module mjs scripts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:scripts",
+          "packageId": "package:agentskit-chat",
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "757c3186ea7e72cc4076f941bc92c8701fdaf8ac9ba62aa54bfe3b37060718a8",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:scripts/check-publication-surface.mjs",
         "kind": "module",
         "path": "scripts/check-publication-surface.mjs",
@@ -32972,7 +33018,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "4f42b77935d7810fe2f4913f190ef1c794b9acc5c46f3f02ab6bcba7d61610d2",
+        "contentHash": "cb23f856ea993a67dd9d557c5043685fe2b1f72f53f8bc8f114ad472db6d1278",
         "provenance": "observed",
         "confidence": "observed"
       }

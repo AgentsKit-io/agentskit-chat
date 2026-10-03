@@ -36,6 +36,8 @@
     "check:publication-surface": "node scripts/check-publication-surface.mjs",
     "check:readme-standard": "node scripts/check-readme-standard.mjs",
     "test:readme-standard": "vitest run scripts/readme-standard.test.mjs",
+    "check:public-api": "node scripts/check-public-api.mjs",
+    "check:public-api:update": "node scripts/check-public-api.mjs --update",
     "test:ecosystem-adoption": "vitest run scripts/ecosystem-adoption.test.mjs",
     "readme:standard:refresh": "node scripts/refresh-readme-standard.mjs",
     "ecosystem:claims": "node scripts/gen-ecosystem-claims.mjs",
