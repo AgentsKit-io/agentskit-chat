@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  actions: read
 
 concurrency:
   # Supersede in-flight runs for the same PR; pushes to main always finish.
