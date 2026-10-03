@@ -69,7 +69,23 @@ jobs:
           node-version: 24
           package-manager-cache: false
           registry-url: https://registry.npmjs.org
-      - run: npm install --global npm@11
+      - name: Ensure npm supports Trusted Publishing
+        run: |
+          set -eu
+          npm install --global npm@11.5.1
+          npm_version="$(npm --version)"
+          if [ "$npm_version" != '11.5.1' ]; then
+            echo "Trusted Publishing requires npm CLI 11.5.1 or newer; expected pinned npm 11.5.1, found $npm_version." >&2
+            exit 1
+          fi
+      - name: Reject npm auth tokens in the publish workflow
+        run: |
+          set -eu
+          token_pattern='NODE_AUTH''_TOKEN|NPM''_TOKEN'
+          if grep -nE "$token_pattern" .github/workflows/release.yml; then
+            echo 'Publish workflow contains a legacy npm auth token reference; use Trusted Publishing.' >&2
+            exit 1
+          fi
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm check:publication-surface
