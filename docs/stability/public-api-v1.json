@@ -1,0 +1,2363 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "@agentskit/chat": {
+      "subpaths": {
+        ".": {
+          "symbols": [
+            {
+              "name": "ActionConfirmation",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionConfirmationCoordinator",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionConfirmationOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionConfirmationStatus",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionPolicy",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionPolicyReason",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ActionPolicyTrace",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ApprovalRequestComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ApprovalRequestPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskAdapter",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskAdapterOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskMemoryOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskProjection",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskToolEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskToolProjector",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ButtonGroupComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ButtonGroupPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "CHOICE_LIST_COMPONENT_KEY",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "CapabilityPolicyOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatMessagePresentation",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatSession",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatSessionOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatTheme",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatThemeInput",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatThemeSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceAction",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceListComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceListPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceSubmissionReservation",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceSubmissionUnavailable",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentAccessibilityDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentCapability",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentEventDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentManifest",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConfirmationComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ConfirmationPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ControlledChatActions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ControlledChatDriver",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ControlledChatSnapshot",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ControlledChatSource",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConversationDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConversationSnapshot",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConversationStateDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicAnswerAdapter",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicAnswerAdapterOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicAnswerResolver",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicAnswerResolverOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicRoute",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicRouteContext",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ErrorNoticeComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ErrorNoticePropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "FileAttachmentComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "FileAttachmentPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "FormComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "FormPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "LinkCardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "LinkCardPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ProgressComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ProgressPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ResolveChoiceListFrameResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ResolveComponentFrameResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ResumeChatSessionOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "STANDARD_COMPONENT_KEYS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SemanticFallback",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SemanticFallbackSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SessionConflictError",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "SessionStorage",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SourceListComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SourceListPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentCatalog",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TableComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TablePropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ToolCallComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ToolCallPropsSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TrustedActionContext",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnTrace",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnTraceKind",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "commandRoute",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createActionConfirmation",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createAskAdapter",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createAskSessionMemory",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createCapabilityPolicy",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createChatSession",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createComponentInteraction",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createControlledChatDriver",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createDeterministicAnswerAdapter",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createDeterministicAnswerResolver",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeAskEvents",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "defaultChatTheme",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "defineChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "defineComponentManifest",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "formatSemanticFallback",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "getLifecycleTargets",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "normalizeDeterministicQuery",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "parseControlledChatSnapshot",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "parseSemanticFallback",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "presentChatMessage",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "projectAskEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "projectAskMessages",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveChatSession",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveChatTheme",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveChoiceAction",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveChoiceListFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveComponentFallback",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveComponentFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resumeChatSession",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "selectChoice",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "validateStandardComponentInteraction",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "withActionPolicy",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./angular": {
+          "symbols": [
+            {
+              "name": "AgentChatComponent",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "ChatCssVariables",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceListComponent",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentComponent",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "toChatCssVariables",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./devtools": {
+          "symbols": [
+            {
+              "name": "AppendTraceInput",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ApplicationTraceRecord",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ApplicationTraceRecordSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ParityMismatch",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "RendererOutcome",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "RendererOutcomeSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "RendererParityReport",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ReplayFixture",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ReplayFixtureSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SemanticOutcome",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SemanticOutcomeSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TraceCapture",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TraceCaptureOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TraceCategory",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TraceCategorySchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "captureActionPolicyTrace",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "captureActionTrace",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "captureTurnTrace",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "compareRendererOutcomes",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createReplayFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTraceCapture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "parseReplayFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "serializeReplayFixture",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./ink": {
+          "symbols": [
+            {
+              "name": "AgentChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatBaseProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatSlots",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceList",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SemanticFallback",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SemanticFallbackContent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SemanticFallbackProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatInkTheme",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./protocol": {
+          "symbols": [
+            {
+              "name": "ANSWER_MAX_CITATIONS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ANSWER_MAX_SUGGESTIONS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ANSWER_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ANSWER_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_BACKEND_MAX_MESSAGES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_BACKEND_MAX_MESSAGE_CHARS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_BACKEND_MAX_SOURCES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_BACKEND_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_BACKEND_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_EVENT_MAX_BYTES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_EVENT_MAX_RECORDS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASK_SERVICE_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASSISTANT_CONTENT_MAX_BYTES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASSISTANT_CONTENT_MAX_RECORDS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASSISTANT_CONTENT_PREFIX",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASSISTANT_CONTENT_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ASSISTANT_CONTENT_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentEventContext",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentEventContextSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AnswerCitation",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AnswerCitationSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AnswerConfidenceSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AnswerResponse",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AnswerResponseSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AnswerSuggestionSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendDiagnostic",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendDiagnosticSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendMessage",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendMessageSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendMetric",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendMetricNameSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendMetricSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendRequest",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendRequestSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendSessionRecord",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendSessionRecordSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendSiteConfig",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendSiteConfigSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendSource",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendSourceSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskBackendUsage",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskBackendUsageSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskEventDecodeResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AskToolEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantComponentPart",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantComponentPartSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AssistantContentDecodeCode",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantContentEncoder",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantContentPart",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantContentPartSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AssistantTextPart",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AssistantTextPartSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "COMPONENT_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "COMPONENT_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ComponentDecodeCode",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentFallback",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentFallbackSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ComponentInteractionEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentInteractionEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ComponentKeySchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ComponentRenderFrame",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentRenderFrameSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ComponentSelectionEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ComponentSelectionEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "CreateSnapshotEventOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_ARTIFACT_MAX_BYTES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_ARTIFACT_MAX_ENTRIES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_KNOWLEDGE_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_KNOWLEDGE_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_MATCH_MAX_VALUES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_QUERY_MAX_CHARS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_SITE_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DETERMINISTIC_SITE_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DecodeAssistantContentResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DecodeComponentFrameResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DecodeLocalKnowledgeArtifactOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DecodeSessionSnapshotResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DecodeTurnEventResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicDecodeCode",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicDecodeResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicKnowledgeEntry",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicKnowledgeEntrySchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DeterministicSiteConfig",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "DeterministicSiteConfigSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "DiagnosticTurnEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "LocalKnowledgeArtifact",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "LocalKnowledgeArtifactHashInput",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "LocalKnowledgeArtifactSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ProtocolDecodeCode",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ProtocolDecodeDiagnostic",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SESSION_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SESSION_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SessionConfirmation",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SessionConfirmationSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SessionSnapshot",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SessionSnapshotSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "SnapshotTurnEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "SubmitTurnEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TURN_PROTOCOL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TURN_PROTOCOL_VERSION",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TokenUsageSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TurnDiagnostic",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnDiagnosticSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TurnEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TurnLineage",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnSnapshotCursor",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "VerifiedLocalKnowledgeArtifact",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "VerifyLocalKnowledgeArtifactOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "WireMessage",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "canonicalizeLocalKnowledgeArtifact",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "computeLocalKnowledgeArtifactContentHash",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createAssistantContentEncoder",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createInteractionEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createSelectionEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createSnapshotEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTurnSnapshotCursor",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeAnswerResponse",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeAskEvents",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeAssistantContent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeComponentFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeDeterministicSiteConfig",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeLocalKnowledgeArtifact",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeSessionSnapshot",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "decodeTurnEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "encodeTurnEvent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "isAssistantContentCandidate",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "isComponentFrameCandidate",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "normalizeKnowledgeKey",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "snapshotMessages",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "verifyLocalKnowledgeArtifact",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "verifyLocalKnowledgeArtifactSync",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./protocol/fixtures": {
+          "symbols": [
+            {
+              "name": "InvalidTurnEventFixture",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnEventFixture",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "deterministicAnswerFixtures",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "deterministicContentHashFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "deterministicSiteConfigFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "invalidChoiceListPropsFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "invalidComponentFrameFixtures",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "invalidDeterministicArtifactFixtures",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "invalidTurnEventFixtures",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "localKnowledgeArtifactFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "persistentSessionFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "staleLocalKnowledgeArtifactFixture",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "standardComponentFrameFixtures",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "unknownComponentFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "validChoiceListFrame",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "validTurnEventFixtures",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./react": {
+          "symbols": [
+            {
+              "name": "AgentChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatBaseProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatSlots",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatCssVariables",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceList",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatCssVariables",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./react-native": {
+          "symbols": [
+            {
+              "name": "AgentChatNative",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatNativeProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatNativeSlots",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatNativeStyles",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceListNative",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListNativeProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponentNative",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentNativeProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatNativeStyles",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./server": {
+          "symbols": [
+            {
+              "name": "AskServiceAuthenticationResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceGenerationChunk",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceGenerator",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceGeneratorInput",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceHandler",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceHandlerOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceRateLimitDecision",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceRetriever",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceRetrieverInput",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceSessionRecord",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AskServiceSessionStore",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AuthenticationResult",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatHandler",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatHandlerError",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "ChatHandlerOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "createAskServiceHandler",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createChatHandler",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./solid": {
+          "symbols": [
+            {
+              "name": "AgentChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatCssVariables",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceList",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatCssVariables",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./svelte": {
+          "symbols": [
+            {
+              "name": "AgentChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatCssVariables",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceList",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatCssVariables",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "toChatStyle",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
+        "./vue": {
+          "symbols": [
+            {
+              "name": "AgentChat",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "AgentChatProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "AgentChatSlots",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatCssVariables",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatDefinition",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChoiceList",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChoiceListProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "StandardComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "StandardComponentProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "toChatCssVariables",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "@agentskit/chat-cli": {
+      "subpaths": {
+        ".": {
+          "symbols": [
+            {
+              "name": "AddComponentOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "CHAT_RENDERERS",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ChatCliError",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "ChatRenderer",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ChatRendererSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "InitChatProjectOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "addChatComponent",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "detectRenderer",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "initChatProject",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

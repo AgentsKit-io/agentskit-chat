@@ -40,6 +40,7 @@ pnpm install
 pnpm lint
 pnpm test
 pnpm build
+pnpm check:public-api
 pnpm conformance:gate
 pnpm docs:bridge:gate
 pnpm test:e2e   # Playwright (React, React Native web, Vue)
@@ -62,7 +63,8 @@ pnpm --filter @agentskit/chat-example-solid dev
 2. Keep the slice vertical: contract → runtime/app behavior → renderer impact → tests → docs/handoffs.
 3. Add a [Changeset](https://github.com/changesets/changesets) for public package changes.
 4. Include an **upstream-adoption** note: inspected source, reused exports, local application behavior, linked upstream work when required.
-5. Ensure CI is green: lint, tests, conformance, doc-bridge gate, release gate, browser e2e, Ink PTY when relevant.
+5. When an intentional public export changes, run `pnpm check:public-api:update`, review `docs/stability/public-api-v1.json`, and include the snapshot change with the implementation.
+6. Ensure CI is green: lint, tests, public API snapshot, conformance, doc-bridge gate, release gate, browser e2e, Ink PTY when relevant.
 
 ## Issue structure
 
