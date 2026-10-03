@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "b47dbcb338626b753e37be2b3be1ec25ab5e582b681e59bb45a9c7780b3516a9",
+  "contentHash": "ff61f7f65c5107c519a42c68fb2263845960cbbe70ed2543a9b3a9cb35e9b2c6",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-02T21:38:55.029Z",
+  "generatedAt": "2026-10-02T23:46:09.280Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -3499,7 +3499,7 @@
         "ts",
         "angular"
       ],
-      "contentHash": "0da9ce7a8d8cf556901a8713b21db213f99accfa03b1ee9ae7d72752b2441549"
+      "contentHash": "416759abd756086ae511302804508a299cfbf15f8c3587d7721659d1704d6446"
     },
     {
       "id": "module:packages/chat/fixtures/readme-example.ts",
@@ -4703,7 +4703,7 @@
         "ts",
         "solid"
       ],
-      "contentHash": "e2c341d981c5a6c5c355283ebe205d6ddb3df78bd9d3b0dd54fc62bbf7fc6bd0"
+      "contentHash": "0d6185e805ccb8741ec12a299852005916e6bcd17e814529fc194082aa1f3fc6"
     },
     {
       "id": "module:packages/svelte/fixtures/readme-example.ts",
@@ -4855,7 +4855,7 @@
         "ts",
         "svelte"
       ],
-      "contentHash": "e9d6c96cad8e37e01a2cf41fe80c80c8ceda291efb6352ad2798901f5490ddaa"
+      "contentHash": "059825d70766d868ac6053af49767461c7a18e705d569e76b46fbb4e80de34dc"
     },
     {
       "id": "module:packages/svelte/vitest.ssr.config.ts",
@@ -5555,6 +5555,21 @@
         "tests"
       ],
       "contentHash": "8801b79fc00b9ea946d58d988977e251817364c1eb0a31306856bab56e11d1c8"
+    },
+    {
+      "id": "module:vitest.coverage.ts",
+      "type": "module",
+      "title": "vitest.coverage.ts",
+      "path": "vitest.coverage.ts",
+      "symbols": [
+        "coverage",
+        "default"
+      ],
+      "tags": [
+        "module",
+        "ts"
+      ],
+      "contentHash": "7a9530d1863e993d38250c7bafa07ac967b6692bff0d16b58354bca1bdd3c53b"
     }
   ],
   "handoffs": {
@@ -6758,8 +6773,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "8b7cc7f5c92280850e4cd981e8daa282ab6836379c3eaf2949d105be3bc267b9",
-    "fileCount": 447,
+    "hash": "8a6419abde5080ddfee848b7e6de4958c6f01d1c9ef02322498a50ea7536c4bf",
+    "fileCount": 448,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6781,9 +6796,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "6ee2a90efd7d2e0a731e2affc0e0c68a9b6d1032366694545a0c9eb4753a3247",
+    "contentHash": "258f1b05545023967f506f9c1f978c590143159a4adb29d0f38302c84aa4a8fb",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "72eb38415f96de8f3025b4f6c701c75722dfedc7359f345ead5404d0ceeaff73",
+    "snapshotHash": "884e958dbf999e48a2fcdee2feda4b13ae827d9c5c747b77e11c3f0de594c079",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6803,7 +6818,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 482,
+      "documentCount": 483,
       "fieldNames": [
         "aliases",
         "body",
@@ -6814,13 +6829,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.141078838174274,
-        "body": 74.92323651452283,
-        "headings": 4.562240663900415,
-        "path": 6.1120331950207465,
-        "summary": 6.08298755186722,
-        "symbols": 4.939834024896266,
-        "title": 3.603734439834025
+        "aliases": 3.1387163561076603,
+        "body": 74.76811594202898,
+        "headings": 4.552795031055901,
+        "path": 6.105590062111801,
+        "summary": 6.070393374741201,
+        "symbols": 4.933747412008281,
+        "title": 3.6024844720496896
       }
     },
     "entries": [
@@ -24514,9 +24529,15 @@
           "areaId": "area:packages/angular",
           "packageId": "package:@agentskit/chat-angular",
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:vitest.coverage.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "0da9ce7a8d8cf556901a8713b21db213f99accfa03b1ee9ae7d72752b2441549",
+        "contentHash": "416759abd756086ae511302804508a299cfbf15f8c3587d7721659d1704d6446",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28433,9 +28454,15 @@
           "areaId": "area:packages/solid",
           "packageId": "package:@agentskit/chat-solid",
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:vitest.coverage.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "e2c341d981c5a6c5c355283ebe205d6ddb3df78bd9d3b0dd54fc62bbf7fc6bd0",
+        "contentHash": "0d6185e805ccb8741ec12a299852005916e6bcd17e814529fc194082aa1f3fc6",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28869,9 +28896,15 @@
           "areaId": "area:packages/svelte",
           "packageId": "package:@agentskit/chat-svelte",
           "inbound": [],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:vitest.coverage.ts",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "e9d6c96cad8e37e01a2cf41fe80c80c8ceda291efb6352ad2798901f5490ddaa",
+        "contentHash": "059825d70766d868ac6053af49767461c7a18e705d569e76b46fbb4e80de34dc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31146,6 +31179,58 @@
         "confidence": "observed"
       },
       {
+        "id": "module:vitest.coverage.ts",
+        "kind": "module",
+        "path": "vitest.coverage.ts",
+        "title": "vitest.coverage.ts",
+        "aliases": [],
+        "symbols": [
+          "coverage",
+          "default"
+        ],
+        "tags": [
+          "module",
+          "ts"
+        ],
+        "fields": {
+          "title": "vitest.coverage.ts",
+          "headings": "",
+          "path": "vitest.coverage.ts",
+          "symbols": "coverage default",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "packageId": "package:agentskit-chat",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/angular/vitest.config.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/solid/vitest.config.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/svelte/vitest.config.ts",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "7a9530d1863e993d38250c7bafa07ac967b6692bff0d16b58354bca1bdd3c53b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "ownership:alpha-release",
         "kind": "package",
         "path": "docs/releases",
@@ -31658,7 +31743,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "8f114946306ccb504bbf1047ec4238093b10292cee6a46d32cf878b582ed242e",
+        "contentHash": "7d1e1c803ad0901182d02f09f3cfa63545a78399f5b6abed5f60a484f5c1c157",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31810,7 +31895,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "dcb4fbe2bcdea204b15e145a4bb3d23bbb658642b147d7946c94026f15fd7ace",
+        "contentHash": "2b54570d5f3121d7f8c1d380ff3208a784ef781523f67d59ea159a1640c656b7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31871,7 +31956,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5955d35eb1fcf551357c0e28c103c015e59c7f3ef9c08f3bd7bf6619f42a274a",
+        "contentHash": "6e776742eeec036c600bd00354ab1596b30aef696bc245d2ba195633f2d20298",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32311,7 +32396,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "98d5c66556487b6eb589a29cb32dc8dcb724405f2f02bebf00c5b9024ab1ec43",
+        "contentHash": "85fad85ab29825f1772fdb12e9300374e8e5440747b2d8d06871857da1c84892",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32426,7 +32511,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6e51c84e59e0292c436855e1f0afad2a652d846dab98482b514c2b0e6ed0227d",
+        "contentHash": "6cf11a856ba39e5d14ce0546d2e0aac18f46206161735f6c39369137dbb69ae3",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32493,7 +32578,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "e72e97bad5f1448b98a17fdd9f9ac08596796841bb33406c3b965d8aa6f95d4c",
+        "contentHash": "0d9e733be386c182678fc6d579d2ad3e72f9f54d9b6099fe23e0f02cebde1180",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32542,7 +32627,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "e592a8cdc3702a0acc50f985238bb5a41399c02283f99435966ca7cdb0e1118c",
+        "contentHash": "f68c0e98b0587efbf217a9eb8d68f87ce54b737cbb3fac1358572bbb9c72c2f0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32627,7 +32712,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "1bdd259eb4740a27bb1b174df7f29595df523f76e3f48fb4c17525266c3f7fae",
+        "contentHash": "5ac51983bab742a715329807ea7e61481a1afe7d8b03a5a8b9ee1127765723c8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32774,7 +32859,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "35af0054f87eaf87828489f291fe02a44fd7d534e31c22933aae783d1738074d",
+        "contentHash": "f87a0cbdcbe73f1cf0e8a467c46ce5b9d9098cc59c0880447e70ea4c724d06e0",
         "provenance": "observed",
         "confidence": "observed"
       },

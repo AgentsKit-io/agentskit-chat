@@ -83,7 +83,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "tsc --noEmit",
-    "test": "pnpm --filter @agentskit/chat-protocol build && vitest run"
+    "test": "pnpm --filter @agentskit/chat-protocol build && vitest run --config ../../vitest.coverage.ts --coverage"
   },
   "peerDependencies": {
     "@agentskit/core": "^1.12.3",

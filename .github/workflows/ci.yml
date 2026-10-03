@@ -36,7 +36,8 @@ jobs:
           git fetch origin main:refs/remotes/origin/main
           if [ "$(git branch --show-current)" != "main" ]; then git branch --force main origin/main; fi
           pnpm exec changeset status
-      - run: pnpm test
+      - name: Run tests and package coverage floors
+        run: pnpm test
       - run: pnpm build
       - run: pnpm conformance:gate
       - run: pnpm bundle:budget

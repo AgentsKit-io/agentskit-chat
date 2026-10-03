@@ -1,4 +1,5 @@
 import solidPlugin from 'vite-plugin-solid'
 import { defineConfig } from 'vitest/config'
+import { coverage } from '../../vitest.coverage'
 
-export default defineConfig({ test: { environment: 'happy-dom', coverage: { provider: 'v8', reporter: ['text'], include: ['src/**/*.tsx'] } }, plugins: [solidPlugin()] })
+export default defineConfig({ test: { environment: 'happy-dom', coverage }, plugins: [solidPlugin()] })
