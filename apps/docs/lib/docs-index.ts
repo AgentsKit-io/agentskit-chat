@@ -2,15 +2,11 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { splitFrontmatter, splitLines } from '@agentskit/cross-platform/pure'
 import { isPublicDocPath } from './public-docs'
+import { readFrontmatterValue } from './frontmatter'
 
 const root = join(process.cwd(), '..', '..', 'docs')
 
 export interface CanonicalDoc { readonly path: string; readonly title: string; readonly description: string; readonly body: string }
-
-function frontmatterValue(body: string, key: 'title' | 'description'): string | undefined {
-  const frontmatter = body.match(/^---\n([\s\S]*?)\n---/)?.[1]
-  return frontmatter?.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))?.[1]?.trim()
-}
 
 export function publicDocSlug(path: string): string {
   return path
@@ -46,10 +42,10 @@ export async function collectCanonicalDocs(): Promise<readonly CanonicalDoc[]> {
   const documents: CanonicalDoc[] = []
   for (const [path, body] of Object.entries(await readPublicDocSources())) {
     const name = path.split('/').at(-1) ?? path
-    const title = frontmatterValue(body, 'title')
+    const title = readFrontmatterValue(body, 'title')
       ?? body.match(/^#\s+(.+)$/m)?.[1]?.trim()
       ?? name.replace(/\.mdx?$/, '')
-    const description = frontmatterValue(body, 'description')
+    const description = readFrontmatterValue(body, 'description')
       ?? splitLines(splitFrontmatter(body).body).find(line => line.trim() && !line.startsWith('#'))?.trim().slice(0, 180)
       ?? ''
     documents.push({ path, title, description, body })
