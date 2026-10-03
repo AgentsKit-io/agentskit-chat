@@ -72,10 +72,10 @@ jobs:
       - name: Ensure npm supports Trusted Publishing
         run: |
           set -eu
-          npm install --global npm@11.5.1
+          npm install --global npm@^11.5.1
           npm_version="$(npm --version)"
-          if [ "$npm_version" != '11.5.1' ]; then
-            echo "Trusted Publishing requires npm CLI 11.5.1 or newer; expected pinned npm 11.5.1, found $npm_version." >&2
+          if ! node -e 'const [a,b,c]=process.argv[1].split(".").map(Number); process.exit(a>11||(a===11&&(b>5||(b===5&&c>=1)))?0:1)' "$npm_version"; then
+            echo "Trusted Publishing requires npm CLI 11.5.1 or newer; found $npm_version." >&2
             exit 1
           fi
       - name: Reject npm auth tokens in the publish workflow
