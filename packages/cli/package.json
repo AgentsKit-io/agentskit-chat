@@ -32,7 +32,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "tsc --noEmit",
-    "test": "vitest run --coverage"
+    "test": "vitest run --config ../../vitest.coverage.ts --coverage"
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*",

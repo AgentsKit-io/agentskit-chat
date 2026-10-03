@@ -1,3 +1,4 @@
 import { defineConfig } from 'vitest/config'
+import { coverage } from '../../vitest.coverage'
 
-export default defineConfig({ test: { environment: 'happy-dom', setupFiles: ['./tests/setup.ts'], coverage: { provider: 'v8', reporter: ['text'], include: ['src/**/*.ts'] } } })
+export default defineConfig({ test: { environment: 'happy-dom', setupFiles: ['./tests/setup.ts'], coverage } })

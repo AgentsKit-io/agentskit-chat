@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean --external vue --external @agentskit/vue",
     "lint": "tsc --noEmit",
-    "test": "pnpm --filter @agentskit/chat build && vitest run --environment happy-dom --coverage"
+    "test": "pnpm --filter @agentskit/chat build && vitest run --config ../../vitest.coverage.ts --environment happy-dom --coverage"
   },
   "dependencies": {
     "@agentskit/chat": "workspace:*"
