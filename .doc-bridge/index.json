@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "30055bfdea94bcd9a3a971c4e1f5f70febe311818652148c25fe435bb11cb65c",
+  "contentHash": "8663115ef0d3b77d1e9173a606932adae5201784cb2b9360826ddf44041d7581",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T02:00:21.331Z",
+  "generatedAt": "2026-10-03T13:21:32.187Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -2716,7 +2716,7 @@
         "ts",
         "lib"
       ],
-      "contentHash": "01b3543d8ffe84bb53bf53d676d893660384cb652513f3d4163eda9003b93253"
+      "contentHash": "571cf567d340c948c438a59427802d2d7348fdd4f9cd4ebd7e988ab1f4dd9464"
     },
     {
       "id": "module:apps/docs/lib/ecosystem-llms-block.ts",
@@ -2752,6 +2752,21 @@
         "lib"
       ],
       "contentHash": "b93d712a70a532a86f56baec3b681127a11ee55fbbff8141245bec31afba5ae2"
+    },
+    {
+      "id": "module:apps/docs/lib/frontmatter.ts",
+      "type": "module",
+      "title": "frontmatter.ts",
+      "path": "apps/docs/lib/frontmatter.ts",
+      "symbols": [
+        "readFrontmatterValue"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "lib"
+      ],
+      "contentHash": "0910baa4ca6187b4634883c13a03822a49ed6a64e82900da245d746afa69b626"
     },
     {
       "id": "module:apps/docs/lib/knowledge.ts",
@@ -3033,6 +3048,19 @@
         "e2e"
       ],
       "contentHash": "a96453fb1175cec135d35f239dfb51a55d0833edc96e2a3fe5d54fc5105ddde0"
+    },
+    {
+      "id": "module:apps/docs/tests/frontmatter.test.ts",
+      "type": "module",
+      "title": "frontmatter.test.ts",
+      "path": "apps/docs/tests/frontmatter.test.ts",
+      "tags": [
+        "module",
+        "ts",
+        "test",
+        "tests"
+      ],
+      "contentHash": "9410ca6c0cb0cb93727a1b0f95de0a1ba5bca02614b6348edb0f113f04af4a72"
     },
     {
       "id": "module:apps/docs/types/css-modules.d.ts",
@@ -6785,8 +6813,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "20c94999224ffaed2770d1b57de1721f8ccee35b2d97d54409f0aacf0053f2af",
-    "fileCount": 449,
+    "hash": "3f3c888c1774e9d02c1694dd6e069d79cefb03bc76fe6a592164b0104ce49c1f",
+    "fileCount": 451,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6808,9 +6836,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "fd977855093a2440d67beb2425ef2623c0c04a9fb9ccc874ff11f9e38cb526d2",
+    "contentHash": "375761018098e5d4a1fc400b6c10e1476d6af4d16f1787b1a485489dec068465",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "52c516ca68a0575abf038a11b4845742b75104e254d7f0897c880ca765f09f35",
+    "snapshotHash": "67804f43a91f11d69c6cf0a096fef6fbb1ddad33148913800a43c945985b9de0",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6830,7 +6858,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 484,
+      "documentCount": 486,
       "fieldNames": [
         "aliases",
         "body",
@@ -6841,13 +6869,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.1384297520661155,
-        "body": 74.66735537190083,
-        "headings": 4.543388429752066,
-        "path": 6.105371900826446,
-        "summary": 6.0578512396694215,
-        "symbols": 4.9235537190082646,
-        "title": 3.605371900826446
+        "aliases": 3.139917695473251,
+        "body": 74.36008230452676,
+        "headings": 4.5246913580246915,
+        "path": 6.106995884773663,
+        "summary": 6.032921810699588,
+        "symbols": 4.911522633744856,
+        "title": 3.60082304526749
       }
     },
     "entries": [
@@ -6909,7 +6937,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "bbdfbd6f493d7d959499db82da16c3bd484d7216318920a64add17127b75f20c",
+        "contentHash": "a0cbd512dcc53d3e015fc321992935adfae302fc701b49381d73d9e96e67ed02",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "docs-app"
@@ -7302,7 +7330,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "5692d365db16c8bea37a7fc1aa97954f173e0408c4a4ee2ea7af53ebee4ded6a",
+        "contentHash": "89653d03313e85aeca996d5211b8e711585e8ae39698b3c2886cab3adaf045fe",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22298,12 +22326,17 @@
           "outbound": [
             {
               "kind": "imports",
+              "id": "module:apps/docs/lib/frontmatter.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
               "id": "module:apps/docs/lib/public-docs.ts",
               "confidence": "observed"
             }
           ]
         },
-        "contentHash": "01b3543d8ffe84bb53bf53d676d893660384cb652513f3d4163eda9003b93253",
+        "contentHash": "571cf567d340c948c438a59427802d2d7348fdd4f9cd4ebd7e988ab1f4dd9464",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -22396,6 +22429,54 @@
           "outbound": []
         },
         "contentHash": "b93d712a70a532a86f56baec3b681127a11ee55fbbff8141245bec31afba5ae2",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/lib/frontmatter.ts",
+        "kind": "module",
+        "path": "apps/docs/lib/frontmatter.ts",
+        "title": "frontmatter.ts",
+        "aliases": [],
+        "symbols": [
+          "readFrontmatterValue"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "lib"
+        ],
+        "fields": {
+          "title": "frontmatter.ts",
+          "headings": "",
+          "path": "apps/docs/lib/frontmatter.ts",
+          "symbols": "readFrontmatterValue",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts lib"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/docs-index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/tests/frontmatter.test.ts",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": []
+        },
+        "contentHash": "0910baa4ca6187b4634883c13a03822a49ed6a64e82900da245d746afa69b626",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -23204,6 +23285,47 @@
           "outbound": []
         },
         "contentHash": "a96453fb1175cec135d35f239dfb51a55d0833edc96e2a3fe5d54fc5105ddde0",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:apps/docs/tests/frontmatter.test.ts",
+        "kind": "module",
+        "path": "apps/docs/tests/frontmatter.test.ts",
+        "title": "frontmatter.test.ts",
+        "aliases": [],
+        "tags": [
+          "module",
+          "ts",
+          "test",
+          "tests"
+        ],
+        "fields": {
+          "title": "frontmatter.test.ts",
+          "headings": "",
+          "path": "apps/docs/tests/frontmatter.test.ts",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts test tests"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "areaId": "area:apps/docs/tests",
+          "packageId": "package:@agentskit/chat-docs",
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:apps/docs/lib/frontmatter.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "9410ca6c0cb0cb93727a1b0f95de0a1ba5bca02614b6348edb0f113f04af4a72",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32044,7 +32166,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "81c9b2537e806f6f0e445d9ed33f1351dd5a8ddcb067a31e0ec649f1bbfebb42",
+        "contentHash": "dc05de0e3b4e4ae1c3373803f78792d802da3ce4820c272962ec182fe60aca01",
         "provenance": "observed",
         "confidence": "observed"
       },
