@@ -55,3 +55,18 @@ Package ownership: `packages/protocol`. Follow [CONTRIBUTING.md](../../CONTRIBUT
 ## AgentsKit ecosystem
 
 Consumes AgentsKit state snapshots from [AgentsKit](https://github.com/AgentsKit-io/agentskit). Shared across Registry, Playbook, and Doc Bridge dogfood hosts.
+
+### Referenced input parts (additive v1)
+
+`client.turn.submit.payload.input` also accepts up to 32 parts: `{ type: 'text', text }`
+and `{ type: 'file', ref, mimeType, sha256, bytes }`. File objects reject extra fields,
+including inline binary/base64. `sha256` is lowercase hex; `bytes` is a positive integer.
+The server keeps the 64 KiB JSON request boundary.
+
+A server may advertise `turn-parts-v1` in the first snapshot's optional
+`payload.capabilities`; clients must echo it in submit `payload.capabilities` before
+sending parts. Existing string submissions need no capability. Schema support alone
+is not an advertisement: the current server announces an empty capability list and
+returns `TURN_PARTS_UNAVAILABLE` (501) for validated parts, because the published
+upstream controller still accepts only strings. Do not send parts until a server
+advertises this capability. Protocol version remains 1.
