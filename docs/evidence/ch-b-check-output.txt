@@ -1,0 +1,41 @@
+Node Postgres contract
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Duration  29.30s (transform 342ms, setup 0ms, import 2.29s, tests 25.02s, environment 0ms)
+
+Chat tests
+ Test Files  6 passed (6)
+      Tests  122 passed (122)
+   Duration  3.91s (transform 7.28s, setup 0ms, import 11.86s, tests 937ms, environment 0ms)
+Statements   : 87.89% ( 1002/1140 )
+Branches     : 74.72% ( 618/827 )
+Functions    : 87.55% ( 197/225 )
+Lines        : 92.08% ( 838/910 )
+
+Server tests
+ Test Files  3 passed (3)
+      Tests  27 passed | 3 expected fail | 1 skipped (31)
+   Duration  5.53s (transform 408ms, setup 0ms, import 1.17s, tests 8.39s, environment 0ms)
+Statements   : 93.85% ( 336/358 )
+Branches     : 88.71% ( 228/257 )
+Functions    : 86.95% ( 60/69 )
+Lines        : 98.49% ( 262/266 )
+
+Conformance
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Duration  1.95s (transform 603ms, setup 0ms, import 1.32s, tests 11ms, environment 0ms)
+
+API
+public-api: ok — 2 packages, 14 export subpaths
+
+Changeset
+🦋  info Packages to be bumped at patch:
+🦋  info Packages to be bumped at minor:
+🦋  - @agentskit/chat
+🦋  - @agentskit/chat-cli
+
+Fresh Worker HTTP 200 response
+{"runtime":"workerd-request-client","criteria":["RF-13 tenant isolation (load/save/delete; no list API)","RF-14 100 concurrent CAS races, exactly one winner","RF-15 durable lease, overlapping HTTP 200 + 409 SESSION_BUSY, release/recovery 200","409 SESSION_CONFLICT preserved at handler boundary (real stale-cursor SQL update)","pre-aborted operation rejected"]}
+
+Other test database connections after completion: 0

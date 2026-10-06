@@ -1,0 +1,159 @@
+{
+  "taskId": "task_dc7edd3d0fd0",
+  "dispatchId": "ctx_e29c36cc2d76",
+  "implementationCommit": "4a08da009e9222298fca8b43ef2b99765ba799ca",
+  "sourceFingerprintSha256": "6b28baf3090fc417a8beb36c0e2f0f227cc407d025b36ccaa617bec474f0905a",
+  "sourceFilesSha256": {
+    "package.json": "baf41a103844b2cdca81a00a6677d90586c0bc7d295315af70a625220abc805d",
+    "packages/chat/README.md": "0fa74328bdb79e722f380806d8c32cf8fbdc8a652dfa1c3aa4562d0c1fc40f07",
+    "packages/chat/fixtures/readme-example.ts": "865a0c5b60b4f89ba27fc0bfb89260f9bcef2ac36351fe5bbfd17514b614aabc",
+    "packages/chat/package.json": "4de1254aa4d28a9b8e3397312cdf57c22954d8a6fd1e19bf4f94c52a1a7d0aa1",
+    "packages/chat/src/ask.ts": "6ce79a14cf01c151e997b13354e4714d6bfe36776aaf51cae386f5cd0a079d3b",
+    "packages/chat/src/catalog.ts": "acd489521c07018ad286927cc7a67173f520f86abe91cb50008e42b455f5777d",
+    "packages/chat/src/controlled.ts": "40833ab73ceb7b353964ee8307d326570ac1480d5cd70b5debada69590b458aa",
+    "packages/chat/src/deterministic.ts": "f33794206925ab999f7b0bccd6a43e75eef90f75d35e247f39bb8e499d9304e6",
+    "packages/chat/src/drizzle-pg.ts": "f2a25d9aa9c52aaca9f52f175ed42a133ccd549e32a2e1e6103f01d7bc2ce2da",
+    "packages/chat/src/index.ts": "faa71906bc87d527fcef07cd55cfa5c74c20cfb65040ba02652c31a44c9e9feb",
+    "packages/chat/src/presentation.ts": "911048635ce3b9daf569f6a7b5b4bc57d13e495b4cea540267ce99c532bd0d3b",
+    "packages/chat/tests/ask.test.ts": "7046207dc8abe3ec9024cdd8db80d987d21ecf55a63a207353f97e32ab5080c7",
+    "packages/chat/tests/controlled-driver.test.ts": "cf8d036ae0d50ef37935b990d6e86f5bd07b198fe30e0d59a85d610e4818609e",
+    "packages/chat/tests/define-chat.test.ts": "c45ac57f9bfa24fc628e64e6e5a24e863b23ec9524142611165eba1c1cf33736",
+    "packages/chat/tests/deterministic.test.ts": "dc03df205e452f32d664165f972c926f30298c7265f459e4d6272bc8e778020c",
+    "packages/chat/tests/drizzle-pg.test.ts": "052c166aea489c297bfd4818fc71837fd6dce40ba1fd81e3145a6642d1fb9c79",
+    "packages/chat/tests/fixtures/controlled-snapshots.ts": "2c62f42f052c1c9831adc16b0ed0557b479df8977fe2f097e71a72e23c8b1044",
+    "packages/chat/tests/presentation.test.ts": "c9b4c3dd20670a7b61e79b0606bb3a93f74e3c54a5a8fcfd05454f3bbd88ae08",
+    "packages/chat/tsconfig.json": "60cba353d22c0c8233b48c407f164a2c94392cbc334624f46a99b4bc7bc0e92e",
+    "packages/chat/tsup.config.ts": "9cffb00c466ca2d240b5407f0ce5031efe0cf7723114b628a5c9fd9e19a1d445",
+    "packages/protocol/README.md": "fdb2decba4f476ef0266e9f3a4f24518135cddb77774244af5fd1a8d85dfc227",
+    "packages/protocol/fixtures/readme-example.ts": "107b47187cebd34a9aaa5a5a5696ecca39d78e0da04cd0b27de5e02b5de14c52",
+    "packages/protocol/package.json": "5d3e1c7b150396d90c2aa9a439c7276bf66ff41114e770b7b964b2623b8f7faa",
+    "packages/protocol/src/ask.ts": "7556418d4131370c19e707a841681e13a2a4392a022108ee77b5a01e8d23e727",
+    "packages/protocol/src/backend.ts": "ca998b37154a04614fb15baa9a30b16e4ad0ddb1d0e5c4f0753152da432bbb6f",
+    "packages/protocol/src/deterministic.ts": "65e5ab735f163ff130f554af1e3ce03aa8606d21e77c3a0a59cf5e07b98e2362",
+    "packages/protocol/src/fixtures.ts": "b79b349fc9c1ca8bb298fe5c36cc51db3a5f48457efba1adcad61e04d45cd7e5",
+    "packages/protocol/src/index.ts": "3eeab4a6d86537d3ad6563779bafb205a6aec16d2071d74f08cb3a4a2d3fb75b",
+    "packages/protocol/tests/ask.test.ts": "ac374a0b0b5dfffc13268b8974155e0c145fec5be06be8d52d608c289e999cbe",
+    "packages/protocol/tests/backend.test.ts": "046c206433566dee18c9e061bfba180be84c4e184a85e624090e3babc6263ce0",
+    "packages/protocol/tests/deterministic.test.ts": "cc591baec8c1e453bd27fc4fa38e92669bb9188c80a8ac142bdd3efcb4e0e280",
+    "packages/protocol/tests/protocol.test.ts": "1d5651c88ea238f20285586b941ae7d237d1f50ead872293e9a82e5aaef9f830",
+    "packages/protocol/tsconfig.json": "60cba353d22c0c8233b48c407f164a2c94392cbc334624f46a99b4bc7bc0e92e",
+    "packages/server/README.md": "65dfc92fc7490a1e0399cf2e213f78bf338c332f2bf76829b46ef1a61694b180",
+    "packages/server/fixtures/readme-example.ts": "3a725ad4312c9f341fe04d297cfe6411893b03eb35e76dde9da8f3731b998185",
+    "packages/server/package.json": "287ced69a4245035ff490b273370b46ab939c1db4b0b28db19b1fa0949a431a9",
+    "packages/server/src/ask-service.ts": "a27c63db0c459399675933dc40e23e89a03c9fcf3ea9ae051a9fcc3f793a4cd7",
+    "packages/server/src/index.ts": "364d64a0d845f1682db83e4d48762a12838b7544ce74e86ec7751f27a350cc1e",
+    "packages/server/src/internal.ts": "c621b8aa260311b6271d50d354db84d9d3243382cf70a32f408d43ac08aa7c5e",
+    "packages/server/tests/ask-service.test.ts": "f14054b3987c3d560b500f3711a64aaae9428e1cbdd453ab357b534b82845f55",
+    "packages/server/tests/handler.test.ts": "e62cbdf9b33b22784cc5ebf5eabb3de7c6ef7de6dbae6baf1a56850eed05a5dd",
+    "packages/server/tests/known-gaps.test.ts": "aade2fa7f3c06f9a5ce9344ecd53ad22e4c3cfc379029ef8070865ea7e37e1de",
+    "packages/server/tsconfig.json": "60cba353d22c0c8233b48c407f164a2c94392cbc334624f46a99b4bc7bc0e92e",
+    "pnpm-lock.yaml": "c8cb5260bff3a18756e9452da148a4a37381b73b88e61e1f29280e08d4818330",
+    "tests/storage-pg/README.md": "59d44471002c9efcdc55239023720a9a0bee14a11d1c7f516db775ce74bb82b3",
+    "tests/storage-pg/contract.ts": "866df16e8d3961cc26b58c735d58d11600303b0b52f36a621516aab5cd63bb62",
+    "tests/storage-pg/node.test.ts": "e40a454c48347d10a84c3b0f196de9a3d53b3e81aa4f8177d44f44292036a86c",
+    "tests/storage-pg/tsconfig.json": "7e4bdbf09ee26fdca641a03462fac19e7ddba4a6e252b190bf3560a62a747af5",
+    "tests/storage-pg/vitest.config.mts": "c79919b3cd4247e081ce6ba14a90c7c8b0aeccb1a9dce9dbaedee75838833903",
+    "tests/storage-pg/worker.ts": "665e6867b803a03bdeca7b8c56ed90d0e3cb698811132482b745abd2c62ae358",
+    "tests/storage-pg/wrangler.jsonc": "c7394c08e64157795ec1f088b7a5680e512255b7025b61d5e695c63bb628a4e5",
+    "tsconfig.base.json": "1f8e7b0c4da66d2f7c454d4140fb17574ab6133f25641ff991fb109e6c25c816"
+  },
+  "state": "BLOCKED",
+  "nodeRuntime": "22.22.2",
+  "postgres": "16.15",
+  "worker": {
+    "runtime": "workerd-request-client",
+    "criteria": [
+      "RF-13 tenant isolation (load/save/delete; no list API)",
+      "RF-14 100 concurrent CAS races, exactly one winner",
+      "RF-15 durable lease, overlapping HTTP 200 + 409 SESSION_BUSY, release/recovery 200",
+      "409 SESSION_CONFLICT preserved at handler boundary (real stale-cursor SQL update)",
+      "pre-aborted operation rejected"
+    ]
+  },
+  "nodeContract": {
+    "command": "pnpm test:storage:pg",
+    "exit": 0,
+    "testCount": 1,
+    "criteria": [
+      "RF-13 tenant isolation (load/save/delete; no list API)",
+      "RF-14 100 concurrent CAS races, exactly one winner",
+      "RF-15 durable lease, overlapping HTTP 200 + 409 SESSION_BUSY, release/recovery 200",
+      "409 SESSION_CONFLICT preserved at handler boundary (real stale-cursor SQL update)",
+      "pre-aborted operation rejected"
+    ],
+    "durationSeconds": 29.3
+  },
+  "checks": [
+    {
+      "command": "pnpm test:storage:pg:types",
+      "exit": 0
+    },
+    {
+      "command": "pnpm --filter @agentskit/chat lint",
+      "exit": 0
+    },
+    {
+      "command": "pnpm --filter @agentskit/chat build",
+      "exit": 0
+    },
+    {
+      "command": "chat vitest with repository coverage config",
+      "exit": 0,
+      "passed": 122,
+      "coverage": {
+        "statements": 87.89,
+        "branches": 74.72,
+        "functions": 87.55,
+        "lines": 92.08
+      }
+    },
+    {
+      "command": "server vitest with repository coverage config",
+      "exit": 0,
+      "passed": 27,
+      "expectedFailures": 3,
+      "skipped": 1,
+      "coverage": {
+        "statements": 93.85,
+        "branches": 88.71,
+        "functions": 86.95,
+        "lines": 98.49
+      }
+    },
+    {
+      "command": "pnpm test:conformance",
+      "exit": 0,
+      "passed": 5
+    },
+    {
+      "command": "pnpm check:public-api",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec changeset status",
+      "exit": 0
+    },
+    {
+      "command": "pnpm docs:bridge:gate",
+      "exit": 1,
+      "failedGates": [
+        {
+          "id": "index-freshness",
+          "message": "Index is stale. Run: ak-docs index"
+        }
+      ]
+    }
+  ],
+  "connectionCleanup": {
+    "otherChatTestConnections": 0
+  },
+  "cleanup": "Task-owned wrangler stopped, Docker ch-b-postgres removed, local Wrangler cache removed; temporary logs removed after evidence capture",
+  "limitations": [
+    "ChatMemory Drizzle/Postgres requires a supported upstream release under ADR-0002",
+    "Neon/Hyperdrive production and real provider calls not executed: no real accounts authorized",
+    "Exact core 1.14.1 no-op symptom skipped: repository uses core 1.12.x",
+    "Full CI not green: retained main doc index is stale/incompatible with local doc-bridge 1.12.0",
+    "Broad lint/build attempts stopped after long-running checks; full test/e2e/PTY/Expo/release gates not established",
+    "No UI changed; no visual approval applicable"
+  ]
+}
