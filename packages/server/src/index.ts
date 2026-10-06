@@ -3,12 +3,16 @@ import { createChatController } from '@agentskit/core'
 import type { ChatState, Message } from '@agentskit/core'
 import { resumeChatSession, SessionConflictError } from '@agentskit/chat'
 import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
-import { createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TurnEventSchema } from '@agentskit/chat-protocol'
+import { createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TURN_PARTS_CAPABILITY, TurnEventSchema } from '@agentskit/chat-protocol'
 import type { TurnDiagnostic } from '@agentskit/chat-protocol'
+
+import { resolveUploadParts, UploadError, validateUploadPolicy } from './uploads.js'
+import type { UploadPolicy } from './uploads.js'
 
 import { readBoundedJson } from './internal.js'
 
 export * from './ask-service.js'
+export * from './uploads.js'
 
 export type ChatHandler = (request: Request) => Promise<Response>
 export type AuthenticationResult<TContext> = { readonly ok: true; readonly context: TContext } | { readonly ok: false; readonly response: Response }
@@ -21,6 +25,7 @@ export interface ChatHandlerOptions<TContext = undefined> {
   readonly authenticate?: (request: Request, signal: AbortSignal) => AuthenticationResult<TContext> | Promise<AuthenticationResult<TContext>>
   readonly resolveDefinition: (context: TContext | undefined, sessionId: string, signal: AbortSignal) => ChatDefinition | Promise<ChatDefinition>
   readonly sessionStorage: (context: TContext | undefined, signal: AbortSignal) => SessionStorage
+  readonly uploads?: UploadPolicy & { readonly tenantId: (context: TContext | undefined, sessionId: string, signal: AbortSignal) => string | Promise<string> }
   readonly maxBodyBytes?: number
   readonly now?: () => Date
   readonly createId?: () => string
@@ -39,8 +44,8 @@ const encoder = new TextEncoder()
 const json = (diagnostic: TurnDiagnostic, status: number): Response => new Response(JSON.stringify({ error: diagnostic }), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
 })
-const safeError = (error: unknown): { readonly status: number; readonly diagnostic: TurnDiagnostic } => error instanceof ChatHandlerError
-  ? { status: error.status, diagnostic: { version: 1, code: error.code, message: error.message, retryable: error.retryable } }
+const safeError = (error: unknown): { readonly status: number; readonly diagnostic: TurnDiagnostic } => (error instanceof ChatHandlerError || error instanceof UploadError)
+  ? { status: error.status, diagnostic: { version: 1, code: error.code, message: error.message, retryable: error instanceof ChatHandlerError ? error.retryable : false } }
   : error instanceof SessionConflictError
     ? { status: 409, diagnostic: { version: 1, code: 'SESSION_CONFLICT', message: 'Another turn is active for this session.', retryable: true } }
     : { status: 500, diagnostic: { version: 1, code: 'SERVER_INTERNAL', message: 'The chat request failed.', retryable: true } }
@@ -53,6 +58,7 @@ const snapshotStatus = (state: ChatState): 'idle' | 'streaming' | 'complete' | '
   state.status === 'error' ? 'error' : state.status === 'streaming' ? 'streaming' : state.messages.length === 0 ? 'idle' : 'complete'
 
 export const createChatHandler = <TContext = undefined>(options: ChatHandlerOptions<TContext>): ChatHandler => {
+  if (options.uploads) validateUploadPolicy(options.uploads)
   const timeoutMs = options.timeoutMs ?? 30_000
   const cleanupTimeoutMs = options.cleanupTimeoutMs ?? 5_000
   const maxBodyBytes = options.maxBodyBytes ?? 64 * 1024
@@ -77,6 +83,17 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const decoded = decodeTurnEvent(await readBody(request, maxBodyBytes, signal))
       if (!decoded.ok || decoded.event.event !== 'client.turn.submit') return fail(400, 'REQUEST_INVALID_EVENT', 'Request body must be a valid turn submission.')
       const submission = decoded.event
+      const input = submission.payload.input
+      if (typeof input !== 'string') {
+        if (!submission.payload.capabilities?.includes(TURN_PARTS_CAPABILITY)) fail(400, 'TURN_CAPABILITY_REQUIRED', 'Parts require explicit capability negotiation.')
+        const uploads = options.uploads
+        if (!uploads) return fail(501, 'TURN_PARTS_UNAVAILABLE', 'Parts are unavailable until the supported upstream controller accepts them.')
+        const tenantId = await withTimeout(callbackSignal => Promise.resolve(uploads.tenantId(context, submission.sessionId, callbackSignal)), timeoutMs, signal)
+        const parts = input
+        await withTimeout(callbackSignal => resolveUploadParts(uploads, tenantId, submission.sessionId, parts, callbackSignal), timeoutMs, signal)
+        // Upstream ChatController.send still accepts only string. Never silently flatten or discard parts.
+        return fail(501, 'TURN_PARTS_UNAVAILABLE', 'Parts are unavailable until the supported upstream controller accepts them.')
+      }
       const definition = await withTimeout(callbackSignal => Promise.resolve(options.resolveDefinition(context, submission.sessionId, callbackSignal)), timeoutMs, signal)
       const storage = options.sessionStorage(context, signal)
       const session = await withTimeout(callbackSignal => resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal: callbackSignal, ...(options.now ? { now: options.now } : {}) }), timeoutMs, signal)
@@ -91,6 +108,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
       const controller = createChatController(session.updateChat({ ...chat, initialMessages: [...messages] }))
+      let announcedCapabilities = false
       let pending: ChatState | undefined
       let wake: (() => void) | undefined
       let done = false
@@ -104,7 +122,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       let cleanup: (stop: boolean) => Promise<void> = async () => undefined
       const abort = (): void => { controller.stop(); void cleanup(true).catch(() => undefined) }
       signal.addEventListener('abort', abort, { once: true })
-      const send = controller.send(submission.payload.input).finally(() => { done = true; wake?.(); wake = undefined })
+      const send = controller.send(input).finally(() => { done = true; wake?.(); wake = undefined })
 
       cleanup = async (stop: boolean): Promise<void> => {
         if (closed) return
@@ -150,8 +168,10 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
                 eventId: createId(), sessionId: submission.sessionId, turnId: submission.turnId, sequence: session.getCursor(), emittedAt: (options.now?.() ?? new Date()).toISOString(),
                 ...(submission.correlation === undefined ? {} : { correlation: submission.correlation }),
                 messages: state.messages, status: snapshotStatus(state), usage: state.usage, lineage: { operation: 'submit' },
+                ...(!announcedCapabilities ? { capabilities: [] } : {}),
                 ...(state.error ? { error: { version: 1, code: 'CHAT_TURN_FAILED', message: 'The chat turn failed.', retryable: true } } : {}),
               })
+              announcedCapabilities = true
               stream.enqueue(encoder.encode(`${encodeTurnEvent(event)}\n`))
               return
             }

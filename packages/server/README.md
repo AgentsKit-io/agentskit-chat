@@ -67,3 +67,32 @@ Package ownership: `packages/server`. Follow [CONTRIBUTING.md](../../CONTRIBUTIN
 ## AgentsKit ecosystem
 
 Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of [AgentsKit](https://github.com/AgentsKit-io/agentskit).
+
+### Optional reference uploads
+
+Mount `createUploadHandler` at `POST /uploads`. Configure a `BlobStore`, `maxBytes`,
+allowed `mimeTypes`, and mandatory host `authorize(request, sessionId, signal)`.
+Authorization must authenticate the caller and authorize that session, returning a
+trusted `tenantId`. The request is JSON metadata only: `{ sessionId, bytes, mimeType }`.
+The 201 response contains `{ ref, url, headers, expiresIn }`. PUT the file directly to
+storage using the signed MIME and exact byte count. Browsers set Content-Length
+implicitly; do not attempt to override that forbidden browser header.
+
+`createS3BlobStore` uses SigV4 through aws4fetch and path-style endpoints for R2,
+MinIO and S3. Supply credentials from your host's secret channel. URLs default to
+300 seconds and are capped at 600. Never log signed URLs or persist them as message
+content. Scope keys are `tenantId/sessionId/random-uuid`; identifiers follow the
+protocol's safe identifier rules. Configure bucket CORS for your browser origin and
+PUT/Content-Type, and lifecycle cleanup for abandoned uploads in the host infrastructure.
+
+The chat handler's optional `uploads` policy additionally requires
+`tenantId(context, sessionId, signal)`, which must authorize access to the session.
+Reference validation rejects cross-tenant/session keys (403), disallowed size/type
+(413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read
+at most the declared upload size and buffer it within `maxBytes`; choose a conservative
+limit. The store's short `presignGet` is available for future upstream composition.
+
+Parts delivery remains disabled: valid references receive 501
+`TURN_PARTS_UNAVAILABLE` until a supported, published AgentsKit controller accepts
+parts. No controller wrapper, private upstream import or text flattening is used.
+See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.
