@@ -1,0 +1,12 @@
+{
+  "name": "agentskit-chat-storage-contract",
+  "main": "worker.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "send_metrics": false,
+  "alias": {
+    "drizzle-orm/node-postgres": "../../node_modules/drizzle-orm/node-postgres/index.js"
+  }
+}

@@ -48,17 +48,24 @@
     "release:deprecation:preflight": "node scripts/legacy-package-deprecation-preflight.mjs",
     "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs scripts/legacy-package-deprecation-preflight.test.mjs",
     "test:release-lib": "vitest run scripts/release-lib.test.mjs",
-    "postinstall": "node scripts/ensure-node-pty-helper.mjs"
+    "postinstall": "node scripts/ensure-node-pty-helper.mjs",
+    "test:storage:pg": "vitest run --config tests/storage-pg/vitest.config.mts",
+    "test:storage:pg:types": "tsc --noEmit -p tests/storage-pg/tsconfig.json"
   },
   "devDependencies": {
+    "@agentskit/chat": "workspace:*",
     "@agentskit/cross-platform": "^0.1.0",
     "@agentskit/doc-bridge": "1.12.0",
     "@changesets/cli": "^2.31.1",
     "@playwright/test": "^1.63.0",
+    "@types/pg": "8.23.1",
     "@vitest/coverage-v8": "^4.1.11",
+    "drizzle-orm": "0.45.3",
     "node-pty": "^1.1.0",
+    "pg": "8.23.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.11",
+    "wrangler": "4.147.0",
     "zod": "^4.3.6"
   }
 }

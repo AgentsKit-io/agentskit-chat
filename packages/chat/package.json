@@ -75,6 +75,11 @@
       "types": "./dist/renderers/angular/types/agentskit-chat-angular.d.ts",
       "import": "./dist/renderers/angular/fesm2022/agentskit-chat-angular.mjs",
       "default": "./dist/renderers/angular/fesm2022/agentskit-chat-angular.mjs"
+    },
+    "./drizzle-pg": {
+      "types": "./dist/drizzle-pg.d.ts",
+      "import": "./dist/drizzle-pg.js",
+      "require": "./dist/drizzle-pg.cjs"
     }
   },
   "files": [
@@ -86,8 +91,8 @@
     "test": "pnpm --filter @agentskit/chat-protocol build && vitest run --config ../../vitest.coverage.ts --coverage"
   },
   "peerDependencies": {
-    "@agentskit/core": "^1.12.3",
     "@agentskit/angular": "^0.4.6",
+    "@agentskit/core": "^1.12.3",
     "@agentskit/ink": "^0.10.1",
     "@agentskit/react": ">=0.7.1 <1",
     "@agentskit/react-native": ">=0.4.4 <1",
@@ -102,7 +107,8 @@
     "rxjs": "^7.0.0",
     "solid-js": "^1.9.0",
     "svelte": "^5.0.0",
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "drizzle-orm": "^0.45.3"
   },
   "peerDependenciesMeta": {
     "@agentskit/angular": {
@@ -152,20 +158,24 @@
     },
     "vue": {
       "optional": true
+    },
+    "drizzle-orm": {
+      "optional": true
     }
   },
   "dependencies": {
     "@agentskit/eval": "^0.4.17",
     "@agentskit/memory": "^0.11.0",
+    "@agentskit/net": "^0.2.0",
     "@agentskit/statechart": "^0.2.0",
-    "zod": "^4.3.6",
     "tslib": "^2.8.1",
-    "@agentskit/net": "^0.2.0"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.3",
     "@agentskit/chat-protocol": "workspace:*",
+    "@agentskit/core": "^1.12.3",
     "@types/node": "^25.9.7",
+    "drizzle-orm": "0.45.3",
     "tsup": "^8.5.1"
   },
   "publishConfig": {

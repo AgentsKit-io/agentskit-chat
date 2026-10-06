@@ -7,6 +7,7 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@agentskit/chat": ["packages/chat/src/index.ts"],
+      "@agentskit/chat/drizzle-pg": ["packages/chat/src/drizzle-pg.ts"],
       "@agentskit/chat-protocol": ["packages/protocol/src/index.ts"],
       "@agentskit/chat-protocol/fixtures": ["packages/protocol/src/fixtures.ts"],
       "@agentskit/chat/protocol": ["packages/protocol/src/index.ts"],

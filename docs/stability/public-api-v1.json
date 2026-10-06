@@ -877,6 +877,28 @@
             }
           ]
         },
+        "./drizzle-pg": {
+          "symbols": [
+            {
+              "name": "chatSessionDDL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "chatSessionTable",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createDrizzleSessionStorage",
+              "kinds": [
+                "value"
+              ]
+            }
+          ]
+        },
         "./ink": {
           "symbols": [
             {
