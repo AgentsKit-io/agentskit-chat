@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "8663115ef0d3b77d1e9173a606932adae5201784cb2b9360826ddf44041d7581",
+  "contentHash": "c2ac71fee45bcd89e8036b2e2fbb11d529f50ced3d935d599974e8b1ca1a8029",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-03T13:21:32.187Z",
+  "generatedAt": "2026-10-06T23:04:36.893Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -772,6 +772,18 @@
       "contentHash": "123e7717a9f8a20f3f97a3228a8598171d0c9b033f0cfdb88f8e4d5c337eb8e4"
     },
     {
+      "id": "document:docs/architecture/adrs/0035-referenced-turn-parts-and-upload-policy.md",
+      "type": "document",
+      "title": "ADR-0035: Additive referenced turn parts and host-owned upload policy",
+      "path": "docs/architecture/adrs/0035-referenced-turn-parts-and-upload-policy.md",
+      "description": "Status: Proposed; implementation scope approved by the coordinator on 2026-10-06.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "aaa18f14b97d2099f7e769a9f83fa89ffc7727f9ffa2992ad697a78585968133"
+    },
+    {
       "id": "document:docs/architecture/overview.md",
       "type": "document",
       "title": "Architecture overview",
@@ -806,6 +818,18 @@
         "human"
       ],
       "contentHash": "3779fb9b449f9437177c2d3fe4425721337a6a9070dd1634ae7305be32abee41"
+    },
+    {
+      "id": "document:docs/ch-d-parts-upload-report.md",
+      "type": "document",
+      "title": "CH-D — reference parts and uploads (2026-10-06)",
+      "path": "docs/ch-d-parts-upload-report.md",
+      "description": "State: BLOCKED for the original RF-07–11 outcome; the independently implementable layer is implemented and locally validated. No parent-task completion or approval is claimed.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "186dba2957af1fec763b995125911aa9782a08d7ead9dd631eb76a4d89974939"
     },
     {
       "id": "document:docs/cli.mdx",
@@ -1789,7 +1813,7 @@
         "document",
         "project"
       ],
-      "contentHash": "d049c9ab19946d4c765fe8a09059b3235b002fada1febe7fd947b98c730c72b6"
+      "contentHash": "65a97c67a8ad96f55a8e3f0abae027ff212731a66ca121d40c617451e2122c0c"
     },
     {
       "id": "document:packages/react-native/README.md",
@@ -1825,7 +1849,7 @@
         "document",
         "project"
       ],
-      "contentHash": "1fc38b51f2a7292ed84f5adb3358de0214fb2aef3573b9266886da14a92dfa02"
+      "contentHash": "5adab9132594ab628ebd51fa153cdfa39c0be6b68d5dc5b239a358052ad38822"
     },
     {
       "id": "document:packages/solid/README.md",
@@ -4285,6 +4309,7 @@
         "SessionSnapshotSchema",
         "SnapshotTurnEvent",
         "SubmitTurnEvent",
+        "TURN_PARTS_CAPABILITY",
         "TURN_PROTOCOL",
         "TURN_PROTOCOL_VERSION",
         "TokenUsageSchema",
@@ -4292,6 +4317,8 @@
         "TurnDiagnosticSchema",
         "TurnEvent",
         "TurnEventSchema",
+        "TurnInputPart",
+        "TurnInputPartSchema",
         "TurnLineage",
         "TurnSnapshotCursor",
         "WireMessage",
@@ -4314,7 +4341,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "b900b9e9e3d21fda80988d29c103e8ad6b9efa8bbd13f6936147369b18e49231"
+      "contentHash": "eb9f4eb86344743d1987adfc036a7015255bbabac95a5dfa43e4fb5790b2c5e0"
     },
     {
       "id": "module:packages/protocol/tests/ask.test.ts",
@@ -4354,6 +4381,19 @@
         "tests"
       ],
       "contentHash": "81e4afe537bf241ef87c6b6679efa68e99c289338301918d42685839f3853263"
+    },
+    {
+      "id": "module:packages/protocol/tests/parts.test.ts",
+      "type": "module",
+      "title": "parts.test.ts",
+      "path": "packages/protocol/tests/parts.test.ts",
+      "tags": [
+        "module",
+        "ts",
+        "test",
+        "tests"
+      ],
+      "contentHash": "375b1d3b36f8fd6c694fc4a1c211f5cf4e428bcdfb046820bd5e8f5d7b506d75"
     },
     {
       "id": "module:packages/protocol/tests/protocol.test.ts",
@@ -4583,7 +4623,7 @@
         "ts",
         "src"
       ],
-      "contentHash": "cdc458fb2f13bbd4b1ef6ee61b7d57a318bb90783f42b7d19b4029a306a0d60d"
+      "contentHash": "fd1d30b1bc2db9092247db8acf19df85239972a312dcb910475423ecfffa2714"
     },
     {
       "id": "module:packages/server/src/internal.ts",
@@ -4601,6 +4641,27 @@
       "contentHash": "34ad866d5252d7649fe85f2df9829643c2b03d56420bcd06eafa0b2e6a4b4113"
     },
     {
+      "id": "module:packages/server/src/uploads.ts",
+      "type": "module",
+      "title": "uploads.ts",
+      "path": "packages/server/src/uploads.ts",
+      "symbols": [
+        "BlobStore",
+        "UploadError",
+        "UploadPolicy",
+        "createS3BlobStore",
+        "createUploadHandler",
+        "resolveUploadParts",
+        "validateUploadPolicy"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "src"
+      ],
+      "contentHash": "ce008b7f057e89add8a227ab9bbaa567bd2e448f50eb9146e24867faa988f4cc"
+    },
+    {
       "id": "module:packages/server/tests/ask-service.test.ts",
       "type": "module",
       "title": "ask-service.test.ts",
@@ -4614,6 +4675,21 @@
       "contentHash": "d45880769ea9b85c4b2a4a4be19b30d167d16ce00f69f9e1f489812f1c7e2041"
     },
     {
+      "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+      "type": "module",
+      "title": "upload-worker.ts",
+      "path": "packages/server/tests/fixtures/upload-worker.ts",
+      "symbols": [
+        "uploadWorker"
+      ],
+      "tags": [
+        "module",
+        "ts",
+        "fixtures"
+      ],
+      "contentHash": "c26c7d764113a1eb7e45d44ed97c70380182aa779033cf73031c9d17997fbfaf"
+    },
+    {
       "id": "module:packages/server/tests/handler.test.ts",
       "type": "module",
       "title": "handler.test.ts",
@@ -4625,6 +4701,19 @@
         "tests"
       ],
       "contentHash": "de018d59d8be1e13ae109bb1a821f674619b501ba30f23553cb8b1591887232c"
+    },
+    {
+      "id": "module:packages/server/tests/uploads.test.ts",
+      "type": "module",
+      "title": "uploads.test.ts",
+      "path": "packages/server/tests/uploads.test.ts",
+      "tags": [
+        "module",
+        "ts",
+        "test",
+        "tests"
+      ],
+      "contentHash": "700cca32457882ef8234ad31a9f80a203dc6ae09a1cf6d7e76a25bedc9d8affb"
     },
     {
       "id": "module:packages/solid/fixtures/readme-example.ts",
@@ -6813,8 +6902,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "3f3c888c1774e9d02c1694dd6e069d79cefb03bc76fe6a592164b0104ce49c1f",
-    "fileCount": 451,
+    "hash": "53284fe7c6d0ae04e28fec36b7c49ab1346451fe8463ee8e2f4df642d98117e9",
+    "fileCount": 457,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -6836,9 +6925,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "375761018098e5d4a1fc400b6c10e1476d6af4d16f1787b1a485489dec068465",
+    "contentHash": "c7fa492122c78d2cc65f7902bdc9abd5813b59e52051a611e0cc868256bbe2a4",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "67804f43a91f11d69c6cf0a096fef6fbb1ddad33148913800a43c945985b9de0",
+    "snapshotHash": "e5301c8afcdc947c0f460382bc4188580e34e5398ab30efd1f1c1e5dc9157fb5",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6858,7 +6947,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 486,
+      "documentCount": 492,
       "fieldNames": [
         "aliases",
         "body",
@@ -6869,13 +6958,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.139917695473251,
-        "body": 74.36008230452676,
-        "headings": 4.5246913580246915,
-        "path": 6.106995884773663,
-        "summary": 6.032921810699588,
-        "symbols": 4.911522633744856,
-        "title": 3.60082304526749
+        "aliases": 3.138211382113821,
+        "body": 76.01422764227642,
+        "headings": 4.567073170731708,
+        "path": 6.126016260162602,
+        "summary": 6.020325203252033,
+        "symbols": 4.936991869918699,
+        "title": 3.6239837398373984
       }
     },
     "entries": [
@@ -8520,7 +8609,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "e47749f60de57e276a8251af74dc4389a1f98277db72ae2b2a53cf70e526078c",
+        "contentHash": "77e93b1f4a06c19904ce382627612b00f2632c43d186a720cda2210972e27630",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -8824,7 +8913,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "2d1d8c1adb32108ce859f6d69ad4b64da7c55e6a771f68fa6346d260ba6d6948",
+        "contentHash": "350b7090d5fa232cabe06857642f9ab1dde3a7822859171c9038b919970fc29e",
         "provenance": "observed",
         "confidence": "observed",
         "ownershipId": "server"
@@ -8889,7 +8978,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "a78bbc48e19d74ab707a2c66882ef8ae27937fff11ef61dd9785d62896f5f563",
+        "contentHash": "78f2d67cb2808417f29780abca191add9a3b3e6c166d286b90a309903b7e941d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12144,6 +12233,39 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/architecture/adrs/0035-referenced-turn-parts-and-upload-policy.md",
+        "kind": "document",
+        "path": "docs/architecture/adrs/0035-referenced-turn-parts-and-upload-policy.md",
+        "title": "ADR-0035: Additive referenced turn parts and host-owned upload policy",
+        "summary": "Status: Proposed; implementation scope approved by the coordinator on 2026-10-06.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "ADR-0035: Additive referenced turn parts and host-owned upload policy",
+          "headings": "ADR-0035: Additive referenced turn parts and host-owned upload policy Decision Upstream adoption Consequences",
+          "path": "docs/architecture/adrs/0035-referenced-turn-parts-and-upload-policy.md",
+          "symbols": "",
+          "summary": "Status: Proposed; implementation scope approved by the coordinator on 2026-10-06.",
+          "body": "ADR-0035: Additive referenced turn parts and host-owned upload policy Status: Proposed; implementation scope approved by the coordinator on 2026-10-06. Decision Extend protocol v1 additively with text/file-reference inputs and optional snapshot capabilities. Clients must echo turn-parts-v1 ; the server may advertise it only when the supported upstream controller can preserve parts through dispatch. Current snapshots advertise no capabilities. Validated reference submissions fail explicitly with 501; string turns keep their upstream lifecycle and 64 KiB request boundary. Uploads are application policy: a host-authorized metadata endpoint signs direct storage PUTs through a BlobStore port. The chat JSON never carries file binaries. References are bound to trusted tenant/session identifiers, checked before storage reads, and verified against actual MIME, byte count and SHA-256. SigV4 is provided by aws4fetch, already present in the dependency graph, not a custom signer. PUT length and MIME headers are signed; signed URLs expire within ten minutes. BlobStore's short signed GET is the future adapter handoff seam. This change neither persists nor hands GET URLs to core. A future upstream adoption change must consider URL expiry during memory/retry and concurrent overwrite of a previously validated object before enabling delivery; immutable/versioned objects may be needed. Upstream adoption Inspected installed @agentskit/core exports and controller implementation, and read-only CH-A packages/core/src/types/chat.ts , controller.ts , types/content.ts . ContentPart and Message.parts exist, but ChatController.send(text: string) calls text.trim() and constructs a text-only user message. The coordinator confirmed no published version accepts parts. Existing createChatController , session resume, claim/release and @agentskit/net bounded JSON/timeouts remain reused without copying. The missing framework-neutral send API belongs upstream under ADR-0002. CH-A source was not copied, linked or consumed. Tracking/publication is owned by the coordinator; no upstream issue link was supplied, and external issue creation/publication is forbidden in this dispatch. Enabling capability remains blocked on that tracked, published upstream change and a real adapter-delivery acceptance flow. Consequences No breaking v1 field changes. Hosts own authentication, session authorization, bucket CORS, storage credentials and abandoned-upload lifecycle. Checksums buffer at most maxBytes ; large-file incremental hashing is deferred. Real local SeaweedFS and workerd exercise the reference flow; this is not R2/S3 production certification.",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": []
+        },
+        "contentHash": "aaa18f14b97d2099f7e769a9f83fa89ffc7727f9ffa2992ad697a78585968133",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/architecture/overview.md",
         "kind": "document",
         "path": "docs/architecture/overview.md",
@@ -12565,6 +12687,75 @@
           ]
         },
         "contentHash": "3779fb9b449f9437177c2d3fe4425721337a6a9070dd1634ae7305be32abee41",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "document:docs/ch-d-parts-upload-report.md",
+        "kind": "document",
+        "path": "docs/ch-d-parts-upload-report.md",
+        "title": "CH-D — reference parts and uploads (2026-10-06)",
+        "summary": "State: BLOCKED for the original RF-07–11 outcome; the independently implementable layer is implemented and locally validated. No parent-task completion or approval is claimed.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "CH-D — reference parts and uploads (2026-10-06)",
+          "headings": "CH-D — reference parts and uploads (2026-10-06) Contract and authorization Current-source evidence Unresolved and excluded evidence SHA-256 bindings for tested files",
+          "path": "docs/ch-d-parts-upload-report.md",
+          "symbols": "",
+          "summary": "State: BLOCKED for the original RF-07–11 outcome; the independently implementable layer is implemented and locally validated. No parent-task completion or approval is claimed.",
+          "body": "CH-D — reference parts and uploads (2026-10-06) State: BLOCKED for the original RF-07–11 outcome ; the independently implementable layer is implemented and locally validated. No parent-task completion or approval is claimed. Contract and authorization Task task 3a3d6b78c1bd , dispatch ctx 35c6ba25cd9b ; intent: implement in this worktree. Scope: protocol/server, their tests/READMEs, public API snapshot, ADR, local changeset and this report. Out of scope: upstream source changes, UI, real accounts, R2 buckets, push/PR/release/deploy. Budget: cached dependencies, one local storage container, local workerd, at most two Vitest workers, no CI. Do not stop other owners' processes. Tracking remains the supplied Orca task; no external issue was created. Coordinator reply during this dispatch confirmed no published core accepts parts and authorized only additive/negotiated protocol, reference upload and handler validation; delivery stays unavailable pending supported upstream publication. It also confirmed ORCA PLAYBOOK.md is absent/not required and assigned doc-bridge compatibility investigation to INV-DB. No CH-A private import or CH-B cherry-pick was used. Current-source evidence Code commits: ff2c5b2 (protocol), 7b447875dddb9ccfeb1c4e4acdf1ea66f2932f04 (server/uploads/docs/changeset). Final test run: 2026-10-06, Vitest start 19:27:37 server and 19:27:42 protocol (tool session 86409). The later report-only commit does not change tested source. Installed upstream core: 1.12.3; its send method remains string-only. Upstream adoption and deferred integration decisions are in ADR-0035. Criterion Status Evidence and limits --- --- --- RF-07 / C1: additive v1 parts plus legacy strings Partially validated parts.test.ts accepts text/file references and capability fields; server legacy string flow returns 200 in Node/workerd. A parts turn cannot return 200 yet: valid negotiated references return typed 501. §8.5 / C2: capability negotiation Validated for disabled capability Optional capabilities round-trip in snapshots; first real handler snapshot advertises an empty list. Parts without echo return 400. No supported upstream delivery capability is advertised or enabled. RF-08 / C3: reference-only, JSON bound Validated Strict file objects reject inline fields; upload metadata rejects binary/base64 fields; bounded JSON preserves 413 over 64 KiB; no multipart/binary chat body is implemented. RF-09 / C4: S3 port and signatures Partially validated Real SeaweedFS 4.17 Docker: bucket creation, SigV4 PUT/GET, exact signed byte-count/MIME headers, 300-second PUT and 60-second GET, digest validation. Invalid expiry above 600 rejected. Same implementation exercised inside workerd. MinIO image pull was denied; real MinIO, R2 and AWS S3 were not exercised. RF-10 / C5: optional upload endpoint and scoped integrity Validated locally Real workerd POST /uploads returns 201, direct PUT returns 200, cross-tenant turn returns 403, checksum mismatch 422, oversized metadata 413, unsupported MIME 415, forbidden session 403. Unit/contract checks also cover cross-session references, truncated/missing objects, malformed metadata and timeout recovery. RF-11 / C6: reference delivery to controller/adapter Blocked Published ChatController.send(text: string) cannot preserve parts. BlobStore.presignGet is tested, but no adapter delivery or public persistent URL is implemented. Requires tracked/published upstream API, expiry/retry/immutability design review, then real adapter acceptance. C7: documented code gates Validated within declared scope Protocol/server builds and strict lint, their coverage suites, public API snapshot check, cross-platform ratchet and diff whitespace check pass. Full-repository build/test/e2e/release were not run. C8: documentation routing gate Blocked pnpm docs:bridge:query ownership server --agent exits 1: installed doc-bridge rejects index fields including contentHash, symbols, checksSource, inputs/retrieval/projection. No stale gate success is cla",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 0,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [],
+          "outbound": [
+            {
+              "kind": "mentions",
+              "id": "module:packages/protocol/src/index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:packages/protocol/tests/parts.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:packages/server/src/index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "module:packages/server/tests/uploads.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "186dba2957af1fec763b995125911aa9782a08d7ead9dd631eb76a4d89974939",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19476,11 +19667,11 @@
         ],
         "fields": {
           "title": "@agentskit/chat/protocol",
-          "headings": "@agentskit/chat/protocol Verified proof Quick start Maturity and compatibility Contributing AgentsKit ecosystem",
+          "headings": "@agentskit/chat/protocol Verified proof Quick start Maturity and compatibility Contributing AgentsKit ecosystem Referenced input parts (additive v1)",
           "path": "packages/protocol/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/protocol Profile: major-package Framework-neutral v1 turn events, deterministic answer envelopes, and Ask service contracts for AgentsKit Chat. Transports snapshots of canonical AgentsKit state without implementing a controller, stream reducer, transport, or persistence layer. Verified proof Surface Evidence --- --- Turn protocol Deterministic answers Ask backend Quick start Decode untrusted wire data at every boundary: <!-- readme-command:install-protocol -- <!-- readme-example:decode-turn -- For ordered assistant prose plus registered components, use createAssistantContentEncoder and decode with decodeAssistantContent . Maturity and compatibility Published in @agentskit/chat at 0.4.1 . Wire changes require a new protocol version and explicit decoder path. See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/protocol . Follow . Tags: agentskit-chat , protocol , runtime-validation , typescript AgentsKit ecosystem Consumes AgentsKit state snapshots from . Shared across Registry, Playbook, and Doc Bridge dogfood hosts.",
+          "body": "@agentskit/chat/protocol Profile: major-package Framework-neutral v1 turn events, deterministic answer envelopes, and Ask service contracts for AgentsKit Chat. Transports snapshots of canonical AgentsKit state without implementing a controller, stream reducer, transport, or persistence layer. Verified proof Surface Evidence --- --- Turn protocol Deterministic answers Ask backend Quick start Decode untrusted wire data at every boundary: <!-- readme-command:install-protocol -- <!-- readme-example:decode-turn -- For ordered assistant prose plus registered components, use createAssistantContentEncoder and decode with decodeAssistantContent . Maturity and compatibility Published in @agentskit/chat at 0.4.1 . Wire changes require a new protocol version and explicit decoder path. See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/protocol . Follow . Tags: agentskit-chat , protocol , runtime-validation , typescript AgentsKit ecosystem Consumes AgentsKit state snapshots from . Shared across Registry, Playbook, and Doc Bridge dogfood hosts. Referenced input parts (additive v1) client.turn.submit.payload.input also accepts up to 32 parts: { type: 'text', text } and { type: 'file', ref, mimeType, sha256, bytes } . File objects reject extra fields, including inline binary/base64. sha256 is lowercase hex; bytes is a positive integer. The server keeps the 64 KiB JSON request boundary. A server may advertise turn-parts-v1 in the first snapshot's optional payload.capabilities ; clients must echo it in submit payload.capabilities before sending parts. Existing string submissions need no capability. Schema support alone is not an advertisement: the current server announces an empty capability list and returns TURN PARTS UNAVAILABLE (501) for validated parts, because the published upstream controller still accepts only strings. Do not send parts until a server advertises this capability. Protocol version remains 1.",
           "aliases": "document project"
         },
         "graph": {
@@ -19542,7 +19733,7 @@
             }
           ]
         },
-        "contentHash": "d049c9ab19946d4c765fe8a09059b3235b002fada1febe7fd947b98c730c72b6",
+        "contentHash": "65a97c67a8ad96f55a8e3f0abae027ff212731a66ca121d40c617451e2122c0c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19723,11 +19914,11 @@
         ],
         "fields": {
           "title": "@agentskit/chat/server",
-          "headings": "@agentskit/chat/server Verified proof Quick start Maturity and compatibility Contributing AgentsKit ecosystem",
+          "headings": "@agentskit/chat/server Verified proof Quick start Maturity and compatibility Contributing AgentsKit ecosystem Optional reference uploads",
           "path": "packages/server/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. The existing 64 KiB request limit is enforced by the published @agentskit/net JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Callback factories use the published @agentskit/net@0.2.0 withTimeout helper with their existing configured deadlines and the parent request signal. This ends the handler's wait when a callback ignores its signal, but arbitrary callback work cannot be forcibly stopped; callbacks should honor the signal to cancel fetches and other cooperative work. Maturity and compatibility Published in @agentskit/chat at 0.4.1 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of .",
+          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. The existing 64 KiB request limit is enforced by the published @agentskit/net JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Callback factories use the published @agentskit/net@0.2.0 withTimeout helper with their existing configured deadlines and the parent request signal. This ends the handler's wait when a callback ignores its signal, but arbitrary callback work cannot be forcibly stopped; callbacks should honor the signal to cancel fetches and other cooperative work. Maturity and compatibility Published in @agentskit/chat at 0.4.1 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of . Optional reference uploads Mount createUploadHandler at POST /uploads . Configure a BlobStore , maxBytes , allowed mimeTypes , and mandatory host authorize(request, sessionId, signal) . Authorization must authenticate the caller and authorize that session, returning a trusted tenantId . The request is JSON metadata only: { sessionId, bytes, mimeType } . The 201 response contains { ref, url, headers, expiresIn } . PUT the file directly to storage using the signed MIME and exact byte count. Browsers set Content-Length implicitly; do not attempt to override that forbidden browser header. createS3BlobStore uses SigV4 through aws4fetch and path-style endpoints for R2, MinIO and S3. Supply credentials from your host's secret channel. URLs default to 300 seconds and are capped at 600. Never log signed URLs or persist them as message content. Scope keys are tenantId/sessionId/random-uuid ; identifiers follow the protocol's safe identifier rules. Configure bucket CORS for your browser origin and PUT/Content-Type, and lifecycle cleanup for abandoned uploads in the host infrastructure. The chat handler's optional uploads policy additionally requires tenantId(context, sessionId, signal) , which must authorize access to the session. Reference validation rejects cross-tenant/session keys (403), disallowed size/type (413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read at most the declared upload size and buffer it within maxBytes ; choose a conservative limit. The store's short presignGet is available for future upstream composition. Parts delivery remains disabled: valid references receive 501 TURN PARTS UNAVAILABLE until a supported, published AgentsKit controller accepts parts. No controller wrapper, private upstream import or text flattening is used. See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.",
           "aliases": "document project"
         },
         "graph": {
@@ -19781,10 +19972,15 @@
               "kind": "mentions-symbol",
               "id": "module:packages/server/src/ask-service.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
             }
           ]
         },
-        "contentHash": "1fc38b51f2a7292ed84f5adb3358de0214fb2aef3573b9266886da14a92dfa02",
+        "contentHash": "5adab9132594ab628ebd51fa153cdfa39c0be6b68d5dc5b239a358052ad38822",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -26996,6 +27192,7 @@
           "SessionSnapshotSchema",
           "SnapshotTurnEvent",
           "SubmitTurnEvent",
+          "TURN_PARTS_CAPABILITY",
           "TURN_PROTOCOL",
           "TURN_PROTOCOL_VERSION",
           "TokenUsageSchema",
@@ -27003,6 +27200,8 @@
           "TurnDiagnosticSchema",
           "TurnEvent",
           "TurnEventSchema",
+          "TurnInputPart",
+          "TurnInputPartSchema",
           "TurnLineage",
           "TurnSnapshotCursor",
           "WireMessage",
@@ -27029,16 +27228,17 @@
           "title": "index.ts",
           "headings": "",
           "path": "packages/protocol/src/index.ts",
-          "symbols": "ASSISTANT_CONTENT_MAX_BYTES ASSISTANT_CONTENT_MAX_RECORDS ASSISTANT_CONTENT_PREFIX ASSISTANT_CONTENT_PROTOCOL ASSISTANT_CONTENT_PROTOCOL_VERSION AgentEventContext AgentEventContextSchema AssistantComponentPart AssistantComponentPartSchema AssistantContentDecodeCode AssistantContentEncoder AssistantContentPart AssistantContentPartSchema AssistantTextPart AssistantTextPartSchema COMPONENT_PROTOCOL COMPONENT_PROTOCOL_VERSION ComponentDecodeCode ComponentFallback ComponentFallbackSchema ComponentInteractionEvent ComponentInteractionEventSchema ComponentKeySchema ComponentRenderFrame ComponentRenderFrameSchema ComponentSelectionEvent ComponentSelectionEventSchema CreateSnapshotEventOptions DecodeAssistantContentResult DecodeComponentFrameResult DecodeSessionSnapshotResult DecodeTurnEventResult DiagnosticTurnEvent ProtocolDecodeCode ProtocolDecodeDiagnostic SESSION_PROTOCOL SESSION_PROTOCOL_VERSION SessionConfirmation SessionConfirmationSchema SessionSnapshot SessionSnapshotSchema SnapshotTurnEvent SubmitTurnEvent TURN_PROTOCOL TURN_PROTOCOL_VERSION TokenUsageSchema TurnDiagnostic TurnDiagnosticSchema TurnEvent TurnEventSchema TurnLineage TurnSnapshotCursor WireMessage createAssistantContentEncoder createInteractionEvent createSelectionEvent createSnapshotEvent createTurnSnapshotCursor decodeAssistantContent decodeComponentFrame decodeSessionSnapshot decodeTurnEvent encodeTurnEvent isAssistantContentCandidate isComponentFrameCandidate snapshotMessages",
+          "symbols": "ASSISTANT_CONTENT_MAX_BYTES ASSISTANT_CONTENT_MAX_RECORDS ASSISTANT_CONTENT_PREFIX ASSISTANT_CONTENT_PROTOCOL ASSISTANT_CONTENT_PROTOCOL_VERSION AgentEventContext AgentEventContextSchema AssistantComponentPart AssistantComponentPartSchema AssistantContentDecodeCode AssistantContentEncoder AssistantContentPart AssistantContentPartSchema AssistantTextPart AssistantTextPartSchema COMPONENT_PROTOCOL COMPONENT_PROTOCOL_VERSION ComponentDecodeCode ComponentFallback ComponentFallbackSchema ComponentInteractionEvent ComponentInteractionEventSchema ComponentKeySchema ComponentRenderFrame ComponentRenderFrameSchema ComponentSelectionEvent ComponentSelectionEventSchema CreateSnapshotEventOptions DecodeAssistantContentResult DecodeComponentFrameResult DecodeSessionSnapshotResult DecodeTurnEventResult DiagnosticTurnEvent ProtocolDecodeCode ProtocolDecodeDiagnostic SESSION_PROTOCOL SESSION_PROTOCOL_VERSION SessionConfirmation SessionConfirmationSchema SessionSnapshot SessionSnapshotSchema SnapshotTurnEvent SubmitTurnEvent TURN_PARTS_CAPABILITY TURN_PROTOCOL TURN_PROTOCOL_VERSION TokenUsageSchema TurnDiagnostic TurnDiagnosticSchema TurnEvent TurnEventSchema TurnInputPart TurnInputPartSchema TurnLineage TurnSnapshotCursor WireMessage createAssistantContentEncoder createInteractionEvent createSelectionEvent createSnapshotEvent createTurnSnapshotCursor decodeAssistantContent decodeComponentFrame decodeSessionSnapshot decodeTurnEvent encodeTurnEvent isAssistantContentCandidate isComponentFrameCandidate snapshotMessages",
           "summary": "",
           "body": "",
           "aliases": "module ts src"
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 8,
+          "inboundLinks": 9,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md",
             "document:docs/architecture/adrs/0010-lifecycle-lineage-and-snapshot-cursor.md",
             "document:docs/architecture/adrs/0021-ordered-assistant-content-records.md",
             "document:docs/architecture/upstream-adoption.md",
@@ -27083,6 +27283,11 @@
             },
             {
               "kind": "imports",
+              "id": "module:packages/protocol/tests/parts.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
               "id": "module:packages/protocol/tests/protocol.test.ts",
               "confidence": "observed"
             },
@@ -27109,6 +27314,11 @@
             {
               "kind": "imports",
               "id": "module:tests/turn-protocol-conformance.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
               "confidence": "observed"
             },
             {
@@ -27170,7 +27380,7 @@
             }
           ]
         },
-        "contentHash": "b900b9e9e3d21fda80988d29c103e8ad6b9efa8bbd13f6936147369b18e49231",
+        "contentHash": "eb9f4eb86344743d1987adfc036a7015255bbabac95a5dfa43e4fb5790b2c5e0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -27299,6 +27509,55 @@
           ]
         },
         "contentHash": "81e4afe537bf241ef87c6b6679efa68e99c289338301918d42685839f3853263",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:packages/protocol/tests/parts.test.ts",
+        "kind": "module",
+        "path": "packages/protocol/tests/parts.test.ts",
+        "title": "parts.test.ts",
+        "aliases": [],
+        "tags": [
+          "module",
+          "ts",
+          "test",
+          "tests"
+        ],
+        "fields": {
+          "title": "parts.test.ts",
+          "headings": "",
+          "path": "packages/protocol/tests/parts.test.ts",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts test tests"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md"
+          ],
+          "areaId": "area:packages/protocol/tests",
+          "packageId": "package:@agentskit/chat-protocol",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/protocol/src/index.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "375b1d3b36f8fd6c694fc4a1c211f5cf4e428bcdfb046820bd5e8f5d7b506d75",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28078,9 +28337,10 @@
         },
         "graph": {
           "pagerank": 0,
-          "inboundLinks": 5,
+          "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md",
             "document:docs/api-reference.mdx",
             "document:docs/architecture/adrs/0012-web-standard-snapshot-handler.md",
             "document:docs/examples/support-reference.md",
@@ -28092,7 +28352,22 @@
           "inbound": [
             {
               "kind": "imports",
+              "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
               "id": "module:packages/server/tests/handler.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/tests/uploads.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
               "confidence": "observed"
             },
             {
@@ -28128,13 +28403,23 @@
               "confidence": "observed"
             },
             {
+              "kind": "imports",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
+            },
+            {
               "kind": "re-exports",
               "id": "module:packages/server/src/ask-service.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "re-exports",
+              "id": "module:packages/server/src/uploads.ts",
               "confidence": "observed"
             }
           ]
         },
-        "contentHash": "cdc458fb2f13bbd4b1ef6ee61b7d57a318bb90783f42b7d19b4029a306a0d60d",
+        "contentHash": "fd1d30b1bc2db9092247db8acf19df85239972a312dcb910475423ecfffa2714",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28178,11 +28463,99 @@
               "kind": "imports",
               "id": "module:packages/server/src/index.ts",
               "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
             }
           ],
           "outbound": []
         },
         "contentHash": "34ad866d5252d7649fe85f2df9829643c2b03d56420bcd06eafa0b2e6a4b4113",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:packages/server/src/uploads.ts",
+        "kind": "module",
+        "path": "packages/server/src/uploads.ts",
+        "title": "uploads.ts",
+        "aliases": [],
+        "symbols": [
+          "BlobStore",
+          "UploadError",
+          "UploadPolicy",
+          "createS3BlobStore",
+          "createUploadHandler",
+          "resolveUploadParts",
+          "validateUploadPolicy"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "src"
+        ],
+        "fields": {
+          "title": "uploads.ts",
+          "headings": "",
+          "path": "packages/server/src/uploads.ts",
+          "symbols": "BlobStore UploadError UploadPolicy createS3BlobStore createUploadHandler resolveUploadParts validateUploadPolicy",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts src"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md",
+            "document:packages/server/README.md"
+          ],
+          "areaId": "area:packages/server",
+          "packageId": "package:@agentskit/chat-server",
+          "inbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/tests/uploads.test.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:packages/server/README.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "re-exports",
+              "id": "module:packages/server/src/index.ts",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/internal.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "ce008b7f057e89add8a227ab9bbaa567bd2e448f50eb9146e24867faa988f4cc",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28228,6 +28601,68 @@
         "confidence": "observed"
       },
       {
+        "id": "module:packages/server/tests/fixtures/upload-worker.ts",
+        "kind": "module",
+        "path": "packages/server/tests/fixtures/upload-worker.ts",
+        "title": "upload-worker.ts",
+        "aliases": [],
+        "symbols": [
+          "uploadWorker"
+        ],
+        "tags": [
+          "module",
+          "ts",
+          "fixtures"
+        ],
+        "fields": {
+          "title": "upload-worker.ts",
+          "headings": "",
+          "path": "packages/server/tests/fixtures/upload-worker.ts",
+          "symbols": "uploadWorker",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts fixtures"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md",
+            "document:docs/ch-d-parts-upload-report.md"
+          ],
+          "areaId": "area:packages/server/tests",
+          "packageId": "package:@agentskit/chat-server",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions-symbol",
+              "id": "document:docs/ch-d-parts-upload-report.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "c26c7d764113a1eb7e45d44ed97c70380182aa779033cf73031c9d17997fbfaf",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "module:packages/server/tests/handler.test.ts",
         "kind": "module",
         "path": "packages/server/tests/handler.test.ts",
@@ -28265,6 +28700,60 @@
           ]
         },
         "contentHash": "de018d59d8be1e13ae109bb1a821f674619b501ba30f23553cb8b1591887232c",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
+        "id": "module:packages/server/tests/uploads.test.ts",
+        "kind": "module",
+        "path": "packages/server/tests/uploads.test.ts",
+        "title": "uploads.test.ts",
+        "aliases": [],
+        "tags": [
+          "module",
+          "ts",
+          "test",
+          "tests"
+        ],
+        "fields": {
+          "title": "uploads.test.ts",
+          "headings": "",
+          "path": "packages/server/tests/uploads.test.ts",
+          "symbols": "",
+          "summary": "",
+          "body": "",
+          "aliases": "module ts test tests"
+        },
+        "graph": {
+          "pagerank": 0,
+          "inboundLinks": 1,
+          "coveredBy": [],
+          "mentionedBy": [
+            "document:docs/ch-d-parts-upload-report.md"
+          ],
+          "areaId": "area:packages/server/tests",
+          "packageId": "package:@agentskit/chat-server",
+          "inbound": [
+            {
+              "kind": "mentions",
+              "id": "document:docs/ch-d-parts-upload-report.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/index.ts",
+              "confidence": "observed"
+            },
+            {
+              "kind": "imports",
+              "id": "module:packages/server/src/uploads.ts",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "700cca32457882ef8234ad31a9f80a203dc6ae09a1cf6d7e76a25bedc9d8affb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32880,7 +33369,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "5ac51983bab742a715329807ea7e61481a1afe7d8b03a5a8b9ee1127765723c8",
+        "contentHash": "b19be6521387c98ca06a5a3e443d25af424c9e0a06e51794b263c86102789075",
         "provenance": "observed",
         "confidence": "observed"
       },
