@@ -129,3 +129,71 @@ describe('upload trust boundary and recovery', () => {
     await expect(resolveUploadParts(policy, 'tenant', 'session', [{ type: 'text', text: 'hello' }], AbortSignal.timeout(1000))).resolves.toEqual([{ type: 'text', text: 'hello' }])
   })
 })
+
+describe('upload failure contracts', () => {
+  it('rejects invalid declared metadata before touching storage', async () => {
+    let reads = 0
+    const guarded = { ...policy, store: { ...store, read: async () => { reads++; return new Response(bytes) } } }
+    for (const [candidate, status, code] of [
+      [{ ...part, bytes: 0 }, 400, 'UPLOAD_INVALID_METADATA'],
+      [{ ...part, bytes: 1.5 }, 400, 'UPLOAD_INVALID_METADATA'],
+      [{ ...part, bytes: 1025 }, 413, 'UPLOAD_TOO_LARGE'],
+      [{ ...part, mimeType: 'text/html' }, 415, 'UPLOAD_UNSUPPORTED_TYPE'],
+      [{ ...part, ref: ref.replace('tenant', 'other') }, 403, 'UPLOAD_REFERENCE_FORBIDDEN'],
+      [{ ...part, ref: ref.replace('session', 'other') }, 403, 'UPLOAD_REFERENCE_FORBIDDEN'],
+    ] as const) {
+      await expect(resolveUploadParts(guarded, 'tenant', 'session', [candidate], new AbortController().signal)).rejects.toMatchObject({ status, code })
+    }
+    expect(reads).toBe(0)
+  })
+
+  it('propagates read failures and cancels a failed object stream', async () => {
+    const failure = new Error('storage unavailable')
+    await expect(resolveUploadParts({ ...policy, store: { ...store, read: async () => { throw failure } } }, 'tenant', 'session', [part], new AbortController().signal)).rejects.toBe(failure)
+    let cancelled = false
+    const body = new ReadableStream<Uint8Array>({ pull(controller) { controller.enqueue(bytes) }, cancel() { cancelled = true } })
+    await expect(resolveUploadParts({ ...policy, store: { ...store, read: async () => new Response(body) } }, 'tenant', 'session', [{ ...part, bytes: 1 }], new AbortController().signal)).rejects.toMatchObject({ status: 413, code: 'UPLOAD_TOO_LARGE' })
+    expect(cancelled).toBe(true)
+    expect(body.locked).toBe(false)
+    const aborted = AbortSignal.abort(failure)
+    await expect(resolveUploadParts(policy, 'tenant', 'session', [part], aborted)).rejects.toBe(failure)
+  })
+
+  it('returns safe retryable diagnostics for PUT signing failures', async () => {
+    const handler = createUploadHandler({ ...policy, authorize: async () => ({ tenantId: 'tenant' }), store: { ...store, presignPut: async () => { throw new Error('private storage detail') } } })
+    const response = await handler(request(metadata))
+    expect(response.status).toBe(500)
+    expect(response.headers.get('cache-control')).toBe('no-store')
+    expect(await response.json()).toEqual({ error: { version: 1, code: 'UPLOAD_FAILED', message: 'Upload request failed.', retryable: true } })
+  })
+
+  it('signs PUT and GET with encoded paths, MIME, exact size and bounded lifetimes', async () => {
+    const storage = createS3BlobStore({ endpoint: 'https://storage.invalid/base/', bucket: 'test bucket', region: 'local', accessKeyId: 'fixture', secretAccessKey: 'fixture' })
+    const signal = new AbortController().signal
+    const put = await storage.presignPut(ref, { bytes: bytes.length, mimeType: 'image/png', expiresIn: 60 }, signal)
+    const target = new URL(put.url)
+    expect(target.pathname).toBe(`/base/test%20bucket/${ref}`)
+    expect(target.searchParams.get('X-Amz-Expires')).toBe('60')
+    expect(target.searchParams.get('X-Amz-SignedHeaders')).toBe('content-length;content-type;host')
+    expect(target.searchParams.get('X-Amz-Signature')).toMatch(/^[a-f0-9]{64}$/)
+    expect(put.headers).toEqual({ 'content-type': 'image/png', 'content-length': String(bytes.length) })
+    const get = new URL(await storage.presignGet(ref, 600, signal))
+    expect(get.searchParams.get('X-Amz-Expires')).toBe('600')
+    expect(get.searchParams.get('X-Amz-SignedHeaders')).toBe('host')
+    for (const expiresIn of [0, -1, 1.5, 601, NaN]) {
+      await expect(storage.presignGet(ref, expiresIn, signal)).rejects.toMatchObject({ code: 'UPLOAD_CONFIG_INVALID' })
+      await expect(storage.presignPut(ref, { ...metadata, expiresIn }, signal)).rejects.toMatchObject({ code: 'UPLOAD_CONFIG_INVALID' })
+    }
+    await expect(storage.presignGet(ref, 60, AbortSignal.abort())).rejects.toMatchObject({ name: 'AbortError' })
+  })
+
+  it('keeps parts disabled without upload policy and never starts the adapter', async () => {
+    let starts = 0
+    const adapter: AdapterFactory = { createSource: () => { starts++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }) })
+    const response = await handler(request({ protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', turnId: 'turn', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit', payload: { input: [part], capabilities: ['turn-parts-v1'] } }))
+    expect(response.status).toBe(501)
+    expect(await response.json()).toMatchObject({ error: { code: 'TURN_PARTS_UNAVAILABLE' } })
+    expect(starts).toBe(0)
+  })
+})

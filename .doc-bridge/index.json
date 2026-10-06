@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "c2ac71fee45bcd89e8036b2e2fbb11d529f50ced3d935d599974e8b1ca1a8029",
+  "contentHash": "5f284c1501903c475852097f40ba7930c21b916079f7ab94fc064ef58037d96d",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-06T23:04:36.893Z",
+  "generatedAt": "2026-10-06T23:19:09.947Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -829,7 +829,7 @@
         "document",
         "human"
       ],
-      "contentHash": "186dba2957af1fec763b995125911aa9782a08d7ead9dd631eb76a4d89974939"
+      "contentHash": "c4be0afc746aad7023cd2fb98f1a62875d7bde49f765740764f25919c5465c8e"
     },
     {
       "id": "document:docs/cli.mdx",
@@ -4713,7 +4713,7 @@
         "test",
         "tests"
       ],
-      "contentHash": "700cca32457882ef8234ad31a9f80a203dc6ae09a1cf6d7e76a25bedc9d8affb"
+      "contentHash": "052a956f7f38685a5ff2689d7c593404a1cf0b782e369cf8f16bd3f9d638a6ab"
     },
     {
       "id": "module:packages/solid/fixtures/readme-example.ts",
@@ -6902,7 +6902,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "53284fe7c6d0ae04e28fec36b7c49ab1346451fe8463ee8e2f4df642d98117e9",
+    "hash": "d779dbd55dbfe38ebf35a13252f7f874c34c34e4106eb43f9b27f611ec7a9628",
     "fileCount": 457,
     "projectionVersion": 2
   },
@@ -6925,9 +6925,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "c7fa492122c78d2cc65f7902bdc9abd5813b59e52051a611e0cc868256bbe2a4",
+    "contentHash": "d12b173039a26ab7869c22f0601be4882c930a7a4fe28b3569a633b7103beba0",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "e5301c8afcdc947c0f460382bc4188580e34e5398ab30efd1f1c1e5dc9157fb5",
+    "snapshotHash": "d74cf454b578a44d501f2881d5cd10f5ab708d7e8d74024fcc5733eb187c9905",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -6960,7 +6960,7 @@
       "averageFieldLength": {
         "aliases": 3.138211382113821,
         "body": 76.01422764227642,
-        "headings": 4.567073170731708,
+        "headings": 4.587398373983739,
         "path": 6.126016260162602,
         "summary": 6.020325203252033,
         "symbols": 4.936991869918699,
@@ -12704,7 +12704,7 @@
         ],
         "fields": {
           "title": "CH-D — reference parts and uploads (2026-10-06)",
-          "headings": "CH-D — reference parts and uploads (2026-10-06) Contract and authorization Current-source evidence Unresolved and excluded evidence SHA-256 bindings for tested files",
+          "headings": "CH-D — reference parts and uploads (2026-10-06) Contract and authorization Current-source evidence Unresolved and excluded evidence SHA-256 bindings for tested files CH-D2 — upload coverage repair (2026-10-06)",
           "path": "docs/ch-d-parts-upload-report.md",
           "symbols": "",
           "summary": "State: BLOCKED for the original RF-07–11 outcome; the independently implementable layer is implemented and locally validated. No parent-task completion or approval is claimed.",
@@ -12755,7 +12755,7 @@
             }
           ]
         },
-        "contentHash": "186dba2957af1fec763b995125911aa9782a08d7ead9dd631eb76a4d89974939",
+        "contentHash": "c4be0afc746aad7023cd2fb98f1a62875d7bde49f765740764f25919c5465c8e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -28753,7 +28753,7 @@
             }
           ]
         },
-        "contentHash": "700cca32457882ef8234ad31a9f80a203dc6ae09a1cf6d7e76a25bedc9d8affb",
+        "contentHash": "052a956f7f38685a5ff2689d7c593404a1cf0b782e369cf8f16bd3f9d638a6ab",
         "provenance": "observed",
         "confidence": "observed"
       },

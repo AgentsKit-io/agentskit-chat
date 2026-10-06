@@ -96,3 +96,45 @@ termination occurred.
 - `packages/server/tests/uploads.test.ts`: `a40d2a1ca6638042300dc08f7be3479be0db8849412627371cb38025739a28ec`
 - `packages/server/tests/fixtures/upload-worker.ts`: `1dcd2440e2a05ff3425f44104fbd2ba9d1575e9ad27b18936fb9eb6ecf7dd5cc`
 - `pnpm-lock.yaml`: `6d49df4a5d28022dfcbf613dc9523b3f6641e9df133ef2cb9589d5c308fe8899`
+
+## CH-D2 — upload coverage repair (2026-10-06)
+
+Task `task_e805fdb56e7d`, dispatch `ctx_a2dae0265f7d`, Run `run_b7f0241f0ec9`.
+Intent/authorization: implement meaningful upload failure tests and a local commit.
+Scope: `packages/server/tests/uploads.test.ts`, this report, and index refresh only
+when freshness requires it. No production behavior, threshold, UI, upstream source,
+push, PR, release, external tracking, or other owners' processes are changed.
+Validation budget: installed dependencies, one Vitest worker, local documented
+commands; no new storage fixture, network service, or CI run.
+
+Upstream adoption: inspected published `@agentskit/net` declaration of `withTimeout`
+and `@agentskit/core` controller `send(text: string)` declarations, existing
+uploads implementation, all its callers, and ADR-0035. Tests exercise existing
+application policy and aws4fetch SigV4; no upstream primitive was reimplemented.
+
+| Criterion | Evidence/status |
+|---|---|
+| D2-1: meaningful upload error contracts | Validated: declared size/MIME and tenant/session rejection precede storage reads; existing checksum and unavailable/truncated/mistyped object tests remain passing. A deleted/expired object is represented by a non-OK store response, not an application expiry timer. |
+| D2-2: BlobStore failures and recovery | Validated: rejected reads propagate, oversized streams cancel and release their lock, aborted reads reject, PUT signing failures return safe retryable 500 diagnostics. |
+| D2-3: presign parameters and disabled capability | Validated: actual aws4fetch PUT/GET signing checks encoded paths, signed headers, byte count, lifetime and signature shape; invalid lifetimes/abort reject. Disabled parts return typed 501 without starting the adapter. |
+| D2-4: server lines ≥98%, floors unchanged | Validated: `VITEST_MAX_WORKERS=1 pnpm --filter @agentskit/chat-server test`, 36 passed, 2 optional integration tests skipped; server lines 98.59% (352/357), uploads lines 98.73%, branches 100%. Server lint and diff whitespace check pass. |
+| D2-5: repository suite | Validated: `VITEST_MAX_WORKERS=1 pnpm test` exited 0, including recursive package coverage checks and bundle-budget/ecosystem/release-deprecation/release-lib tests (finished 20:17:06 local). |
+| D2-6: CI documentation gates | Validated: freshness passed after required index regeneration; docs:bridge:gate reports ok=true, conformance reports 7 required and 2 recommended passing, doctor exits 0 (83/100, 3/3 gates). Final report-only update is followed by index regeneration and rerun of all four gates. |
+
+Test source SHA-256: `b1222057d81be045e12a4a88ce9d06cfeed3ffae71fb9cf0889214630cc6e41a`.
+Unchanged upload source SHA-256: `36af26695a5ff65ca207683ff2a8eafbc45435cc82f7badf7ea84b8bc86f954d`.
+Base revision: `abdb635a6f56ba6aab54784a3aa1c3945cbc2bab`.
+No dead code was identified or removed. Optional live S3/workerd flows are not
+revalidated by CH-D2; the original upstream delivery blocker remains unchanged.
+UI/browser approval is not applicable because no UI is touched. Coordinator review
+of these criterion results remains required; this worker does not approve its evidence.
+
+CH-D2 reconciliation: validated D2-1 through D2-6 within the declared local scope;
+partially validated: live storage expiry semantics (only non-OK response handling);
+not analyzed: production storage and deployment; blocked: original upstream parts
+delivery, unchanged; not applicable: UI and publication. Doctor still reports
+40/62 areas undocumented, 52/169 documents unlinked, and retrieval benchmark not
+analyzed; passing gates do not establish semantic documentation completeness.
+Task-owned command logs use `/tmp/chd2-*.log` and are removed after reporting;
+no other owner files or processes are cleaned. Next action: coordinator reviews
+this evidence and the local commit; no push/PR/release is authorized.
