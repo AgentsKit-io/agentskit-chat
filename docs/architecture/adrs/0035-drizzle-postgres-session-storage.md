@@ -1,4 +1,4 @@
-# ADR-0025: Drizzle/Postgres application session envelopes
+# ADR-0035: Drizzle/Postgres application session envelopes
 
 Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending.
 
