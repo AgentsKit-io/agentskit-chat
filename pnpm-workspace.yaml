@@ -3,6 +3,8 @@ packages:
   - "apps/*"
 
 overrides:
+  seroval: "1.6.8"
+  shell-quote: "1.11.0"
   # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
   # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
   fast-uri: "3.1.8"
