@@ -3,6 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    'drizzle-pg': 'src/drizzle-pg.ts',
     protocol: '../protocol/src/index.ts',
     'protocol-fixtures': '../protocol/src/fixtures.ts',
     server: '../server/src/index.ts',

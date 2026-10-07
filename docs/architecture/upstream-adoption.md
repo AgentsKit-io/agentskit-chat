@@ -323,3 +323,7 @@ interaction focus rule. The PTY tracer adds only a synthetic host-state fixture
 and injected callbacks. No controller, terminal input parser, lifecycle,
 confirmation widget, transport, persistence, or business behavior is copied or
 reimplemented. No upstream gap or new architecture decision blocks #107.
+
+## Drizzle/Postgres application envelopes (CH-B)
+
+[ADR-0036](./adrs/0036-drizzle-postgres-session-storage.md) adds only a PostgreSQL adapter for the existing application `SessionStorage` and validated `SessionSnapshot`. The upstream `ChatMemory` interface and memory exports were inspected; no Drizzle ChatMemory backend exists in the inspected source. Canonical message storage is therefore blocked on upstream implementation and a supported release. No controller, message-memory implementation, or private upstream source is copied locally. Local acceptance evidence and its limits are recorded in [CH-B](../ch-b-session-storage.md).

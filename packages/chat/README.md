@@ -73,3 +73,32 @@ Package ownership: `packages/chat`. Follow [CONTRIBUTING.md](../../CONTRIBUTING.
 ## AgentsKit ecosystem
 
 Built on [AgentsKit](https://github.com/AgentsKit-io/agentskit). Composes with [Registry](https://registry.agentskit.io), [Playbook](https://playbook.agentskit.io), and [Doc Bridge](https://www.npmjs.com/package/@agentskit/doc-bridge).
+
+### Optional PostgreSQL session envelopes
+
+Install `drizzle-orm` and a PostgreSQL driver in the host, then import the optional subpath:
+
+```ts
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { chatSessionDDL, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
+
+// pool is the host-owned pg Pool (Node) or connected request Client (Workers).
+// Apply chatSessionDDL once in a migration, never on every production request.
+const storage = createDrizzleSessionStorage(drizzle(pool), authenticatedTenantId)
+```
+
+The adapter stores application envelopes, not messages. Continue using upstream `ChatMemory` for canonical history; a Drizzle ChatMemory backend is pending upstream. `save` returns false for a lost cursor CAS; persistence on the resumed session converts that into `SessionConflictError`, and the handler preserves HTTP 409 `SESSION_CONFLICT`. Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event.
+
+On Workers connect a `pg.Client` per request (Hyperdrive connection string in production), and call `client.end()` in `waitUntil` after consuming/closing the chat stream. On Node reuse a `pg.Pool` and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled.
+
+Optional RLS defense in depth (configure tenant context with transaction-local `set_config` on the same connection, and use a non-owner role without BYPASSRLS):
+
+```sql
+ALTER TABLE agentskit_chat_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE agentskit_chat_sessions FORCE ROW LEVEL SECURITY;
+CREATE POLICY chat_tenant ON agentskit_chat_sessions
+  USING (tenant_id = current_setting('app.tenant_id', true))
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true));
+```
+
+See [the reusable local contract](../../tests/storage-pg/README.md) for Postgres 16 and wrangler validation. RLS is optional and is not exercised by that suite.

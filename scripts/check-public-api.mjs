@@ -22,6 +22,7 @@ const kindOrder = ['type', 'value']
 const sourceEntries = {
   '@agentskit/chat': {
     '.': '../chat/src/index.ts',
+    './drizzle-pg': '../chat/src/drizzle-pg.ts',
     './protocol': '../protocol/src/index.ts',
     './protocol/fixtures': '../protocol/src/fixtures.ts',
     './server': '../server/src/index.ts',
