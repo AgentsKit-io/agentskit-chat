@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "7a93e116a81e3c883199f277906b46c7a4357f996e0504b53b21a360819a9e01",
+  "contentHash": "fdbb825845fb7a1ebf0ea0bbcbda8589509fcb4b78ad0b6e22657bfb2fd57d82",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-07T13:45:01.007Z",
+  "generatedAt": "2026-10-07T14:07:26.883Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -284,12 +284,12 @@
       "type": "document",
       "title": "Changelog",
       "path": "CHANGELOG.md",
-      "description": "Metadata-only patch so both public packages advertise the canonical docs portal.",
+      "description": "Adds optional @agentskit/chat/drizzle-pg tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned.",
       "tags": [
         "document",
         "project"
       ],
-      "contentHash": "2b121cb3a64afd2b3698180520964692a73b764b5f077d6d162e7a0f47384d34"
+      "contentHash": "70380ff678d3cdafd04ce52af53f337780aefe4d14194fa16b4603e1af7116f5"
     },
     {
       "id": "document:CODE_OF_CONDUCT.md",
@@ -1441,7 +1441,7 @@
         "document",
         "human"
       ],
-      "contentHash": "f3267624239e035b7d770b38632757ff7840c494ed045651b0d8478a87fb5e2a"
+      "contentHash": "654e08c911a9ef1e32e04563b819337335185c1855abbd5d5e8b93e93e917984"
     },
     {
       "id": "document:docs/lifecycle.mdx",
@@ -1578,26 +1578,26 @@
     {
       "id": "document:docs/releases/compatibility.md",
       "type": "document",
-      "title": "v0.4 compatibility matrix",
+      "title": "v0.5 compatibility matrix",
       "path": "docs/releases/compatibility.md",
-      "description": "The two public AgentsKit Chat packages ship as the fixed 0.4.1 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
+      "description": "The two public AgentsKit Chat packages ship as the fixed 0.5.0 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "4d401f99154c0b8aee3104f1a90ec5b83d0fa8d7f5913a8e2ff484bfc2ef4725"
+      "contentHash": "01b82b3a76347ee4832b591b428ff1f620d63f7315b3788d69ed58d6905ebefa"
     },
     {
       "id": "document:docs/releases/launch-checklist.md",
       "type": "document",
       "title": "Stable public launch checklist",
       "path": "docs/releases/launch-checklist.md",
-      "description": "Executable close-out checklist for issue #104. AgentsKit Chat 0.4.0 adds controlled React and Ink sessions to the consolidated two-package graph.",
+      "description": "Executable close-out checklist for issue #104. AgentsKit Chat 0.5.0 adds optional Drizzle/PostgreSQL CAS SessionStorage and referenced parts/uploads to the fixed two-package graph. Historical evidence below remains tied to its original release and does not validate 0.5.0.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "e89ebe62d5788498035c5b5ab3975884c23465cef0c3a8ed98997fa794fc3534"
+      "contentHash": "70531cb852d2169277ef61cd1ef2a13b218c8c1a1fcd10d1e9457563fd65bd0a"
     },
     {
       "id": "document:docs/releases/migration-from-alpha.md",
@@ -1633,7 +1633,7 @@
         "document",
         "human"
       ],
-      "contentHash": "effed05984f3bb496913d7d5429968a5456a5e9cfdf7281048f78047e6ab63ac"
+      "contentHash": "9777d7435c72137fd3a8710f0148d5f433fd76baff4f1fcebb87ad489d1d5ddd"
     },
     {
       "id": "document:docs/releases/release-process.md",
@@ -1657,7 +1657,7 @@
         "document",
         "human"
       ],
-      "contentHash": "69d733832be64bbea2dba5058a669791a2abaefd3b9f55cce656a61c6f482d74"
+      "contentHash": "710bf5cd576e93e80c1dc56ad5daaaf8a911d28722e23d0b4bf8c11bd505fc13"
     },
     {
       "id": "document:docs/releases/v0.1.0.md",
@@ -1720,6 +1720,18 @@
       "contentHash": "29924f0f9c548e8ffe02f8729e17809f3f00f0da75026355e5106c80eb2b8852"
     },
     {
+      "id": "document:docs/releases/v0.5.0.md",
+      "type": "document",
+      "title": "AgentsKit Chat 0.5.0",
+      "path": "docs/releases/v0.5.0.md",
+      "description": "0.5.0 is an additive minor release of the fixed group: @agentskit/chat and @agentskit/chat-cli. The two-package graph and protocol v1 remain intact.",
+      "tags": [
+        "document",
+        "human"
+      ],
+      "contentHash": "35b10eacea7c12e3eaf2825a315f982f85f0abd39b0341d3389117a491ecdc2b"
+    },
+    {
       "id": "document:docs/server.mdx",
       "type": "document",
       "title": "Web-standard server handler",
@@ -1777,7 +1789,7 @@
         "document",
         "project"
       ],
-      "contentHash": "39a547c9ff868cdd8a36b137c1fbfc6f95dfe05a629c6caa83ce94862e45cb62"
+      "contentHash": "e8933bf6550ad5a6803778c403d8eca6231f654bcf6dab9f5d8483a6b4c82123"
     },
     {
       "id": "document:packages/chat/README.md",
@@ -1789,7 +1801,7 @@
         "document",
         "project"
       ],
-      "contentHash": "230488efdb1d5a207215b20712f046e02a173f3a87acb002f017072ccb36072c"
+      "contentHash": "236f2355f91ab7cd7482e0d713086b9d02a7a874f2f309049265fc54f3c4117f"
     },
     {
       "id": "document:packages/cli/README.md",
@@ -1801,7 +1813,7 @@
         "document",
         "project"
       ],
-      "contentHash": "a22b5534a3b1684fb5f32441debb595c4b6d7127b552c97b8fd440bbd2ee5ecf"
+      "contentHash": "77db45ae8dbac1ac2144c3ebe88ab6664287733fe61055228540aed45043740e"
     },
     {
       "id": "document:packages/devtools/README.md",
@@ -1813,7 +1825,7 @@
         "document",
         "project"
       ],
-      "contentHash": "3232649d8b06e3fdaf5037e7783ce5d4398669e4708f8185a04ec62a4b54f88f"
+      "contentHash": "62cff091048e643538930c0addf2d53b4d77ae13dbc82973ae75566b0864da5a"
     },
     {
       "id": "document:packages/ink/README.md",
@@ -1825,7 +1837,7 @@
         "document",
         "project"
       ],
-      "contentHash": "cfc07dc554cf333398d5564e22e8e92dfcd61cf154edd0cda4892f2d2e185a05"
+      "contentHash": "b0e1deb92783fa17cbf84e7b0dbc40c8f8450b60f17e37c8ae4293d94e263efd"
     },
     {
       "id": "document:packages/protocol/README.md",
@@ -1837,7 +1849,7 @@
         "document",
         "project"
       ],
-      "contentHash": "65a97c67a8ad96f55a8e3f0abae027ff212731a66ca121d40c617451e2122c0c"
+      "contentHash": "58c79d7b0540cfe90376c16a3c0875e0b742fa927fb0f89779c8a0b023b76c10"
     },
     {
       "id": "document:packages/react-native/README.md",
@@ -1849,7 +1861,7 @@
         "document",
         "project"
       ],
-      "contentHash": "4a352e5c721a1d02c8daf766e56571c4accdf9526477deaa3282ffef5cf1c793"
+      "contentHash": "223056969ce05ba1a267322d4e1540c9bd7a2e4d9dc6f840cf0ab422bb4c2a00"
     },
     {
       "id": "document:packages/react/README.md",
@@ -1861,7 +1873,7 @@
         "document",
         "project"
       ],
-      "contentHash": "161d3e86b20402b1b9f448768287b2abfedd055e7a7fd8e887727612a50ec3f6"
+      "contentHash": "0f0e2c5f055a59021eaa4e747b5fef5dd1b6079ab0e43e1e6473ee9269ffddab"
     },
     {
       "id": "document:packages/server/README.md",
@@ -1873,7 +1885,7 @@
         "document",
         "project"
       ],
-      "contentHash": "5adab9132594ab628ebd51fa153cdfa39c0be6b68d5dc5b239a358052ad38822"
+      "contentHash": "ab13d78eb153eb175789bbb10fdc83e4c2be9dd41ad8d35e9aaa94a1e004b272"
     },
     {
       "id": "document:packages/solid/README.md",
@@ -1885,7 +1897,7 @@
         "document",
         "project"
       ],
-      "contentHash": "77c91122464fb24ff052ae2ac94232c8b9c696048b124e2daa871ed12ffabd47"
+      "contentHash": "9226a62d8ddd61cf6d92881a220f6dd67e4304df634df6cf0f1fe5f981afaea7"
     },
     {
       "id": "document:packages/svelte/README.md",
@@ -1897,7 +1909,7 @@
         "document",
         "project"
       ],
-      "contentHash": "d74640d65d1c097cd8f6988bdcde0db1da634d96b83f529e825f390bc823fec5"
+      "contentHash": "3a252ffc6728ac4f6f942a36d80077dac783af02ca6ff554b4e5c1df609ac944"
     },
     {
       "id": "document:packages/vue/README.md",
@@ -1909,7 +1921,7 @@
         "document",
         "project"
       ],
-      "contentHash": "47bafc0cf841884e5f2a31db7b8da7ccee6c828e74d17b6871fb4b5fb8ac7d7f"
+      "contentHash": "48e45eed179a853a3879859bcb439c121a0651f078628de0398343379d085797"
     },
     {
       "id": "document:README.md",
@@ -1921,7 +1933,7 @@
         "document",
         "project"
       ],
-      "contentHash": "74b5df89a3b9624b724d8ed759f6f3f384045a59081ad5a496d6e2772031019e"
+      "contentHash": "453db303f2444693098355475bd7f5098a92e2d0b16f905fdedb923b873b1829"
     },
     {
       "id": "document:SECURITY.md",
@@ -5182,7 +5194,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "4d3cc97ced8f91f2f646a51456a20fe6bd5714549cd441b041fb830733a5ece5"
+      "contentHash": "38a20cc37e7b33a3d0ff89881b2083ff1f53dd793692a5da9bc6c4aa498fabd2"
     },
     {
       "id": "module:scripts/bundle-budget.mjs",
@@ -5380,7 +5392,7 @@
         "test",
         "scripts"
       ],
-      "contentHash": "99fdea651c8f03d22da0d56d0d73e2ae324c1517fa845065a7906dbcfc7b9924"
+      "contentHash": "0b1e52a39f9de1ed14a5a78b64a3280eb7545d98baf6226fec8801a5637d425b"
     },
     {
       "id": "module:scripts/ecosystem-claims-live-lib.mjs",
@@ -5515,7 +5527,7 @@
         "test",
         "scripts"
       ],
-      "contentHash": "0e36d421a800c195e373eff44f75be7468d5f5e5e7bd8fef6167c8268f566aa5"
+      "contentHash": "5bc306e6698edce7416b1885963290573f8fddb0df3ed6083948ac90b0ba4119"
     },
     {
       "id": "module:scripts/legacy-package-deprecation.test.mjs",
@@ -5643,7 +5655,7 @@
         "mjs",
         "scripts"
       ],
-      "contentHash": "f446bd95de4f81dd55ce95abfd7c8d17b14dda1ca43237754aaa7d5be9a80563"
+      "contentHash": "0af20635728c49fdceebace34de764de6381798ce8c69d3976633709e6aa986d"
     },
     {
       "id": "module:scripts/release-lib.test.mjs",
@@ -7039,8 +7051,8 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "5e20594fb6f5c572c29a33909557571082ca5ec33fb74112b9c25b6122e9c81e",
-    "fileCount": 468,
+    "hash": "baf004f1c279f0b1553193e658505c2566c6e2e12466d9b8bc770143cf656dc1",
+    "fileCount": 469,
     "projectionVersion": 2
   },
   "retrieval": {
@@ -7062,9 +7074,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "34b8d81361dba9e3ff22dbce3f0bdeea4b5062a4e79c4d0d13b553d7c71debe6",
+    "contentHash": "fc46f18d64b437ebeded7602d85f276c9904167c1461dab44b01980fe67ae363",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "ba08c0f39bd5794f9bcf36495efdd045104277fbeda20023c51ca537764c3e47",
+    "snapshotHash": "98f1448139491fefc178d1b62840ca06e399bef1312a109ae7846cb93a181f8b",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -7084,7 +7096,7 @@
     },
     "lexical": {
       "version": 1,
-      "documentCount": 502,
+      "documentCount": 503,
       "fieldNames": [
         "aliases",
         "body",
@@ -7095,13 +7107,13 @@
         "title"
       ],
       "averageFieldLength": {
-        "aliases": 3.151394422310757,
-        "body": 76.44621513944223,
-        "headings": 4.597609561752988,
-        "path": 6.145418326693227,
-        "summary": 6.00796812749004,
-        "symbols": 4.878486055776892,
-        "title": 3.637450199203187
+        "aliases": 3.1491053677932404,
+        "body": 76.92246520874751,
+        "headings": 4.618290258449304,
+        "path": 6.143141153081511,
+        "summary": 6.105367793240557,
+        "symbols": 4.868787276341949,
+        "title": 3.6381709741550696
       }
     },
     "entries": [
@@ -9547,7 +9559,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.004591,
+          "pagerank": 0.004529,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [
@@ -9620,7 +9632,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9679,7 +9691,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9738,7 +9750,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9797,7 +9809,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9851,7 +9863,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9890,7 +9902,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9929,7 +9941,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9956,7 +9968,7 @@
         "kind": "document",
         "path": "CHANGELOG.md",
         "title": "Changelog",
-        "summary": "Metadata-only patch so both public packages advertise the canonical docs portal.",
+        "summary": "Adds optional @agentskit/chat/drizzle-pg tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -9965,15 +9977,15 @@
         ],
         "fields": {
           "title": "Changelog",
-          "headings": "Changelog 0.4.1 — 2026-07-16 0.4.0 — 2026-07-15 0.3.0 — 2026-07-14 0.2.0 — 2026-07-13 0.1.0 — 2026-07-13",
+          "headings": "Changelog 0.5.0 — 2026-10-07 0.4.1 — 2026-07-16 0.4.0 — 2026-07-15 0.3.0 — 2026-07-14 0.2.0 — 2026-07-13 0.1.0 — 2026-07-13",
           "path": "CHANGELOG.md",
           "symbols": "",
-          "summary": "Metadata-only patch so both public packages advertise the canonical docs portal.",
-          "body": "Changelog 0.4.1 — 2026-07-16 Metadata-only patch so both public packages advertise the canonical docs portal. - Publishes homepage: https://chat.agentskit.io/docs for @agentskit/chat and @agentskit/chat-cli . - Fails release pack verification when packaged manifests omit that homepage. - Preserves every 0.4.0 runtime contract, export map, and peer range. 0.4.0 — 2026-07-15 AgentsKit Chat can now present sessions owned by an existing host without creating a second controller or session store. - Adds a framework-neutral, runtime-validated controlled-session driver with host callbacks for input, send, cancel, retry, edit, regenerate, approval, denial, and component interaction. - Adds controlled mode to the React and Ink renderers while preserving their existing definition-owned mode and shared presentation behavior. - Keeps transport, authentication, authorization, persistence, and product actions outside the public framework boundary. - Adds synthetic conformance fixtures for idle, streaming, error, cancellation-ready, confirmation, and semantic-component states. - Preserves the two-package public graph, seven renderer subpaths, protocol v1, and compatibility with applications using the 0.3 definition-owned APIs. 0.3.0 — 2026-07-14 AgentsKit Chat consolidates its public npm surface from twelve packages to two without collapsing the internal framework-specific ownership boundaries. - Publishes protocol, server, devtools, React, React Native, Ink, Vue, Svelte, Solid, and Angular APIs as explicit @agentskit/chat/ subpaths. - Keeps every renderer's native compilation, peer dependencies, conformance, accessibility, and bundle budget isolated inside the monorepo. - Updates the CLI, examples, Fumadocs dogfood, public guides, and executable README fixtures to install the consolidated package graph. - Adds release gates that verify exactly two public packages, all seven renderer exports, clean installation, checksums, and npm provenance. - Preserves the former package names as the immutable 0.2.x compatibility line; applications migrate imports using the documented subpath mapping. 0.2.0 — 2026-07-13 AgentsKit Chat now ships the trusted Ask backend vertical required by public Docs, Registry, and Playbook hosts. - Adds a versioned Ask request, trusted site configuration, grounded sources, usage, CAS sessions, typed diagnostics, and privacy-safe metrics. - Validates deterministic escalation before any backend request and preserves resumable session identity without allowing clients to select a corpus. - Adds injectable local and federated retrieval plus provider generation, citation enforcement, deadlines, cancellation, rate limits, and safe errors. - Documents hosted and self-hosted deployments with executable tests for authority, prompt injection, persistence, conflict, timeout, and streaming. - Recognizes valid Ask NDJSON served with an incorrect text/plain content type while preserving the safe fallback for ordinary text responses. - Preserves the fixed 12-package graph and all seven native renderer gates. 0.1.0 — 2026-07-13 First stable v0 release of AgentsKit Chat. - Defines one framework-neutral chat application contract over AgentsKit. - Ships native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. - Adds deterministic routes backed by @agentskit/statechart , typed actions, trusted capability policy, confirmation, session metadata, semantic themes, and a closed standard component catalog. - Adds the versioned turn, component, ordered-content, Ask, and deterministic answer protocols with runtime validation. - Adds a Web-standard server handler, seven-renderer CLI, replay/parity devtools, four reference applications, and public dogfood evidence. - Enforces browser, native-mobile, terminal, accessibility, package, provenance, documentation, and clean-install release gates. The 0.1.0-alpha.2 GitHub artifact channel remains immutable for existing dogfood lockfiles. New installations should use the npm packages at 0.1.0",
+          "summary": "Adds optional @agentskit/chat/drizzle-pg tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned.",
+          "body": "Changelog 0.5.0 — 2026-10-07 - Adds optional @agentskit/chat/drizzle-pg tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned. - Adds additive protocol v1 reference parts, capability negotiation, and host-authorized S3-compatible uploads with tenant/session, size, MIME, and SHA-256 validation; parts delivery remains unavailable pending published upstream support. - Reuses published AgentsKit Net bounded JSON, signal composition, and callback deadlines. - Fixes empty assistant placeholders and compacts emitted JavaScript within existing bundle budgets. - Uses upstream cross-platform rename/remove helpers for CLI scaffolding and widens framework peer ranges to current 0.x bindings. - Versions both public packages together at 0.5.0 ; existing definition-owned and controlled sessions remain supported. 0.4.1 — 2026-07-16 Metadata-only patch so both public packages advertise the canonical docs portal. - Publishes homepage: https://chat.agentskit.io/docs for @agentskit/chat and @agentskit/chat-cli . - Fails release pack verification when packaged manifests omit that homepage. - Preserves every 0.4.0 runtime contract, export map, and peer range. 0.4.0 — 2026-07-15 AgentsKit Chat can now present sessions owned by an existing host without creating a second controller or session store. - Adds a framework-neutral, runtime-validated controlled-session driver with host callbacks for input, send, cancel, retry, edit, regenerate, approval, denial, and component interaction. - Adds controlled mode to the React and Ink renderers while preserving their existing definition-owned mode and shared presentation behavior. - Keeps transport, authentication, authorization, persistence, and product actions outside the public framework boundary. - Adds synthetic conformance fixtures for idle, streaming, error, cancellation-ready, confirmation, and semantic-component states. - Preserves the two-package public graph, seven renderer subpaths, protocol v1, and compatibility with applications using the 0.3 definition-owned APIs. 0.3.0 — 2026-07-14 AgentsKit Chat consolidates its public npm surface from twelve packages to two without collapsing the internal framework-specific ownership boundaries. - Publishes protocol, server, devtools, React, React Native, Ink, Vue, Svelte, Solid, and Angular APIs as explicit @agentskit/chat/ subpaths. - Keeps every renderer's native compilation, peer dependencies, conformance, accessibility, and bundle budget isolated inside the monorepo. - Updates the CLI, examples, Fumadocs dogfood, public guides, and executable README fixtures to install the consolidated package graph. - Adds release gates that verify exactly two public packages, all seven renderer exports, clean installation, checksums, and npm provenance. - Preserves the former package names as the immutable 0.2.x compatibility line; applications migrate imports using the documented subpath mapping. 0.2.0 — 2026-07-13 AgentsKit Chat now ships the trusted Ask backend vertical required by public Docs, Registry, and Playbook hosts. - Adds a versioned Ask request, trusted site configuration, grounded sources, usage, CAS sessions, typed diagnostics, and privacy-safe metrics. - Validates deterministic escalation before any backend request and preserves resumable session identity without allowing clients to select a corpus. - Adds injectable local and federated retrieval plus provider generation, citation enforcement, deadlines, cancellation, rate limits, and safe errors. - Documents hosted and self-hosted deployments with executable tests for authority, prompt injection, persistence, conflict, timeout, and streaming. - Recognizes valid Ask NDJSON served with an incorrect text/plain content type while preserving the safe fallback for ordinary text responses. - Preserves the fixed 12-package graph and all seven native renderer gates. 0.1.0 — 2026-07-13 First stable v0 release of AgentsKit Chat. - Defines one framework-",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002534,
+          "pagerank": 0.002499,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -9997,7 +10009,7 @@
             }
           ]
         },
-        "contentHash": "2b121cb3a64afd2b3698180520964692a73b764b5f077d6d162e7a0f47384d34",
+        "contentHash": "70380ff678d3cdafd04ce52af53f337780aefe4d14194fa16b4603e1af7116f5",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -10022,7 +10034,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.004085,
+          "pagerank": 0.004029,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [
@@ -10084,7 +10096,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.008211,
+          "pagerank": 0.008098,
           "inboundLinks": 26,
           "coveredBy": [],
           "mentionedBy": [
@@ -10361,7 +10373,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.056884,
+          "pagerank": 0.056101,
           "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10456,7 +10468,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.086716,
+          "pagerank": 0.085522,
           "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10541,7 +10553,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002258,
+          "pagerank": 0.002227,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10664,7 +10676,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.011693,
+          "pagerank": 0.011533,
           "inboundLinks": 11,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10759,7 +10771,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002325,
+          "pagerank": 0.002293,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10804,7 +10816,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002357,
+          "pagerank": 0.002324,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10849,7 +10861,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002357,
+          "pagerank": 0.002324,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10894,7 +10906,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002325,
+          "pagerank": 0.002293,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -10939,7 +10951,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002516,
+          "pagerank": 0.002481,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11150,7 +11162,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002889,
+          "pagerank": 0.002849,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11210,7 +11222,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.00241,
+          "pagerank": 0.002377,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11255,7 +11267,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002871,
+          "pagerank": 0.002831,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11310,7 +11322,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.00241,
+          "pagerank": 0.002377,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11360,7 +11372,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002626,
+          "pagerank": 0.00259,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11399,7 +11411,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002871,
+          "pagerank": 0.002831,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11521,7 +11533,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004007,
+          "pagerank": 0.003952,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11581,7 +11593,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005224,
+          "pagerank": 0.005153,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11636,7 +11648,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003843,
+          "pagerank": 0.003791,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11696,7 +11708,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003088,
+          "pagerank": 0.003046,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11756,7 +11768,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005871,
+          "pagerank": 0.005791,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11831,7 +11843,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003086,
+          "pagerank": 0.003044,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11870,7 +11882,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.00504,
+          "pagerank": 0.004972,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [],
@@ -11950,7 +11962,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003654,
+          "pagerank": 0.003604,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12020,7 +12032,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002891,
+          "pagerank": 0.002851,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12070,7 +12082,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005348,
+          "pagerank": 0.005275,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12120,7 +12132,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005117,
+          "pagerank": 0.005047,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12210,7 +12222,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002957,
+          "pagerank": 0.002917,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12275,7 +12287,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12424,14 +12436,19 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002684,
-          "inboundLinks": 1,
+          "pagerank": 0.008989,
+          "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
           "inbound": [
             {
               "kind": "links-to",
               "id": "document:docs/architecture/upstream-adoption.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:docs/releases/v0.5.0.md",
               "confidence": "observed"
             }
           ],
@@ -12463,7 +12480,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003167,
+          "pagerank": 0.003124,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12588,7 +12605,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.006099,
+          "pagerank": 0.006016,
           "inboundLinks": 7,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12778,7 +12795,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.023871,
+          "pagerank": 0.023543,
           "inboundLinks": 12,
           "coveredBy": [],
           "mentionedBy": [],
@@ -12898,7 +12915,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002684,
+          "pagerank": 0.002648,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13017,7 +13034,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.011349,
+          "pagerank": 0.011194,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13077,7 +13094,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.00416,
+          "pagerank": 0.004104,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13152,7 +13169,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002473,
+          "pagerank": 0.002439,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13207,7 +13224,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002473,
+          "pagerank": 0.002439,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13246,7 +13263,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13300,7 +13317,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13369,7 +13386,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004101,
+          "pagerank": 0.004045,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13439,7 +13456,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003217,
+          "pagerank": 0.003173,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13494,7 +13511,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004245,
+          "pagerank": 0.004187,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13549,7 +13566,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002473,
+          "pagerank": 0.002439,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13604,7 +13621,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004891,
+          "pagerank": 0.004824,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13664,7 +13681,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002982,
+          "pagerank": 0.002941,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13719,7 +13736,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13768,7 +13785,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13812,7 +13829,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.0048,
+          "pagerank": 0.004735,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13887,7 +13904,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.007536,
+          "pagerank": 0.007433,
           "inboundLinks": 10,
           "coveredBy": [],
           "mentionedBy": [],
@@ -13971,7 +13988,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14015,7 +14032,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.014323,
+          "pagerank": 0.014125,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14080,7 +14097,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.020281,
+          "pagerank": 0.020003,
           "inboundLinks": 7,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14195,7 +14212,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002871,
+          "pagerank": 0.002831,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14245,7 +14262,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003164,
+          "pagerank": 0.00312,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14289,7 +14306,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003469,
+          "pagerank": 0.003422,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14418,7 +14435,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.008074,
+          "pagerank": 0.007963,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14478,7 +14495,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.073614,
+          "pagerank": 0.072602,
           "inboundLinks": 18,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14641,7 +14658,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.007706,
+          "pagerank": 0.007601,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14805,7 +14822,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.022883,
+          "pagerank": 0.02257,
           "inboundLinks": 12,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14899,7 +14916,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005645,
+          "pagerank": 0.005567,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -14964,7 +14981,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005645,
+          "pagerank": 0.005567,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15049,7 +15066,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.005645,
+          "pagerank": 0.005567,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15108,7 +15125,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.009971,
+          "pagerank": 0.009833,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15168,7 +15185,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.007042,
+          "pagerank": 0.006946,
           "inboundLinks": 7,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15265,7 +15282,7 @@
           "aliases": "docs document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15327,7 +15344,7 @@
           "aliases": "example-ink document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15379,7 +15396,7 @@
           "aliases": "example-react-native document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15426,7 +15443,7 @@
           "aliases": "example-react document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15478,7 +15495,7 @@
           "aliases": "example-shared document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15525,7 +15542,7 @@
           "aliases": "example-solid document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15577,7 +15594,7 @@
           "aliases": "example-svelte document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15629,7 +15646,7 @@
           "aliases": "example-vue document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15696,7 +15713,7 @@
           "aliases": "architecture document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15773,7 +15790,7 @@
           "aliases": "governance document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15825,7 +15842,7 @@
           "aliases": "index document agent"
         },
         "graph": {
-          "pagerank": 0.002258,
+          "pagerank": 0.002227,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -15992,7 +16009,7 @@
           "aliases": "angular document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16049,7 +16066,7 @@
           "aliases": "chat document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16171,7 +16188,7 @@
           "aliases": "cli document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16223,7 +16240,7 @@
           "aliases": "devtools document agent"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16269,7 +16286,7 @@
           "aliases": "ink document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16321,7 +16338,7 @@
           "aliases": "protocol document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16423,7 +16440,7 @@
           "aliases": "react-native document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16485,7 +16502,7 @@
           "aliases": "react document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16542,7 +16559,7 @@
           "aliases": "server document agent"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16623,7 +16640,7 @@
           "aliases": "solid document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16675,7 +16692,7 @@
           "aliases": "svelte document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16727,7 +16744,7 @@
           "aliases": "vue document agent"
         },
         "graph": {
-          "pagerank": 0.002723,
+          "pagerank": 0.002686,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16789,7 +16806,7 @@
           "aliases": "product document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16846,7 +16863,7 @@
           "aliases": "release document agent"
         },
         "graph": {
-          "pagerank": 0.002246,
+          "pagerank": 0.002215,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16911,7 +16928,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003739,
+          "pagerank": 0.003688,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -16966,7 +16983,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002258,
+          "pagerank": 0.002227,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17016,7 +17033,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002779,
+          "pagerank": 0.002741,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17071,7 +17088,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002626,
+          "pagerank": 0.00259,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17126,7 +17143,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002534,
+          "pagerank": 0.002499,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17186,7 +17203,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002779,
+          "pagerank": 0.002741,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17231,7 +17248,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002779,
+          "pagerank": 0.002741,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17281,7 +17298,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002779,
+          "pagerank": 0.002741,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17390,7 +17407,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004117,
+          "pagerank": 0.004061,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17434,7 +17451,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.014747,
+          "pagerank": 0.014545,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17514,7 +17531,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.03087,
+          "pagerank": 0.030446,
           "inboundLinks": 7,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17629,7 +17646,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.017702,
+          "pagerank": 0.017459,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17704,7 +17721,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.008258,
+          "pagerank": 0.008145,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17774,7 +17791,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f3267624239e035b7d770b38632757ff7840c494ed045651b0d8478a87fb5e2a",
+        "contentHash": "654e08c911a9ef1e32e04563b819337335185c1855abbd5d5e8b93e93e917984",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -17800,7 +17817,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.012629,
+          "pagerank": 0.012455,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17904,7 +17921,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17948,7 +17965,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003075,
+          "pagerank": 0.003033,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -17992,7 +18009,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002802,
+          "pagerank": 0.002764,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18031,7 +18048,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003529,
+          "pagerank": 0.003481,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18116,7 +18133,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002976,
+          "pagerank": 0.002935,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18181,7 +18198,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002988,
+          "pagerank": 0.002947,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18246,7 +18263,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18305,7 +18322,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004242,
+          "pagerank": 0.004184,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18370,7 +18387,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004242,
+          "pagerank": 0.004184,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18407,8 +18424,8 @@
         "id": "document:docs/releases/compatibility.md",
         "kind": "document",
         "path": "docs/releases/compatibility.md",
-        "title": "v0.4 compatibility matrix",
-        "summary": "The two public AgentsKit Chat packages ship as the fixed 0.4.1 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
+        "title": "v0.5 compatibility matrix",
+        "summary": "The two public AgentsKit Chat packages ship as the fixed 0.5.0 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -18416,16 +18433,16 @@
           "human"
         ],
         "fields": {
-          "title": "v0.4 compatibility matrix",
-          "headings": "v0.4 compatibility matrix",
+          "title": "v0.5 compatibility matrix",
+          "headings": "v0.5 compatibility matrix",
           "path": "docs/releases/compatibility.md",
           "symbols": "",
-          "summary": "The two public AgentsKit Chat packages ship as the fixed 0.4.1 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
-          "body": "v0.4 compatibility matrix The two public AgentsKit Chat packages ship as the fixed 0.4.1 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence. Renderer AgentsKit binding Host framework Evidence --- --- --- --- React @agentskit/react ^0.7.1 React 18+ component tests, Chromium E2E, conformance React Native @agentskit/react-native ^0.4.4 React 18+, React Native component/accessibility tests, Expo web/iOS bundle, conformance Ink @agentskit/ink ^0.10.1 Ink 7.1+, React 18+ component tests, real PTY interactions, conformance Vue @agentskit/vue ^0.4.4 Vue 3.4+ component tests, build, conformance Svelte @agentskit/svelte ^0.4.4 Svelte 5+ component tests, SSR test, package build, conformance Solid @agentskit/solid ^0.4.4 Solid 1.9+ component tests, build, conformance Angular @agentskit/angular ^0.4.6 Angular 18.1–21, RxJS 7 component tests, partial-Ivy AOT package test, conformance Core packages require the published AgentsKit ranges in their manifests: @agentskit/core 1.12.x, @agentskit/memory 0.11.x, @agentskit/statechart 0.2.x, and @agentskit/eval 0.4.19+ where used. The release workflow builds on Node 24 with npm 11 and also runs the normal CI matrix on Node 22. The is the release-blocking component/event/platform record (repository artifact). A range being installable is not enough: a new upstream version is promoted only after the repository gates pass against it. See also .",
+          "summary": "The two public AgentsKit Chat packages ship as the fixed 0.5.0 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence.",
+          "body": "v0.5 compatibility matrix The two public AgentsKit Chat packages ship as the fixed 0.5.0 group. The peer ranges in the published manifests are authoritative; this table summarizes the supported minimums and release evidence. Renderer AgentsKit binding Host framework Evidence --- --- --- --- React @agentskit/react ^0.7.1 React 18+ component tests, Chromium E2E, conformance React Native @agentskit/react-native ^0.4.4 React 18+, React Native component/accessibility tests, Expo web/iOS bundle, conformance Ink @agentskit/ink ^0.10.1 Ink 7.1+, React 18+ component tests, real PTY interactions, conformance Vue @agentskit/vue ^0.4.4 Vue 3.4+ component tests, build, conformance Svelte @agentskit/svelte ^0.4.4 Svelte 5+ component tests, SSR test, package build, conformance Solid @agentskit/solid ^0.4.4 Solid 1.9+ component tests, build, conformance Angular @agentskit/angular ^0.4.6 Angular 18.1–21, RxJS 7 component tests, partial-Ivy AOT package test, conformance Core packages require the published AgentsKit ranges in their manifests: @agentskit/core 1.12.x, @agentskit/memory 0.11.x, @agentskit/statechart 0.2.x, and @agentskit/eval 0.4.19+ where used. The release workflow builds on Node 24 with npm 11 and also runs the normal CI matrix on Node 22. The is the release-blocking component/event/platform record (repository artifact). A range being installable is not enough: a new upstream version is promoted only after the repository gates pass against it. See also .",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.003008,
+          "pagerank": 0.002967,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18454,7 +18471,7 @@
             }
           ]
         },
-        "contentHash": "4d401f99154c0b8aee3104f1a90ec5b83d0fa8d7f5913a8e2ff484bfc2ef4725",
+        "contentHash": "01b82b3a76347ee4832b591b428ff1f620d63f7315b3788d69ed58d6905ebefa",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -18463,7 +18480,7 @@
         "kind": "document",
         "path": "docs/releases/launch-checklist.md",
         "title": "Stable public launch checklist",
-        "summary": "Executable close-out checklist for issue #104. AgentsKit Chat 0.4.0 adds controlled React and Ink sessions to the consolidated two-package graph.",
+        "summary": "Executable close-out checklist for issue #104. AgentsKit Chat 0.5.0 adds optional Drizzle/PostgreSQL CAS SessionStorage and referenced parts/uploads to the fixed two-package graph. Historical evidence below remains tied to its original release and does not validate 0.5.0.",
         "audience": "human",
         "aliases": [],
         "tags": [
@@ -18472,15 +18489,15 @@
         ],
         "fields": {
           "title": "Stable public launch checklist",
-          "headings": "Stable public launch checklist Documentation Engineering gates Distribution Dogfood Product close-out Legacy package retirement",
+          "headings": "Stable public launch checklist Documentation Engineering gates Distribution Dogfood Product close-out Legacy package retirement 0.5.0 publication handoff",
           "path": "docs/releases/launch-checklist.md",
           "symbols": "",
-          "summary": "Executable close-out checklist for issue #104. AgentsKit Chat 0.4.0 adds controlled React and Ink sessions to the consolidated two-package graph.",
-          "body": "Stable public launch checklist Executable close-out checklist for . AgentsKit Chat 0.4.0 adds controlled React and Ink sessions to the consolidated two-package graph. Documentation - [x] Quick starts for React, React Native, Ink, Vue, Svelte, Solid, and Angular - [x] API reference, deployment modes, stability, security, and changelog - [x] Compatibility matrix, 0.4.0 release notes, and 0.2.x migration map - [x] Agent handoffs and doc-bridge ownership routing - [x] Host adapter recipes for Next.js, Hono, Express, and Cloudflare Workers - [x] README install path targets the two-package npm graph Engineering gates Run from a clean checkout of main : - [x] Release and post-merge workflows pass on the 0.4.0 line - [x] Both public tarballs match SHA256SUMS - [x] All seven renderer exports pass clean-install verification - [x] Expo web and iOS production exports pass in the release workflow Immutable evidence: and . Distribution - [x] Immutable v0.4.0 tag and GitHub release are public - [x] Both packages resolve from npm at exact 0.4.0 - [x] npm provenance attestations and registry signatures verify - [x] Clean external installation, ESM/CJS imports, and CLI scaffolding pass - [x] npm Trusted Publishing succeeds for both packages through OIDC - [x] Published 0.4.1 aligns both public npm homepages with https://chat.agentskit.io/docs - [ ] The GitHub v0.4.1 release and its checksum assets are public Evidence for the clean external consumer paths is recorded in and . Exact 0.4.1 registry metadata, signatures, attestations, ESM/CJS loading, and CLI version were re-read after Trusted Publishing. - [x] Temporary bootstrap NPM TOKEN is absent from the protected npm environment The stable workflow must remain token-free. Its protected publish job uses id-token: write , npm 11, repository AgentsKit-io/agentskit-chat , workflow release.yml , and environment npm . Dogfood - [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline - [x] Chat Docs is certified with the canonical production evidence from 102 - [x] Frozen installs, strict typechecks/tests, and production builds pass for all declared product chats - [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge Product close-out - [ ] Record release, provenance, checksums, clean install, and host smoke links on 104 - [x] Complete the convergence ledger only after every public and private tracer passes Legacy package retirement - [x] 102 is closed with canonical deployment evidence and the Chat documentation portal is certified in the ledger - [x] The exact ten-command dry-run received explicit HITL approval on 103 - [x] All ten npm deprecations were applied one at a time and all 20 published versions were re-read - [x] Canonical replacement subpaths and migration links match on every deprecated version - [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision",
+          "summary": "Executable close-out checklist for issue #104. AgentsKit Chat 0.5.0 adds optional Drizzle/PostgreSQL CAS SessionStorage and referenced parts/uploads to the fixed two-package graph. Historical evidence below remains tied to its original release and does not validate 0.5.0.",
+          "body": "Stable public launch checklist Executable close-out checklist for . AgentsKit Chat 0.5.0 adds optional Drizzle/PostgreSQL CAS SessionStorage and referenced parts/uploads to the fixed two-package graph. Historical evidence below remains tied to its original release and does not validate 0.5.0 . Documentation - [x] Quick starts for React, React Native, Ink, Vue, Svelte, Solid, and Angular - [x] API reference, deployment modes, stability, security, and changelog - [x] Compatibility matrix, 0.5.0 release notes, and 0.2.x migration map - [x] Agent handoffs and doc-bridge ownership routing - [x] Host adapter recipes for Next.js, Hono, Express, and Cloudflare Workers - [x] README install path targets the two-package npm graph Engineering gates Run from a clean checkout of main : - [x] Release and post-merge workflows pass on the 0.4.0 line - [x] Both public tarballs match SHA256SUMS - [x] All seven renderer exports pass clean-install verification - [x] Expo web and iOS production exports pass in the release workflow Immutable evidence: and . Distribution - [x] Immutable v0.4.0 tag and GitHub release are public - [x] Both packages resolve from npm at exact 0.4.0 - [x] npm provenance attestations and registry signatures verify - [x] Clean external installation, ESM/CJS imports, and CLI scaffolding pass - [x] npm Trusted Publishing succeeds for both packages through OIDC - [x] Published 0.4.1 aligns both public npm homepages with https://chat.agentskit.io/docs - [ ] The GitHub v0.4.1 release and its checksum assets are public Evidence for the clean external consumer paths is recorded in and . Exact 0.4.1 registry metadata, signatures, attestations, ESM/CJS loading, and CLI version were re-read after Trusted Publishing. - [x] Temporary bootstrap NPM TOKEN is absent from the protected npm environment The stable workflow must remain token-free. Its protected publish job uses id-token: write , npm 11, repository AgentsKit-io/agentskit-chat , workflow release.yml , and environment npm . Dogfood - [x] AgentsKit Docs, Registry, Playbook, and Doc Bridge are certified at the audited baseline - [x] Chat Docs is certified with the canonical production evidence from 102 - [x] Frozen installs, strict typechecks/tests, and production builds pass for all declared product chats - [x] Public browser smoke passes for AgentsKit Docs, Registry, Chat Docs, Playbook, and Doc Bridge Product close-out - [ ] Record release, provenance, checksums, clean install, and host smoke links on 104 - [x] Complete the convergence ledger only after every public and private tracer passes Legacy package retirement - [x] 102 is closed with canonical deployment evidence and the Chat documentation portal is certified in the ledger - [x] The exact ten-command dry-run received explicit HITL approval on 103 - [x] All ten npm deprecations were applied one at a time and all 20 published versions were re-read - [x] Canonical replacement subpaths and migration links match on every deprecated version - [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision 0.5.0 publication handoff - [ ] Required local gates reviewed and conditional E2E/PTY completed locally or in CI - [ ] Human release review and PR merge - [ ] Stable tag and Trusted Publishing workflow - [ ] npm provenance, checksum assets, clean install, and host smoke evidence",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002718,
+          "pagerank": 0.002681,
           "inboundLinks": 2,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18509,7 +18526,7 @@
             }
           ]
         },
-        "contentHash": "e89ebe62d5788498035c5b5ab3975884c23465cef0c3a8ed98997fa794fc3534",
+        "contentHash": "70531cb852d2169277ef61cd1ef2a13b218c8c1a1fcd10d1e9457563fd65bd0a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -18568,7 +18585,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002626,
+          "pagerank": 0.00259,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18619,11 +18636,11 @@
           "path": "docs/releases/migration-to-0.3.md",
           "symbols": "",
           "summary": "AgentsKit Chat 0.3.0 reduces the public npm graph to @agentskit/chat and @agentskit/chat-cli. Remove the former standalone Chat packages after moving their imports to the corresponding subpaths.",
-          "body": "Upgrade from 0.2.x to 0.3.0 AgentsKit Chat 0.3.0 reduces the public npm graph to @agentskit/chat and @agentskit/chat-cli . Remove the former standalone Chat packages after moving their imports to the corresponding subpaths. The current stable release is 0.4.1 . It preserves this package graph and the 0.3.0 import contract, so new migrations should install 0.4.1 directly. Former package 0.3.0 import --- --- @agentskit/chat-protocol @agentskit/chat/protocol @agentskit/chat-server @agentskit/chat/server @agentskit/chat-devtools @agentskit/chat/devtools @agentskit/chat-react @agentskit/chat/react @agentskit/chat-react-native @agentskit/chat/react-native @agentskit/chat-ink @agentskit/chat/ink @agentskit/chat-vue @agentskit/chat/vue @agentskit/chat-svelte @agentskit/chat/svelte @agentskit/chat-solid @agentskit/chat/solid @agentskit/chat-angular @agentskit/chat/angular Install only the consolidated package, the AgentsKit binding, and framework peers used by the host: Protocol versions, deterministic answers, Ask requests, session persistence, component identities, and renderer behavior are unchanged. The migration is a package/import rewrite rather than a runtime or business-logic migration. After updating, remove obsolete package entries from the manifest and lockfile, perform a frozen install, and run typecheck, tests, production build, and a real streaming interaction smoke test. Do not keep aliases or compatibility overrides that hide a remaining legacy import. The old 0.2.x package names remain published and installable. After every declared product chat passes the public convergence ledger and the release owner approves the deprecation dry-run, those versions receive npm deprecation warnings that point here; they are not unpublished. Maintainers can inspect that fail-closed report without changing npm state: Optional migration after upgrading to 0.4.0 Hosts that already receive a complete chat snapshot from a trusted session service may replace local controller wiring with the additive controlled prop on the React or Ink AgentChat . The source supplies a serializable snapshot and the canonical AgentsKit lifecycle callbacks. Do not run both modes for one mounted chat, and do not move authentication, authorization, persistence, transport, or business rules into the public driver. Hosts that use definition.chat locally need no change. See the for the controlled-session contract and evidence. This capability is not part of the 0.3.0 API. Before merging the migration, run the host's frozen install, tests, build, and streaming smoke, then use to inspect the import rewrite. If the repository's documentation ownership is unclear, generate an executable handoff with .",
+          "body": "Upgrade from 0.2.x to 0.3.0 AgentsKit Chat 0.3.0 reduces the public npm graph to @agentskit/chat and @agentskit/chat-cli . Remove the former standalone Chat packages after moving their imports to the corresponding subpaths. The current stable release is 0.5.0 . It preserves this package graph and the 0.3.0 import contract, so new migrations should install 0.5.0 directly. Former package 0.3.0 import --- --- @agentskit/chat-protocol @agentskit/chat/protocol @agentskit/chat-server @agentskit/chat/server @agentskit/chat-devtools @agentskit/chat/devtools @agentskit/chat-react @agentskit/chat/react @agentskit/chat-react-native @agentskit/chat/react-native @agentskit/chat-ink @agentskit/chat/ink @agentskit/chat-vue @agentskit/chat/vue @agentskit/chat-svelte @agentskit/chat/svelte @agentskit/chat-solid @agentskit/chat/solid @agentskit/chat-angular @agentskit/chat/angular Install only the consolidated package, the AgentsKit binding, and framework peers used by the host: Protocol versions, deterministic answers, Ask requests, session persistence, component identities, and renderer behavior are unchanged. The migration is a package/import rewrite rather than a runtime or business-logic migration. After updating, remove obsolete package entries from the manifest and lockfile, perform a frozen install, and run typecheck, tests, production build, and a real streaming interaction smoke test. Do not keep aliases or compatibility overrides that hide a remaining legacy import. The old 0.2.x package names remain published and installable. After every declared product chat passes the public convergence ledger and the release owner approves the deprecation dry-run, those versions receive npm deprecation warnings that point here; they are not unpublished. Maintainers can inspect that fail-closed report without changing npm state: Optional migration after upgrading to 0.4.0 Hosts that already receive a complete chat snapshot from a trusted session service may replace local controller wiring with the additive controlled prop on the React or Ink AgentChat . The source supplies a serializable snapshot and the canonical AgentsKit lifecycle callbacks. Do not run both modes for one mounted chat, and do not move authentication, authorization, persistence, transport, or business rules into the public driver. Hosts that use definition.chat locally need no change. See the for the controlled-session contract and evidence. This capability is not part of the 0.3.0 API. Before merging the migration, run the host's frozen install, tests, build, and streaming smoke, then use to inspect the import rewrite. If the repository's documentation ownership is unclear, generate an executable handoff with .",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004824,
+          "pagerank": 0.004758,
           "inboundLinks": 3,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18712,7 +18729,7 @@
             }
           ]
         },
-        "contentHash": "effed05984f3bb496913d7d5429968a5456a5e9cfdf7281048f78047e6ab63ac",
+        "contentHash": "9777d7435c72137fd3a8710f0148d5f433fd76baff4f1fcebb87ad489d1d5ddd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -18738,7 +18755,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.004467,
+          "pagerank": 0.004406,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -18790,11 +18807,11 @@
           "path": "docs/releases/stability.md",
           "symbols": "",
           "summary": "AgentsKit Chat follows SemVer as a fixed package group.",
-          "body": "v0 stability and upgrades AgentsKit Chat follows SemVer as a fixed package group. - Patch releases preserve public TypeScript signatures, protocol versions, component/event meaning, and persisted session compatibility. - During 0.x , a minor release may change a public contract, but only with an RFC or ADR as required, a changelog entry, a migration guide, and conformance evidence for all affected renderers. - Protocol v1 payloads remain runtime validated. A breaking wire change uses a new protocol version and an explicit decoder/migration path. - Deprecated APIs remain for at least one subsequent minor release unless a security issue makes that unsafe. - AgentsKit peer minimums change only after upstream-first inspection and the full release matrix. No upstream implementation is copied downstream. Applications should pin a minor line ( ^0.4.0 for this release), commit their lockfile, run renderer conformance and host E2E before upgrades, and review both the changelog and migration guide. Migration guides (repository) Maintainer migration notes live in the monorepo (not every path is on the public product site): - - - Applications already on 0.3.x can adopt 0.4.1 without changing their definition-owned sessions; controlled React and Ink modes are additive. See also .",
+          "body": "v0 stability and upgrades AgentsKit Chat follows SemVer as a fixed package group. - Patch releases preserve public TypeScript signatures, protocol versions, component/event meaning, and persisted session compatibility. - During 0.x , a minor release may change a public contract, but only with an RFC or ADR as required, a changelog entry, a migration guide, and conformance evidence for all affected renderers. - Protocol v1 payloads remain runtime validated. A breaking wire change uses a new protocol version and an explicit decoder/migration path. - Deprecated APIs remain for at least one subsequent minor release unless a security issue makes that unsafe. - AgentsKit peer minimums change only after upstream-first inspection and the full release matrix. No upstream implementation is copied downstream. Applications should pin a minor line ( ^0.5.0 for this release), commit their lockfile, run renderer conformance and host E2E before upgrades, and review both the changelog and migration guide. Migration guides (repository) Maintainer migration notes live in the monorepo (not every path is on the public product site): - - - Applications already on 0.3.x can adopt 0.5.0 without changing their definition-owned sessions; controlled React and Ink modes are additive. See also . The 0.5.0 storage and referenced-upload integrations are opt-in. Protocol v1 remains compatible; parts delivery stays unavailable pending published upstream support. See for integration constraints.",
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.00624,
+          "pagerank": 0.006155,
           "inboundLinks": 6,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18830,9 +18847,15 @@
               "confidence": "observed"
             }
           ],
-          "outbound": []
+          "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/releases/v0.5.0.md",
+              "confidence": "observed"
+            }
+          ]
         },
-        "contentHash": "69d733832be64bbea2dba5058a669791a2abaefd3b9f55cce656a61c6f482d74",
+        "contentHash": "710bf5cd576e93e80c1dc56ad5daaaf8a911d28722e23d0b4bf8c11bd505fc13",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -18858,7 +18881,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18917,7 +18940,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -18971,7 +18994,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19020,19 +19043,14 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.006359,
-          "inboundLinks": 2,
+          "pagerank": 0.006181,
+          "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
           "inbound": [
             {
               "kind": "links-to",
               "id": "document:docs/releases/migration-to-0.3.md",
-              "confidence": "observed"
-            },
-            {
-              "kind": "links-to",
-              "id": "document:README.md",
               "confidence": "observed"
             }
           ],
@@ -19080,7 +19098,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19113,6 +19131,66 @@
         "confidence": "observed"
       },
       {
+        "id": "document:docs/releases/v0.5.0.md",
+        "kind": "document",
+        "path": "docs/releases/v0.5.0.md",
+        "title": "AgentsKit Chat 0.5.0",
+        "summary": "0.5.0 is an additive minor release of the fixed group: @agentskit/chat and @agentskit/chat-cli. The two-package graph and protocol v1 remain intact.",
+        "audience": "human",
+        "aliases": [],
+        "tags": [
+          "document",
+          "human"
+        ],
+        "fields": {
+          "title": "AgentsKit Chat 0.5.0",
+          "headings": "AgentsKit Chat 0.5.0 What changed Upgrade Release evidence and publication",
+          "path": "docs/releases/v0.5.0.md",
+          "symbols": "",
+          "summary": "0.5.0 is an additive minor release of the fixed group: @agentskit/chat and @agentskit/chat-cli. The two-package graph and protocol v1 remain intact.",
+          "body": "AgentsKit Chat 0.5.0 0.5.0 is an additive minor release of the fixed group: @agentskit/chat and @agentskit/chat-cli . The two-package graph and protocol v1 remain intact. What changed - Optional @agentskit/chat/drizzle-pg provides tenant-scoped Drizzle/PostgreSQL SessionStorage with atomic cursor compare-and-swap. Message memory remains an upstream AgentsKit responsibility. See . - Protocol v1 adds reference-part schemas and capability negotiation fields. Hosts can opt into authorized S3-compatible uploads with tenant/session binding, size, MIME, and SHA-256 validation. Parts delivery remains unavailable pending published upstream support; these fields do not enable unsupported delivery. - Server callbacks use published AgentsKit Net deadlines, bounded JSON reading, and signal composition while retaining request diagnostics. - Ask requests avoid empty assistant placeholders. Emitted JavaScript is compacted within existing bundle budgets while preserving identifiers and exports. - CLI scaffolding reuses upstream cross-platform rename/remove helpers for Windows file-lock recovery. Framework peer ranges support current AgentsKit 0.x bindings. Upgrade Update both packages together: Existing definition-owned and controlled sessions remain supported. Storage and upload integrations are opt-in; review their host authorization and persistence requirements before enabling them. Pin the new minor line and run application conformance and host E2E checks before upgrading. Release evidence and publication This is release preparation, not proof of npm publication. The release owner must review local gate evidence, run pending CI/native/browser checks, merge the PR, and create the stable tag. release.yml publishes through Trusted Publishing; registry provenance, checksums, clean-install and host smoke evidence follow publication.",
+          "aliases": "document human"
+        },
+        "graph": {
+          "pagerank": 0.007459,
+          "inboundLinks": 2,
+          "coveredBy": [],
+          "mentionedBy": [],
+          "inbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/releases/stability.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "links-to",
+              "id": "document:README.md",
+              "confidence": "observed"
+            }
+          ],
+          "outbound": [
+            {
+              "kind": "links-to",
+              "id": "document:docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "package:@agentskit/chat",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
+              "id": "package:@agentskit/chat-cli",
+              "confidence": "observed"
+            }
+          ]
+        },
+        "contentHash": "35b10eacea7c12e3eaf2825a315f982f85f0abd39b0341d3389117a491ecdc2b",
+        "provenance": "observed",
+        "confidence": "observed"
+      },
+      {
         "id": "document:docs/server.mdx",
         "kind": "document",
         "path": "docs/server.mdx",
@@ -19134,7 +19212,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.03306,
+          "pagerank": 0.032605,
           "inboundLinks": 8,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19254,7 +19332,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.042357,
+          "pagerank": 0.041774,
           "inboundLinks": 9,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19354,7 +19432,7 @@
           "aliases": "document human"
         },
         "graph": {
-          "pagerank": 0.008224,
+          "pagerank": 0.008112,
           "inboundLinks": 5,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19443,7 +19521,7 @@
           "aliases": "document unclassified"
         },
         "graph": {
-          "pagerank": 0.003255,
+          "pagerank": 0.00321,
           "inboundLinks": 4,
           "coveredBy": [],
           "mentionedBy": [
@@ -19527,11 +19605,11 @@
           "path": "packages/angular/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/angular Profile: concise-package Native Angular application shell for AgentsKit Chat. Composes AgentskitChat and the standalone components published by @agentskit/angular ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-angular -- <!-- readme-example:import-angular -- The standalone component works with Angular 18–21. Use content templates named container , message , input , thinking , confirmation , and choiceList for Angular-native customization. Maturity and compatibility Published in @agentskit/chat at 0.4.1 with Angular 18.1–21, RxJS 7, and @agentskit/angular ^0.4.6 . - Angular 18.1–21 - Partial-Ivy AOT package test in CI Contributing Package ownership: packages/angular . Follow . Tags: agentskit-chat , angular , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
+          "body": "@agentskit/chat/angular Profile: concise-package Native Angular application shell for AgentsKit Chat. Composes AgentskitChat and the standalone components published by @agentskit/angular ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-angular -- <!-- readme-example:import-angular -- The standalone component works with Angular 18–21. Use content templates named container , message , input , thinking , confirmation , and choiceList for Angular-native customization. Maturity and compatibility Published in @agentskit/chat at 0.5.0 with Angular 18.1–21, RxJS 7, and @agentskit/angular ^0.4.6 . - Angular 18.1–21 - Partial-Ivy AOT package test in CI Contributing Package ownership: packages/angular . Follow . Tags: agentskit-chat , angular , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19574,7 +19652,7 @@
             }
           ]
         },
-        "contentHash": "39a547c9ff868cdd8a36b137c1fbfc6f95dfe05a629c6caa83ce94862e45cb62",
+        "contentHash": "e8933bf6550ad5a6803778c403d8eca6231f654bcf6dab9f5d8483a6b4c82123",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19596,11 +19674,11 @@
           "path": "packages/chat/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat Profile: major-package Framework-neutral application definitions that compile to AgentsKit configuration. Owns typed routes, policy composition, component manifests, session metadata, deterministic answer adapters, and semantic fallback envelopes while the upstream controller keeps lifecycle, memory, and tool execution. Protocol, server, devtools, and all seven framework renderers ship as subpath exports: They remain isolated private workspace modules for ownership and testing, while npm consumers install only @agentskit/chat . The former standalone package names remain available until the separate deprecation phase. Actionable choices use createActionConfirmation , which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit. Verified proof Surface Evidence --- --- Standard components Deterministic plane Upstream adoption defineChat preserves the upstream ChatConfig ; it does not create another runtime. <!-- readme-command:install-chat -- Quick start <!-- readme-example:define-chat -- Use resumeChatSession(definition, { sessionId, storage }) for cross-client metadata and pass the returned session to any renderer. Custom UI flows through defineComponentManifest and resolveComponentFrame . Maturity and compatibility Published at 0.4.1 with @agentskit/core ^1.12.3 , @agentskit/memory ^0.11.0 , and @agentskit/statechart ^0.2.0 . See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/chat . Follow and query doc-bridge before editing. Tags: agentskit-chat , chat-definitions , deterministic-answers , typescript AgentsKit ecosystem Built on . Composes with , , and . Optional PostgreSQL session envelopes Install drizzle-orm and a PostgreSQL driver in the host, then import the optional subpath: The adapter stores application envelopes, not messages. Continue using upstream ChatMemory for canonical history; a Drizzle ChatMemory backend is pending upstream. save returns false for a lost cursor CAS; persistence on the resumed session converts that into SessionConflictError , and the handler preserves HTTP 409 SESSION CONFLICT . Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event. On Workers connect a pg.Client per request (Hyperdrive connection string in production), and call client.end() in waitUntil after consuming/closing the chat stream. On Node reuse a pg.Pool and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled. Optional RLS defense in depth (configure tenant context with transaction-local set config on the same connection, and use a non-owner role without BYPASSRLS): See for Postgres 16 and wrangler validation. RLS is optional and is not exercised by that suite.",
+          "body": "@agentskit/chat Profile: major-package Framework-neutral application definitions that compile to AgentsKit configuration. Owns typed routes, policy composition, component manifests, session metadata, deterministic answer adapters, and semantic fallback envelopes while the upstream controller keeps lifecycle, memory, and tool execution. Protocol, server, devtools, and all seven framework renderers ship as subpath exports: They remain isolated private workspace modules for ownership and testing, while npm consumers install only @agentskit/chat . The former standalone package names remain available until the separate deprecation phase. Actionable choices use createActionConfirmation , which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit. Verified proof Surface Evidence --- --- Standard components Deterministic plane Upstream adoption defineChat preserves the upstream ChatConfig ; it does not create another runtime. <!-- readme-command:install-chat -- Quick start <!-- readme-example:define-chat -- Use resumeChatSession(definition, { sessionId, storage }) for cross-client metadata and pass the returned session to any renderer. Custom UI flows through defineComponentManifest and resolveComponentFrame . Maturity and compatibility Published at 0.5.0 with @agentskit/core ^1.12.3 , @agentskit/memory ^0.11.0 , and @agentskit/statechart ^0.2.0 . See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/chat . Follow and query doc-bridge before editing. Tags: agentskit-chat , chat-definitions , deterministic-answers , typescript AgentsKit ecosystem Built on . Composes with , , and . Optional PostgreSQL session envelopes Install drizzle-orm and a PostgreSQL driver in the host, then import the optional subpath: The adapter stores application envelopes, not messages. Continue using upstream ChatMemory for canonical history; a Drizzle ChatMemory backend is pending upstream. save returns false for a lost cursor CAS; persistence on the resumed session converts that into SessionConflictError , and the handler preserves HTTP 409 SESSION CONFLICT . Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event. On Workers connect a pg.Client per request (Hyperdrive connection string in production), and call client.end() in waitUntil after consuming/closing the chat stream. On Node reuse a pg.Pool and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled. Optional RLS defense in depth (configure tenant context with transaction-local set config on the same connection, and use a non-owner role without BYPASSRLS): See for Postgres 16 and wrangler validation. RLS is optional and is not exercised by that suite.",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19663,7 +19741,7 @@
             }
           ]
         },
-        "contentHash": "230488efdb1d5a207215b20712f046e02a173f3a87acb002f017072ccb36072c",
+        "contentHash": "236f2355f91ab7cd7482e0d713086b9d02a7a874f2f309049265fc54f3c4117f",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19685,11 +19763,11 @@
           "path": "packages/cli/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat-cli Profile: major-package Framework-aware scaffolding for complete AgentsKit Chat projects. Detects host manifests when unambiguous, prompts only on an interactive TTY, and atomically publishes only to a target path that does not already exist. Verified proof Surface Evidence --- --- Safe scaffolding Seven renderers Launch verification Quick start <!-- readme-command:init-chat -- <!-- readme-example:renderers -- Generated projects contain a shared definition, Web-standard server handler, native renderer, test, and architecture README using only published AgentsKit and AgentsKit Chat packages. Maturity and compatibility Published at 0.4.1 . Targets: react , react-native , ink , vue , svelte , solid , and angular . - Node.js 22+ - Never merges, deletes, or overwrites existing project files Contributing Package ownership: packages/cli . Follow . Tags: agentskit-chat , cli , scaffolding , developer-experience AgentsKit ecosystem Entry point for teams adopting AgentsKit Chat alongside , Registry, and Playbook.",
+          "body": "@agentskit/chat-cli Profile: major-package Framework-aware scaffolding for complete AgentsKit Chat projects. Detects host manifests when unambiguous, prompts only on an interactive TTY, and atomically publishes only to a target path that does not already exist. Verified proof Surface Evidence --- --- Safe scaffolding Seven renderers Launch verification Quick start <!-- readme-command:init-chat -- <!-- readme-example:renderers -- Generated projects contain a shared definition, Web-standard server handler, native renderer, test, and architecture README using only published AgentsKit and AgentsKit Chat packages. Maturity and compatibility Published at 0.5.0 . Targets: react , react-native , ink , vue , svelte , solid , and angular . - Node.js 22+ - Never merges, deletes, or overwrites existing project files Contributing Package ownership: packages/cli . Follow . Tags: agentskit-chat , cli , scaffolding , developer-experience AgentsKit ecosystem Entry point for teams adopting AgentsKit Chat alongside , Registry, and Playbook.",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19732,7 +19810,7 @@
             }
           ]
         },
-        "contentHash": "a22b5534a3b1684fb5f32441debb595c4b6d7127b552c97b8fd440bbd2ee5ecf",
+        "contentHash": "77db45ae8dbac1ac2144c3ebe88ab6664287733fe61055228540aed45043740e",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19754,11 +19832,11 @@
           "path": "packages/devtools/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/devtools Profile: concise-package Application trace capture, upstream replay-fixture composition, and semantic renderer parity diagnostics for AgentsKit Chat. Verified proof Surface Evidence --- --- Replay composition Conformance Devtools guide This package does not record or replay model calls. Use createRecordingAdapter and createReplayAdapter from @agentskit/eval/replay . Quick start <!-- readme-command:install-devtools -- <!-- readme-example:import-devtools -- Store replay cassettes beside application traces with createReplayFixture after upstream eval adapters produce them. Maturity and compatibility Published in @agentskit/chat at 0.4.1 with @agentskit/eval ^0.4.19 where replay composition is used. - Node.js 22+ - Composes upstream replay; does not fork eval primitives Contributing Package ownership: packages/devtools . Follow . Tags: agentskit-chat , devtools , replay , eval AgentsKit ecosystem Diagnostics layer over for renderer parity and application traces.",
+          "body": "@agentskit/chat/devtools Profile: concise-package Application trace capture, upstream replay-fixture composition, and semantic renderer parity diagnostics for AgentsKit Chat. Verified proof Surface Evidence --- --- Replay composition Conformance Devtools guide This package does not record or replay model calls. Use createRecordingAdapter and createReplayAdapter from @agentskit/eval/replay . Quick start <!-- readme-command:install-devtools -- <!-- readme-example:import-devtools -- Store replay cassettes beside application traces with createReplayFixture after upstream eval adapters produce them. Maturity and compatibility Published in @agentskit/chat at 0.5.0 with @agentskit/eval ^0.4.19 where replay composition is used. - Node.js 22+ - Composes upstream replay; does not fork eval primitives Contributing Package ownership: packages/devtools . Follow . Tags: agentskit-chat , devtools , replay , eval AgentsKit ecosystem Diagnostics layer over for renderer parity and application traces.",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19811,7 +19889,7 @@
             }
           ]
         },
-        "contentHash": "3232649d8b06e3fdaf5037e7783ce5d4398669e4708f8185a04ec62a4b54f88f",
+        "contentHash": "62cff091048e643538930c0addf2d53b4d77ae13dbc82973ae75566b0864da5a",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19833,11 +19911,11 @@
           "path": "packages/ink/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/ink Profile: concise-package Opinionated Ink shell for a framework-neutral AgentsKit Chat definition. Chat state, streaming, keyboard history, cancellation, and terminal primitives come directly from @agentskit/ink . Verified proof Surface Evidence --- --- Quick start Conformance PTY evidence apps/example-ink and pnpm test:pty Quick start <!-- readme-command:install-ink -- <!-- readme-example:import-ink -- Unsupported visual components should be validated through parseSemanticFallback from @agentskit/chat and rendered through SemanticFallback . The native ChoiceList supports Up/Down or a number followed by Enter. Maturity and compatibility Published in @agentskit/chat at 0.4.1 with Ink 7.1+, React 18+, and real PTY interaction tests in CI. - Ink 7.1+ - Terminal keyboard flow and graceful process exit verified Contributing Package ownership: packages/ink . Follow . Tags: agentskit-chat , ink , terminal , chat-ui AgentsKit ecosystem Terminal renderer over with dedicated proof apps in apps/example-ink .",
+          "body": "@agentskit/chat/ink Profile: concise-package Opinionated Ink shell for a framework-neutral AgentsKit Chat definition. Chat state, streaming, keyboard history, cancellation, and terminal primitives come directly from @agentskit/ink . Verified proof Surface Evidence --- --- Quick start Conformance PTY evidence apps/example-ink and pnpm test:pty Quick start <!-- readme-command:install-ink -- <!-- readme-example:import-ink -- Unsupported visual components should be validated through parseSemanticFallback from @agentskit/chat and rendered through SemanticFallback . The native ChoiceList supports Up/Down or a number followed by Enter. Maturity and compatibility Published in @agentskit/chat at 0.5.0 with Ink 7.1+, React 18+, and real PTY interaction tests in CI. - Ink 7.1+ - Terminal keyboard flow and graceful process exit verified Contributing Package ownership: packages/ink . Follow . Tags: agentskit-chat , ink , terminal , chat-ui AgentsKit ecosystem Terminal renderer over with dedicated proof apps in apps/example-ink .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19890,7 +19968,7 @@
             }
           ]
         },
-        "contentHash": "cfc07dc554cf333398d5564e22e8e92dfcd61cf154edd0cda4892f2d2e185a05",
+        "contentHash": "b0e1deb92783fa17cbf84e7b0dbc40c8f8450b60f17e37c8ae4293d94e263efd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19912,11 +19990,11 @@
           "path": "packages/protocol/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/protocol Profile: major-package Framework-neutral v1 turn events, deterministic answer envelopes, and Ask service contracts for AgentsKit Chat. Transports snapshots of canonical AgentsKit state without implementing a controller, stream reducer, transport, or persistence layer. Verified proof Surface Evidence --- --- Turn protocol Deterministic answers Ask backend Quick start Decode untrusted wire data at every boundary: <!-- readme-command:install-protocol -- <!-- readme-example:decode-turn -- For ordered assistant prose plus registered components, use createAssistantContentEncoder and decode with decodeAssistantContent . Maturity and compatibility Published in @agentskit/chat at 0.4.1 . Wire changes require a new protocol version and explicit decoder path. See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/protocol . Follow . Tags: agentskit-chat , protocol , runtime-validation , typescript AgentsKit ecosystem Consumes AgentsKit state snapshots from . Shared across Registry, Playbook, and Doc Bridge dogfood hosts. Referenced input parts (additive v1) client.turn.submit.payload.input also accepts up to 32 parts: { type: 'text', text } and { type: 'file', ref, mimeType, sha256, bytes } . File objects reject extra fields, including inline binary/base64. sha256 is lowercase hex; bytes is a positive integer. The server keeps the 64 KiB JSON request boundary. A server may advertise turn-parts-v1 in the first snapshot's optional payload.capabilities ; clients must echo it in submit payload.capabilities before sending parts. Existing string submissions need no capability. Schema support alone is not an advertisement: the current server announces an empty capability list and returns TURN PARTS UNAVAILABLE (501) for validated parts, because the published upstream controller still accepts only strings. Do not send parts until a server advertises this capability. Protocol version remains 1.",
+          "body": "@agentskit/chat/protocol Profile: major-package Framework-neutral v1 turn events, deterministic answer envelopes, and Ask service contracts for AgentsKit Chat. Transports snapshots of canonical AgentsKit state without implementing a controller, stream reducer, transport, or persistence layer. Verified proof Surface Evidence --- --- Turn protocol Deterministic answers Ask backend Quick start Decode untrusted wire data at every boundary: <!-- readme-command:install-protocol -- <!-- readme-example:decode-turn -- For ordered assistant prose plus registered components, use createAssistantContentEncoder and decode with decodeAssistantContent . Maturity and compatibility Published in @agentskit/chat at 0.5.0 . Wire changes require a new protocol version and explicit decoder path. See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/protocol . Follow . Tags: agentskit-chat , protocol , runtime-validation , typescript AgentsKit ecosystem Consumes AgentsKit state snapshots from . Shared across Registry, Playbook, and Doc Bridge dogfood hosts. Referenced input parts (additive v1) client.turn.submit.payload.input also accepts up to 32 parts: { type: 'text', text } and { type: 'file', ref, mimeType, sha256, bytes } . File objects reject extra fields, including inline binary/base64. sha256 is lowercase hex; bytes is a positive integer. The server keeps the 64 KiB JSON request boundary. A server may advertise turn-parts-v1 in the first snapshot's optional payload.capabilities ; clients must echo it in submit payload.capabilities before sending parts. Existing string submissions need no capability. Schema support alone is not an advertisement: the current server announces an empty capability list and returns TURN PARTS UNAVAILABLE (501) for validated parts, because the published upstream controller still accepts only strings. Do not send parts until a server advertises this capability. Protocol version remains 1.",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -19974,7 +20052,7 @@
             }
           ]
         },
-        "contentHash": "65a97c67a8ad96f55a8e3f0abae027ff212731a66ca121d40c617451e2122c0c",
+        "contentHash": "58c79d7b0540cfe90376c16a3c0875e0b742fa927fb0f89779c8a0b023b76c10",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -19996,11 +20074,11 @@
           "path": "packages/react-native/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/react-native Profile: concise-package React Native application shell for an AgentsKit Chat definition. Delegates chat state, streaming, cancellation, and native headless components to @agentskit/react-native . Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-react-native -- <!-- readme-example:import-react-native -- ChoiceListNative renders a validated shared frame with native accessibility roles and labels. Use theme and slots with toChatNativeStyles for semantic styling. See . Maturity and compatibility Published in @agentskit/chat at 0.4.1 with React 18+, React Native, and Expo web/iOS bundle evidence in release workflows. - React 18+ - Native accessibility roles in CI Contributing Package ownership: packages/react-native . Follow . Tags: agentskit-chat , react-native , expo , chat-ui AgentsKit ecosystem Mobile renderer over with dedicated proof apps in apps/example-react-native .",
+          "body": "@agentskit/chat/react-native Profile: concise-package React Native application shell for an AgentsKit Chat definition. Delegates chat state, streaming, cancellation, and native headless components to @agentskit/react-native . Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-react-native -- <!-- readme-example:import-react-native -- ChoiceListNative renders a validated shared frame with native accessibility roles and labels. Use theme and slots with toChatNativeStyles for semantic styling. See . Maturity and compatibility Published in @agentskit/chat at 0.5.0 with React 18+, React Native, and Expo web/iOS bundle evidence in release workflows. - React 18+ - Native accessibility roles in CI Contributing Package ownership: packages/react-native . Follow . Tags: agentskit-chat , react-native , expo , chat-ui AgentsKit ecosystem Mobile renderer over with dedicated proof apps in apps/example-react-native .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20058,7 +20136,7 @@
             }
           ]
         },
-        "contentHash": "4a352e5c721a1d02c8daf766e56571c4accdf9526477deaa3282ffef5cf1c793",
+        "contentHash": "223056969ce05ba1a267322d4e1540c9bd7a2e4d9dc6f840cf0ab422bb4c2a00",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20080,11 +20158,11 @@
           "path": "packages/react/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/react Profile: major-package Accessible React application shell over @agentskit/react . Chat state, streaming, cancellation, and headless components remain upstream; this package owns semantic theming, native slots, and the shared ChoiceList renderer. Verified proof Surface Evidence --- --- DOM parity Conformance Quick start Quick start <!-- readme-command:install-react -- <!-- readme-example:agent-chat -- Use theme for semantic tokens and slots for native React composition. toChatCssVariables exposes the upstream CSS-variable mapping. See . Maturity and compatibility Published in @agentskit/chat at 0.4.1 with React 18+, @agentskit/react ^0.7.1 , and Chromium E2E evidence in CI. - React 18+ - TypeScript strict mode Contributing Package ownership: packages/react . Follow . Tags: agentskit-chat , react , accessibility , chat-ui AgentsKit ecosystem Primary web renderer for Registry and Playbook dogfood on .",
+          "body": "@agentskit/chat/react Profile: major-package Accessible React application shell over @agentskit/react . Chat state, streaming, cancellation, and headless components remain upstream; this package owns semantic theming, native slots, and the shared ChoiceList renderer. Verified proof Surface Evidence --- --- DOM parity Conformance Quick start Quick start <!-- readme-command:install-react -- <!-- readme-example:agent-chat -- Use theme for semantic tokens and slots for native React composition. toChatCssVariables exposes the upstream CSS-variable mapping. See . Maturity and compatibility Published in @agentskit/chat at 0.5.0 with React 18+, @agentskit/react ^0.7.1 , and Chromium E2E evidence in CI. - React 18+ - TypeScript strict mode Contributing Package ownership: packages/react . Follow . Tags: agentskit-chat , react , accessibility , chat-ui AgentsKit ecosystem Primary web renderer for Registry and Playbook dogfood on .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20137,7 +20215,7 @@
             }
           ]
         },
-        "contentHash": "161d3e86b20402b1b9f448768287b2abfedd055e7a7fd8e887727612a50ec3f6",
+        "contentHash": "0f0e2c5f055a59021eaa4e747b5fef5dd1b6079ab0e43e1e6473ee9269ffddab",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20159,11 +20237,11 @@
           "path": "packages/server/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. The existing 64 KiB request limit is enforced by the published @agentskit/net JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Callback factories use the published @agentskit/net@0.2.0 withTimeout helper with their existing configured deadlines and the parent request signal. This ends the handler's wait when a callback ignores its signal, but arbitrary callback work cannot be forcibly stopped; callbacks should honor the signal to cancel fetches and other cooperative work. Maturity and compatibility Published in @agentskit/chat at 0.4.1 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of . Optional reference uploads Mount createUploadHandler at POST /uploads . Configure a BlobStore , maxBytes , allowed mimeTypes , and mandatory host authorize(request, sessionId, signal) . Authorization must authenticate the caller and authorize that session, returning a trusted tenantId . The request is JSON metadata only: { sessionId, bytes, mimeType } . The 201 response contains { ref, url, headers, expiresIn } . PUT the file directly to storage using the signed MIME and exact byte count. Browsers set Content-Length implicitly; do not attempt to override that forbidden browser header. createS3BlobStore uses SigV4 through aws4fetch and path-style endpoints for R2, MinIO and S3. Supply credentials from your host's secret channel. URLs default to 300 seconds and are capped at 600. Never log signed URLs or persist them as message content. Scope keys are tenantId/sessionId/random-uuid ; identifiers follow the protocol's safe identifier rules. Configure bucket CORS for your browser origin and PUT/Content-Type, and lifecycle cleanup for abandoned uploads in the host infrastructure. The chat handler's optional uploads policy additionally requires tenantId(context, sessionId, signal) , which must authorize access to the session. Reference validation rejects cross-tenant/session keys (403), disallowed size/type (413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read at most the declared upload size and buffer it within maxBytes ; choose a conservative limit. The store's short presignGet is available for future upstream composition. Parts delivery remains disabled: valid references receive 501 TURN PARTS UNAVAILABLE until a supported, published AgentsKit controller accepts parts. No controller wrapper, private upstream import or text flattening is used. See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.",
+          "body": "@agentskit/chat/server Profile: major-package Web-standard request handlers for AgentsKit Chat definitions. Composes the canonical AgentsKit controller and memory with AgentsKit Chat protocol and session contracts. Verified proof Surface Evidence --- --- Chat handler Ask vertical Deployment recipes Quick start <!-- readme-command:install-server -- <!-- readme-example:chat-handler -- The returned function accepts a standard Request and returns a streaming Response . Semantic escalations use createAskServiceHandler with trusted site resolution. The existing 64 KiB request limit is enforced by the published @agentskit/net JSON reader, with the same safe 400/413 diagnostics. The request body stream is connected to the combined request/deadline signal so timeout and host cancellation stop body reads. Callback factories use the published @agentskit/net@0.2.0 withTimeout helper with their existing configured deadlines and the parent request signal. This ends the handler's wait when a callback ignores its signal, but arbitrary callback work cannot be forcibly stopped; callbacks should honor the signal to cancel fetches and other cooperative work. Maturity and compatibility Published in @agentskit/chat at 0.5.0 for Next.js, Hono, Express, and Cloudflare Worker recipes documented in . - Node.js 22+ - Web-standard Request / Response Contributing Package ownership: packages/server . Follow . Tags: agentskit-chat , server , web-standard , streaming AgentsKit ecosystem Mounts the same factories in Registry, Playbook, and self-hosted deployments on top of . Optional reference uploads Mount createUploadHandler at POST /uploads . Configure a BlobStore , maxBytes , allowed mimeTypes , and mandatory host authorize(request, sessionId, signal) . Authorization must authenticate the caller and authorize that session, returning a trusted tenantId . The request is JSON metadata only: { sessionId, bytes, mimeType } . The 201 response contains { ref, url, headers, expiresIn } . PUT the file directly to storage using the signed MIME and exact byte count. Browsers set Content-Length implicitly; do not attempt to override that forbidden browser header. createS3BlobStore uses SigV4 through aws4fetch and path-style endpoints for R2, MinIO and S3. Supply credentials from your host's secret channel. URLs default to 300 seconds and are capped at 600. Never log signed URLs or persist them as message content. Scope keys are tenantId/sessionId/random-uuid ; identifiers follow the protocol's safe identifier rules. Configure bucket CORS for your browser origin and PUT/Content-Type, and lifecycle cleanup for abandoned uploads in the host infrastructure. The chat handler's optional uploads policy additionally requires tenantId(context, sessionId, signal) , which must authorize access to the session. Reference validation rejects cross-tenant/session keys (403), disallowed size/type (413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read at most the declared upload size and buffer it within maxBytes ; choose a conservative limit. The store's short presignGet is available for future upstream composition. Parts delivery remains disabled: valid references receive 501 TURN PARTS UNAVAILABLE until a supported, published AgentsKit controller accepts parts. No controller wrapper, private upstream import or text flattening is used. See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20221,7 +20299,7 @@
             }
           ]
         },
-        "contentHash": "5adab9132594ab628ebd51fa153cdfa39c0be6b68d5dc5b239a358052ad38822",
+        "contentHash": "ab13d78eb153eb175789bbb10fdc83e4c2be9dd41ad8d35e9aaa94a1e004b272",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20243,11 +20321,11 @@
           "path": "packages/solid/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/solid Profile: concise-package Solid application shell for AgentsKit Chat. Composes useChat and the headless components from @agentskit/solid ; chat state, streaming, and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-solid -- <!-- readme-example:import-solid -- Customization uses typed Solid render props: container , message , input , thinking , confirmation , and choiceList . Maturity and compatibility Published in @agentskit/chat at 0.4.1 with Solid 1.9+ and @agentskit/solid ^0.4.4 . - Solid 1.9+ - TypeScript strict mode Contributing Package ownership: packages/solid . Follow . Tags: agentskit-chat , solid , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
+          "body": "@agentskit/chat/solid Profile: concise-package Solid application shell for AgentsKit Chat. Composes useChat and the headless components from @agentskit/solid ; chat state, streaming, and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-solid -- <!-- readme-example:import-solid -- Customization uses typed Solid render props: container , message , input , thinking , confirmation , and choiceList . Maturity and compatibility Published in @agentskit/chat at 0.5.0 with Solid 1.9+ and @agentskit/solid ^0.4.4 . - Solid 1.9+ - TypeScript strict mode Contributing Package ownership: packages/solid . Follow . Tags: agentskit-chat , solid , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20290,7 +20368,7 @@
             }
           ]
         },
-        "contentHash": "77c91122464fb24ff052ae2ac94232c8b9c696048b124e2daa871ed12ffabd47",
+        "contentHash": "9226a62d8ddd61cf6d92881a220f6dd67e4304df634df6cf0f1fe5f981afaea7",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20312,11 +20390,11 @@
           "path": "packages/svelte/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/svelte Profile: concise-package Svelte 5 application shell for AgentsKit Chat. Composes createChatStore and the headless components from @agentskit/svelte ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-svelte -- <!-- readme-example:import-svelte -- Customization uses typed Svelte snippets: container , message , input , thinking , confirmation , and choiceList . Maturity and compatibility Published in @agentskit/chat at 0.4.1 with Svelte 5+ and @agentskit/svelte ^0.4.4 . - Svelte 5+ - SSR evidence in CI Contributing Package ownership: packages/svelte . Follow . Tags: agentskit-chat , svelte , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
+          "body": "@agentskit/chat/svelte Profile: concise-package Svelte 5 application shell for AgentsKit Chat. Composes createChatStore and the headless components from @agentskit/svelte ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-svelte -- <!-- readme-example:import-svelte -- Customization uses typed Svelte snippets: container , message , input , thinking , confirmation , and choiceList . Maturity and compatibility Published in @agentskit/chat at 0.5.0 with Svelte 5+ and @agentskit/svelte ^0.4.4 . - Svelte 5+ - SSR evidence in CI Contributing Package ownership: packages/svelte . Follow . Tags: agentskit-chat , svelte , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20359,7 +20437,7 @@
             }
           ]
         },
-        "contentHash": "d74640d65d1c097cd8f6988bdcde0db1da634d96b83f529e825f390bc823fec5",
+        "contentHash": "3a252ffc6728ac4f6f942a36d80077dac783af02ca6ff554b4e5c1df609ac944",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20381,11 +20459,11 @@
           "path": "packages/vue/README.md",
           "symbols": "",
           "summary": "Profile: concise-package",
-          "body": "@agentskit/chat/vue Profile: concise-package Native Vue 3 application shell for AgentsKit Chat. Composes useChat , ChatRoot , and the headless components published by @agentskit/vue ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-vue -- <!-- readme-example:import-vue -- Use the named scoped slots container , message , input , thinking , confirmation , and choiceList for Vue-native customization. Maturity and compatibility Published in @agentskit/chat at 0.4.1 with Vue 3.4+ and @agentskit/vue ^0.4.4 . - Vue 3.4+ - TypeScript strict mode Contributing Package ownership: packages/vue . Follow . Tags: agentskit-chat , vue , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
+          "body": "@agentskit/chat/vue Profile: concise-package Native Vue 3 application shell for AgentsKit Chat. Composes useChat , ChatRoot , and the headless components published by @agentskit/vue ; chat state and lifecycle remain upstream. Verified proof Surface Evidence --- --- Quick start Conformance Quick start <!-- readme-command:install-vue -- <!-- readme-example:import-vue -- Use the named scoped slots container , message , input , thinking , confirmation , and choiceList for Vue-native customization. Maturity and compatibility Published in @agentskit/chat at 0.5.0 with Vue 3.4+ and @agentskit/vue ^0.4.4 . - Vue 3.4+ - TypeScript strict mode Contributing Package ownership: packages/vue . Follow . Tags: agentskit-chat , vue , chat-ui AgentsKit ecosystem Renderer binding over with shared definitions from @agentskit/chat .",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20428,7 +20506,7 @@
             }
           ]
         },
-        "contentHash": "47bafc0cf841884e5f2a31db7b8da7ccee6c828e74d17b6871fb4b5fb8ac7d7f",
+        "contentHash": "48e45eed179a853a3879859bcb439c121a0651f078628de0398343379d085797",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20450,11 +20528,11 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Cross-framework application framework for building interactive agent experiences on top of AgentsKit. Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.",
-          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 36 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
+          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 36 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Maturity and compatibility AgentsKit Chat 0.5.0 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002166,
+          "pagerank": 0.002136,
           "inboundLinks": 0,
           "coveredBy": [],
           "mentionedBy": [],
@@ -20547,7 +20625,7 @@
             },
             {
               "kind": "links-to",
-              "id": "document:docs/releases/v0.4.0.md",
+              "id": "document:docs/releases/v0.5.0.md",
               "confidence": "observed"
             },
             {
@@ -20607,7 +20685,7 @@
             }
           ]
         },
-        "contentHash": "74b5df89a3b9624b724d8ed759f6f3f384045a59081ad5a496d6e2772031019e",
+        "contentHash": "453db303f2444693098355475bd7f5098a92e2d0b16f905fdedb923b873b1829",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20633,7 +20711,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.0084,
+          "pagerank": 0.008286,
           "inboundLinks": 10,
           "coveredBy": [],
           "mentionedBy": [
@@ -20738,7 +20816,7 @@
           "aliases": "document project"
         },
         "graph": {
-          "pagerank": 0.002473,
+          "pagerank": 0.002439,
           "inboundLinks": 1,
           "coveredBy": [],
           "mentionedBy": [],
@@ -30374,7 +30452,7 @@
             }
           ]
         },
-        "contentHash": "4d3cc97ced8f91f2f646a51456a20fe6bd5714549cd441b041fb830733a5ece5",
+        "contentHash": "38a20cc37e7b33a3d0ff89881b2083ff1f53dd793692a5da9bc6c4aa498fabd2",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -30995,7 +31073,7 @@
             }
           ]
         },
-        "contentHash": "99fdea651c8f03d22da0d56d0d73e2ae324c1517fa845065a7906dbcfc7b9924",
+        "contentHash": "0b1e52a39f9de1ed14a5a78b64a3280eb7545d98baf6226fec8801a5637d425b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31443,7 +31521,7 @@
             }
           ]
         },
-        "contentHash": "0e36d421a800c195e373eff44f75be7468d5f5e5e7bd8fef6167c8268f566aa5",
+        "contentHash": "5bc306e6698edce7416b1885963290573f8fddb0df3ed6083948ac90b0ba4119",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -31867,7 +31945,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f446bd95de4f81dd55ce95abfd7c8d17b14dda1ca43237754aaa7d5be9a80563",
+        "contentHash": "0af20635728c49fdceebace34de764de6381798ce8c69d3976633709e6aa986d",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -32748,8 +32826,8 @@
           "aliases": "chat @agentskit/chat package"
         },
         "graph": {
-          "pagerank": 0.002325,
-          "inboundLinks": 43,
+          "pagerank": 0.002293,
+          "inboundLinks": 44,
           "coveredBy": [
             "document:docs/for-agents/packages/chat.md"
           ],
@@ -32784,6 +32862,7 @@
             "document:docs/releases/v0.3.0.md",
             "document:docs/releases/v0.4.0.md",
             "document:docs/releases/v0.4.1.md",
+            "document:docs/releases/v0.5.0.md",
             "document:packages/angular/README.md",
             "document:packages/chat/README.md",
             "document:packages/devtools/README.md",
@@ -32956,6 +33035,11 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/releases/v0.5.0.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:packages/angular/README.md",
               "confidence": "observed"
             },
@@ -33017,7 +33101,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "1dacc6381bd3c2eb25c67d9c8b5c52ccb62956f0fbdea2583e71d07d5b1df0a4",
+        "contentHash": "2e463ad8c4fe2f67998d842e36a509fc5d1fe93622d886faba4eb1c89aee80ac",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33043,7 +33127,7 @@
           "aliases": "chat-angular @agentskit/chat-angular package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/angular.md"
@@ -33066,7 +33150,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "25c898dcfa5481847993f0ce269b210c98a6fa3b97e9a0c8468e8c121087b9e7",
+        "contentHash": "28d6a912ed0dae03ee76551bcffeb601e2c6917e711b4f6bb2f74072519cc176",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33092,8 +33176,8 @@
           "aliases": "chat-cli @agentskit/chat-cli package"
         },
         "graph": {
-          "pagerank": 0.004075,
-          "inboundLinks": 11,
+          "pagerank": 0.004019,
+          "inboundLinks": 12,
           "coveredBy": [
             "document:docs/for-agents/packages/cli.md"
           ],
@@ -33107,6 +33191,7 @@
             "document:docs/releases/migration-to-0.3.md",
             "document:docs/releases/v0.3.0.md",
             "document:docs/releases/v0.4.1.md",
+            "document:docs/releases/v0.5.0.md",
             "document:README.md"
           ],
           "packageId": "package:@agentskit/chat-cli",
@@ -33163,13 +33248,18 @@
             },
             {
               "kind": "mentions",
+              "id": "document:docs/releases/v0.5.0.md",
+              "confidence": "observed"
+            },
+            {
+              "kind": "mentions",
               "id": "document:README.md",
               "confidence": "observed"
             }
           ],
           "outbound": []
         },
-        "contentHash": "2b54570d5f3121d7f8c1d380ff3208a784ef781523f67d59ea159a1640c656b7",
+        "contentHash": "e8172c71d99f25425112b9c4836f4745f9118ed7e41972a36b11608d0fcd4dda",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33195,7 +33285,7 @@
           "aliases": "chat-devtools @agentskit/chat-devtools package"
         },
         "graph": {
-          "pagerank": 0.004007,
+          "pagerank": 0.003952,
           "inboundLinks": 4,
           "coveredBy": [
             "document:docs/for-agents/packages/devtools.md"
@@ -33230,7 +33320,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "6e776742eeec036c600bd00354ab1596b30aef696bc245d2ba195633f2d20298",
+        "contentHash": "a559194a7154a1b7a1f273d8495a2cd6b427eddcd6d2aaa26d7f07610731d242",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33256,7 +33346,7 @@
           "aliases": "chat-docs @agentskit/chat-docs package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 1,
           "coveredBy": [
             "document:docs/for-agents/apps/docs.md"
@@ -33272,7 +33362,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "dc05de0e3b4e4ae1c3373803f78792d802da3ce4820c272962ec182fe60aca01",
+        "contentHash": "fe4a271acb9b861153de0777c93f23b37c68748dfdbd77a9416907d27aaa0042",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33298,7 +33388,7 @@
           "aliases": "chat-example-ink @agentskit/chat-example-ink package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-ink.md"
@@ -33321,7 +33411,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7052fc0463ac5f249b7fa5b36dc1b8a3d5e4786a07fa13ace7812097eeafda34",
+        "contentHash": "5a1e337ab01467a54b960d2908c64748a19c54b9d95a737837626681c7edb7dd",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33347,7 +33437,7 @@
           "aliases": "chat-example-react @agentskit/chat-example-react package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-react.md"
@@ -33370,7 +33460,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f71271c7096850e6ec4c44f35b7f4752e1277f68d2c74f9628c353ffb9b93589",
+        "contentHash": "16346b0d1b7190c083de6bc19d07efce47cc64c73cadba864e82fb606852db01",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33396,7 +33486,7 @@
           "aliases": "chat-example-react-native @agentskit/chat-example-react-native package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-react-native.md"
@@ -33419,7 +33509,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "42b63c1b9f70aec50c608d1b721f58ae56842cda3e86c3d711dc8053bc12337b",
+        "contentHash": "0d05b59d2379ab84cce5af7527d8875d8e32fa064723409dc991f63385d922ed",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33445,7 +33535,7 @@
           "aliases": "chat-example-shared @agentskit/chat-example-shared package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 3,
           "coveredBy": [
             "document:docs/for-agents/apps/example-shared.md"
@@ -33474,7 +33564,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "39e16cca86270db92252c30b4171db45025b82f7565bbfedac9fe257cac51833",
+        "contentHash": "4c4a16b16021c916140ea95aa06a1b4cb514b7595b977f2832161309d2f93fcb",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33500,7 +33590,7 @@
           "aliases": "chat-example-solid @agentskit/chat-example-solid package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-solid.md"
@@ -33523,7 +33613,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "dad7a85aa53eb43d6299f805119c3db4f5150881f9f37cb4a9a3edac07404ba1",
+        "contentHash": "2db10333947a6bd36a46e8b5005d44103694b67b9d32a249b92b9d6a47a0319c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33549,7 +33639,7 @@
           "aliases": "chat-example-svelte @agentskit/chat-example-svelte package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-svelte.md"
@@ -33572,7 +33662,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "7da11fdfeb6d44402e13a7e75863130ac8e9ca0bf21f9a4198d8950ab29e3587",
+        "contentHash": "0e75cbc18fa786526055dc1ccd71a3bf7bceafbc9855d3267d68569d70a7c294",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33598,7 +33688,7 @@
           "aliases": "chat-example-vue @agentskit/chat-example-vue package"
         },
         "graph": {
-          "pagerank": 0.002643,
+          "pagerank": 0.002607,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/apps/example-vue.md"
@@ -33621,7 +33711,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "0c0e00c99eace2b04c0165e1da457fc5a6abfe9df17ebded91d663b146fe6dab",
+        "contentHash": "8bbd0d40b69e941dd6e4eab9d448f4623b6059c4257017f65f5b1daeee0bf1d0",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33647,7 +33737,7 @@
           "aliases": "chat-ink @agentskit/chat-ink package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/ink.md"
@@ -33670,7 +33760,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "85fad85ab29825f1772fdb12e9300374e8e5440747b2d8d06871857da1c84892",
+        "contentHash": "b4e637c192bb62c54cce8f13b498ed5fd0455e37129c41df42abc67b62e7c64b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33696,7 +33786,7 @@
           "aliases": "chat-protocol @agentskit/chat-protocol package"
         },
         "graph": {
-          "pagerank": 0.002357,
+          "pagerank": 0.002324,
           "inboundLinks": 13,
           "coveredBy": [
             "document:docs/for-agents/packages/protocol.md"
@@ -33811,7 +33901,7 @@
           "aliases": "chat-react @agentskit/chat-react package"
         },
         "graph": {
-          "pagerank": 0.00312,
+          "pagerank": 0.003078,
           "inboundLinks": 5,
           "coveredBy": [
             "document:docs/for-agents/packages/react.md"
@@ -33852,7 +33942,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "0d9e733be386c182678fc6d579d2ad3e72f9f54d9b6099fe23e0f02cebde1180",
+        "contentHash": "6b28b6a659a44b4d844cd3f003159527128730b977bdf58f971e06c3f34084be",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33878,7 +33968,7 @@
           "aliases": "chat-react-native @agentskit/chat-react-native package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/react-native.md"
@@ -33901,7 +33991,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f68c0e98b0587efbf217a9eb8d68f87ce54b737cbb3fac1358572bbb9c72c2f0",
+        "contentHash": "4355c4465f9984075b19512c22a445e01c64f6dc419603cc06962df5690e1535",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -33927,7 +34017,7 @@
           "aliases": "chat-server @agentskit/chat-server package"
         },
         "graph": {
-          "pagerank": 0.002429,
+          "pagerank": 0.002396,
           "inboundLinks": 8,
           "coveredBy": [
             "document:docs/for-agents/packages/server.md"
@@ -33986,7 +34076,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "b19be6521387c98ca06a5a3e443d25af424c9e0a06e51794b263c86102789075",
+        "contentHash": "39e7783de9949a64e6e0d8861e8e08b26ba186aa4271a5be6e7160d796dfe809",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -34012,7 +34102,7 @@
           "aliases": "chat-solid @agentskit/chat-solid package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/solid.md"
@@ -34035,7 +34125,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "b3c0ce7921c4d2a9447bc1a36bcd7b2d022017c73436e777968a40ddd2cbcef1",
+        "contentHash": "2d74c3c60e0bf7783227c62c8c2745b2b0387dbefe035c0f0c256e8e8685b14b",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -34061,7 +34151,7 @@
           "aliases": "chat-svelte @agentskit/chat-svelte package"
         },
         "graph": {
-          "pagerank": 0.004075,
+          "pagerank": 0.004019,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/svelte.md"
@@ -34084,7 +34174,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "fd866f2830804d1dbf19a59dada9a680855b6bbd411dd3fba02b2f696434af28",
+        "contentHash": "8a0b23ed11c67ed771fa96c58beabc479baa6aa9a26058ac18005a674c866b72",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -34110,7 +34200,7 @@
           "aliases": "chat-vue @agentskit/chat-vue package"
         },
         "graph": {
-          "pagerank": 0.003323,
+          "pagerank": 0.003278,
           "inboundLinks": 2,
           "coveredBy": [
             "document:docs/for-agents/packages/vue.md"
@@ -34133,7 +34223,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "f87a0cbdcbe73f1cf0e8a467c46ce5b9d9098cc59c0880447e70ea4c724d06e0",
+        "contentHash": "8c8f63510f3bd4cf3286ab9ce4372b1f50e60ec277ffe60714e445d732948908",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -34246,7 +34336,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "9cf7a50b224c61897fdfa69875bbf2af52a257ae371e1dca8692ed5ced8b744d",
+        "contentHash": "87ade766dbaff5280769f614530aa5b01edd4d1630d632127cec26e83c3504c1",
         "provenance": "observed",
         "confidence": "observed"
       }

@@ -21,14 +21,14 @@ describe('ecosystem adoption contract', () => {
   it('tracks the current release while retaining the minimum consolidated baseline', async () => {
     const result = await inspectEcosystemAdoption(fileURLToPath(new URL('..', import.meta.url)))
     expect(result.manifest.minimumConsolidatedVersion).toBe('0.3.0')
-    expect(result.manifest.currentFrameworkVersion).toBe('0.4.1')
-    expect(result.manifest.supportedConsolidatedVersions).toEqual(['0.3.0', '0.4.0', '0.4.1'])
+    expect(result.manifest.currentFrameworkVersion).toBe('0.5.0')
+    expect(result.manifest.supportedConsolidatedVersions).toEqual(['0.3.0', '0.4.0', '0.4.1', '0.5.0'])
     expect(result.diagnostics).toEqual([])
     expect(formatEcosystemAdoptionResult(result.manifest)).toMatchObject({
       schemaVersion: 3,
       minimumConsolidatedVersion: '0.3.0',
-      currentFrameworkVersion: '0.4.1',
-      supportedConsolidatedVersions: ['0.3.0', '0.4.0', '0.4.1'],
+      currentFrameworkVersion: '0.5.0',
+      supportedConsolidatedVersions: ['0.3.0', '0.4.0', '0.4.1', '0.5.0'],
     })
     expect(formatEcosystemAdoptionResult(result.manifest)).not.toHaveProperty('frameworkVersion')
   })
@@ -108,7 +108,7 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(stale)).toThrow('exact supported consolidated framework version')
 
     const future = clone(manifest)
-    future.consumers[0].packageVersion = '0.5.0'
+    future.consumers[0].packageVersion = '0.6.0'
     expect(() => parseEcosystemAdoption(future)).toThrow('exact supported consolidated framework version')
 
     const unproved = clone(manifest)

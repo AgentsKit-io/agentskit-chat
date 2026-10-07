@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — 2026-10-07
+
+- Adds optional `@agentskit/chat/drizzle-pg` tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned.
+- Adds additive protocol v1 reference parts, capability negotiation, and host-authorized S3-compatible uploads with tenant/session, size, MIME, and SHA-256 validation; parts delivery remains unavailable pending published upstream support.
+- Reuses published AgentsKit Net bounded JSON, signal composition, and callback deadlines.
+- Fixes empty assistant placeholders and compacts emitted JavaScript within existing bundle budgets.
+- Uses upstream cross-platform rename/remove helpers for CLI scaffolding and widens framework peer ranges to current 0.x bindings.
+- Versions both public packages together at `0.5.0`; existing definition-owned and controlled sessions remain supported.
+
 ## 0.4.1 — 2026-07-16
 
 Metadata-only patch so both public packages advertise the canonical docs portal.

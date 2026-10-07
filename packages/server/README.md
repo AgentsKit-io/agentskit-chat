@@ -53,7 +53,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.4.1` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.mdx](../../docs/deployment.mdx).
+Published in `@agentskit/chat` at `0.5.0` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.mdx](../../docs/deployment.mdx).
 
 - Node.js 22+
 - Web-standard `Request` / `Response`

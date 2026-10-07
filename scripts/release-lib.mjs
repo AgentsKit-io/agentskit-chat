@@ -58,6 +58,7 @@ const requiredDocs = [
   'docs/releases/v0.3.0.md',
   'docs/releases/v0.4.0.md',
   'docs/releases/v0.4.1.md',
+  'docs/releases/v0.5.0.md',
   'docs/server.mdx',
 ]
 

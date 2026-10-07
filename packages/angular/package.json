@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-angular",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Angular application shell for AgentsKit Chat.",
   "license": "MIT",
   "repository": {
