@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "9391a81a085e67ed397148272da3151489336b2e87923bb6ca267ccb65530751",
+  "contentHash": "19930dc2be16545e9668467cae28635f640327fffa2c8d7933b556320ac49b97",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-07T01:30:56.620Z",
+  "generatedAt": "2026-10-07T01:34:10.662Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -772,16 +772,16 @@
       "contentHash": "123e7717a9f8a20f3f97a3228a8598171d0c9b033f0cfdb88f8e4d5c337eb8e4"
     },
     {
-      "id": "document:docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
+      "id": "document:docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
       "type": "document",
-      "title": "ADR-0035: Drizzle/Postgres application session envelopes",
-      "path": "docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
+      "title": "ADR-0036: Drizzle/Postgres application session envelopes",
+      "path": "docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
       "description": "Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending.",
       "tags": [
         "document",
         "human"
       ],
-      "contentHash": "52d1120a2ff95398019815847dfb9c26e8cddfe5b7b37ca6179527df66010f73"
+      "contentHash": "baaecbcfe7f7a45df6ee1e58e11cfebff141c968d8ba73ab0e992f6eb4ad41f8"
     },
     {
       "id": "document:docs/architecture/overview.md",
@@ -805,7 +805,7 @@
         "document",
         "human"
       ],
-      "contentHash": "55e854cf21ea4271e1340d8af47b438758ceae468f55c3d00215d91c251e4063"
+      "contentHash": "1da0f5b4400500cf8d08ae01f9ba4fd33980e739910e97f436395d39c84aa456"
     },
     {
       "id": "document:docs/backend.mdx",
@@ -6950,7 +6950,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "692b0512fe92cb6044c0e973a3e9004cae744e8aec678380757a47377adfbd88",
+    "hash": "5211324283ab19446d5f6d91886e7e4492deb39cbd69b334fa83eb9f4778c97d",
     "fileCount": 462,
     "projectionVersion": 2
   },
@@ -6973,9 +6973,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "359e03fefdc86ec83f02ee8ba350c2e0aef5ff0c69abf0bd9d6300c4a4800989",
+    "contentHash": "c19b0043abe28f4f074b93a67e4d651c15fb83ec802559019d41fde318568317",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "ee95cd60b4701984c5933b81ce997f7739de2cd455b4063fc9616b18c11f9a31",
+    "snapshotHash": "91392cf28250859852c1b1febfcb02dfd810d0e9e1c07c7f26defefe1cc9d82d",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -12281,10 +12281,10 @@
         "confidence": "observed"
       },
       {
-        "id": "document:docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
+        "id": "document:docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
         "kind": "document",
-        "path": "docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
-        "title": "ADR-0035: Drizzle/Postgres application session envelopes",
+        "path": "docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
+        "title": "ADR-0036: Drizzle/Postgres application session envelopes",
         "summary": "Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending.",
         "audience": "human",
         "aliases": [],
@@ -12293,12 +12293,12 @@
           "human"
         ],
         "fields": {
-          "title": "ADR-0035: Drizzle/Postgres application session envelopes",
-          "headings": "ADR-0035: Drizzle/Postgres application session envelopes Decision Upstream boundary Consequences",
-          "path": "docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
+          "title": "ADR-0036: Drizzle/Postgres application session envelopes",
+          "headings": "ADR-0036: Drizzle/Postgres application session envelopes Decision Upstream boundary Consequences",
+          "path": "docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
           "symbols": "",
           "summary": "Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending.",
-          "body": "ADR-0035: Drizzle/Postgres application session envelopes Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending. Decision Expose @agentskit/chat/drizzle-pg as an optional Drizzle peer subpath. Store only the existing versioned application SessionSnapshot in agentskit chat sessions , keyed by (tenant id, session id) . Insert uses ON CONFLICT DO NOTHING; updates compare the cursor column in the same SQL UPDATE and return whether one row changed. A replacement must advance the cursor. Existing session code owns SessionConflictError, leases and the HTTP 409 mapping; the adapter does not create parallel lifecycle semantics. The host supplies a Drizzle node-postgres database: Node may use a pool, Workers use a request-scoped pg Client and close it in waitUntil after stream consumption. No Neon, Cloudflare bindings, DO or D1 are required by the adapter. SQL DDL is explicit, not run on import. Abort signals reject before dispatch; pg statements already in flight are not cancelled, and committed writes return their actual CAS result. Upstream boundary ADR-0002 and ADR-0011 remain binding. Canonical messages stay in upstream ChatMemory. A general ChatMemory Drizzle backend is absent upstream and must land there before adoption; this subpath does not implement it. No core source is copied or imported privately. Existing SessionStorage and SessionSnapshot contracts are reused unchanged. Consequences Tenant scope is supplied from trusted host authentication and applied to every query. Application isolation does not replace database RLS. The fixed table name keeps the public surface small; migrations remain the host's responsibility. PostgreSQL is the shared durable authority across pool connections and Worker isolates.",
+          "body": "ADR-0036: Drizzle/Postgres application session envelopes Status: Accepted for implementation by the CH-B coordinator, 2026-10-06; parent evidence review pending. Decision Expose @agentskit/chat/drizzle-pg as an optional Drizzle peer subpath. Store only the existing versioned application SessionSnapshot in agentskit chat sessions , keyed by (tenant id, session id) . Insert uses ON CONFLICT DO NOTHING; updates compare the cursor column in the same SQL UPDATE and return whether one row changed. A replacement must advance the cursor. Existing session code owns SessionConflictError, leases and the HTTP 409 mapping; the adapter does not create parallel lifecycle semantics. The host supplies a Drizzle node-postgres database: Node may use a pool, Workers use a request-scoped pg Client and close it in waitUntil after stream consumption. No Neon, Cloudflare bindings, DO or D1 are required by the adapter. SQL DDL is explicit, not run on import. Abort signals reject before dispatch; pg statements already in flight are not cancelled, and committed writes return their actual CAS result. Upstream boundary ADR-0002 and ADR-0011 remain binding. Canonical messages stay in upstream ChatMemory. A general ChatMemory Drizzle backend is absent upstream and must land there before adoption; this subpath does not implement it. No core source is copied or imported privately. Existing SessionStorage and SessionSnapshot contracts are reused unchanged. Consequences Tenant scope is supplied from trusted host authentication and applied to every query. Application isolation does not replace database RLS. The fixed table name keeps the public surface small; migrations remain the host's responsibility. PostgreSQL is the shared durable authority across pool connections and Worker isolates.",
           "aliases": "document human"
         },
         "graph": {
@@ -12315,7 +12315,7 @@
           ],
           "outbound": []
         },
-        "contentHash": "52d1120a2ff95398019815847dfb9c26e8cddfe5b7b37ca6179527df66010f73",
+        "contentHash": "baaecbcfe7f7a45df6ee1e58e11cfebff141c968d8ba73ab0e992f6eb4ad41f8",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -12545,7 +12545,7 @@
             },
             {
               "kind": "links-to",
-              "id": "document:docs/architecture/adrs/0035-drizzle-postgres-session-storage.md",
+              "id": "document:docs/architecture/adrs/0036-drizzle-postgres-session-storage.md",
               "confidence": "observed"
             },
             {
@@ -12630,7 +12630,7 @@
             }
           ]
         },
-        "contentHash": "55e854cf21ea4271e1340d8af47b438758ceae468f55c3d00215d91c251e4063",
+        "contentHash": "1da0f5b4400500cf8d08ae01f9ba4fd33980e739910e97f436395d39c84aa456",
         "provenance": "observed",
         "confidence": "observed"
       },
