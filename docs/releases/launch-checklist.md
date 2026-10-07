@@ -1,14 +1,15 @@
 # Stable public launch checklist
 
 Executable close-out checklist for [issue #104](https://github.com/AgentsKit-io/agentskit-chat/issues/104).
-AgentsKit Chat `0.4.0` adds controlled React and Ink sessions to the consolidated
-two-package graph.
+AgentsKit Chat `0.5.0` adds optional Drizzle/PostgreSQL CAS SessionStorage and
+referenced parts/uploads to the fixed two-package graph. Historical evidence below
+remains tied to its original release and does not validate `0.5.0`.
 
 ## Documentation
 
 - [x] Quick starts for React, React Native, Ink, Vue, Svelte, Solid, and Angular
 - [x] API reference, deployment modes, stability, security, and changelog
-- [x] Compatibility matrix, `0.4.0` release notes, and `0.2.x` migration map
+- [x] Compatibility matrix, `0.5.0` release notes, and `0.2.x` migration map
 - [x] Agent handoffs and doc-bridge ownership routing
 - [x] Host adapter recipes for Next.js, Hono, Express, and Cloudflare Workers
 - [x] README install path targets the two-package npm graph
@@ -33,6 +34,14 @@ pnpm release:pack
 pnpm release:deprecation:plan
 pnpm test:e2e
 pnpm test:pty
+pnpm check:readme-standard
+pnpm test:readme-standard
+pnpm ecosystem:claims:check
+pnpm ecosystem:adoption:check
+pnpm check:public-api
+pnpm check:publication-surface
+pnpm exec ak-docs gate run index-freshness
+pnpm changeset status
 ```
 
 - [x] Release and post-merge workflows pass on the `0.4.0` line
@@ -83,3 +92,10 @@ The stable workflow must remain token-free. Its protected publish job uses
 - [x] All ten npm deprecations were applied one at a time and all 20 published versions were re-read
 - [x] Canonical replacement subpaths and migration links match on every deprecated version
 - [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision
+
+## 0.5.0 publication handoff
+
+- [ ] Required local gates reviewed and conditional E2E/PTY completed locally or in CI
+- [ ] Human release review and PR merge
+- [ ] Stable tag and Trusted Publishing workflow
+- [ ] npm provenance, checksum assets, clean install, and host smoke evidence
