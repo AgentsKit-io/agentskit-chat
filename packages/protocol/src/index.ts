@@ -329,11 +329,21 @@ const TurnLineageSchema = z.discriminatedUnion('operation', [
   z.object({ operation: z.enum(['retry', 'edit', 'regenerate']), parentTurnId: SafeIdentifierSchema, sourceMessageId: SafeIdentifierSchema }),
 ])
 
+/** Additive v1 capability; clients must echo it before sending reference parts. */
+export const TURN_PARTS_CAPABILITY = 'turn-parts-v1' as const
+export const TurnInputPartSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('text'), text: z.string().min(1).max(16_384) }).strict(),
+  z.object({ type: z.literal('file'), ref: z.string().min(1).max(512), mimeType: z.string().min(1).max(128),
+    sha256: z.string().regex(/^[a-f0-9]{64}$/), bytes: z.number().int().positive() }).strict(),
+])
+export type TurnInputPart = z.infer<typeof TurnInputPartSchema>
+
 const SubmitEventSchema = z.object({
   ...EnvelopeFields,
   event: z.literal('client.turn.submit'),
   payload: z.object({
-    input: z.string().min(1).refine(value => value.trim().length > 0),
+    input: z.union([z.string().min(1).refine(value => value.trim().length > 0), z.array(TurnInputPartSchema).min(1).max(32)]),
+    capabilities: z.array(z.string().min(1).max(64)).max(32).optional(),
   }),
 })
 
@@ -346,6 +356,7 @@ const SnapshotEventSchema = z.object({
     usage: TokenUsageSchema,
     error: TurnDiagnosticSchema.optional(),
     lineage: TurnLineageSchema.optional(),
+    capabilities: z.array(z.string().min(1).max(64)).max(32).optional(),
   }),
 })
 
@@ -391,6 +402,7 @@ export interface CreateSnapshotEventOptions {
   readonly correlation?: AgentEventContext
   readonly lineage?: TurnLineage
   readonly error?: TurnDiagnostic
+  readonly capabilities?: readonly string[]
 }
 
 export const createSnapshotEvent = (options: CreateSnapshotEventOptions): SnapshotTurnEvent => SnapshotEventSchema.parse({
@@ -405,6 +417,7 @@ export const createSnapshotEvent = (options: CreateSnapshotEventOptions): Snapsh
   event: 'server.turn.snapshot',
   payload: {
     messages: serializeMessages([...options.messages]).messages,
+    ...(options.capabilities === undefined ? {} : { capabilities: options.capabilities }),
     status: options.status,
     usage: options.usage,
     ...(options.lineage === undefined ? {} : { lineage: options.lineage }),
