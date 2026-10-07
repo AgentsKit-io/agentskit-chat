@@ -11,5 +11,6 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
+  esbuildOptions: options => { options.minifyWhitespace = true },
   noExternal: ['@agentskit/chat/protocol'],
 })

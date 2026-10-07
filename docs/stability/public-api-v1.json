@@ -1562,6 +1562,12 @@
               ]
             },
             {
+              "name": "TURN_PARTS_CAPABILITY",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
               "name": "TURN_PROTOCOL",
               "kinds": [
                 "value"
@@ -1599,6 +1605,18 @@
             },
             {
               "name": "TurnEventSchema",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TurnInputPart",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnInputPartSchema",
               "kinds": [
                 "value"
               ]
@@ -2076,6 +2094,12 @@
               ]
             },
             {
+              "name": "BlobStore",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "ChatHandler",
               "kinds": [
                 "type"
@@ -2095,6 +2119,19 @@
               ]
             },
             {
+              "name": "UploadError",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "UploadPolicy",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "createAskServiceHandler",
               "kinds": [
                 "value"
@@ -2102,6 +2139,30 @@
             },
             {
               "name": "createChatHandler",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createS3BlobStore",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createUploadHandler",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveUploadParts",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "validateUploadPolicy",
               "kinds": [
                 "value"
               ]
