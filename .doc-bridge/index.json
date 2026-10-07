@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "5f284c1501903c475852097f40ba7930c21b916079f7ab94fc064ef58037d96d",
+  "contentHash": "c1001d71c8bd35450c6d74e6baef8e171bb64d47bbdaf7cf7d828047972840d3",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-06T23:19:09.947Z",
+  "generatedAt": "2026-10-07T01:04:37.871Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -3859,7 +3859,7 @@
         "ts",
         "chat"
       ],
-      "contentHash": "7f065761f6bd4345d7145b88a861373f3d208feef73bb102328186f46ced93a4"
+      "contentHash": "7232a71368cbddc69d7f0a2ddba8b3e799664f0c4d0e72c7ca1c6abd0e595223"
     },
     {
       "id": "module:packages/cli/fixtures/readme-example.mjs",
@@ -6902,7 +6902,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "d779dbd55dbfe38ebf35a13252f7f874c34c34e4106eb43f9b27f611ec7a9628",
+    "hash": "1c9073ae54ba9bc2e1096e6e97dcd54944abafc36d859b0dccd59ca772c64aa6",
     "fileCount": 457,
     "projectionVersion": 2
   },
@@ -6925,9 +6925,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "d12b173039a26ab7869c22f0601be4882c930a7a4fe28b3569a633b7103beba0",
+    "contentHash": "29a1debb23f413e7a19c6e9eda0a06452207a1404847e7b88646da37179bd207",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "d74cf454b578a44d501f2881d5cd10f5ab708d7e8d74024fcc5733eb187c9905",
+    "snapshotHash": "1a3c493df084738ff96f7032bc0b02e20adda8b3cb451f15bb17bf0a1666fde3",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -26001,7 +26001,7 @@
           "inbound": [],
           "outbound": []
         },
-        "contentHash": "7f065761f6bd4345d7145b88a861373f3d208feef73bb102328186f46ced93a4",
+        "contentHash": "7232a71368cbddc69d7f0a2ddba8b3e799664f0c4d0e72c7ca1c6abd0e595223",
         "provenance": "observed",
         "confidence": "observed"
       },
