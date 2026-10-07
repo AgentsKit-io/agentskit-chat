@@ -87,7 +87,7 @@ import { chatSessionDDL, createDrizzleSessionStorage } from '@agentskit/chat/dri
 const storage = createDrizzleSessionStorage(drizzle(pool), authenticatedTenantId)
 ```
 
-The adapter stores application envelopes, not messages. Continue using upstream `ChatMemory` for canonical history; a Drizzle ChatMemory backend is pending upstream. `save` returns false for a lost cursor CAS; `resumeChatSession` converts that into `SessionConflictError`, and the handler preserves HTTP 409 `SESSION_CONFLICT`. Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event.
+The adapter stores application envelopes, not messages. Continue using upstream `ChatMemory` for canonical history; a Drizzle ChatMemory backend is pending upstream. `save` returns false for a lost cursor CAS; persistence on the resumed session converts that into `SessionConflictError`, and the handler preserves HTTP 409 `SESSION_CONFLICT`. Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event.
 
 On Workers connect a `pg.Client` per request (Hyperdrive connection string in production), and call `client.end()` in `waitUntil` after consuming/closing the chat stream. On Node reuse a `pg.Pool` and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled.
 

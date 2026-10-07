@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "contentHash": "d1607bda1619db43e6312b0dab6258a26f1485199a80c90877062b3809fe5632",
+  "contentHash": "ab4b1431cf3c35cb441fcc92c9ee6a391578c0d35948b05f5c058fe4257580e2",
   "contentHashAlgo": "sha256-normalized-v1",
-  "generatedAt": "2026-10-07T01:04:40.777Z",
+  "generatedAt": "2026-10-07T01:16:48.469Z",
   "project": {
     "name": "agentskit-chat",
     "root": "."
@@ -1765,7 +1765,7 @@
         "document",
         "project"
       ],
-      "contentHash": "c287d924ab2d82a0927890320a7fce2af511c47f731f9d4b89a1fe570046a0fd"
+      "contentHash": "230488efdb1d5a207215b20712f046e02a173f3a87acb002f017072ccb36072c"
     },
     {
       "id": "document:packages/cli/README.md",
@@ -1897,7 +1897,7 @@
         "document",
         "project"
       ],
-      "contentHash": "75599723d44a54ecc06e254bccd527bc113f825116b67209bc2a2402c32b9e96"
+      "contentHash": "1bc014575616ca3b89304dfbe2dfb253deaa44448a72892a4b41311107242aec"
     },
     {
       "id": "document:SECURITY.md",
@@ -6950,7 +6950,7 @@
     "changes": {}
   },
   "inputs": {
-    "hash": "9cd7b51bbca0cac90f7a04f50b52189c073c6ee005408413595db0fdfaed4c38",
+    "hash": "88d064c8d73d21c6bb22cc1138c2ceb5782d3d27ad86dd62e7cdd86b1e27a52b",
     "fileCount": 462,
     "projectionVersion": 2
   },
@@ -6973,9 +6973,9 @@
   "projection": {
     "type": "retrieval-index",
     "schemaVersion": 1,
-    "contentHash": "3ad121b4898eb38187ad3e24fe3cf6b5e0418ba72e1861779d7e627e3d51ace1",
+    "contentHash": "182c2856d76731cee2cae00ff0f0d42e1d2af08936a6abd0621ac22540009c39",
     "contentHashAlgo": "sha256-normalized-v1",
-    "snapshotHash": "e3d739431525e761af32adaba433a73769cdca31f4aea2fd2b0e29d6d8c1f11f",
+    "snapshotHash": "8d58014b17dda46a60999e202e31e0e57829528ec84c9d21e7362e9f75c04bfa",
     "overlayHash": "f99666ff9119084dd25c2974ae64eb6935ec2aa785ff5ad478fb9d541f7a5e94",
     "configurationHash": "1eb202ad41ff8f63f9670a4f2caf1ee31c9f4013997cc150f7d67b65c948e807",
     "lexiconVersion": 1,
@@ -7007,7 +7007,7 @@
       ],
       "averageFieldLength": {
         "aliases": 3.153225806451613,
-        "body": 74.83266129032258,
+        "body": 74.83064516129032,
         "headings": 4.536290322580645,
         "path": 6.127016129032258,
         "summary": 6.020161290322581,
@@ -19405,7 +19405,7 @@
           "path": "packages/chat/README.md",
           "symbols": "",
           "summary": "Profile: major-package",
-          "body": "@agentskit/chat Profile: major-package Framework-neutral application definitions that compile to AgentsKit configuration. Owns typed routes, policy composition, component manifests, session metadata, deterministic answer adapters, and semantic fallback envelopes while the upstream controller keeps lifecycle, memory, and tool execution. Protocol, server, devtools, and all seven framework renderers ship as subpath exports: They remain isolated private workspace modules for ownership and testing, while npm consumers install only @agentskit/chat . The former standalone package names remain available until the separate deprecation phase. Actionable choices use createActionConfirmation , which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit. Verified proof Surface Evidence --- --- Standard components Deterministic plane Upstream adoption defineChat preserves the upstream ChatConfig ; it does not create another runtime. <!-- readme-command:install-chat -- Quick start <!-- readme-example:define-chat -- Use resumeChatSession(definition, { sessionId, storage }) for cross-client metadata and pass the returned session to any renderer. Custom UI flows through defineComponentManifest and resolveComponentFrame . Maturity and compatibility Published at 0.4.1 with @agentskit/core ^1.12.3 , @agentskit/memory ^0.11.0 , and @agentskit/statechart ^0.2.0 . See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/chat . Follow and query doc-bridge before editing. Tags: agentskit-chat , chat-definitions , deterministic-answers , typescript AgentsKit ecosystem Built on . Composes with , , and . Optional PostgreSQL session envelopes Install drizzle-orm and a PostgreSQL driver in the host, then import the optional subpath: The adapter stores application envelopes, not messages. Continue using upstream ChatMemory for canonical history; a Drizzle ChatMemory backend is pending upstream. save returns false for a lost cursor CAS; resumeChatSession converts that into SessionConflictError , and the handler preserves HTTP 409 SESSION CONFLICT . Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event. On Workers connect a pg.Client per request (Hyperdrive connection string in production), and call client.end() in waitUntil after consuming/closing the chat stream. On Node reuse a pg.Pool and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled. Optional RLS defense in depth (configure tenant context with transaction-local set config on the same connection, and use a non-owner role without BYPASSRLS): See for Postgres 16 and wrangler validation. RLS is optional and is not exercised by that suite.",
+          "body": "@agentskit/chat Profile: major-package Framework-neutral application definitions that compile to AgentsKit configuration. Owns typed routes, policy composition, component manifests, session metadata, deterministic answer adapters, and semantic fallback envelopes while the upstream controller keeps lifecycle, memory, and tool execution. Protocol, server, devtools, and all seven framework renderers ship as subpath exports: They remain isolated private workspace modules for ownership and testing, while npm consumers install only @agentskit/chat . The former standalone package names remain available until the separate deprecation phase. Actionable choices use createActionConfirmation , which delegates validation, canonical confirmation state, approval, denial, and execution to AgentsKit. Verified proof Surface Evidence --- --- Standard components Deterministic plane Upstream adoption defineChat preserves the upstream ChatConfig ; it does not create another runtime. <!-- readme-command:install-chat -- Quick start <!-- readme-example:define-chat -- Use resumeChatSession(definition, { sessionId, storage }) for cross-client metadata and pass the returned session to any renderer. Custom UI flows through defineComponentManifest and resolveComponentFrame . Maturity and compatibility Published at 0.4.1 with @agentskit/core ^1.12.3 , @agentskit/memory ^0.11.0 , and @agentskit/statechart ^0.2.0 . See . - Node.js 22+ - TypeScript strict mode Contributing Package ownership: packages/chat . Follow and query doc-bridge before editing. Tags: agentskit-chat , chat-definitions , deterministic-answers , typescript AgentsKit ecosystem Built on . Composes with , , and . Optional PostgreSQL session envelopes Install drizzle-orm and a PostgreSQL driver in the host, then import the optional subpath: The adapter stores application envelopes, not messages. Continue using upstream ChatMemory for canonical history; a Drizzle ChatMemory backend is pending upstream. save returns false for a lost cursor CAS; persistence on the resumed session converts that into SessionConflictError , and the handler preserves HTTP 409 SESSION CONFLICT . Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event. On Workers connect a pg.Client per request (Hyperdrive connection string in production), and call client.end() in waitUntil after consuming/closing the chat stream. On Node reuse a pg.Pool and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled. Optional RLS defense in depth (configure tenant context with transaction-local set config on the same connection, and use a non-owner role without BYPASSRLS): See for Postgres 16 and wrangler validation. RLS is optional and is not exercised by that suite.",
           "aliases": "document project"
         },
         "graph": {
@@ -19472,7 +19472,7 @@
             }
           ]
         },
-        "contentHash": "c287d924ab2d82a0927890320a7fce2af511c47f731f9d4b89a1fe570046a0fd",
+        "contentHash": "230488efdb1d5a207215b20712f046e02a173f3a87acb002f017072ccb36072c",
         "provenance": "observed",
         "confidence": "observed"
       },
@@ -20254,7 +20254,7 @@
           "path": "README.md",
           "symbols": "",
           "summary": "Cross-framework application framework for building interactive agent experiences on top of AgentsKit. Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells.",
-          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 34 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
+          "body": "<p align=\"center\" <img src=\"./docs/assets/agentschat-mark.svg\" width=\"88\" height=\"88\" alt=\"AgentsKit Chat mark\" / </p <h1 align=\"center\" AgentsKit Chat</h1 <p align=\"center\" <strong Profile:</strong <code top-level-repository</code </p <p align=\"center\" <strong One agent experience. Every interface.</strong </p <p align=\"center\" <a href=\"https://github.com/AgentsKit-io/agentskit-chat/actions/workflows/ci.yml\" <img alt=\"CI\" src=\"https://img.shields.io/github/actions/workflow/status/AgentsKit-io/agentskit-chat/ci.yml?branch=main\" / </a <a href=\"./LICENSE\" <img alt=\"MIT license\" src=\"https://img.shields.io/badge/license-MIT-2563eb\" / </a <a href=\"https://www.npmjs.com/package/@agentskit/chat\" <img alt=\"npm @agentskit/chat\" src=\"https://img.shields.io/npm/v/@agentskit/chat\" / </a <a href=\"https://www.bestpractices.dev/projects/13874\" <img alt=\"OpenSSF Best Practices\" src=\"https://www.bestpractices.dev/projects/13874/baseline\" / </a </p Cross-framework application framework for building interactive agent experiences on top of . Define chat behavior once, answer exact local facts before any backend call, and render the same definition through native React, React Native, Ink, Vue, Svelte, Solid, and Angular shells. AgentsKit remains the controller/runtime substrate. AgentsKit Chat composes typed definitions, deterministic routes, policy, protocol envelopes, Web-standard handlers, and renderer bindings into full interactive applications. Verified proof Repository claims are derived from canonical evidence and checked in CI: Surface Current proof --- ---: Public npm packages 2 Native renderers 7 Standard components 12 Conformance requirements 12 Renderer quick starts 7 Example applications 6 Architecture ADRs 35 Agent handoffs 28 Counts live in , generated by . The , , and provide release and adoption evidence. <!-- readme-command:verify-readme -- Quick start Scaffold a React project from the published CLI, then verify the README claim ledger locally: <!-- readme-command:init-react -- <!-- readme-example:init-react -- Continue with the , , and . Maturity and compatibility AgentsKit Chat 0.4.1 ships as two public npm packages with provenance: @agentskit/chat and @agentskit/chat-cli . Protocol, server, devtools, and renderer APIs are versioned subpaths of @agentskit/chat ; React and Ink can also render host-owned controlled sessions without creating a second controller. Patch releases preserve protocol meaning, component contracts, and persisted session compatibility. See , the , the , and the . - Node.js 22 in CI; Node.js 24 in release workflows - TypeScript strict mode across packages - Peer ranges for @agentskit/core , renderer bindings, and @agentskit/memory are authoritative in each published manifest Documentation - - - - - - - Examples React, Vue, Svelte, and Solid share definitions from @agentskit/chat-example-shared . React Native and Ink keep dedicated proof apps. Contributing Read , , , and before editing. Use doc-bridge for ownership routing: Tags: agentskit-chat , agentskit , typescript , cross-framework , chat-ui , deterministic-answers AgentsKit ecosystem Product Relationship --- --- Controller, adapters, memory, eval, and framework bindings consumed upstream Dogfoods the consolidated protocol and Ask surface This repository: the shared application layer for conversational surfaces Dogfoods deterministic local answers and shared Ask integration Indexes ownership, gates, and agent handoffs for this repository Reviews changes before merge with the model already in your workflow Configurable issue-to-release SDLC loop License",
           "aliases": "document project"
         },
         "graph": {
@@ -20411,7 +20411,7 @@
             }
           ]
         },
-        "contentHash": "75599723d44a54ecc06e254bccd527bc113f825116b67209bc2a2402c32b9e96",
+        "contentHash": "1bc014575616ca3b89304dfbe2dfb253deaa44448a72892a4b41311107242aec",
         "provenance": "observed",
         "confidence": "observed"
       },
