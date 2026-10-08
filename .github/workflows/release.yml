@@ -41,7 +41,26 @@ jobs:
       - run: pnpm build
       - run: pnpm check:publication-surface
       - run: pnpm conformance:gate
+      # Generate ignored artifacts; this proves determinism, not committed-index freshness.
+      - name: Build deterministic repository index
+        run: |
+          pnpm docs:bridge:index
+          first_index=$(mktemp)
+          trap 'rm -f "$first_index"' EXIT
+          cp .doc-bridge/index.json "$first_index"
+          pnpm docs:bridge:index
+          cmp "$first_index" .doc-bridge/index.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+          import { execFileSync } from 'node:child_process'
+          const tracked = new Set(execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0'))
+          const index = JSON.parse(readFileSync('.doc-bridge/index.json', 'utf8'))
+          const untracked = index.knowledge.filter(entry => !tracked.has(entry.path))
+          if (untracked.length) throw new Error(`Index includes untracked inputs: ${untracked.map(entry => entry.path).join(', ')}`)
+          NODE
       - run: pnpm docs:bridge:gate
+      - run: pnpm docs:bridge:conformance
+      - run: pnpm docs:bridge:doctor
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - run: pnpm test:pty

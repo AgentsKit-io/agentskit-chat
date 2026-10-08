@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Patch Changes
+
+- Generate ignored doc-bridge context before local and CI documentation checks, verify deterministic bytes and tracked inputs, and pin documentation tooling to `1.14.0-next.2`.
+
 ## 0.5.0 — 2026-10-07
 
 - Adds optional `@agentskit/chat/drizzle-pg` tenant-scoped PostgreSQL SessionStorage with atomic cursor compare-and-swap; message memory remains upstream-owned.
