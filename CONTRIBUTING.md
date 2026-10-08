@@ -23,6 +23,13 @@ pnpm docs:bridge:query ownership <id> --agent
 pnpm docs:bridge:gate
 ```
 
+The repository index and its capabilities and `llms.txt` companions in
+`.doc-bridge/` are generated locally and in CI; never commit them. Run
+`pnpm docs:bridge:index` before queries or gates in a fresh checkout and after
+source or documentation changes. CI compares two index builds and verifies
+tracked inputs before running documentation gates, conformance, and doctor;
+this checks deterministic generation, not committed-index freshness.
+
 MCP tools: `handoff.resolve`, `doc.search`, `doc.get`, `gate.status`,
 `memory.classify`, `memory.promoteDraft`, and `retriever.query`.
 
@@ -42,6 +49,7 @@ pnpm test
 pnpm build
 pnpm check:public-api
 pnpm conformance:gate
+pnpm docs:bridge:index
 pnpm docs:bridge:gate
 pnpm test:e2e   # Playwright (React, React Native web, Vue)
 pnpm test:pty   # Ink terminal proof

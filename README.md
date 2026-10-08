@@ -111,6 +111,10 @@ pnpm docs:bridge:query ownership <id> --agent
 pnpm docs:bridge:gate
 ```
 
+Generate the ignored `.doc-bridge/` index, capabilities, and `llms.txt` locally
+before queries or gates and after source changes. Never commit these outputs;
+CI checks deterministic generation and tracked inputs.
+
 **Tags:** `agentskit-chat`, `agentskit`, `typescript`, `cross-framework`, `chat-ui`, `deterministic-answers`
 
 ## AgentsKit ecosystem

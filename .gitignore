@@ -25,3 +25,8 @@ artifacts/
 .wrangler/
 .dev.vars
 apps/docs/lib/docs-index.generated.json
+
+# Generated repository documentation context
+/.doc-bridge/index.json
+/.doc-bridge/capabilities.json
+/.doc-bridge/llms.txt

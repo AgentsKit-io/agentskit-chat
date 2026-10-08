@@ -16,7 +16,10 @@ remains tied to its original release and does not validate `0.5.0`.
 
 ## Engineering gates
 
-Run from a clean checkout of `main`:
+Run from a clean checkout of `main`. Generate the ignored repository index
+before documentation checks; never commit the generated `.doc-bridge/` index,
+capabilities, or `llms.txt`. CI builds the index twice and compares bytes, then
+checks that indexed knowledge comes from tracked inputs:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -40,7 +43,7 @@ pnpm ecosystem:claims:check
 pnpm ecosystem:adoption:check
 pnpm check:public-api
 pnpm check:publication-surface
-pnpm exec ak-docs gate run index-freshness
+pnpm docs:bridge:conformance
 pnpm changeset status
 ```
 
