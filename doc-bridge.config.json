@@ -451,7 +451,7 @@
     },
     "memory": {
       "enabled": true,
-      "adapters": ["playbook-memory", "cursor-rules", "session-export"],
+      "adapters": ["playbook-memory", "cursor-rules"],
       "ingestDir": ".doc-bridge/memory-inbox",
       "classify": true,
       "promote": {
