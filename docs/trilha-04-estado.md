@@ -1,4 +1,54 @@
-# Trilha 04 — estado real por etapa (2026-10-09)
+# Trilha 04 — estado real por etapa (2026-10-10)
+
+## Reconciliação da retomada — 10/10/2026
+
+Este checkpoint prevalece sobre o levantamento histórico abaixo. A retomada encontrou
+worktree limpo em `release/0.6.0`, revisão `b52b421d6e230202210f61828f73f257ae268ad3`,
+já enviada ao origin. Não havia alterações não commitadas para recuperar. O spec da
+retomada é o contrato: inspecionar o trabalho anterior, concluir o que faltar de
+RF-07/RF-11, atualizar esta tabela e fazer push, sem merge ou publicação. Não existe
+`ORCA_PLAYBOOK.md` neste worktree nem contrato pai/hash de critérios; conforme o spec,
+essa ausência não impede a retomada. Nenhum agente foi despachado nesta execução.
+
+| Etapa | PR | Gate / evidência | Saída atual |
+|---|---|---|---|
+| 4 — CostStore upstream | [agentskit#1835](https://github.com/AgentsKit-io/agentskit/pull/1835) | Head `fdb1e758`; checks consultados no GitHub, sem falha; sem mudança upstream nesta execução | Já mergeado por outra sessão; correções preservadas |
+| 3/4 — decide + custo no chat | [chat#205](https://github.com/AgentsKit-io/agentskit-chat/pull/205), incorporado em [#206](https://github.com/AgentsKit-io/agentskit-chat/pull/206) | #205 fechado; código combinado em `6723cd7`; suíte atual do servidor: 73 passaram, 3 ignorados; cobertura de linhas 98,45% | Implementado; validação local de HTTP/adapter sintético, sem recertificar Postgres/Neon |
+| 9 — RF-07: turno com parts retorna 200 | [chat#206](https://github.com/AgentsKit-io/agentskit-chat/pull/206) | `packages/server/tests/uploads.test.ts` e `known-gaps.test.ts` na suíte atual; 501 permanece apenas quando o host não configura uploads | Validado localmente no contrato com store/adapter determinísticos |
+| 9 — RF-11: entrega no adapter | [chat#206](https://github.com/AgentsKit-io/agentskit-chat/pull/206) | Suíte atual cobre URL/bytes, renovação no histórico, isolamento, limites e adapters congelados; ADR-0038 e registro de adoção já presentes | Validado localmente; contrato real MinIO bloqueado |
+| 9 — MinIO/Docker | #206 | Carga observada 11,92 (<30); tentativas de pull falharam: Docker Hub `pull access denied`; Quay `401 UNAUTHORIZED` | BLOCKED: não há imagem MinIO local nem execução do contrato real; nenhum login/credencial foi solicitado |
+| Gate Svelte pendente | #206 / [chat#207](https://github.com/AgentsKit-io/agentskit-chat/pull/207) | `pnpm --filter @agentskit/chat-svelte test`: 27 testes + 1 SSR passaram; funções 74,70%, piso 74% | Validado; não foi necessário alterar testes nem baixar o piso |
+| Artefatos README/ADRs | #206 / #207 | README já conta 38 ADRs; revisão inclui `b52b421` e `b723c77`; `pnpm check:readme-standard` | Alterações anteriores preservadas; estado não era mais 36→37 |
+| 10 — preparação Release OSS 2 | [chat#207](https://github.com/AgentsKit-io/agentskit-chat/pull/207) | Head `b52b421`; [CI quality/browser/Ink](https://github.com/AgentsKit-io/agentskit-chat/actions/runs/38064616001) SUCCESS, doc-advisory/CodeQL/dependency review também SUCCESS; merge `4891be6` confirmado remotamente | 0.6.0 já preparado e mergeado por outra sessão; publicação não realizada nem verificada nesta execução |
+
+Validação nesta retomada: dependências restauradas com `pnpm install --frozen-lockfile
+--offline`, sem mudar lockfile; um job pesado por vez; nenhum CI novo disparado para
+substituir os resultados existentes. A evidência local liga-se a `b52b421`; a alteração
+desta rodada é exclusivamente este checkpoint documental. O gate doc-bridge deve usar
+a versão local do lockfile: a primeira chamada sem node_modules usou CLI global e não
+constitui evidência válida para o repositório. Após instalação e regeneração com a CLI local, `pnpm docs:bridge:gate` passou
+3/3 gates; `pnpm docs:bridge:doctor` confirmou índice fresco (83/100, com lacunas
+de conectividade e benchmark não analisado); README Standard passou 221 regras,
+0 falhas. Estes checks não provam cobertura semântica de toda a documentação.
+
+**Validated:** RF-07/RF-11 no contrato local sintético, cobertura Svelte e estado remoto
+dos PRs. **Partially validated:** entrega de parts, pois o serviço S3 real não foi
+exercitado nesta retomada. **Not analyzed:** R2, Neon, Hyperdrive, workerd, provedor real,
+50 recibos e estado de publicação npm. **Blocked:** contrato MinIO por acesso às imagens.
+**Not applicable:** revisão visual humana de UI nesta execução, que não altera UI.
+Nenhum teste sintético equivale ao gate MinIO/R2 ou à autorização de publicação.
+
+Próxima ação necessária: disponibilizar imagem MinIO acessível para executar as duas
+acceptance flows existentes com `CHD_S3_ENDPOINT`; R2 e a autorização de publicação
+continuam com os responsáveis. Não foram feitos merge, publicação ou alterações no
+upstream; arquivos e containers preexistentes foram preservados. As 21 pastas node_modules criadas pela instalação desta execução foram removidas
+após os checks; sua criação às 17:03 foi conferida antes da limpeza. O único log
+temporário desta retomada foi removido. O espaço livre final passou de 12 GB decimais
+(11.857.356 KiB), ainda próximo do limite; não iniciar novo job pesado sem conferir.
+O gate doc-bridge passou antes desta correção final do registro de limpeza; não foi
+reexecutado sem as dependências, logo não certifica o índice após esta edição. Branch documental: `codex/t04-state-reconciliation`.
+
+## Levantamento histórico — 09/10/2026
 
 Levantamento feito antes de qualquer implementação desta rodada. Fontes:
 `AgentsKit-io/agentskit` em `origin/main` `cff4ba9b`, `AgentsKit-io/agentskit-chat`
