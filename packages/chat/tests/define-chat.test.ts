@@ -697,7 +697,7 @@ describe('deterministic conversation session', () => {
       const session = createChatSession(defineChat({ id: 'class-adapter', chat: { adapter: source }, ...(conversation ? { conversation } : {}) }))
       expect(session.chat.adapter.capabilities).toEqual({ multiModal: false })
       expect(session.updateChat({ adapter: source }).adapter.capabilities).toEqual({ multiModal: false })
-      expect(session.chat.adapter.createSource({} as AdapterRequest)).toBeDefined()
+      expect(session.chat.adapter.createSource(request('hello', 'class-user'))).toBeDefined()
     }
   })
 
