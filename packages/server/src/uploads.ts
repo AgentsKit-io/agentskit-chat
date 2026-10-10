@@ -132,31 +132,40 @@ const dataUrl = (bytes: Uint8Array, mimeType: string): string => {
  */
 export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy, tenantId: string, sessionId: string, signal: AbortSignal): AdapterFactory => {
   const expectedPrefix = prefix(tenantId, sessionId)
-  const deliver = async (part: Exclude<ContentPart, { type: 'text' }>): Promise<ContentPart> => {
-    if (!part.source.startsWith(expectedPrefix) || !reference.test(part.source.slice(expectedPrefix.length))) return part
-    if (policy.delivery !== 'bytes') return { ...part, source: await policy.store.presignGet(part.source, policy.expiresIn ?? 300, signal) }
-    const stored = await readStored(policy, part.source, policy.maxBytes, signal)
-    return { ...part, source: dataUrl(stored.bytes, part.mimeType ?? stored.mimeType ?? 'application/octet-stream') }
-  }
-  const resolve = (message: Message): Promise<Message> | Message => message.parts?.some(part => part.type !== 'text')
-    ? Promise.all(message.parts.map(part => part.type === 'text' ? part : deliver(part))).then(parts => ({ ...message, parts }))
-    : message
-  return {
-    ...adapter,
-    createSource: request => {
-      let source: ReturnType<AdapterFactory['createSource']> | undefined
-      let aborted = false
-      return {
-        async *stream() {
-          const messages = await Promise.all(request.messages.map(resolve))
-          if (aborted) return
-          source = adapter.createSource({ ...request, messages })
-          yield* source.stream()
-        },
-        abort() { aborted = true; source?.abort() },
+  return new Proxy(adapter, {
+    get(target, property) {
+      if (property !== 'createSource') {
+        const value: unknown = Reflect.get(target, property, target)
+        return typeof value === 'function' ? value.bind(target) : value
+      }
+      return (request: Parameters<AdapterFactory['createSource']>[0]) => {
+        let source: ReturnType<AdapterFactory['createSource']> | undefined
+        let aborted = false
+        return {
+          async *stream() {
+            let remaining = policy.maxBytes
+            const messages: Message[] = []
+            for (const message of request.messages) {
+              if (!message.parts) { messages.push(message); continue }
+              const parts: ContentPart[] = []
+              for (const part of message.parts) {
+                if (part.type === 'text' || !part.source.startsWith(expectedPrefix) || !reference.test(part.source.slice(expectedPrefix.length))) { parts.push(part); continue }
+                if (policy.delivery !== 'bytes') { parts.push({ ...part, source: await policy.store.presignGet(part.source, policy.expiresIn ?? 300, signal) }); continue }
+                const stored = await readStored(policy, part.source, remaining, signal)
+                remaining -= stored.bytes.byteLength
+                parts.push({ ...part, source: dataUrl(stored.bytes, part.mimeType ?? stored.mimeType ?? 'application/octet-stream') })
+              }
+              messages.push({ ...message, parts })
+            }
+            if (aborted) return
+            source = adapter.createSource({ ...request, messages })
+            yield* source.stream()
+          },
+          abort() { aborted = true; source?.abort() },
+        }
       }
     },
-  }
+  })
 }
 
 /** SigV4 is delegated to aws4fetch; credentials are supplied by the host, never logged. */

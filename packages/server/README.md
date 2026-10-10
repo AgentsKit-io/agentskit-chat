@@ -91,7 +91,8 @@ Reference validation rejects cross-tenant/session keys (403), disallowed size/ty
 (413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read
 at most the declared upload size and buffer it within `maxBytes`; choose a conservative
 limit. With core 1.15, verified references reach the adapter as short signed GET URLs
-(default) or data URLs (`uploads.delivery: 'bytes'`). Memory and snapshots keep only
+(default) or data URLs (`uploads.delivery: 'bytes'`). In bytes mode, `maxBytes`
+is also the total raw-byte budget per model call, including transcript history. Memory and snapshots keep only
 opaque references. Earlier turns receive fresh URLs on each model call, including
 a resumed decision. Configure immutable objects: a still-valid signed PUT otherwise
 allows an upload to change after verification.

@@ -1,6 +1,6 @@
 import { AwsClient } from 'aws4fetch'
 import { describe, expect, it } from 'vitest'
-import { createS3BlobStore, createUploadHandler, resolveUploadParts } from '../src/uploads.js'
+import { createS3BlobStore, createUploadHandler, deliverUploadParts, resolveUploadParts } from '../src/uploads.js'
 import type { BlobStore } from '../src/uploads.js'
 import { createChatHandler } from '../src/index.js'
 import type { AdapterFactory, Message } from '@agentskit/core'
@@ -313,5 +313,32 @@ describe('parts delivery to the adapter', () => {
     expect(response.status).toBe(200)
     expect(await response.text()).toContain('CHAT_TURN_FAILED')
     expect(adapterStarts).toHaveLength(0)
+  })
+})
+
+
+describe('adapter delivery limits and class contracts', () => {
+  it('caps total bytes across historical messages before dispatch', async () => {
+    let calls = 0
+    const adapter: AdapterFactory = { createSource: () => { calls++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length }, 'tenant', 'session', new AbortController().signal)
+    const message: Message = { id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }
+    const source = wrapped.createSource({ messages: [message, { ...message, id: 'm2' }] })
+    await expect(async () => { for await (const _chunk of source.stream()) { /* drain */ } }).rejects.toThrow('size limit')
+    expect(calls).toBe(0)
+  })
+
+  it('preserves class prototype capabilities and private state', async () => {
+    class ClassAdapter implements AdapterFactory {
+      #calls = 0
+      get capabilities() { return { multiModal: false } }
+      get calls() { return this.#calls }
+      createSource() { this.#calls++; return { async *stream() { yield { type: 'done' as const } }, abort() {} } }
+    }
+    const adapter = new ClassAdapter()
+    const wrapped = deliverUploadParts(adapter, policy, 'tenant', 'session', new AbortController().signal)
+    expect(wrapped.capabilities).toEqual({ multiModal: false })
+    for await (const _chunk of wrapped.createSource({ messages: [] }).stream()) { /* drain */ }
+    expect(adapter.calls).toBe(1)
   })
 })
