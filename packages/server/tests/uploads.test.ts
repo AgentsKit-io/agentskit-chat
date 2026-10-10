@@ -333,12 +333,16 @@ describe('adapter delivery limits and class contracts', () => {
       #calls = 0
       get capabilities() { return { multiModal: false } }
       get calls() { return this.#calls }
+      createSourceForSession(input: Parameters<AdapterFactory['createSource']>[0]) { expect(input.messages[0]?.parts?.[0]).toMatchObject({ source: 'https://storage.invalid/short' }); return this.createSource() }
       createSource() { this.#calls++; return { async *stream() { yield { type: 'done' as const } }, abort() {} } }
     }
     const adapter = new ClassAdapter()
     const wrapped = deliverUploadParts(adapter, policy, 'tenant', 'session', new AbortController().signal)
     expect(wrapped.capabilities).toEqual({ multiModal: false })
     for await (const _chunk of wrapped.createSource({ messages: [] }).stream()) { /* drain */ }
-    expect(adapter.calls).toBe(1)
+    const sessionAdapter = wrapped as AdapterFactory & { createSourceForSession: AdapterFactory['createSource'] }
+    const message: Message = { id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }
+    for await (const _chunk of sessionAdapter.createSourceForSession({ messages: [message] }).stream()) { /* drain */ }
+    expect(adapter.calls).toBe(2)
   })
 })

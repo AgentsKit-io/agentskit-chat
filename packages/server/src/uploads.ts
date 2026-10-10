@@ -134,10 +134,12 @@ export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy
   const expectedPrefix = prefix(tenantId, sessionId)
   return new Proxy(adapter, {
     get(target, property) {
-      if (property !== 'createSource') {
+      if (property !== 'createSource' && property !== 'createSourceForSession') {
         const value: unknown = Reflect.get(target, property, target)
         return typeof value === 'function' ? value.bind(target) : value
       }
+      const create: unknown = Reflect.get(target, property, target)
+      if (typeof create !== 'function') return create
       return (request: Parameters<AdapterFactory['createSource']>[0]) => {
         let source: ReturnType<AdapterFactory['createSource']> | undefined
         let aborted = false
@@ -158,7 +160,7 @@ export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy
               messages.push({ ...message, parts })
             }
             if (aborted) return
-            source = adapter.createSource({ ...request, messages })
+            source = Reflect.apply(create, target, [{ ...request, messages }, sessionId]) as ReturnType<AdapterFactory['createSource']>
             yield* source.stream()
           },
           abort() { aborted = true; source?.abort() },
