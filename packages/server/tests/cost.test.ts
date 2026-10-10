@@ -45,9 +45,9 @@ const createWorld = (policy: Partial<TurnCostPolicy> = {}, failing: (call: numbe
     cost: () => ({ store, tenant: 'household-1', capUsd: 0.01, reserveUsd: 0.002, priceUsd, model: 'gemini-2.5-flash-lite', source: 'chat', ...policy }),
   })
   let turn = 0
-  const submit = (sessionId = 'session'): Promise<Response> => handler(new Request('http://localhost/chat', {
+  const submit = (sessionId = 'session', turnId?: string): Promise<Response> => handler(new Request('http://localhost/chat', {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ protocol: 'agentskit.chat.turn', version: 1, eventId: `event-${++turn}`, sessionId, turnId: `turn-${turn}`, sequence: 0,
+    body: JSON.stringify({ protocol: 'agentskit.chat.turn', version: 1, eventId: `event-${++turn}`, sessionId, turnId: turnId ?? `turn-${turn}`, sequence: 0,
       emittedAt: '2026-10-09T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }),
   }))
   return { store, submit, modelCalls: () => calls }
@@ -67,9 +67,20 @@ describe('turn cost policy (RF-25..RF-29)', () => {
     expect(first).toMatchObject({ event: 'server.turn.snapshot', payload: { quota: { utilization: 0.2, warning: false } } })
     expect(await world.store.window({ tenant: 'household-1', capUsd: 0.01 })).toMatchObject({ spentUsd: 0.0015, reservedUsd: 0, utilization: 0.15 })
     expect(world.store.ledger()).toEqual([{
-      tenant: 'household-1', reservationId: 'session:turn-1', model: 'gemini-2.5-flash-lite',
+      tenant: 'household-1', reservationId: expect.stringMatching(/^session:turn-1:/), model: 'gemini-2.5-flash-lite',
       promptTokens: 1000, completionTokens: 500, costUsd: 0.0015, source: 'chat', fallback: true,
     }])
+  })
+
+  it('does not reuse a committed reservation after the 64-turn replay window', async () => {
+    const world = createWorld({ capUsd: 65 * 0.0015 + 0.00001, reserveUsd: 0.0015 })
+    for (let turn = 0; turn < 65; turn++) {
+      const response = await world.submit('session', `cycle-${turn}`)
+      expect(response.status).toBe(200)
+      await response.text()
+    }
+    expect((await world.submit('session', 'cycle-0')).status).toBe(402)
+    expect(world.modelCalls()).toBe(65)
   })
 
   it('RF-27: warns from 80% of the cap and answers 402 QUOTA_EXCEEDED once the cap cannot fit another turn', async () => {
@@ -108,18 +119,19 @@ describe('turn cost policy (RF-25..RF-29)', () => {
     for (let turn = 0; turn < 100; turn++) await (await world.submit()).text()
     const window = await world.store.window({ tenant: 'household-1' })
     const ledger = world.store.ledger()
-    expect(ledger).toHaveLength(80)
+    expect(ledger).toHaveLength(100)
     expect(window.reservedUsd).toBe(0)
     expect(window.spentUsd).toBeCloseTo(ledger.reduce((total, row) => total + row.costUsd, 0), 9)
-    expect(window.spentUsd).toBeCloseTo(80 * 0.0015, 9)
+    expect(window.spentUsd).toBeCloseTo(80 * 0.0015 + 20 * 0.002, 9)
   })
 
-  it('RF-28: a cancelled request releases its reservation', async () => {
+  it.each(['cancel', 'timeout'] as const)('RF-28: a dispatched request commits unknown usage on %s', async mode => {
     const store = createInMemoryCostStore()
     const abort = new AbortController()
     const adapter: AdapterFactory = { createSource: () => ({ async *stream() { await new Promise(resolve => setTimeout(resolve, 200)); yield { type: 'done' } }, abort() {} }) }
     const handler = createChatHandler({
       resolveDefinition: () => ({ id: 'metered', chat: { adapter } }),
+      timeoutMs: mode === 'timeout' ? 50 : 1000,
       sessionStorage: () => createStorage(),
       cost: () => ({ store, tenant: 't', capUsd: 1, reserveUsd: 0.5, priceUsd, model: 'm' }),
     })
@@ -129,10 +141,29 @@ describe('turn cost policy (RF-25..RF-29)', () => {
         emittedAt: '2026-10-09T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }),
     }))
     expect(await store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0.5 })
-    abort.abort()
+    if (mode === 'cancel') abort.abort()
     await response.text().catch(() => undefined)
-    // Cleanup waits for the adapter to settle before it releases; poll instead of guessing its delay.
+    // Cleanup waits for the adapter to settle before it settles; poll instead of guessing its delay.
     await expect.poll(async () => (await store.window({ tenant: 't' })).reservedUsd, { timeout: 2000 }).toBe(0)
+    expect(await store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0, spentUsd: 0.5 })
+  })
+
+  it('releases a reservation when memory fails before dispatch', async () => {
+    const store = createInMemoryCostStore()
+    const handler = createChatHandler({
+      resolveDefinition: () => ({ id: 'metered', chat: {
+        adapter: { createSource: () => { throw new Error('must not dispatch') } },
+        memory: { load: async () => { throw new Error('unavailable') }, save: async () => undefined },
+      } }),
+      sessionStorage: () => createStorage(),
+      cost: () => ({ store, tenant: 't', capUsd: 1, reserveUsd: 0.5, priceUsd, model: 'm' }),
+    })
+    const response = await handler(new Request('http://localhost/chat', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ protocol: 'agentskit.chat.turn', version: 1, eventId: 'event', sessionId: 'session', turnId: 'turn', sequence: 0,
+        emittedAt: '2026-10-09T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }),
+    }))
+    expect(response.status).toBe(500)
     expect(await store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0, spentUsd: 0 })
   })
 

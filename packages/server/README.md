@@ -96,3 +96,8 @@ Parts delivery remains disabled: valid references receive 501
 `TURN_PARTS_UNAVAILABLE` until a supported, published AgentsKit controller accepts
 parts. No controller wrapper, private upstream import or text flattening is used.
 See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.
+
+Turn cost policies reserve with server-generated IDs. Once an adapter call starts,
+cleanup commits reported usage or the reserved estimate when usage is unknown,
+including cancellation, timeout and provider failures. Pre-dispatch failures release
+the hold. Decision stores reject reused IDs from a different or settled proposal.
