@@ -104,3 +104,12 @@ contrato em workerd com o store de decisão, size/bundle budget, doc-bridge gate
 
 Neon, Hyperdrive, R2 e MinIO reais; chamada real a OpenRouter e AI Gateway; extração com 50 recibos; RLS no Postgres.
 RF-27 cobre teto, 402 e aviso; a leitura do teto em `entitlements` fica com o host (starter, etapa 11).
+
+### PRs abertos no checkpoint (todos draft, nenhum mergeado)
+
+| Etapa | PR | Gates locais |
+|---|---|---|
+| 4 — a5 `CostStore` (agentskit) | AgentsKit-io/agentskit#1835 | Pacote: lint, 374 testes, cobertura, Postgres 16, workerd e size-limit verdes; 52 quality gates verdes antes do commit. O hook de pre-push falhou 2 gates por causa do ambiente (dist sendo reconstruído no mesmo worktree e máquina sem memória) e o push foi feito com `HUSKY=0`. O CI precisa confirmar. `pnpm test` do repositório inteiro não foi rodado |
+| 3 e 4 no chat — decide + custo | AgentsKit-io/agentskit-chat#205 | Suíte do servidor e contrato Postgres verdes contra tarballs locais; CI não passa até a publicação do upstream (lockfile) |
+| 5 — matriz AKOS | AgentsKit-io/agentskit-os#6392 | `check-compat-matrix` ok; só documentação |
+| 1, 2, 3 (core), 8 | já no `main` do agentskit (#1826, #1827, #1828, #1833) | "Version Packages" agentskit#1757 aberto e verde; vai incluir o a5 depois do merge de #1835 |
