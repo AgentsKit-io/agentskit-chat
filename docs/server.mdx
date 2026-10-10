@@ -49,7 +49,7 @@ export const POST = (request: Request) => handleChat(request)
 
 | Direction | Format |
 | --- | --- |
-| Request body | `application/json` encoded `client.turn.submit` |
+| Request body | `application/json` encoded `client.turn.submit` or `client.action.decide` |
 | Success body | `application/x-ndjson` — one encoded turn event per line |
 | Decode | `decodeTurnEvent` from `@agentskit/chat/protocol` |
 
@@ -61,6 +61,55 @@ Auth completes **before** parsing untrusted JSON. Trusted context lives only in 
 - **Application metadata** → CAS [`SessionStorage`](/docs/sessions)
 
 `sessionStorage` is required: cursor, active-turn lease, and recent terminal turns prevent rollback, concurrent execution, and replay of tool effects.
+
+## Confirmed actions across requests
+
+Pass `decisions` to accept `client.action.decide`. It returns the upstream `ToolDecisionStore` for the authorized tenant and session; `@agentskit/chat/drizzle-pg` ships a PostgreSQL one.
+
+```ts
+import { chatDecisionDDL, createDrizzleDecisionStore, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
+
+// Apply chatDecisionDDL once in a migration.
+const handleChat = createChatHandler({
+  authenticate,
+  resolveDefinition: context => chats.forTenant(context?.tenantId),
+  sessionStorage: context => createDrizzleSessionStorage(db, context!.tenantId),
+  decisions: (context, sessionId) => createDrizzleDecisionStore(db, context!.tenantId, sessionId),
+})
+```
+
+A tool with `requiresConfirmation` then stops its turn as pending. The decision can arrive in another request or on another instance: the store's atomic claim lets one request execute the tool, and the model continues in that request's stream. Repeating a settled decision replays the stored result.
+
+| Status | Code | Meaning |
+| --- | --- | --- |
+| 404 | `ACTION_NOT_FOUND` | No pending action has this token |
+| 409 | `ACTION_ALREADY_DECIDED` | Another decision won, or is being applied |
+| 409 | `SESSION_BUSY` / `SESSION_CONFLICT` | Another turn holds the session; retry |
+| 501 | `ACTION_DECIDE_UNAVAILABLE` | The host did not configure `decisions` |
+
+Keep `definition.chat.memory` configured: the decision resumes from the stored messages. The claim is not a transaction with your domain write, so keep `unique(tool_call_id)` on tables written by tools.
+
+## Spend limits
+
+Pass `cost` to meter turns against a durable `CostStore` from `@agentskit/observability`.
+
+```ts
+import { postgresCostStore } from '@agentskit/observability/postgres'
+
+const handleChat = createChatHandler({
+  // ...
+  cost: async context => ({
+    store: postgresCostStore({ db }),
+    tenant: context!.tenantId,
+    capUsd: await plans.capFor(context!.tenantId), // your entitlements
+    reserveUsd: 0.002,
+    priceUsd: usage => (usage.promptTokens * 0.1 + usage.completionTokens * 0.4) / 1_000_000,
+    model: 'google/gemini-2.5-flash-lite',
+  }),
+})
+```
+
+The handler reserves `reserveUsd` before the model runs, commits the real cost with a ledger entry after model dispatch, including failed, timed-out, or cancelled turns. When usage is unknown it charges the reservation; it releases the reservation only if no model call started. A turn that does not fit the cap gets 402 `QUOTA_EXCEEDED` and never reaches the model. A custom `createId` must generate unique IDs on every call; a constant value can reuse a reservation and bypass the quota. The first snapshot carries `quota.utilization` and `quota.warning` (true from 80% by default, `warnAt` to change) for a usage bar.
 
 ## Limits and failures
 

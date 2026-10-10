@@ -1,7 +1,8 @@
 import { Client } from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { chatSessionDDL, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
+import { chatDecisionDDL, chatSessionDDL, createDrizzleDecisionStore, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
 import { runSessionStorageContract } from './contract.js'
+import { runDecisionStoreContract } from './decision-contract.js'
 
 export default {
   async fetch(_request: Request, _env: unknown, context: { waitUntil(promise: Promise<unknown>): void }): Promise<Response> {
@@ -10,7 +11,15 @@ export default {
     try {
       await client.connect()
       await client.query(chatSessionDDL)
-      const criteria = await runSessionStorageContract(tenant => createDrizzleSessionStorage(drizzle(client), tenant))
+      await client.query(chatDecisionDDL)
+      const db = drizzle(client)
+      const criteria = [
+        ...await runSessionStorageContract(tenant => createDrizzleSessionStorage(db, tenant)),
+        ...await runDecisionStoreContract({
+          sessions: tenant => createDrizzleSessionStorage(db, tenant),
+          decisions: (tenant, sessionId) => createDrizzleDecisionStore(db, tenant, sessionId),
+        }),
+      ]
       return Response.json({ runtime: 'workerd-request-client', criteria })
     } catch (error) {
       return Response.json({ failed: error instanceof Error ? error.message : 'Contract failed' }, { status: 500 })

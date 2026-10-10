@@ -90,9 +90,22 @@ The chat handler's optional `uploads` policy additionally requires
 Reference validation rejects cross-tenant/session keys (403), disallowed size/type
 (413/415), missing objects or metadata/checksum mismatches (422). SHA-256 checks read
 at most the declared upload size and buffer it within `maxBytes`; choose a conservative
-limit. The store's short `presignGet` is available for future upstream composition.
+limit. With core 1.15, verified references reach the adapter as short signed GET URLs
+(default) or data URLs (`uploads.delivery: 'bytes'`). In bytes mode, `maxBytes`
+limits each file; `maxTotalBytes` separately limits total raw bytes per model call, including transcript history
+(default: ten times `maxBytes`, capped at the largest safe integer). Memory and snapshots keep only
+opaque references. Earlier turns receive fresh URLs on each model call, including
+a resumed decision. Configure immutable objects: a still-valid signed PUT otherwise
+allows an upload to change after verification.
 
-Parts delivery remains disabled: valid references receive 501
-`TURN_PARTS_UNAVAILABLE` until a supported, published AgentsKit controller accepts
-parts. No controller wrapper, private upstream import or text flattening is used.
-See ADR-0035 and the CH-D report for local storage/workerd evidence and remaining gates.
+Servers with uploads advertise `turn-parts-v1`; clients must echo the capability.
+Without uploads the handler returns 501 `TURN_PARTS_UNAVAILABLE`. Adapters declaring
+`multiModal: false` receive 422 `TURN_PARTS_UNSUPPORTED` before a model call.
+`uploads.tenantId` authorizes every request, including text turns and decisions.
+See [ADR-0038](../../docs/architecture/adrs/0038-reference-parts-adapter-delivery.md).
+Core 1.15 is pending publication; this integration is not available in chat 0.5.0.
+Turn cost policies reserve with server-generated IDs. Once an adapter call starts,
+cleanup commits reported usage or the reserved estimate when usage is unknown,
+including cancellation, timeout and provider failures. Pre-dispatch failures release
+the hold. Decision stores reject reused IDs from a different or settled proposal.
+

@@ -137,6 +137,17 @@ export const validTurnEventFixtures = [
       },
     },
   },
+  // Appended: the fixtures above keep their positions for consumers that index them.
+  {
+    name: 'action decision',
+    event: {
+      ...base,
+      eventId: 'event-decide',
+      sequence: 0,
+      event: 'client.action.decide',
+      payload: { token: 'call-1', decision: 'approve' },
+    },
+  },
 ] as const satisfies readonly TurnEventFixture[]
 
 export const invalidTurnEventFixtures = [

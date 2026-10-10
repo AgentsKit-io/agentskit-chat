@@ -1,9 +1,9 @@
 import { AwsClient } from 'aws4fetch'
 import { describe, expect, it } from 'vitest'
-import { createS3BlobStore, createUploadHandler, resolveUploadParts } from '../src/uploads.js'
+import { createS3BlobStore, createUploadHandler, deliverUploadParts, resolveUploadParts } from '../src/uploads.js'
 import type { BlobStore } from '../src/uploads.js'
 import { createChatHandler } from '../src/index.js'
-import type { AdapterFactory } from '@agentskit/core'
+import type { AdapterFactory, Message } from '@agentskit/core'
 
 const bytes = new TextEncoder().encode('local upload')
 const sha256 = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), n => n.toString(16).padStart(2, '0')).join('')
@@ -36,14 +36,13 @@ describe('upload reference policy', () => {
     await expect(resolveUploadParts(policy, 'tenant', 'session', [{ ...part, sha256: '0'.repeat(64) }], AbortSignal.timeout(1000))).rejects.toMatchObject({ status: 422, code: 'UPLOAD_CHECKSUM_MISMATCH' })
     await expect(resolveUploadParts(policy, 'tenant', 'session', [{ ...part, bytes: 1 }], AbortSignal.timeout(1000))).rejects.toMatchObject({ status: 413 })
   })
-  it('preserves string turns and never silently drops parts when upstream capability is unavailable', async () => {
+  it('preserves string turns and rejects unnegotiated, cross-tenant and mismatched parts', async () => {
     const adapter: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'done' } }, abort() {} }) }
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }), uploads: { ...policy, tenantId: () => 'tenant' } })
     const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', turnId: 'turn', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
     const post = (payload: unknown) => handler(request({ ...event, payload }))
-    const legacy = await post({ input: 'hello' }); expect(legacy.status).toBe(200); expect(await legacy.text()).not.toContain('turn-parts-v1')
+    const legacy = await post({ input: 'hello' }); expect(legacy.status).toBe(200); expect(await legacy.text()).toContain('"capabilities":["turn-parts-v1"]')
     expect((await post({ input: [part] })).status).toBe(400)
-    expect((await post({ input: [part], capabilities: ['turn-parts-v1'] })).status).toBe(501)
     expect((await post({ input: [{ ...part, ref: ref.replace('tenant', 'other') }], capabilities: ['turn-parts-v1'] })).status).toBe(403)
     expect((await post({ input: [{ ...part, sha256: '0'.repeat(64) }], capabilities: ['turn-parts-v1'] })).status).toBe(422)
   })
@@ -71,11 +70,42 @@ describe.skipIf(!endpoint)('BlobStore contract against local S3-compatible stora
     await expect(resolveUploadParts({ ...policy, store: storage }, 'tenant', 'session', [{ ...realPart, sha256: '0'.repeat(64) }], signal)).rejects.toMatchObject({ status: 422 })
     const get = await fetch(await storage.presignGet(result.ref, 60, signal)); expect(await get.text()).toBe('local upload')
   }, 30_000)
+  it('RF-11: the adapter can fetch the delivered signed URL, or receives the stored bytes', async () => {
+    const client = new AwsClient({ accessKeyId: 'minioadmin', secretAccessKey: 'minioadmin', service: 's3', region: 'us-east-1' })
+    const bucket = 'chd-contract'
+    expect([200, 409]).toContain((await client.fetch(`${endpoint}/${bucket}`, { method: 'PUT' })).status)
+    const storage = createS3BlobStore({ endpoint: endpoint!, bucket, region: 'us-east-1', accessKeyId: 'minioadmin', secretAccessKey: 'minioadmin' })
+    const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
+    for (const delivery of ['url', 'bytes'] as const) {
+      const uploaded = await (await createUploadHandler({ ...policy, store: storage, authorize: async () => ({ tenantId: 'tenant' }) })(request(metadata))).json() as { ref: string; url: string; headers: Record<string, string> }
+      expect((await fetch(uploaded.url, { method: 'PUT', headers: uploaded.headers, body: bytes })).status).toBe(200)
+      const sources: string[] = []
+      const adapter: AdapterFactory = { createSource: input => {
+        const source = input.messages.find(message => message.role === 'user')?.parts?.[0]
+        if (source && source.type !== 'text') sources.push(source.source)
+        return { async *stream() { yield { type: 'done' } }, abort() {} }
+      } }
+      const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+        uploads: { ...policy, store: storage, delivery, expiresIn: 60, tenantId: () => 'tenant' } })
+      const response = await handler(request({ ...event, turnId: `turn-${delivery}`, payload: { input: [{ ...part, ref: uploaded.ref }], capabilities: ['turn-parts-v1'] } }))
+      expect(response.status).toBe(200)
+      expect(await response.text()).not.toContain('X-Amz-Signature')
+      expect(sources).toHaveLength(1)
+      if (delivery === 'bytes') { expect(sources[0]).toBe(`data:image/png;base64,${btoa('local upload')}`); continue }
+      const signed = new URL(sources[0]!)
+      expect(signed.searchParams.get('X-Amz-Expires')).toBe('60')
+      const fetched = await fetch(signed)
+      expect(fetched.status).toBe(200)
+      expect(await fetched.text()).toBe('local upload')
+      signed.searchParams.set('X-Amz-Signature', '0'.repeat(64))
+      expect((await fetch(signed)).status).toBe(403)
+    }
+  }, 30_000)
 })
 
 const workerUrl = process.env.CHD_WRANGLER_URL
 describe.skipIf(!workerUrl)('real wrangler dev HTTP flow', () => {
-  it('presigns and validates uploads through workerd, preserving tenant isolation and the upstream gate', async () => {
+  it('presigns and validates uploads through workerd, preserving tenant isolation and fetching the delivered URL', async () => {
     const post = (path: string, body: unknown, tenant = 'tenant') => fetch(`${workerUrl}${path}`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-test-tenant': tenant }, body: JSON.stringify(body) })
     const uploadResponse = await post('/uploads', metadata); expect(uploadResponse.status).toBe(201)
     const result = await uploadResponse.json() as { ref: string; url: string; headers: Record<string, string> }
@@ -85,7 +115,10 @@ describe.skipIf(!workerUrl)('real wrangler dev HTTP flow', () => {
     const body = { ...event, payload: { input: [realPart], capabilities: ['turn-parts-v1'] } }
     expect((await post('/chat', body, 'other')).status).toBe(403)
     expect((await post('/chat', { ...body, payload: { ...body.payload, input: [{ ...realPart, sha256: '0'.repeat(64) }] } })).status).toBe(422)
-    expect((await post('/chat', body)).status).toBe(501)
+    const delivered = await post('/chat', body); expect(delivered.status).toBe(200)
+    const transcript = await delivered.text()
+    expect(transcript).toContain('local upload')
+    expect(transcript).not.toContain('X-Amz-Signature')
     expect((await post('/uploads', { ...metadata, bytes: 1025 })).status).toBe(413)
     expect((await post('/uploads', { ...metadata, mimeType: 'text/html' })).status).toBe(415)
     expect((await post('/uploads', { ...metadata, sessionId: 'forbidden' })).status).toBe(403)
@@ -101,7 +134,7 @@ describe('upload trust boundary and recovery', () => {
     expect((await upload(new Request('http://localhost/uploads'))).status).toBe(405)
     expect((await upload(new Request('http://localhost/uploads', { method: 'POST', body: '{}' }))).status).toBe(415)
     expect((await upload(new Request('http://localhost/uploads', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{' }))).status).toBe(400)
-    for (const overrides of [{ maxBytes: 0 }, { mimeTypes: [] }, { expiresIn: 601 }, { expiresIn: 0 }, { timeoutMs: 0 }]) {
+    for (const overrides of [{ maxBytes: 0 }, { maxTotalBytes: 0 }, { maxTotalBytes: 1.5 }, { mimeTypes: [] }, { expiresIn: 601 }, { expiresIn: 0 }, { timeoutMs: 0 }]) {
       expect(() => createUploadHandler({ ...policy, ...overrides, authorize: async () => ({ tenantId: 'tenant' }) })).toThrow()
     }
     const defaultExpiry = createUploadHandler({ ...policy, expiresIn: 60, authorize: async () => ({ tenantId: 'tenant' }) })
@@ -187,7 +220,7 @@ describe('upload failure contracts', () => {
     await expect(storage.presignGet(ref, 60, AbortSignal.abort())).rejects.toMatchObject({ name: 'AbortError' })
   })
 
-  it('keeps parts disabled without upload policy and never starts the adapter', async () => {
+  it('keeps parts disabled without upload policy, advertises nothing and never starts the adapter', async () => {
     let starts = 0
     const adapter: AdapterFactory = { createSource: () => { starts++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }) })
@@ -195,5 +228,148 @@ describe('upload failure contracts', () => {
     expect(response.status).toBe(501)
     expect(await response.json()).toMatchObject({ error: { code: 'TURN_PARTS_UNAVAILABLE' } })
     expect(starts).toBe(0)
+    const legacy = await handler(request({ protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', turnId: 'turn-2', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }))
+    expect(await legacy.text()).not.toContain('turn-parts-v1')
+  })
+})
+
+describe('parts delivery to the adapter', () => {
+  const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
+  const fixture = (overrides: { readonly delivery?: 'url' | 'bytes'; readonly multiModal?: boolean; readonly history?: Message[]; readonly maxBytes?: number; readonly frozen?: boolean } = {}) => {
+    const seen: Message[][] = []
+    let saved: Message[] = overrides.history ?? []
+    let signed = 0
+    const adapter: AdapterFactory = {
+      createSource: input => { seen.push(input.messages); return { async *stream() { yield { type: 'text', content: 'seen' }; yield { type: 'done' } }, abort() {} } },
+      ...(overrides.multiModal === undefined ? {} : { capabilities: { multiModal: overrides.multiModal } }),
+    }
+    const handler = createChatHandler({
+      resolveDefinition: () => ({ id: 'test', chat: { adapter: overrides.frozen ? Object.freeze(adapter) : adapter, memory: { load: async () => saved, save: async messages => { saved = [...messages] } } } }),
+      sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, maxBytes: overrides.maxBytes ?? policy.maxBytes, store: { ...store, presignGet: async target => `https://storage.invalid/short/${++signed}?ref=${encodeURIComponent(target)}` }, tenantId: () => 'tenant', ...(overrides.delivery ? { delivery: overrides.delivery } : {}) },
+    })
+    const post = (turnId: string, payload: unknown) => handler(request({ ...event, turnId, payload }))
+    return { post, seen, saved: () => saved }
+  }
+  const text = { type: 'text' as const, text: 'What is in this image?' }
+  const partsOf = (messages: Message[] | undefined) => messages?.find(message => message.role === 'user' && message.parts)?.parts
+
+  it('RF-07/RF-11: delivers a short signed URL to the adapter and keeps only the reference in the transcript', async () => {
+    const { post, seen, saved } = fixture()
+    const response = await post('turn-1', { input: [text, part], capabilities: ['turn-parts-v1'] })
+    expect(response.status).toBe(200)
+    const stream = await response.text()
+    expect(partsOf(seen[0])).toEqual([text, { type: 'image', source: `https://storage.invalid/short/1?ref=${encodeURIComponent(ref)}`, mimeType: 'image/png' }])
+    expect(stream).toContain('"capabilities":["turn-parts-v1"]')
+    expect(stream).toContain(ref)
+    expect(stream).not.toContain('storage.invalid')
+    expect(partsOf(saved())).toEqual([text, { type: 'image', source: ref, mimeType: 'image/png' }])
+    expect(JSON.stringify(saved())).not.toContain('storage.invalid')
+  })
+  it('RF-11: delivers bytes as a data URL when the provider cannot fetch URLs, without persisting them', async () => {
+    const { post, seen, saved } = fixture({ delivery: 'bytes' })
+    const response = await post('turn-1', { input: [part], capabilities: ['turn-parts-v1'] })
+    expect(response.status).toBe(200)
+    const stream = await response.text()
+    const expected = `data:image/png;base64,${btoa('local upload')}`
+    expect(partsOf(seen[0])).toEqual([{ type: 'image', source: expected, mimeType: 'image/png' }])
+    expect(stream).not.toContain(expected)
+    expect(JSON.stringify(saved())).not.toContain('base64')
+  })
+  it('signs earlier references again on a later text turn and leaves foreign sources untouched', async () => {
+    const foreign = { type: 'image' as const, source: 'other/session/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' }
+    const { post, seen } = fixture({ history: [{ id: 'old', role: 'user', content: 'earlier', parts: [foreign], status: 'complete', createdAt: new Date(0) }] })
+    await (await post('turn-1', { input: [{ ...part, mimeType: 'image/png' }], capabilities: ['turn-parts-v1'] })).text()
+    const followUp = await post('turn-2', { input: 'and now?' }); expect(followUp.status).toBe(200); await followUp.text()
+    expect(partsOf(seen[1]?.slice(1))).toEqual([{ type: 'image', source: `https://storage.invalid/short/2?ref=${encodeURIComponent(ref)}`, mimeType: 'image/png' }])
+    expect(seen[1]?.[0]?.parts).toEqual([foreign])
+  })
+  for (const delivery of ['url', 'bytes'] as const) it(`delivers and replays two files through frozen adapters (${delivery})`, async () => {
+    const { post, seen, saved } = fixture({ delivery, frozen: true, maxBytes: bytes.length })
+    const second = { ...part, ref: ref.replace('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb') }
+    for (const [turnId, payload] of [
+      ['turn-1', { input: [part], capabilities: ['turn-parts-v1'] }],
+      ['turn-2', { input: [second], capabilities: ['turn-parts-v1'] }],
+      ['turn-3', { input: 'and now?' }],
+    ] as const) {
+      const response = await post(turnId, payload)
+      expect(response.status).toBe(200)
+      expect(await response.text()).not.toContain('CHAT_TURN_FAILED')
+    }
+    expect(seen).toHaveLength(3)
+    const replayed = seen[2]!.flatMap(message => message.parts ?? []).filter(part => part.type !== 'text')
+    expect(replayed).toHaveLength(2)
+    expect(replayed.every(part => part.source.startsWith(delivery === 'bytes' ? 'data:' : 'https:'))).toBe(true)
+    expect(JSON.stringify(saved())).toContain(second.ref)
+  })
+  it('maps non-image references to file parts', async () => {
+    const pdf = { ...part, mimeType: 'application/pdf' }
+    const seen: Message[][] = []
+    const adapter: AdapterFactory = { createSource: input => { seen.push(input.messages); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, mimeTypes: ['application/pdf'], store: { ...store, read: async () => new Response(bytes, { headers: { 'content-type': 'application/pdf' } }) }, tenantId: () => 'tenant' } })
+    const response = await handler(request({ ...event, turnId: 'turn-1', payload: { input: [pdf], capabilities: ['turn-parts-v1'] } }))
+    expect(response.status).toBe(200); await response.text()
+    expect(partsOf(seen[0])).toEqual([{ type: 'file', source: 'https://storage.invalid/short', mimeType: 'application/pdf' }])
+  })
+  it('refuses file parts for an adapter that declares no multimodal support, and still accepts text parts', async () => {
+    const { post, seen } = fixture({ multiModal: false })
+    const refused = await post('turn-1', { input: [text, part], capabilities: ['turn-parts-v1'] })
+    expect(refused.status).toBe(422)
+    expect(await refused.json()).toMatchObject({ error: { code: 'TURN_PARTS_UNSUPPORTED' } })
+    expect(seen).toHaveLength(0)
+    const accepted = await post('turn-2', { input: [text], capabilities: ['turn-parts-v1'] }); expect(accepted.status).toBe(200); await accepted.text()
+    expect(partsOf(seen[0])).toEqual([text])
+  })
+  it('fails the turn instead of sending a partial request when a stored reference disappears before delivery', async () => {
+    let reads = 0
+    const adapterStarts: number[] = []
+    const adapter: AdapterFactory = { createSource: () => { adapterStarts.push(1); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, delivery: 'bytes', store: { ...store, read: async () => ++reads === 1 ? new Response(bytes, { headers: { 'content-type': 'image/png' } }) : new Response(null, { status: 404 }) }, tenantId: () => 'tenant' } })
+    const response = await handler(request({ ...event, turnId: 'turn-1', payload: { input: [part], capabilities: ['turn-parts-v1'] } }))
+    expect(response.status).toBe(200)
+    expect(await response.text()).toContain('CHAT_TURN_FAILED')
+    expect(adapterStarts).toHaveLength(0)
+  })
+})
+
+
+describe('adapter delivery limits and class contracts', () => {
+  it('caps total bytes across historical messages before dispatch', async () => {
+    let calls = 0
+    const adapter: AdapterFactory = { createSource: () => { calls++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length, maxTotalBytes: bytes.length }, 'tenant', 'session', new AbortController().signal)
+    const message: Message = { id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }
+    const source = wrapped.createSource({ messages: [message, { ...message, id: 'm2' }] })
+    await expect(async () => { for await (const _chunk of source.stream()) { /* drain */ } }).rejects.toThrow('size limit')
+    expect(calls).toBe(0)
+  })
+
+  it('keeps the per-file byte limit independent of the total budget', async () => {
+    let calls = 0
+    const adapter: AdapterFactory = { createSource: () => { calls++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length - 1, maxTotalBytes: 1024 }, 'tenant', 'session', new AbortController().signal)
+    const source = wrapped.createSource({ messages: [{ id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }] })
+    await expect(async () => { for await (const _chunk of source.stream()) { /* drain */ } }).rejects.toThrow('size limit')
+    expect(calls).toBe(0)
+  })
+
+  it('preserves class prototype capabilities and private state', async () => {
+    class ClassAdapter implements AdapterFactory {
+      #calls = 0
+      get capabilities() { return { multiModal: false } }
+      get calls() { return this.#calls }
+      createSourceForSession(input: Parameters<AdapterFactory['createSource']>[0]) { expect(input.messages[0]?.parts?.[0]).toMatchObject({ source: 'https://storage.invalid/short' }); return this.createSource() }
+      createSource() { this.#calls++; return { async *stream() { yield { type: 'done' as const } }, abort() {} } }
+    }
+    const adapter = Object.freeze(new ClassAdapter())
+    const wrapped = deliverUploadParts(adapter, policy, 'tenant', 'session', new AbortController().signal)
+    expect(wrapped.capabilities).toEqual({ multiModal: false })
+    for await (const _chunk of wrapped.createSource({ messages: [] }).stream()) { /* drain */ }
+    const sessionAdapter = wrapped as AdapterFactory & { createSourceForSession: AdapterFactory['createSource'] }
+    const message: Message = { id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }
+    for await (const _chunk of sessionAdapter.createSourceForSession({ messages: [message] }).stream()) { /* drain */ }
+    expect(adapter.calls).toBe(2)
   })
 })

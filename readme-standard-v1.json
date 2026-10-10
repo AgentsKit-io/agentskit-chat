@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:c50022d7e29c7dc3180896f58c6ac92dac088a9c3fa98e32b05c6b5f6309b678"
+        "sourceHash": "sha256:ce052a7358db5d6503e5b29b7232451e7d5266d4926c75fdd076edee116a382f"
       },
       "exceptions": []
     },
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:c45d9c3978c292ffb4c7fd00dc80fe1650c8e45581bdc2ff89944ef465a91ca9"
+        "sourceHash": "sha256:46cddd8a39d236e0efdd58c39818a63f83275a7f5ec782894e49c5da4fb1aa55"
       },
       "exceptions": []
     },
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:69c48ec03b721d13191515e59c0e915ae540d637b25698760db8c09ce381e1de"
+        "sourceHash": "sha256:8209883f112c691cb5eae4009c9576c272fc0ff64495187fe7d6dd6d98c3a679"
       },
       "exceptions": []
     },
@@ -442,8 +442,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/server/README.md",
           "packages/server/package.json",
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:de6f9078ab05d374ff698ec6fe25e34c9a77e4bf521a85bd08401ab217ed1c6f"
+        "sourceHash": "sha256:3dc421940f03bbd65a557fbd4afd31ce2735168d71ec74583872c9aac25928b0"
       },
       "exceptions": []
     },

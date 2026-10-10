@@ -303,18 +303,34 @@ export const createActionConfirmation = ({
     async propose(action) {
       const suffix = nextId()
       if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,119}$/.test(suffix)) invalidConfirmation('Action confirmation id is invalid.')
-      const call: ToolCall = await chat.proposeToolCall({ id: `app-${suffix}`, name: action.name, args: action.input })
+      const id = `app-${suffix}`
       const token = `confirm-${suffix}`
+      const expiresAt = now() + ttlMs
+      // Upstream shows the pending call to the UI before `proposeToolCall` resolves. Register it first, so a decision
+      // made in that window still goes through this coordinator instead of reaching the controller directly.
+      const provisional: ActionConfirmation = Object.freeze({
+        token, sessionId, action: action.name, input: freezeJson(structuredClone(action.input)), toolCallId: id, expiresAt, status: 'pending',
+      })
+      records.set(token, provisional)
+      tokensByCall.set(id, token)
+      let call: ToolCall
+      try { call = await chat.proposeToolCall({ id, name: action.name, args: action.input }) } catch (error) {
+        if (records.get(token) === provisional) { records.delete(token); tokensByCall.delete(id) }
+        throw error
+      }
+      const decided = records.get(token)
+      if (decided && decided !== provisional) return decided
       const record: ActionConfirmation = Object.freeze({
         token,
         sessionId,
         action: call.name,
         input: freezeJson(structuredClone(call.args)),
         toolCallId: call.id,
-        expiresAt: now() + ttlMs,
+        expiresAt,
         status: call.status === 'requires_confirmation' ? 'pending' : 'rejected',
       })
       records.set(token, record)
+      if (call.id !== id) tokensByCall.delete(id)
       tokensByCall.set(call.id, token)
       await changed()
       return record
@@ -775,10 +791,14 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     const sessionAware = adapter as ChatConfig['adapter'] & {
       readonly createSourceForSession?: (request: AdapterRequest, sessionId: string) => StreamSource
     }
-    return {
-      ...adapter,
-      createSource: request => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request),
-    }
+    return new Proxy(Object.create(adapter) as typeof adapter, {
+      get(_target, property) {
+        const target = adapter
+        if (property === 'createSource') return (request: AdapterRequest) => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request)
+        const value: unknown = Reflect.get(target, property, target)
+        return typeof value === 'function' ? value.bind(target) : value
+      },
+    })
   }
   const claimTurn = async (turnId: string, leaseMs: number, signal?: AbortSignal): Promise<boolean> => {
     if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(turnId) || !Number.isSafeInteger(leaseMs) || leaseMs <= 0) invalidConversation('Turn claim is invalid.')
@@ -914,7 +934,12 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   const updateChat = (chat: ChatConfig): ChatConfig => {
     const adapter = wrappedAdapters.get(chat.adapter) ?? chat.adapter
     const scoped = scopeAdapter(adapter)
-    const wrapped = { ...adapter, createSource: (request: AdapterRequest) => createSource(scoped, request) }
+    const wrapped = new Proxy(Object.create(scoped) as typeof scoped, {
+      get(_target, property) {
+        const target = scoped
+        return property === 'createSource' ? (request: AdapterRequest) => createSource(scoped, request) : Reflect.get(target, property)
+      },
+    })
     wrappedAdapters.set(wrapped, adapter)
     return { ...chat, adapter: wrapped }
   }

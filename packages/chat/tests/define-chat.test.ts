@@ -36,6 +36,27 @@ describe('defineChat', () => {
     expect(definition.chat).toBe(chat)
   })
 
+  for (const deterministic of [false, true]) it(`accepts frozen session-aware adapters (conversation: ${deterministic})`, async () => {
+    let calls = 0
+    const frozen = Object.freeze({
+      createSource: () => { throw new Error('Expected session-aware source') },
+      createSourceForSession: (request: AdapterRequest, sessionId: string) => {
+        expect(sessionId).toBe('frozen-session')
+        expect(request.messages).toHaveLength(2)
+        calls++
+        return { async *stream() { yield { type: 'text' as const, content: 'ok' }; yield { type: 'done' as const } }, abort() {} }
+      },
+    })
+    const definition = defineChat({ id: 'frozen', chat: { adapter: frozen },
+      ...(deterministic ? { conversation: { initial: 'ready', states: { ready: {} }, routes: [] } } : {}) })
+    const session = createChatSession(definition, { sessionId: 'frozen-session' })
+    const controller = createChatController(session.chat)
+    await controller.send('hello')
+    expect(controller.getState().error).toBeNull()
+    expect(controller.getState().messages.at(-1)?.content).toBe('ok')
+    expect(calls).toBe(1)
+  })
+
   it('rejects a prepared session from another definition', () => {
     const first = defineChat({ id: 'first', chat: { adapter } })
     const session = createChatSession(first, { sessionId: 'shared' })
@@ -350,6 +371,32 @@ describe('typed action confirmation', () => {
     await expect(confirmation.propose({ name: 'confirmed', input: {} })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
   })
 
+  it('routes a decision made before the upstream proposal settles through the coordinator', async () => {
+    let settle = (): void => undefined
+    const approve = vi.fn().mockResolvedValue(undefined)
+    const confirmation = createActionConfirmation({
+      sessionId: 'session', createId: () => 'early',
+      chat: { proposeToolCall: proposal => new Promise(resolve => { settle = () => resolve({ ...proposal, status: 'requires_confirmation' }) }), approve, deny: vi.fn() },
+    })
+    const proposing = confirmation.propose({ name: 'pay', input: { amount: 1 } })
+    expect(confirmation.getByToolCall('app-early')).toMatchObject({ token: 'confirm-early', status: 'pending', input: { amount: 1 } })
+    await expect(confirmation.approve('confirm-early', 'session')).resolves.toMatchObject({ status: 'approved' })
+    settle()
+    await expect(proposing).resolves.toMatchObject({ token: 'confirm-early', status: 'approved' })
+    expect(approve).toHaveBeenCalledExactlyOnceWith('app-early')
+    expect(confirmation.getByToolCall('app-early')?.status).toBe('approved')
+  })
+
+  it('forgets the provisional record when the upstream proposal fails', async () => {
+    const confirmation = createActionConfirmation({
+      sessionId: 'session', createId: () => 'refused',
+      chat: { proposeToolCall: async () => { throw new Error('refused') }, approve: vi.fn(), deny: vi.fn() },
+    })
+    await expect(confirmation.propose({ name: 'pay', input: {} })).rejects.toThrow('refused')
+    expect(confirmation.getByToolCall('app-refused')).toBeUndefined()
+    expect(confirmation.getSnapshot()).toEqual([])
+  })
+
   it('keeps a record pending when upstream approval or rejection fails', async () => {
     const approve = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
     const deny = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
@@ -658,6 +705,21 @@ describe('deterministic conversation session', () => {
 
   it('rejects an empty exact command', () => {
     expect(() => commandRoute({ id: 'empty', command: '', event: 'go', response: () => '' })).toThrow(ConfigError)
+  })
+
+  it('preserves prototype capabilities and private adapter state through session wrappers', () => {
+    class ClassAdapter implements AdapterFactory {
+      #capabilities = { multiModal: false }
+      get capabilities() { return this.#capabilities }
+      createSource() { return adapter.createSource({} as AdapterRequest) }
+    }
+    const source = new ClassAdapter()
+    for (const conversation of [undefined, { initial: 'idle', states: { idle: {} }, routes: [] }]) {
+      const session = createChatSession(defineChat({ id: 'class-adapter', chat: { adapter: source }, ...(conversation ? { conversation } : {}) }))
+      expect(session.chat.adapter.capabilities).toEqual({ multiModal: false })
+      expect(session.updateChat({ adapter: source }).adapter.capabilities).toEqual({ multiModal: false })
+      expect(session.chat.adapter.createSource(request('hello', 'class-user'))).toBeDefined()
+    }
   })
 
   it('persists application metadata and resumes deterministic state without replay', async () => {

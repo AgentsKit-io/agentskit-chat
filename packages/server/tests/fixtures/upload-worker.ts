@@ -15,7 +15,15 @@ export const uploadWorker = {
     } })
     // cross-platform-ignore: HTTP route pathname, never a filesystem path.
     if (new URL(request.url).pathname === '/uploads') return uploads(request)
-    const adapter: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'done' } }, abort() {} }) }
+    const adapter: AdapterFactory = { createSource: input => ({ async *stream() {
+      const part = input.messages.find(message => message.role === 'user')?.parts?.[0]
+      if (part && part.type !== 'text') {
+        const object = await fetch(part.source)
+        if (!object.ok) throw new Error('Adapter could not fetch the upload')
+        yield { type: 'text' as const, content: await object.text() }
+      }
+      yield { type: 'done' as const }
+    }, abort() {} }) }
     return createChatHandler({ uploads: { ...policy, tenantId: () => tenantId }, resolveDefinition: () => ({ id: 'fixture', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }) })(request)
   },
 }

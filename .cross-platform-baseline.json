@@ -9,7 +9,10 @@
   ],
   "exclude": [
     "apps/docs/.open-next",
-    "apps/docs/.wrangler"
+    "apps/docs/.wrangler",
+    "apps/example-react-native/dist-release-web",
+    "apps/example-react-native/dist-release-ios",
+    "tests/storage-pg/.wrangler"
   ],
   "entries": {
     "apps/docs/app/api/demo-ask/route.ts": {

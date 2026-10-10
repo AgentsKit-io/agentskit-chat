@@ -327,3 +327,33 @@ reimplemented. No upstream gap or new architecture decision blocks #107.
 ## Drizzle/Postgres application envelopes (CH-B)
 
 [ADR-0036](./adrs/0036-drizzle-postgres-session-storage.md) adds only a PostgreSQL adapter for the existing application `SessionStorage` and validated `SessionSnapshot`. The upstream `ChatMemory` interface and memory exports were inspected; no Drizzle ChatMemory backend exists in the inspected source. Canonical message storage is therefore blocked on upstream implementation and a supported release. No controller, message-memory implementation, or private upstream source is copied locally. Local acceptance evidence and its limits are recorded in [CH-B](../ch-b-session-storage.md).
+
+## Durable action decisions and turn cost (track 04, stages 3 and 4)
+
+[ADR-0037](./adrs/0037-durable-action-decisions-and-turn-cost.md). Inspected upstream source at `AgentsKit-io/agentskit` `main` `cff4ba9b`: `packages/core/src/controller-decision-internal.ts`, `controller.ts` (`decide`, `persistPending`), `types/chat.ts` (`ToolDecisionStore`, `ToolDecisionRecord`), `errors.ts` (`AK_ACTION_NOT_FOUND`, `AK_ACTION_ALREADY_DECIDED`), and `packages/observability/src/cost-store.ts` (`CostStore`).
+
+Reused exports: `createChatController`, `controller.decide`, `ToolDecisionStore`, `ToolDecisionRecord`, `serializeMessages`, `deserializeMessages`, `CostStore`, `createInMemoryCostStore` (tests), and the existing `resumeChatSession` lease. Local application behavior: the `client.action.decide` event and capability, HTTP status mapping, the turn lease around a decision, replay of a settled decision as one snapshot, the reserve/commit/release calls around a turn, the `quota` snapshot field, and a PostgreSQL implementation of the upstream decision port. No claim logic, tool execution, model resume, or spend accounting is reimplemented.
+
+Behavior change taken from upstream: since core 1.15, `proposeToolCall` persists the pending call before its promise resolves, so the UI can show the call first. `createActionConfirmation` therefore registers the confirmation before it calls `proposeToolCall`; a decision made in that window goes through the coordinator instead of the controller's direct `approve`/`deny`. No upstream primitive is copied.
+
+Linked upstream work: agentskit#1828 and #1833 (durable decisions, merged), and the `CostStore` pull request for `@agentskit/observability`. Both are unreleased at the time of writing; this repository's manifests reference the versions that will contain them, and CI depends on that release.
+
+
+## Track 04 — referenced parts at the adapter boundary
+
+[ADR-0038](./adrs/0038-reference-parts-adapter-delivery.md) records the inspected
+core `ContentPart`, `Message`, `AdapterFactory`, `controller.send` and adapter
+source forms. Chat maps validated application references and composes the upstream
+adapter; it adds no provider serializer or lifecycle. Upstream work:
+AgentsKit-io/agentskit#1826 and #1828. Core 1.15/adapters 0.19 remain publication
+dependencies; local tarballs are validation only and are not shipped. Current
+contract results and remaining external gates are in
+[the continuation report](../trilha-04-validacao-2026-10-10.md).
+
+### Independent verification follow-up (2026-10-10)
+
+Re-inspected the published `@agentskit/core` 1.15.0 controller `persistPending`: each registration submits every still-pending call with the current messages. The local PostgreSQL port now preserves the first pending snapshot without requiring transcript equality, while rejecting IDs with claimed or terminal decisions. The same two real handler regressions (two calls in one turn; a later proposal while the first remains pending) run with in-memory stores and PostgreSQL. Billing documentation follows the existing handler: dispatched calls commit actual usage, or the reservation when usage is unknown; only undispatched calls release. No upstream primitive or dependency changed.
+
+The Postgres race contract also exposed a retry between decision settlement and final model/memory persistence. The handler checks the current session lease before replay, returning the existing 409 while that turn remains active; it does not resume or execute the action again.
+
+The parts follow-up continues to reuse core 1.15 `AdapterFactory`, `Message`, `ContentPart` and `controller.send`; it changes only the application byte budget and decorator targets. Frozen object and class adapters keep their original receivers. No upstream gap or new dependency is introduced.

@@ -52,7 +52,7 @@ importers:
         version: 0.1.0
       '@agentskit/doc-bridge':
         specifier: 1.14.0-next.2
-        version: 1.14.0-next.2(@agentskit/core@1.14.1)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
+        version: 1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.1
         version: 2.31.1(@types/node@26.1.1)
@@ -487,8 +487,11 @@ importers:
         specifier: workspace:*
         version: link:../protocol
       '@agentskit/core':
-        specifier: ^1.12.3
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
+      '@agentskit/observability':
+        specifier: ^0.13.0
+        version: 0.13.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
       '@types/node':
         specifier: ^25.9.7
         version: 25.9.7
@@ -668,8 +671,11 @@ importers:
         version: 1.0.20
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
+      '@agentskit/observability':
+        specifier: ^0.13.0
+        version: 0.13.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.28)(typescript@6.0.3)(yaml@2.9.1)
@@ -790,6 +796,10 @@ packages:
   '@agentskit/core@1.14.1':
     resolution: {integrity: sha512-7+zyB5+azISWTCXWIWTs3pQVE9LiKUNQf8GfMV+TWSDSKDkkf7c3xlBCsVFs5QBqUVGBH72TERY+iL2JlqiAdg==}
 
+  '@agentskit/core@1.15.0':
+    resolution: {integrity: sha512-qJxJXAUBbx7BpjfkF/2YCQ9i0voimTfDbDFLRvaOsLkxa2O0ZC5yMQFdTqE8++yGPVPm14Dlc+TMxlNcCaNz9w==}
+    engines: {node: '>=20.19'}
+
   '@agentskit/cross-platform@0.1.0':
     resolution: {integrity: sha512-yl0VHjvs6pjtTYSYOxm3ADTnjC1m3ZAuHh11oDKwmSxEE9u09NLhsGcRFA3tJkWwNHH62a+pV3T0NwLvr0NtPw==}
     engines: {node: '>=20.19'}
@@ -844,6 +854,37 @@ packages:
   '@agentskit/net@0.2.0':
     resolution: {integrity: sha512-GKagBMg+fUY5QEKTy7wmXVqVjV1xn1J1iuEzDoaU6cJwzupZDHbXdZhFq8YXuuknofPwLyNounPfJ4YNy+4Eug==}
     engines: {node: '>=20.19'}
+
+  '@agentskit/net@0.2.3':
+    resolution: {integrity: sha512-/i+yoCbFjs+hp7Qs8ygRJDmJRpMIgbNSvl9mjIl2NRH4DHv4YPBclFzmY3t13AHePY/svQvGMLM9DNY3dY046w==}
+    engines: {node: '>=20.19'}
+
+  '@agentskit/observability@0.13.0':
+    resolution: {integrity: sha512-oQELQ215h2O3ycXaVQoHqBmVi3+LDKz8dB5X4VekFFfZx7MzMeFZvLDsLUDai3tdrlXRpfZuiIVfteq0+jy+Og==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.9.1
+      '@opentelemetry/exporter-trace-otlp-http': ^0.220.0 || ^0.221.0
+      '@opentelemetry/sdk-trace-base': ^2.9.0
+      drizzle-orm: ^0.44.0 || ^0.45.3
+      langfuse: ^3.38.20
+      langsmith: ^0.8.1
+      pg: ^8.23.1
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@opentelemetry/exporter-trace-otlp-http':
+        optional: true
+      '@opentelemetry/sdk-trace-base':
+        optional: true
+      drizzle-orm:
+        optional: true
+      langfuse:
+        optional: true
+      langsmith:
+        optional: true
+      pg:
+        optional: true
 
   '@agentskit/rag@0.4.14':
     resolution: {integrity: sha512-MYIKHWuoBHf+5Nvmtp7RsPogQCdy/WLKvepl7L2+iU74x/vpTNuCjeQZz7Hqu9BWwAgGShejHoLNHlRLQSYtNw==}
@@ -8254,6 +8295,8 @@ snapshots:
 
   '@agentskit/core@1.14.1': {}
 
+  '@agentskit/core@1.15.0': {}
+
   '@agentskit/cross-platform@0.1.0':
     dependencies:
       '@agentskit/core': 1.12.10
@@ -8272,7 +8315,7 @@ snapshots:
       tree-kill: 1.2.2
       which: 2.0.2
 
-  '@agentskit/doc-bridge@1.14.0-next.2(@agentskit/core@1.14.1)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
+  '@agentskit/doc-bridge@1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:
       '@agentskit/cross-platform': 0.2.1
       '@agentskit/harness': 0.22.3(@types/react@19.2.17)(react-devtools-core@6.1.5)
@@ -8299,7 +8342,7 @@ snapshots:
       yaml: 2.9.0
       zod: 4.4.3
     optionalDependencies:
-      '@agentskit/core': 1.14.1
+      '@agentskit/core': 1.15.0
       '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@agentskit/memory': 0.11.0
       '@agentskit/rag': 0.4.14
@@ -8352,6 +8395,20 @@ snapshots:
       '@agentskit/core': 1.13.0
       eventsource-parser: 4.1.1
       ipaddr.js: 2.5.0
+
+  '@agentskit/net@0.2.3':
+    dependencies:
+      '@agentskit/core': 1.15.0
+      eventsource-parser: 4.1.1
+      ipaddr.js: 2.5.0
+
+  '@agentskit/observability@0.13.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)':
+    dependencies:
+      '@agentskit/core': 1.15.0
+      '@agentskit/net': 0.2.3
+    optionalDependencies:
+      drizzle-orm: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)
+      pg: 8.23.1
 
   '@agentskit/rag@0.4.14':
     dependencies:

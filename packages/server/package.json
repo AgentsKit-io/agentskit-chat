@@ -39,11 +39,18 @@
     "aws4fetch": "1.0.20"
   },
   "peerDependencies": {
-    "@agentskit/core": "^1.12.2"
+    "@agentskit/core": "^1.15.0",
+    "@agentskit/observability": ">=0.13.0 <1"
   },
   "devDependencies": {
-    "@agentskit/core": "^1.12.2",
-    "tsup": "^8.5.1"
+    "@agentskit/core": "^1.15.0",
+    "tsup": "^8.5.1",
+    "@agentskit/observability": "^0.13.0"
   },
-  "publishConfig": {}
+  "publishConfig": {},
+  "peerDependenciesMeta": {
+    "@agentskit/observability": {
+      "optional": true
+    }
+  }
 }

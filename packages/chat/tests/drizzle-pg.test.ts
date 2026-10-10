@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { createDrizzleSessionStorage } from '../src/drizzle-pg.js'
+import { serializeMessages } from '@agentskit/core'
+import type { Message, ToolCall, ToolDecisionRecord } from '@agentskit/core'
+import { createDrizzleDecisionStore, createDrizzleSessionStorage } from '../src/drizzle-pg.js'
 import { SessionSnapshotSchema } from '@agentskit/chat-protocol'
 
 const snapshot = SessionSnapshotSchema.parse({ protocol: 'agentskit.chat.session', version: 1, sessionId: 'test',
@@ -47,5 +49,62 @@ describe('Drizzle session boundary (supporting checks)', () => {
     expect(await storage.save(snapshot, undefined)).toBe(false)
     expect(await storage.save(snapshot, 0)).toBe(false)
     await storage.delete?.('test')
+  })
+})
+
+describe('Drizzle decision boundary (supporting checks)', () => {
+  const messages: Message[] = [{ id: 'm1', role: 'user', content: 'pay it', status: 'complete', createdAt: new Date('2026-10-06T00:00:00.000Z') }]
+  const outcome: ToolCall = { id: 'call-1', name: 'pay', args: '{}', status: 'complete', result: 'paid' }
+  const row = { toolCallId: 'call-1', status: 'pending', decision: null, reason: null, record: { messages: serializeMessages(messages) } }
+
+  it('rejects absent or oversized tenant and session scopes before SQL', () => {
+    const { db } = database()
+    for (const [tenant, session] of [['', 'session'], [' ', 'session'], ['tenant', ''], ['tenant', ' '], ['a'.repeat(257), 'session'], ['tenant', 'a'.repeat(257)]]) {
+      expect(() => createDrizzleDecisionStore(db, tenant!, session!)).toThrow(TypeError)
+    }
+  })
+  it('records pending calls and decodes stored rows with their optional decision, reason and outcome', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.rows([{ toolCallId: 'call-1' }])
+    await store.putPending({ toolCallId: 'call-1', status: 'pending', messages })
+    fixture.rows([])
+    expect(fixture.query.values).toHaveBeenCalledWith(expect.objectContaining({ tenantId: 'tenant', sessionId: 'session', toolCallId: 'call-1', status: 'pending' }))
+    expect(await store.get('call-1')).toBeUndefined()
+    fixture.rows([row])
+    expect(await store.get('call-1')).toEqual({ toolCallId: 'call-1', status: 'pending', messages })
+    fixture.rows([{ ...row, status: 'complete', decision: 'approve', reason: 'ok', record: { ...row.record, outcome } }])
+    expect(await store.get('call-1')).toEqual({ toolCallId: 'call-1', status: 'complete', messages, decision: 'approve', reason: 'ok', outcome })
+  })
+  it('accepts changed messages for an existing pending call without updating the snapshot', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.query.returning.mockResolvedValue([])
+    fixture.rows([row])
+    await expect(store.putPending({ toolCallId: 'call-1', status: 'pending', messages: [...messages, { ...messages[0]!, id: 'm2' }] })).resolves.toBeUndefined()
+    expect(fixture.db.update).not.toHaveBeenCalled()
+  })
+  it('rejects a reused tool-call ID instead of replaying a terminal decision', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.query.returning.mockResolvedValue([])
+    fixture.rows([{ ...row, status: 'complete', decision: 'approve' }])
+    await expect(store.putPending({ toolCallId: 'call-1', status: 'pending', messages })).rejects.toThrow('another proposal')
+  })
+  it('returns the claimed record to the single winner and nothing to the loser', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.rows([{ ...row, status: 'claimed', decision: 'deny', reason: 'no' }])
+    expect(await store.claim('call-1', 'deny', 'no')).toEqual({ toolCallId: 'call-1', status: 'claimed', messages, decision: 'deny', reason: 'no' })
+    fixture.rows([])
+    expect(await store.claim('call-1', 'approve')).toBeUndefined()
+  })
+  it('settles only a terminal record that matches its claim', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    const settled: ToolDecisionRecord = { toolCallId: 'call-1', status: 'complete', messages, decision: 'approve', outcome }
+    for (const invalid of [{ ...settled, status: 'pending' as const }, { ...settled, status: 'claimed' as const }, { toolCallId: 'call-1', status: 'complete' as const, messages }]) {
+      await expect(store.settle(invalid)).rejects.toThrow(TypeError)
+    }
+    fixture.rows([])
+    await expect(store.settle(settled)).rejects.toThrow('matching claim')
+    fixture.rows([{ toolCallId: 'call-1' }])
+    await expect(store.settle(settled)).resolves.toBeUndefined()
+    await expect(store.settle({ ...settled, status: 'failed', outcome: undefined })).resolves.toBeUndefined()
   })
 })
