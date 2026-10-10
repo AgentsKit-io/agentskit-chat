@@ -15,7 +15,7 @@ describe('Track 04 stage 9 — referenced parts', () => {
     const ref = 'tenant/known-gap/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
     const store = { presignPut: async () => ({ url: 'https://storage.invalid/put', headers: {} }), read: async () => new Response(bytes, { headers: { 'content-type': 'image/png' } }), presignGet: async () => 'https://storage.invalid/get' }
     const sources: unknown[] = []
-    const seeing: AdapterFactory = { createSource: input => { sources.push(input.messages.at(-1)?.parts?.[0]); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const seeing: AdapterFactory = { createSource: input => { sources.push(input.messages.find(message => message.role === 'user')?.parts?.[0]); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
     const withUploads = createChatHandler({ resolveDefinition: () => ({ id: 'gap', chat: { adapter: seeing } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
       uploads: { store, maxBytes: 1024, mimeTypes: ['image/png'], tenantId: () => 'tenant' } })
     const result = await withUploads(new Request('http://localhost/chat', { method: 'POST', headers: { 'content-type': 'application/json' },

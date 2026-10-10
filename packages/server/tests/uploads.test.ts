@@ -70,11 +70,42 @@ describe.skipIf(!endpoint)('BlobStore contract against local S3-compatible stora
     await expect(resolveUploadParts({ ...policy, store: storage }, 'tenant', 'session', [{ ...realPart, sha256: '0'.repeat(64) }], signal)).rejects.toMatchObject({ status: 422 })
     const get = await fetch(await storage.presignGet(result.ref, 60, signal)); expect(await get.text()).toBe('local upload')
   }, 30_000)
+  it('RF-11: the adapter can fetch the delivered signed URL, or receives the stored bytes', async () => {
+    const client = new AwsClient({ accessKeyId: 'minioadmin', secretAccessKey: 'minioadmin', service: 's3', region: 'us-east-1' })
+    const bucket = 'chd-contract'
+    expect([200, 409]).toContain((await client.fetch(`${endpoint}/${bucket}`, { method: 'PUT' })).status)
+    const storage = createS3BlobStore({ endpoint: endpoint!, bucket, region: 'us-east-1', accessKeyId: 'minioadmin', secretAccessKey: 'minioadmin' })
+    const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
+    for (const delivery of ['url', 'bytes'] as const) {
+      const uploaded = await (await createUploadHandler({ ...policy, store: storage, authorize: async () => ({ tenantId: 'tenant' }) })(request(metadata))).json() as { ref: string; url: string; headers: Record<string, string> }
+      expect((await fetch(uploaded.url, { method: 'PUT', headers: uploaded.headers, body: bytes })).status).toBe(200)
+      const sources: string[] = []
+      const adapter: AdapterFactory = { createSource: input => {
+        const source = input.messages.find(message => message.role === 'user')?.parts?.[0]
+        if (source && source.type !== 'text') sources.push(source.source)
+        return { async *stream() { yield { type: 'done' } }, abort() {} }
+      } }
+      const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+        uploads: { ...policy, store: storage, delivery, expiresIn: 60, tenantId: () => 'tenant' } })
+      const response = await handler(request({ ...event, turnId: `turn-${delivery}`, payload: { input: [{ ...part, ref: uploaded.ref }], capabilities: ['turn-parts-v1'] } }))
+      expect(response.status).toBe(200)
+      expect(await response.text()).not.toContain('X-Amz-Signature')
+      expect(sources).toHaveLength(1)
+      if (delivery === 'bytes') { expect(sources[0]).toBe(`data:image/png;base64,${btoa('local upload')}`); continue }
+      const signed = new URL(sources[0]!)
+      expect(signed.searchParams.get('X-Amz-Expires')).toBe('60')
+      const fetched = await fetch(signed)
+      expect(fetched.status).toBe(200)
+      expect(await fetched.text()).toBe('local upload')
+      signed.searchParams.set('X-Amz-Signature', '0'.repeat(64))
+      expect((await fetch(signed)).status).toBe(403)
+    }
+  }, 30_000)
 })
 
 const workerUrl = process.env.CHD_WRANGLER_URL
 describe.skipIf(!workerUrl)('real wrangler dev HTTP flow', () => {
-  it('presigns and validates uploads through workerd, preserving tenant isolation and the upstream gate', async () => {
+  it('presigns and validates uploads through workerd, preserving tenant isolation and fetching the delivered URL', async () => {
     const post = (path: string, body: unknown, tenant = 'tenant') => fetch(`${workerUrl}${path}`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-test-tenant': tenant }, body: JSON.stringify(body) })
     const uploadResponse = await post('/uploads', metadata); expect(uploadResponse.status).toBe(201)
     const result = await uploadResponse.json() as { ref: string; url: string; headers: Record<string, string> }
@@ -84,7 +115,10 @@ describe.skipIf(!workerUrl)('real wrangler dev HTTP flow', () => {
     const body = { ...event, payload: { input: [realPart], capabilities: ['turn-parts-v1'] } }
     expect((await post('/chat', body, 'other')).status).toBe(403)
     expect((await post('/chat', { ...body, payload: { ...body.payload, input: [{ ...realPart, sha256: '0'.repeat(64) }] } })).status).toBe(422)
-    const delivered = await post('/chat', body); expect(delivered.status).toBe(200); await delivered.text()
+    const delivered = await post('/chat', body); expect(delivered.status).toBe(200)
+    const transcript = await delivered.text()
+    expect(transcript).toContain('local upload')
+    expect(transcript).not.toContain('X-Amz-Signature')
     expect((await post('/uploads', { ...metadata, bytes: 1025 })).status).toBe(413)
     expect((await post('/uploads', { ...metadata, mimeType: 'text/html' })).status).toBe(415)
     expect((await post('/uploads', { ...metadata, sessionId: 'forbidden' })).status).toBe(403)

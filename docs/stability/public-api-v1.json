@@ -2226,7 +2226,19 @@
               ]
             },
             {
+              "name": "deliverUploadParts",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
               "name": "resolveUploadParts",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "toContentParts",
               "kinds": [
                 "value"
               ]

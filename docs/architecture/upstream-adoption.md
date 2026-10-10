@@ -338,3 +338,14 @@ Behavior change taken from upstream: since core 1.15, `proposeToolCall` persists
 
 Linked upstream work: agentskit#1828 and #1833 (durable decisions, merged), and the `CostStore` pull request for `@agentskit/observability`. Both are unreleased at the time of writing; this repository's manifests reference the versions that will contain them, and CI depends on that release.
 
+
+## Track 04 — referenced parts at the adapter boundary
+
+[ADR-0038](./adrs/0038-reference-parts-adapter-delivery.md) records the inspected
+core `ContentPart`, `Message`, `AdapterFactory`, `controller.send` and adapter
+source forms. Chat maps validated application references and composes the upstream
+adapter; it adds no provider serializer or lifecycle. Upstream work:
+AgentsKit-io/agentskit#1826 and #1828. Core 1.15/adapters 0.19 remain publication
+dependencies; local tarballs are validation only and are not shipped. Current
+contract results and remaining external gates are in
+[the continuation report](../trilha-04-validacao-2026-10-10.md).
