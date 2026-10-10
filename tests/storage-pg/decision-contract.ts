@@ -35,7 +35,7 @@ export const runDecisionStoreContract = async (stores: Stores, rounds = 100): Pr
   const session = `decision-${run}`
   const a = stores.decisions('tenant-a', session)
   await a.putPending({ toolCallId: 'call', status: 'pending', messages: pending('call') })
-  await a.putPending({ toolCallId: 'call', status: 'pending', messages: [] })
+  await a.putPending({ toolCallId: 'call', status: 'pending', messages: pending('call') })
   const stored = await a.get('call')
   check(stored?.status === 'pending' && stored.messages.length === 2, 'putPending never overwrites the first snapshot')
   check(stored?.messages[0]?.createdAt instanceof Date && stored.messages[0].createdAt.toISOString() === '2026-10-09T12:00:00.000Z', 'message dates round-trip')
@@ -44,6 +44,9 @@ export const runDecisionStoreContract = async (stores: Stores, rounds = 100): Pr
   check(await stores.decisions('tenant-b', session).claim('call', 'approve') === undefined, 'RF-13 another tenant cannot claim the decision')
   check((await a.get('call'))?.status === 'pending', 'a foreign claim leaves the decision pending')
   check(await rejects(() => a.settle({ toolCallId: 'call', status: 'complete', decision: 'approve', messages: [] })), 'settle without a claim is rejected')
+  await a.claim('call', 'approve')
+  await a.settle({ toolCallId: 'call', status: 'complete', decision: 'approve', messages: pending('call') })
+  check(await rejects(() => a.putPending({ toolCallId: 'call', status: 'pending', messages: pending('call') })), 'reused terminal tool-call ID is rejected')
   passed.push('tenant and session isolation; insert-if-absent pending snapshot')
 
   for (let round = 0; round < rounds; round++) {

@@ -65,13 +65,21 @@ describe('Drizzle decision boundary (supporting checks)', () => {
   })
   it('records pending calls and decodes stored rows with their optional decision, reason and outcome', async () => {
     const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.rows([{ toolCallId: 'call-1' }])
     await store.putPending({ toolCallId: 'call-1', status: 'pending', messages })
+    fixture.rows([])
     expect(fixture.query.values).toHaveBeenCalledWith(expect.objectContaining({ tenantId: 'tenant', sessionId: 'session', toolCallId: 'call-1', status: 'pending' }))
     expect(await store.get('call-1')).toBeUndefined()
     fixture.rows([row])
     expect(await store.get('call-1')).toEqual({ toolCallId: 'call-1', status: 'pending', messages })
     fixture.rows([{ ...row, status: 'complete', decision: 'approve', reason: 'ok', record: { ...row.record, outcome } }])
     expect(await store.get('call-1')).toEqual({ toolCallId: 'call-1', status: 'complete', messages, decision: 'approve', reason: 'ok', outcome })
+  })
+  it('rejects a reused tool-call ID instead of replaying a terminal decision', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.query.returning.mockResolvedValue([])
+    fixture.rows([{ ...row, status: 'complete', decision: 'approve' }])
+    await expect(store.putPending({ toolCallId: 'call-1', status: 'pending', messages })).rejects.toThrow('another proposal')
   })
   it('returns the claimed record to the single winner and nothing to the loser', async () => {
     const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')

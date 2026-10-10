@@ -77,12 +77,15 @@ const safeError = (error: unknown): { readonly status: number; readonly diagnost
     ? { status: 409, diagnostic: { version: 1, code: 'SESSION_CONFLICT', message: 'Another turn is active for this session.', retryable: true } }
     : { status: 500, diagnostic: { version: 1, code: 'SERVER_INTERNAL', message: 'The chat request failed.', retryable: true } }
 const fail = (status: number, code: string, message: string, retryable = false): never => { throw new ChatHandlerError({ status, code, message, retryable }) }
-const DECISION_ERRORS: Readonly<Record<string, ChatHandlerError>> = {
-  AK_ACTION_NOT_FOUND: new ChatHandlerError({ status: 404, code: 'ACTION_NOT_FOUND', message: 'No pending action matches this token.' }),
-  AK_ACTION_ALREADY_DECIDED: new ChatHandlerError({ status: 409, code: 'ACTION_ALREADY_DECIDED', message: 'This action was already decided.' }),
+const DECISION_ERRORS: Readonly<Record<string, ConstructorParameters<typeof ChatHandlerError>[0]>> = {
+  AK_ACTION_NOT_FOUND: { status: 404, code: 'ACTION_NOT_FOUND', message: 'No pending action matches this token.' },
+  AK_ACTION_ALREADY_DECIDED: { status: 409, code: 'ACTION_ALREADY_DECIDED', message: 'This action was already decided.' },
 }
 /** Maps the upstream decision errors to protocol diagnostics; anything else stays an internal failure. */
-const decisionError = (error: unknown): unknown => DECISION_ERRORS[String((error as { readonly code?: unknown } | null)?.code)] ?? error
+const decisionError = (error: unknown): unknown => {
+  const diagnostic = DECISION_ERRORS[String((error as { readonly code?: unknown } | null)?.code)]
+  return diagnostic ? new ChatHandlerError(diagnostic) : error
+}
 const readBody = async (request: Request, maxBodyBytes: number, signal: AbortSignal): Promise<unknown> => {
   return readBoundedJson(request, maxBodyBytes, signal, fail)
 }
@@ -169,7 +172,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       cleanupAfterClaim = releaseClaim
       const resolveCost = options.cost
       const cost = resolveCost ? await withTimeout(callbackSignal => Promise.resolve(resolveCost(context, submission.sessionId, callbackSignal)), timeoutMs, signal) : undefined
-      const reservationId = `${submission.sessionId}:${submission.turnId}`
+      const reservationId = `${submission.sessionId}:${submission.turnId}:${createId()}`
       let quota: { readonly utilization: number; readonly warning: boolean } | undefined
       if (cost) {
         const reserved = await withTimeout(() => cost.store.reserve({ tenant: cost.tenant, reservationId, amountUsd: cost.reserveUsd, ...(cost.capUsd === undefined ? {} : { capUsd: cost.capUsd }) }), timeoutMs, signal)
@@ -177,13 +180,15 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         const utilization = reserved.window.utilization
         if (utilization !== undefined) quota = { utilization, warning: utilization >= (cost.warnAt ?? 0.8) }
       }
-      /** Commit the real spend of a turn that finished; release the hold of one that failed or was cut short. */
+      let modelStarted = false
+      /** Dispatched calls are billable even when their usage is unavailable. */
       const settleCost = async (state: ChatState | undefined): Promise<void> => {
         if (!cost) return
-        if (!state || state.status === 'error' || state.error) { await cost.store.release({ tenant: cost.tenant, reservationId }); return }
-        const actualUsd = cost.priceUsd(state.usage)
+        if (!modelStarted) { await cost.store.release({ tenant: cost.tenant, reservationId }); return }
+        const usage = state?.usage ?? { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
+        const actualUsd = usage.totalTokens > 0 ? cost.priceUsd(usage) : cost.reserveUsd
         await cost.store.commit({ tenant: cost.tenant, reservationId, actualUsd, usage: [{
-          model: cost.model, promptTokens: state.usage.promptTokens, completionTokens: state.usage.completionTokens, costUsd: actualUsd,
+          model: cost.model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, costUsd: actualUsd,
           ...(cost.source === undefined ? {} : { source: cost.source }), ...(cost.fallback === undefined ? {} : { fallback: cost.fallback }),
         }] })
       }
@@ -192,7 +197,15 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const loaded = memory ? await withTimeout(async callbackSignal => memory.load({ signal: callbackSignal }), timeoutMs, signal) : definition.chat.initialMessages ?? []
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
-      const adapter = uploads && tenantId !== undefined ? deliverUploadParts(chat.adapter, uploads, tenantId, submission.sessionId, signal) : chat.adapter
+      const meteredAdapter = new Proxy(chat.adapter, {
+        get(target, property) {
+          const value: unknown = Reflect.get(target, property, target)
+          if (typeof value !== 'function') return value
+          if (property === 'createSource' || property === 'createSourceForSession') return (...args: unknown[]) => { modelStarted = true; return Reflect.apply(value, target, args) }
+          return value.bind(target)
+        },
+      })
+      const adapter = uploads && tenantId !== undefined ? deliverUploadParts(meteredAdapter, uploads, tenantId, submission.sessionId, signal) : meteredAdapter
       const controller = createChatController(session.updateChat({ ...chat, adapter, initialMessages: [...messages], ...(decisionStore ? { decisionStore } : {}) }))
       const capabilities = [...(decisionStore ? [ACTION_DECIDE_CAPABILITY] : []), ...(uploads ? [TURN_PARTS_CAPABILITY] : [])]
       let announcedCapabilities = false
@@ -223,8 +236,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
         if (stop && !signal.aborted) controller.stop()
         const settleSignal = AbortSignal.timeout(cleanupTimeoutMs)
         await withTimeout(() => send, cleanupTimeoutMs, settleSignal).catch(() => undefined)
-        const finished = !stop && failure === undefined && !signal.aborted
-        if (cost) await withTimeout(() => settleCost(finished ? controller.getState() : undefined), cleanupTimeoutMs, AbortSignal.timeout(cleanupTimeoutMs)).catch(() => undefined)
+        if (cost) await withTimeout(() => settleCost(controller.getState()), cleanupTimeoutMs, AbortSignal.timeout(cleanupTimeoutMs)).catch(() => undefined)
         const saveSignal = AbortSignal.timeout(cleanupTimeoutMs)
         let outcome: 'completed' | 'indeterminate' = 'completed'
         try { await withTimeout(callbackSignal => Promise.resolve(memory?.save(controller.getState().messages, { signal: callbackSignal })), cleanupTimeoutMs, saveSignal) }

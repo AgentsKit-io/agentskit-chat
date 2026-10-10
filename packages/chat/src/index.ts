@@ -791,10 +791,13 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     const sessionAware = adapter as ChatConfig['adapter'] & {
       readonly createSourceForSession?: (request: AdapterRequest, sessionId: string) => StreamSource
     }
-    return {
-      ...adapter,
-      createSource: request => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request),
-    }
+    return new Proxy(adapter, {
+      get(target, property) {
+        if (property === 'createSource') return (request: AdapterRequest) => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request)
+        const value: unknown = Reflect.get(target, property, target)
+        return typeof value === 'function' ? value.bind(target) : value
+      },
+    })
   }
   const claimTurn = async (turnId: string, leaseMs: number, signal?: AbortSignal): Promise<boolean> => {
     if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(turnId) || !Number.isSafeInteger(leaseMs) || leaseMs <= 0) invalidConversation('Turn claim is invalid.')
@@ -930,7 +933,11 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   const updateChat = (chat: ChatConfig): ChatConfig => {
     const adapter = wrappedAdapters.get(chat.adapter) ?? chat.adapter
     const scoped = scopeAdapter(adapter)
-    const wrapped = { ...adapter, createSource: (request: AdapterRequest) => createSource(scoped, request) }
+    const wrapped = new Proxy(scoped, {
+      get(target, property) {
+        return property === 'createSource' ? (request: AdapterRequest) => createSource(scoped, request) : Reflect.get(target, property)
+      },
+    })
     wrappedAdapters.set(wrapped, adapter)
     return { ...chat, adapter: wrapped }
   }

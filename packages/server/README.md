@@ -102,3 +102,8 @@ Without uploads the handler returns 501 `TURN_PARTS_UNAVAILABLE`. Adapters decla
 `uploads.tenantId` authorizes every request, including text turns and decisions.
 See [ADR-0038](../../docs/architecture/adrs/0038-reference-parts-adapter-delivery.md).
 Core 1.15 is pending publication; this integration is not available in chat 0.5.0.
+Turn cost policies reserve with server-generated IDs. Once an adapter call starts,
+cleanup commits reported usage or the reserved estimate when usage is unknown,
+including cancellation, timeout and provider failures. Pre-dispatch failures release
+the hold. Decision stores reject reused IDs from a different or settled proposal.
+

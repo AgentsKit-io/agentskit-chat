@@ -686,6 +686,21 @@ describe('deterministic conversation session', () => {
     expect(() => commandRoute({ id: 'empty', command: '', event: 'go', response: () => '' })).toThrow(ConfigError)
   })
 
+  it('preserves prototype capabilities and private adapter state through session wrappers', () => {
+    class ClassAdapter implements AdapterFactory {
+      #capabilities = { multiModal: false }
+      get capabilities() { return this.#capabilities }
+      createSource() { return adapter.createSource({} as AdapterRequest) }
+    }
+    const source = new ClassAdapter()
+    for (const conversation of [undefined, { initial: 'idle', states: { idle: {} }, routes: [] }]) {
+      const session = createChatSession(defineChat({ id: 'class-adapter', chat: { adapter: source }, ...(conversation ? { conversation } : {}) }))
+      expect(session.chat.adapter.capabilities).toEqual({ multiModal: false })
+      expect(session.updateChat({ adapter: source }).adapter.capabilities).toEqual({ multiModal: false })
+      expect(session.chat.adapter.createSource(request('hello', 'class-user'))).toBeDefined()
+    }
+  })
+
   it('persists application metadata and resumes deterministic state without replay', async () => {
     let stored: unknown
     const storage = { load: async () => stored, save: async (snapshot: unknown) => { stored = structuredClone(snapshot); return true } }
