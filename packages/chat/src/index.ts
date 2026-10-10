@@ -303,18 +303,34 @@ export const createActionConfirmation = ({
     async propose(action) {
       const suffix = nextId()
       if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,119}$/.test(suffix)) invalidConfirmation('Action confirmation id is invalid.')
-      const call: ToolCall = await chat.proposeToolCall({ id: `app-${suffix}`, name: action.name, args: action.input })
+      const id = `app-${suffix}`
       const token = `confirm-${suffix}`
+      const expiresAt = now() + ttlMs
+      // Upstream shows the pending call to the UI before `proposeToolCall` resolves. Register it first, so a decision
+      // made in that window still goes through this coordinator instead of reaching the controller directly.
+      const provisional: ActionConfirmation = Object.freeze({
+        token, sessionId, action: action.name, input: freezeJson(structuredClone(action.input)), toolCallId: id, expiresAt, status: 'pending',
+      })
+      records.set(token, provisional)
+      tokensByCall.set(id, token)
+      let call: ToolCall
+      try { call = await chat.proposeToolCall({ id, name: action.name, args: action.input }) } catch (error) {
+        if (records.get(token) === provisional) { records.delete(token); tokensByCall.delete(id) }
+        throw error
+      }
+      const decided = records.get(token)
+      if (decided && decided !== provisional) return decided
       const record: ActionConfirmation = Object.freeze({
         token,
         sessionId,
         action: call.name,
         input: freezeJson(structuredClone(call.args)),
         toolCallId: call.id,
-        expiresAt: now() + ttlMs,
+        expiresAt,
         status: call.status === 'requires_confirmation' ? 'pending' : 'rejected',
       })
       records.set(token, record)
+      if (call.id !== id) tokensByCall.delete(id)
       tokensByCall.set(call.id, token)
       await changed()
       return record

@@ -59,11 +59,13 @@ export const ControlledInkExample = (): ReactElement => {
   })
   const actions: ControlledChatActions = {
     async send(input) {
+      // This text-only host shows just the text of a multimodal submission.
+      const text = typeof input === 'string' ? input : input.flatMap(part => part.type === 'text' ? [part.text] : []).join('\n')
       setSnapshot(current => ({
         ...current,
         input: '',
-        status: input === '/slow' ? 'streaming' : 'complete',
-        messages: [...current.messages, nextMessage('user', input), nextMessage('assistant', input === '/slow' ? 'Controlled stream: press Esc to stop' : `Controlled host received: ${input}`, input === '/slow' ? 'streaming' : 'complete')],
+        status: text === '/slow' ? 'streaming' : 'complete',
+        messages: [...current.messages, nextMessage('user', text), nextMessage('assistant', text === '/slow' ? 'Controlled stream: press Esc to stop' : `Controlled host received: ${text}`, text === '/slow' ? 'streaming' : 'complete')],
       }))
     },
     stop() {

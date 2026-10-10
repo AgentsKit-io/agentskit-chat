@@ -350,6 +350,32 @@ describe('typed action confirmation', () => {
     await expect(confirmation.propose({ name: 'confirmed', input: {} })).rejects.toMatchObject({ code: 'AK_TOOL_INVALID_INPUT' })
   })
 
+  it('routes a decision made before the upstream proposal settles through the coordinator', async () => {
+    let settle = (): void => undefined
+    const approve = vi.fn().mockResolvedValue(undefined)
+    const confirmation = createActionConfirmation({
+      sessionId: 'session', createId: () => 'early',
+      chat: { proposeToolCall: proposal => new Promise(resolve => { settle = () => resolve({ ...proposal, status: 'requires_confirmation' }) }), approve, deny: vi.fn() },
+    })
+    const proposing = confirmation.propose({ name: 'pay', input: { amount: 1 } })
+    expect(confirmation.getByToolCall('app-early')).toMatchObject({ token: 'confirm-early', status: 'pending', input: { amount: 1 } })
+    await expect(confirmation.approve('confirm-early', 'session')).resolves.toMatchObject({ status: 'approved' })
+    settle()
+    await expect(proposing).resolves.toMatchObject({ token: 'confirm-early', status: 'approved' })
+    expect(approve).toHaveBeenCalledExactlyOnceWith('app-early')
+    expect(confirmation.getByToolCall('app-early')?.status).toBe('approved')
+  })
+
+  it('forgets the provisional record when the upstream proposal fails', async () => {
+    const confirmation = createActionConfirmation({
+      sessionId: 'session', createId: () => 'refused',
+      chat: { proposeToolCall: async () => { throw new Error('refused') }, approve: vi.fn(), deny: vi.fn() },
+    })
+    await expect(confirmation.propose({ name: 'pay', input: {} })).rejects.toThrow('refused')
+    expect(confirmation.getByToolCall('app-refused')).toBeUndefined()
+    expect(confirmation.getSnapshot()).toEqual([])
+  })
+
   it('keeps a record pending when upstream approval or rejection fails', async () => {
     const approve = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)
     const deny = vi.fn().mockRejectedValueOnce(new Error('temporary')).mockResolvedValue(undefined)

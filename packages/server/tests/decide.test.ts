@@ -87,7 +87,7 @@ const event = (name: string, payload: unknown, turnId = `turn-${++sequence}`) =>
 const post = (handler: ReturnType<typeof createChatHandler>, body: unknown): Promise<Response> => handler(new Request('http://localhost/chat', {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
 }))
-const lines = async (response: Response) => (await response.text()).trim().split('\n').map(line => {
+const lines = async (response: Response) => (await response.text()).trim().split(/\r?\n/).map(line => {
   const decoded = decodeTurnEvent(line)
   if (!decoded.ok) throw new Error(`invalid stream line: ${line}`)
   return decoded.event

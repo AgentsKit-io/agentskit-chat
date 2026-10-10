@@ -52,7 +52,7 @@ const createWorld = (policy: Partial<TurnCostPolicy> = {}, failing: (call: numbe
   }))
   return { store, submit, modelCalls: () => calls }
 }
-const events = async (response: Response) => (await response.text()).trim().split('\n').map(line => {
+const events = async (response: Response) => (await response.text()).trim().split(/\r?\n/).map(line => {
   const decoded = decodeTurnEvent(line)
   if (!decoded.ok) throw new Error(`invalid stream line: ${line}`)
   return decoded.event

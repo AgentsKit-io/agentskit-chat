@@ -334,5 +334,7 @@ reimplemented. No upstream gap or new architecture decision blocks #107.
 
 Reused exports: `createChatController`, `controller.decide`, `ToolDecisionStore`, `ToolDecisionRecord`, `serializeMessages`, `deserializeMessages`, `CostStore`, `createInMemoryCostStore` (tests), and the existing `resumeChatSession` lease. Local application behavior: the `client.action.decide` event and capability, HTTP status mapping, the turn lease around a decision, replay of a settled decision as one snapshot, the reserve/commit/release calls around a turn, the `quota` snapshot field, and a PostgreSQL implementation of the upstream decision port. No claim logic, tool execution, model resume, or spend accounting is reimplemented.
 
+Behavior change taken from upstream: since core 1.15, `proposeToolCall` persists the pending call before its promise resolves, so the UI can show the call first. `createActionConfirmation` therefore registers the confirmation before it calls `proposeToolCall`; a decision made in that window goes through the coordinator instead of the controller's direct `approve`/`deny`. No upstream primitive is copied.
+
 Linked upstream work: agentskit#1828 and #1833 (durable decisions, merged), and the `CostStore` pull request for `@agentskit/observability`. Both are unreleased at the time of writing; this repository's manifests reference the versions that will contain them, and CI depends on that release.
 

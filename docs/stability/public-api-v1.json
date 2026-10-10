@@ -880,6 +880,18 @@
         "./drizzle-pg": {
           "symbols": [
             {
+              "name": "chatDecisionDDL",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "chatDecisionTable",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
               "name": "chatSessionDDL",
               "kinds": [
                 "value"
@@ -887,6 +899,12 @@
             },
             {
               "name": "chatSessionTable",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createDrizzleDecisionStore",
               "kinds": [
                 "value"
               ]
@@ -983,6 +1001,12 @@
         },
         "./protocol": {
           "symbols": [
+            {
+              "name": "ACTION_DECIDE_CAPABILITY",
+              "kinds": [
+                "value"
+              ]
+            },
             {
               "name": "ANSWER_MAX_CITATIONS",
               "kinds": [
@@ -1434,6 +1458,12 @@
               ]
             },
             {
+              "name": "DecideActionEvent",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "DecodeAssistantContentResult",
               "kinds": [
                 "type"
@@ -1647,6 +1677,18 @@
               "name": "TurnLineage",
               "kinds": [
                 "type"
+              ]
+            },
+            {
+              "name": "TurnQuota",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnQuotaSchema",
+              "kinds": [
+                "value"
               ]
             },
             {
@@ -2136,6 +2178,12 @@
             },
             {
               "name": "ChatHandlerOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnCostPolicy",
               "kinds": [
                 "type"
               ]

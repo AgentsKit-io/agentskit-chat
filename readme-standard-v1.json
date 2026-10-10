@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-01-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-01-08",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:c50022d7e29c7dc3180896f58c6ac92dac088a9c3fa98e32b05c6b5f6309b678"
+        "sourceHash": "sha256:13a34dd260f47470cbd474bff04395869fcde900eaacacf9fa9d20ad0b3bfe0a"
       },
       "exceptions": []
     },
@@ -286,8 +286,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/chat/README.md",
           "packages/chat/package.json",
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:c45d9c3978c292ffb4c7fd00dc80fe1650c8e45581bdc2ff89944ef465a91ca9"
+        "sourceHash": "sha256:46cddd8a39d236e0efdd58c39818a63f83275a7f5ec782894e49c5da4fb1aa55"
       },
       "exceptions": []
     },
@@ -364,8 +364,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/protocol/README.md",
           "packages/protocol/package.json",
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:69c48ec03b721d13191515e59c0e915ae540d637b25698760db8c09ce381e1de"
+        "sourceHash": "sha256:8209883f112c691cb5eae4009c9576c272fc0ff64495187fe7d6dd6d98c3a679"
       },
       "exceptions": []
     },
@@ -442,8 +442,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/server/README.md",
           "packages/server/package.json",
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:de6f9078ab05d374ff698ec6fe25e34c9a77e4bf521a85bd08401ab217ed1c6f"
+        "sourceHash": "sha256:4a6009616cd7edca283740f3d863bae73dcc06475fe24a390deb9a33b5526c63"
       },
       "exceptions": []
     },
@@ -520,8 +520,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/cli/README.md",
           "packages/cli/package.json",
@@ -597,8 +597,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/react/README.md",
           "packages/react/package.json",
@@ -667,8 +667,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/vue/README.md",
           "packages/vue/package.json",
@@ -745,8 +745,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/svelte/README.md",
           "packages/svelte/package.json",
@@ -823,8 +823,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/solid/README.md",
           "packages/solid/package.json",
@@ -901,8 +901,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/angular/README.md",
           "packages/angular/package.json",
@@ -979,8 +979,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/react-native/README.md",
           "packages/react-native/package.json",
@@ -1057,8 +1057,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/ink/README.md",
           "packages/ink/package.json",
@@ -1135,8 +1135,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/devtools/README.md",
           "packages/devtools/package.json",

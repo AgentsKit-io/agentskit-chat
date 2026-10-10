@@ -7,3 +7,5 @@ Add `client.action.decide` to protocol v1 and to the chat handler: a tool call t
 Add the handler's `cost` option: reserve against a durable upstream `CostStore` before the model runs, commit real usage with a ledger entry afterwards, release on failure or cancellation, answer 402 `QUOTA_EXCEEDED` when the plan limit is reached, and report `quota.utilization` / `quota.warning` in the first snapshot.
 
 The `@agentskit/core` peer floor rises to `^1.15.0`. `@agentskit/observability` (`>=0.13.0`) is a new optional peer, needed only by hosts that set `cost`.
+
+With core 1.15, `ControlledChatActions.send` follows the upstream signature and receives `string | ContentPart[]`. A host that implements `send` itself must accept both.
