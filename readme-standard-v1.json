@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:5acd2ce9590c8dcb06689b658366e25d76e84a116b69ae8382f0d5a402a2ee7e"
+        "sourceHash": "sha256:3dc421940f03bbd65a557fbd4afd31ce2735168d71ec74583872c9aac25928b0"
       },
       "exceptions": []
     },
