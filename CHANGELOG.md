@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — 2026-10-10
+
+- Adds durable action decisions across requests with an atomic execution claim and stored-result replay.
+- Adds per-turn cost reservation and settlement, including charging dispatched turns after cancellation.
+- Delivers image/file parts by authorized reference with fresh signed URLs or bounded bytes.
+- Requires `@agentskit/core ^1.15.0`; custom controlled hosts must accept `string | ContentPart[]` in `send`. Cost policy requires optional `@agentskit/observability >=0.13.0 <1`.
+- Versions `@agentskit/chat` and `@agentskit/chat-cli` together at `0.6.0`.
 
 ### Patch Changes
 

@@ -1,12 +1,13 @@
 {
   "schemaVersion": 3,
   "minimumConsolidatedVersion": "0.3.0",
-  "currentFrameworkVersion": "0.5.0",
+  "currentFrameworkVersion": "0.6.0",
   "supportedConsolidatedVersions": [
     "0.3.0",
     "0.4.0",
     "0.4.1",
-    "0.5.0"
+    "0.5.0",
+    "0.6.0"
   ],
   "auditedAt": "2026-09-02",
   "consumers": [
@@ -71,7 +72,7 @@
       "repository": "AgentsKit-io/agentskit-chat",
       "surface": "react",
       "consumption": "workspace",
-      "packageVersion": "0.5.0",
+      "packageVersion": "0.6.0",
       "imports": [
         "@agentskit/chat",
         "@agentskit/chat/protocol",

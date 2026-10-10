@@ -53,7 +53,7 @@ flowchart LR
 
 ## Maturity and compatibility
 
-Published in `@agentskit/chat` at `0.5.0` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.mdx](../../docs/deployment.mdx).
+Published in `@agentskit/chat` at `0.6.0` for Next.js, Hono, Express, and Cloudflare Worker recipes documented in [deployment.mdx](../../docs/deployment.mdx).
 
 - Node.js 22+
 - Web-standard `Request` / `Response`
@@ -103,7 +103,7 @@ Without uploads the handler returns 501 `TURN_PARTS_UNAVAILABLE`. Adapters decla
 `multiModal: false` receive 422 `TURN_PARTS_UNSUPPORTED` before a model call.
 `uploads.tenantId` authorizes every request, including text turns and decisions.
 See [ADR-0038](../../docs/architecture/adrs/0038-reference-parts-adapter-delivery.md).
-Core 1.15 is pending publication; this integration is not available in chat 0.5.0.
+This integration requires `@agentskit/core ^1.15.0` in chat `0.6.0`.
 Turn cost policies reserve with server-generated IDs. Once an adapter call starts,
 cleanup commits reported usage or the reserved estimate when usage is unknown,
 including cancellation, timeout and provider failures. Pre-dispatch failures release

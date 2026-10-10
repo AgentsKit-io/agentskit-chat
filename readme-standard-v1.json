@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-01-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-01-08",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:ce052a7358db5d6503e5b29b7232451e7d5266d4926c75fdd076edee116a382f"
+        "sourceHash": "sha256:521909e45164135cb13fcd7627828a8177156510fa29c519f1053aaffcc87a91"
       },
       "exceptions": []
     },
@@ -286,8 +286,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/chat/README.md",
           "packages/chat/package.json",
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:46cddd8a39d236e0efdd58c39818a63f83275a7f5ec782894e49c5da4fb1aa55"
+        "sourceHash": "sha256:cf1e0c9ef2af3e42e6724e9115a3c7fa8d3482a19db461511130fce9616d7a4d"
       },
       "exceptions": []
     },
@@ -364,8 +364,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/protocol/README.md",
           "packages/protocol/package.json",
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:8209883f112c691cb5eae4009c9576c272fc0ff64495187fe7d6dd6d98c3a679"
+        "sourceHash": "sha256:8b5ebdd8831a5d70f09a237a26a5fd388b638ed86cb7792dd643b5d254f18c3a"
       },
       "exceptions": []
     },
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:3dc421940f03bbd65a557fbd4afd31ce2735168d71ec74583872c9aac25928b0"
+        "sourceHash": "sha256:98d2ac065a8ad69ca3a7cf012256755417b4c9f614c85a23933b60e089ec7d0e"
       },
       "exceptions": []
     },
@@ -520,15 +520,15 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/cli/README.md",
           "packages/cli/package.json",
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.mdx"
         ],
-        "sourceHash": "sha256:94170e8bcebcbe3c58c9806d117d81339d18414c73d846d072a1750299cc4465"
+        "sourceHash": "sha256:5da5de395076c12cc1614cbbbe7221df7153a4c7846f0fa8e693c7a9237f29b4"
       },
       "exceptions": []
     },
@@ -597,8 +597,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-02-04",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-02-07",
         "sources": [
           "packages/react/README.md",
           "packages/react/package.json",
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:cfaedcf4c9b3d7bed059b2b191a3b972a6fec07d9c76dd6257d0fe9707ba3ae0"
+        "sourceHash": "sha256:17d7261bf55a4b5ac163f1bd0f7f6e036cbe1d7aae5a509c3f4d11be08b09d8a"
       },
       "exceptions": []
     },
@@ -667,8 +667,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/vue/README.md",
           "packages/vue/package.json",
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:50d9db02bc2680ee092adc9bfd73bcb71fd3a20b95dde69a5c67f8cda179247f"
+        "sourceHash": "sha256:1d347d3996f79c832ab25cb93a2b8073518cebe8193cfe3b224af701ebf995c2"
       },
       "exceptions": [
         {
@@ -745,8 +745,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/svelte/README.md",
           "packages/svelte/package.json",
@@ -754,7 +754,7 @@
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.mdx"
         ],
-        "sourceHash": "sha256:da9b8aa6864442a94fc4e8cdb58b2acb1233aa01af8f4d79973af7d02b987c8c"
+        "sourceHash": "sha256:c8589b99d2e76aba21c20edc3993c647f29cb4eda87c972cc28b9861303b3224"
       },
       "exceptions": [
         {
@@ -823,8 +823,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/solid/README.md",
           "packages/solid/package.json",
@@ -832,7 +832,7 @@
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.mdx"
         ],
-        "sourceHash": "sha256:7af1ce1d122506b5cade2886af77cd239fd456dfd24d4c2d85d6bcb14e826747"
+        "sourceHash": "sha256:d9594d2f091b97095b5121e52b2bdf562ddae283b5c4f2c71d86e0f3f899f96c"
       },
       "exceptions": [
         {
@@ -901,8 +901,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/angular/README.md",
           "packages/angular/package.json",
@@ -910,7 +910,7 @@
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.mdx"
         ],
-        "sourceHash": "sha256:4cec8d6f32b56b0125df2007e2435f3f29b4bd5a1e6246af1724b37e0312ae2b"
+        "sourceHash": "sha256:c5f5fede63f1989e13a843627fa0e5e48b7e8270339b6aef2cf2ea73fd1b798b"
       },
       "exceptions": [
         {
@@ -979,8 +979,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/react-native/README.md",
           "packages/react-native/package.json",
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.mdx"
         ],
-        "sourceHash": "sha256:dba5d484b83e78dfdcf4da83d9fdcf060eca8c058c9c6b4e57d0696678c41f7d"
+        "sourceHash": "sha256:7d23a3f155877999e491126bcb1b869bb98ee7545213f4bad7236dc48649fb96"
       },
       "exceptions": [
         {
@@ -1057,8 +1057,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/ink/README.md",
           "packages/ink/package.json",
@@ -1066,7 +1066,7 @@
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.mdx"
         ],
-        "sourceHash": "sha256:472e895d5d6aa980ed63e9cdae4fb7a248e992d01d22c55ea713b43f5077af3f"
+        "sourceHash": "sha256:0dbb2f9036a23fdb2cad6dc75de6a363472029face081bec2f15286fab13f096"
       },
       "exceptions": [
         {
@@ -1135,8 +1135,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-07",
-        "reviewDueOn": "2027-04-05",
+        "reviewedOn": "2026-10-10",
+        "reviewDueOn": "2027-04-08",
         "sources": [
           "packages/devtools/README.md",
           "packages/devtools/package.json",
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:5e1a09ec984ad7b960ef8c75745818fc83564145b54c4d61b72869944a1129b4"
+        "sourceHash": "sha256:7432d94cf23f1f8b70598387a56f46eba640330c80c57a2cd316750425b6ba18"
       },
       "exceptions": [
         {

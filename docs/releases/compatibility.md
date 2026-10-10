@@ -1,6 +1,6 @@
-# v0.5 compatibility matrix
+# v0.6 compatibility matrix
 
-The two public AgentsKit Chat packages ship as the fixed `0.5.0` group. The peer ranges in
+The two public AgentsKit Chat packages ship as the fixed `0.6.0` group. The peer ranges in
 the published manifests are authoritative; this table summarizes the supported
 minimums and release evidence.
 
@@ -15,7 +15,7 @@ minimums and release evidence.
 | Angular | `@agentskit/angular ^0.4.6` | Angular 18.1–21, RxJS 7 | component tests, partial-Ivy AOT package test, conformance |
 
 Core packages require the published AgentsKit ranges in their manifests:
-`@agentskit/core` 1.12.x, `@agentskit/memory` 0.11.x,
+`@agentskit/core ^1.15.0`, `@agentskit/memory` 0.11.x,
 `@agentskit/statechart` 0.2.x, and `@agentskit/eval` 0.4.19+ where used.
 The release workflow builds on Node 24 with npm 11 and also runs the normal CI
 matrix on Node 22.

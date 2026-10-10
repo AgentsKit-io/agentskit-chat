@@ -18,7 +18,7 @@ const certifiedAdoption = () => {
 }
 const response = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body })
 const consolidated = {
-  'dist-tags': { latest: '0.5.0' },
+  'dist-tags': { latest: '0.6.0' },
   versions: {
     '0.3.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
@@ -26,7 +26,7 @@ const consolidated = {
     '0.4.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },
-    '0.5.0': {
+    '0.6.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },
     '0.4.1': {

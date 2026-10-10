@@ -1,15 +1,16 @@
 # Stable public launch checklist
 
 Executable close-out checklist for [issue #104](https://github.com/AgentsKit-io/agentskit-chat/issues/104).
-AgentsKit Chat `0.5.0` adds optional Drizzle/PostgreSQL CAS SessionStorage and
-referenced parts/uploads to the fixed two-package graph. Historical evidence below
-remains tied to its original release and does not validate `0.5.0`.
+AgentsKit Chat `0.6.0` adds durable action decisions, per-turn cost policy and
+referenced image/file delivery, and requires `@agentskit/core ^1.15.0`.
+Historical evidence below remains tied to its original release and does not
+validate `0.6.0`.
 
 ## Documentation
 
 - [x] Quick starts for React, React Native, Ink, Vue, Svelte, Solid, and Angular
 - [x] API reference, deployment modes, stability, security, and changelog
-- [x] Compatibility matrix, `0.5.0` release notes, and `0.2.x` migration map
+- [x] Compatibility matrix, `0.6.0` release notes, and `0.2.x` migration map
 - [x] Agent handoffs and doc-bridge ownership routing
 - [x] Host adapter recipes for Next.js, Hono, Express, and Cloudflare Workers
 - [x] README install path targets the two-package npm graph
@@ -96,7 +97,7 @@ The stable workflow must remain token-free. Its protected publish job uses
 - [x] Canonical replacement subpaths and migration links match on every deprecated version
 - [x] ADR-0027 and ADR-0030 are Accepted with the required HITL recorded for the retirement decision
 
-## 0.5.0 publication handoff
+## 0.6.0 publication handoff
 
 - [ ] Required local gates reviewed and conditional E2E/PTY completed locally or in CI
 - [ ] Human release review and PR merge
