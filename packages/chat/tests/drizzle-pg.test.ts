@@ -75,6 +75,13 @@ describe('Drizzle decision boundary (supporting checks)', () => {
     fixture.rows([{ ...row, status: 'complete', decision: 'approve', reason: 'ok', record: { ...row.record, outcome } }])
     expect(await store.get('call-1')).toEqual({ toolCallId: 'call-1', status: 'complete', messages, decision: 'approve', reason: 'ok', outcome })
   })
+  it('accepts changed messages for an existing pending call without updating the snapshot', async () => {
+    const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
+    fixture.query.returning.mockResolvedValue([])
+    fixture.rows([row])
+    await expect(store.putPending({ toolCallId: 'call-1', status: 'pending', messages: [...messages, { ...messages[0]!, id: 'm2' }] })).resolves.toBeUndefined()
+    expect(fixture.db.update).not.toHaveBeenCalled()
+  })
   it('rejects a reused tool-call ID instead of replaying a terminal decision', async () => {
     const fixture = database(), store = createDrizzleDecisionStore(fixture.db, 'tenant', 'session')
     fixture.query.returning.mockResolvedValue([])

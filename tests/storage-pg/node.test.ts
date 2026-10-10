@@ -25,7 +25,7 @@ it('Node pool: Postgres 16 ToolDecisionStore acceptance contract', async () => {
       sessions: tenant => createDrizzleSessionStorage(db, tenant),
       decisions: (tenant, sessionId) => createDrizzleDecisionStore(db, tenant, sessionId),
     })
-    expect(results).toHaveLength(3)
+    expect(results).toHaveLength(5)
     console.log(JSON.stringify({ runtime: 'node-pool', criteria: results }))
   } finally { await pool.end() }
 }, 300000)

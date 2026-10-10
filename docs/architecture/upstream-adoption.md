@@ -338,3 +338,7 @@ Behavior change taken from upstream: since core 1.15, `proposeToolCall` persists
 
 Linked upstream work: agentskit#1828 and #1833 (durable decisions, merged), and the `CostStore` pull request for `@agentskit/observability`. Both are unreleased at the time of writing; this repository's manifests reference the versions that will contain them, and CI depends on that release.
 
+
+### Independent verification follow-up (2026-10-10)
+
+Re-inspected the published `@agentskit/core` 1.15.0 controller `persistPending`: each registration submits every still-pending call with the current messages. The local PostgreSQL port now preserves the first pending snapshot without requiring transcript equality, while rejecting IDs with claimed or terminal decisions. The same two real handler regressions (two calls in one turn; a later proposal while the first remains pending) run with in-memory stores and PostgreSQL. Billing documentation follows the existing handler: dispatched calls commit actual usage, or the reservation when usage is unknown; only undispatched calls release. No upstream primitive or dependency changed.

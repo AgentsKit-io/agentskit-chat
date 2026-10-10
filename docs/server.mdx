@@ -109,7 +109,7 @@ const handleChat = createChatHandler({
 })
 ```
 
-The handler reserves `reserveUsd` before the model runs, commits the real cost with a ledger entry when the turn finishes, and releases the reservation when the turn fails, times out, or is cancelled. A turn that does not fit the cap gets 402 `QUOTA_EXCEEDED` and never reaches the model. The first snapshot carries `quota.utilization` and `quota.warning` (true from 80% by default, `warnAt` to change) for a usage bar.
+The handler reserves `reserveUsd` before the model runs, commits the real cost with a ledger entry after model dispatch, including failed, timed-out, or cancelled turns. When usage is unknown it charges the reservation; it releases the reservation only if no model call started. A turn that does not fit the cap gets 402 `QUOTA_EXCEEDED` and never reaches the model. A custom `createId` must generate unique IDs on every call; a constant value can reuse a reservation and bypass the quota. The first snapshot carries `quota.utilization` and `quota.warning` (true from 80% by default, `warnAt` to change) for a usage bar.
 
 ## Limits and failures
 

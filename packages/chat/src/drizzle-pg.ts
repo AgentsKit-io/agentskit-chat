@@ -94,7 +94,7 @@ export const createDrizzleDecisionStore = (db: NodePgDatabase, tenantId: string,
     putPending: async record => {
       const inserted = await db.insert(chatDecisionTable).values({ tenantId, sessionId, toolCallId: record.toolCallId, status: 'pending', record: encode(record) }).onConflictDoNothing().returning({ toolCallId: chatDecisionTable.toolCallId })
       if (inserted.length === 0) {
-        const [existing] = await db.select(columns).from(chatDecisionTable).where(and(key(record.toolCallId), eq(chatDecisionTable.status, 'pending'), eq(chatDecisionTable.record, encode(record))))
+        const [existing] = await db.select(columns).from(chatDecisionTable).where(key(record.toolCallId))
         if (!existing || existing.status !== 'pending') throw new TypeError('Tool-call ID already belongs to another proposal.')
       }
     },
