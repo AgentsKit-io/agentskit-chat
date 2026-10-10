@@ -327,3 +327,12 @@ reimplemented. No upstream gap or new architecture decision blocks #107.
 ## Drizzle/Postgres application envelopes (CH-B)
 
 [ADR-0036](./adrs/0036-drizzle-postgres-session-storage.md) adds only a PostgreSQL adapter for the existing application `SessionStorage` and validated `SessionSnapshot`. The upstream `ChatMemory` interface and memory exports were inspected; no Drizzle ChatMemory backend exists in the inspected source. Canonical message storage is therefore blocked on upstream implementation and a supported release. No controller, message-memory implementation, or private upstream source is copied locally. Local acceptance evidence and its limits are recorded in [CH-B](../ch-b-session-storage.md).
+
+## Durable action decisions and turn cost (track 04, stages 3 and 4)
+
+[ADR-0037](./adrs/0037-durable-action-decisions-and-turn-cost.md). Inspected upstream source at `AgentsKit-io/agentskit` `main` `cff4ba9b`: `packages/core/src/controller-decision-internal.ts`, `controller.ts` (`decide`, `persistPending`), `types/chat.ts` (`ToolDecisionStore`, `ToolDecisionRecord`), `errors.ts` (`AK_ACTION_NOT_FOUND`, `AK_ACTION_ALREADY_DECIDED`), and `packages/observability/src/cost-store.ts` (`CostStore`).
+
+Reused exports: `createChatController`, `controller.decide`, `ToolDecisionStore`, `ToolDecisionRecord`, `serializeMessages`, `deserializeMessages`, `CostStore`, `createInMemoryCostStore` (tests), and the existing `resumeChatSession` lease. Local application behavior: the `client.action.decide` event and capability, HTTP status mapping, the turn lease around a decision, replay of a settled decision as one snapshot, the reserve/commit/release calls around a turn, the `quota` snapshot field, and a PostgreSQL implementation of the upstream decision port. No claim logic, tool execution, model resume, or spend accounting is reimplemented.
+
+Linked upstream work: agentskit#1828 and #1833 (durable decisions, merged), and the `CostStore` pull request for `@agentskit/observability`. Both are unreleased at the time of writing; this repository's manifests reference the versions that will contain them, and CI depends on that release.
+

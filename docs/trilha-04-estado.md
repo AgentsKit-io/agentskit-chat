@@ -50,3 +50,57 @@ do `AGENTS.md` proíbe import privado ou fork: o `package.json` do chat só pode
 apontar para versões publicadas. A validação local desses itens usa tarballs do
 `main` do `agentskit` por override fora do commit; o CI do PR do chat só fica
 verde depois que agentskit#1757 for publicado.
+
+## Checkpoint de 2026-10-09 (noite)
+
+Parada pedida pelo coordenador por falta de memória e disco na máquina. Nada foi publicado nem mergeado.
+
+### Pronto
+
+- **a5 no `agentskit`** — branch `EmersonBraun/chat-t04`, commit `feat(observability): durable tenant CostStore with Postgres backend`.
+  `CostStore` (`reserve`, `commit`, `release`, `window`), `createInMemoryCostStore`, `@agentskit/observability/postgres`
+  (`postgresCostStore`, DDL, tabelas Drizzle, ledger), `@agentskit/observability/cost-store-contract`, os três guards com
+  `store` opcional e aviso em `NODE_ENV=production`, ADR 0044, changeset minor, passo novo no job Postgres do CI.
+  Validação local: lint do pacote; 374 testes (30 arquivos), linhas 94,4%; contrato em Postgres 16 real repetido 10 vezes
+  (50 reservas concorrentes no teto, 100 turnos com 20% de falha, ledger conferido) e em workerd; os 52 quality gates;
+  size-limit dentro do orçamento. O orçamento do bundle raiz do observability subiu de 16,5 KB para 17 KB (ficou em 16,57 KB).
+- **Matriz AKOS** — branch `EmersonBraun/t04-compat-matrix` em `agentskit-os`: entrada do Release OSS 1 em
+  `docs/COMPAT-MATRIX.md`, só documentação; `check-compat-matrix` ok.
+
+### Pela metade (WIP nesta branch `EmersonBraun/chat-t04` do chat)
+
+a3 e a5 no chat estão implementados e testados localmente contra tarballs do `main` do `agentskit`, mas **o lockfile não foi
+regenerado**: os `package.json` de `packages/chat` e `packages/server` já pedem `@agentskit/core ^1.15.0` e
+`@agentskit/observability ^0.13.0`, que ainda não existem no npm. `pnpm install --frozen-lockfile` falha até a publicação.
+
+- Protocolo: `client.action.decide`, `ACTION_DECIDE_CAPABILITY`, campo aditivo `quota` no snapshot.
+- Handler: opção `decisions` (decide, replay, 404/409/501 tipados) e opção `cost` (reserva, commit, release, 402, aviso em 80%).
+- `@agentskit/chat/drizzle-pg`: `createDrizzleDecisionStore`, `chatDecisionTable`, `chatDecisionDDL`.
+- Testes: `packages/server/tests/decide.test.ts` (RF-17 a RF-24, 11 testes), `packages/server/tests/cost.test.ts`
+  (RF-26 a RF-29, 6 testes), `packages/protocol/tests/decide.test.ts`, `tests/storage-pg/decision-contract.ts`
+  (RF-19 em Postgres 16: 100 rodadas de corrida de claim e 100 rodadas pelo handler).
+- Docs: ADR-0037, `docs/protocol/v1.md`, `docs/server.mdx`, README do chat, registro de adoção upstream, changeset minor.
+
+Último resultado medido: suíte do servidor 55 testes passando, 1 falha esperada (etapa 9), 2 ignorados, linhas 98,75%;
+contrato Postgres em Node 2/2. **Não rodados depois das últimas edições:** `packages/protocol/tests/decide.test.ts`
+e o fixture novo de compatibilidade, suíte completa do repositório, `check:public-api` (o snapshot precisa de `--update`),
+contrato em workerd com o store de decisão, size/bundle budget, doc-bridge gate.
+
+### Próximo passo exato
+
+1. Revisar e mergear o PR do a5 no `agentskit`; publicar o "Version Packages" (agentskit#1757 atualizado).
+2. No chat: `pnpm install` para regenerar o lockfile com core 1.15.0 e observability 0.13.0 publicados.
+   Para validar antes da publicação, usar override local não commitado em `pnpm-workspace.yaml` apontando para
+   tarballs de `pnpm pack` de `packages/core` e `packages/observability` do `agentskit`.
+3. Rodar: `pnpm --filter @agentskit/chat-protocol test`, `pnpm --filter @agentskit/chat test`,
+   `pnpm --filter @agentskit/chat-server test`, `pnpm lint`, `pnpm check:public-api:update` e revisar o diff,
+   `pnpm test:storage:pg:types`, `pnpm test:storage:pg` (Postgres 16 conforme `tests/storage-pg/README.md`),
+   o worker de `tests/storage-pg` em `wrangler dev`, `pnpm test:bundle-budget`, `pnpm docs:bridge:gate`.
+4. Abrir o PR do chat como pronto e deixar o "Version Packages" do chat (0.6.0) aberto.
+5. Release OSS 2: no handler, trocar o 501 `TURN_PARTS_UNAVAILABLE` pela entrega das parts a `controller.send`
+   (RF-07, RF-11), com `BlobStore.presignGet` ou bytes conforme o adapter; converter o `it.fails` da etapa 9.
+
+### Não coberto por esta rodada
+
+Neon, Hyperdrive, R2 e MinIO reais; chamada real a OpenRouter e AI Gateway; extração com 50 recibos; RLS no Postgres.
+RF-27 cobre teto, 402 e aviso; a leitura do teto em `entitlements` fica com o host (starter, etapa 11).

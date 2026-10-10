@@ -347,6 +347,22 @@ const SubmitEventSchema = z.object({
   }),
 })
 
+/** Additive v1 capability; a server that announces it accepts `client.action.decide`. */
+export const ACTION_DECIDE_CAPABILITY = 'action-decide-v1' as const
+const DecideEventSchema = z.object({
+  ...EnvelopeFields,
+  event: z.literal('client.action.decide'),
+  payload: z.object({
+    token: z.string().min(1).max(256),
+    decision: z.enum(['approve', 'deny']),
+    reason: z.string().min(1).max(1024).optional(),
+  }).strict(),
+})
+
+/** Additive v1 field on the first snapshot of a metered turn: share of the plan limit in use, and whether to warn. */
+export const TurnQuotaSchema = z.object({ utilization: z.number().nonnegative(), warning: z.boolean() }).strict()
+export type TurnQuota = z.infer<typeof TurnQuotaSchema>
+
 const SnapshotEventSchema = z.object({
   ...EnvelopeFields,
   event: z.literal('server.turn.snapshot'),
@@ -357,6 +373,7 @@ const SnapshotEventSchema = z.object({
     error: TurnDiagnosticSchema.optional(),
     lineage: TurnLineageSchema.optional(),
     capabilities: z.array(z.string().min(1).max(64)).max(32).optional(),
+    quota: TurnQuotaSchema.optional(),
   }),
 })
 
@@ -368,6 +385,7 @@ const DiagnosticEventSchema = z.object({
 
 export const TurnEventSchema = z.discriminatedUnion('event', [
   SubmitEventSchema,
+  DecideEventSchema,
   SnapshotEventSchema,
   DiagnosticEventSchema,
 ])
@@ -375,6 +393,7 @@ export const TurnEventSchema = z.discriminatedUnion('event', [
 export type TurnEvent = z.infer<typeof TurnEventSchema>
 export type WireMessage = MemoryRecord['messages'][number]
 export type SubmitTurnEvent = z.infer<typeof SubmitEventSchema>
+export type DecideActionEvent = z.infer<typeof DecideEventSchema>
 export type SnapshotTurnEvent = z.infer<typeof SnapshotEventSchema>
 export type DiagnosticTurnEvent = z.infer<typeof DiagnosticEventSchema>
 export type TurnLineage = NonNullable<SnapshotTurnEvent['payload']['lineage']>
@@ -403,6 +422,7 @@ export interface CreateSnapshotEventOptions {
   readonly lineage?: TurnLineage
   readonly error?: TurnDiagnostic
   readonly capabilities?: readonly string[]
+  readonly quota?: TurnQuota
 }
 
 export const createSnapshotEvent = (options: CreateSnapshotEventOptions): SnapshotTurnEvent => SnapshotEventSchema.parse({
@@ -418,6 +438,7 @@ export const createSnapshotEvent = (options: CreateSnapshotEventOptions): Snapsh
   payload: {
     messages: serializeMessages([...options.messages]).messages,
     ...(options.capabilities === undefined ? {} : { capabilities: options.capabilities }),
+    ...(options.quota === undefined ? {} : { quota: options.quota }),
     status: options.status,
     usage: options.usage,
     ...(options.lineage === undefined ? {} : { lineage: options.lineage }),
@@ -457,7 +478,7 @@ export type DecodeTurnEventResult =
   | { readonly ok: true; readonly event: TurnEvent }
   | { readonly ok: false; readonly diagnostic: ProtocolDecodeDiagnostic }
 
-const eventNames = new Set(['client.turn.submit', 'server.turn.snapshot', 'server.turn.diagnostic'])
+const eventNames = new Set(['client.turn.submit', 'client.action.decide', 'server.turn.snapshot', 'server.turn.diagnostic'])
 const safeEventId = (input: unknown): string | undefined => {
   try {
     if (!isRecord(input)) return undefined

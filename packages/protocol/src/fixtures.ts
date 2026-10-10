@@ -40,6 +40,16 @@ export const validTurnEventFixtures = [
     },
   },
   {
+    name: 'action decision',
+    event: {
+      ...base,
+      eventId: 'event-decide',
+      sequence: 0,
+      event: 'client.action.decide',
+      payload: { token: 'call-1', decision: 'approve' },
+    },
+  },
+  {
     name: 'idle snapshot',
     event: {
       ...base,

@@ -92,7 +92,7 @@
   },
   "peerDependencies": {
     "@agentskit/angular": "^0.4.6",
-    "@agentskit/core": "^1.12.3",
+    "@agentskit/core": "^1.15.0",
     "@agentskit/ink": "^0.10.1",
     "@agentskit/react": ">=0.7.1 <1",
     "@agentskit/react-native": ">=0.4.4 <1",
@@ -108,7 +108,8 @@
     "solid-js": "^1.9.0",
     "svelte": "^5.0.0",
     "vue": "^3.4.0",
-    "drizzle-orm": "^0.45.3"
+    "drizzle-orm": "^0.45.3",
+    "@agentskit/observability": ">=0.13.0 <1"
   },
   "peerDependenciesMeta": {
     "@agentskit/angular": {
@@ -161,6 +162,9 @@
     },
     "drizzle-orm": {
       "optional": true
+    },
+    "@agentskit/observability": {
+      "optional": true
     }
   },
   "dependencies": {
@@ -173,10 +177,11 @@
   },
   "devDependencies": {
     "@agentskit/chat-protocol": "workspace:*",
-    "@agentskit/core": "^1.12.3",
+    "@agentskit/core": "^1.15.0",
     "@types/node": "^25.9.7",
     "drizzle-orm": "0.45.3",
-    "tsup": "^8.5.1"
+    "tsup": "^8.5.1",
+    "@agentskit/observability": "^0.13.0"
   },
   "publishConfig": {
     "access": "public",

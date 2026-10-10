@@ -91,6 +91,16 @@ The adapter stores application envelopes, not messages. Continue using upstream 
 
 On Workers connect a `pg.Client` per request (Hyperdrive connection string in production), and call `client.end()` in `waitUntil` after consuming/closing the chat stream. On Node reuse a `pg.Pool` and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled.
 
+The same subpath provides the durable store for confirmations decided in a later request. Apply `chatDecisionDDL` in a migration and pass the store to the handler's `decisions` option:
+
+```ts
+import { createDrizzleDecisionStore } from '@agentskit/chat/drizzle-pg'
+
+const decisions = createDrizzleDecisionStore(drizzle(pool), authenticatedTenantId, sessionId)
+```
+
+It implements upstream `ToolDecisionStore`: one row per confirmation-required tool call, and a single conditional `UPDATE` as the claim, so concurrent approvals execute the tool once. See [server](../../docs/server.mdx).
+
 Optional RLS defense in depth (configure tenant context with transaction-local `set_config` on the same connection, and use a non-owner role without BYPASSRLS):
 
 ```sql
