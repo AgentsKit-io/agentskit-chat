@@ -4,7 +4,7 @@ import type { ChatState, ContentPart, Message, TokenUsage, ToolDecisionStore } f
 import type { CostStore } from '@agentskit/observability'
 import { resumeChatSession, SessionConflictError } from '@agentskit/chat'
 import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
-import { ACTION_DECIDE_CAPABILITY, createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TURN_PARTS_CAPABILITY, TurnEventSchema } from '@agentskit/chat-protocol'
+import { ACTION_DECIDE_CAPABILITY, createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TURN_PARTS_CAPABILITY, TurnEventSchema, SessionSnapshotSchema } from '@agentskit/chat-protocol'
 import type { TurnDiagnostic } from '@agentskit/chat-protocol'
 
 import { deliverUploadParts, resolveUploadParts, toContentParts, UploadError, validateUploadPolicy } from './uploads.js'
@@ -149,6 +149,9 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const storage = options.sessionStorage(context, signal)
       const session = await withTimeout(callbackSignal => resumeChatSession(definition, { sessionId: submission.sessionId, storage, signal: callbackSignal, ...(options.now ? { now: options.now } : {}) }), timeoutMs, signal)
       if (decision && settled && settled.status !== 'pending' && settled.status !== 'claimed') {
+        // Settlement precedes model resume and final memory persistence; do not replay an active turn.
+        const current = SessionSnapshotSchema.nullish().parse(await withTimeout(async callbackSignal => storage.load(submission.sessionId, callbackSignal), timeoutMs, signal))
+        if (current?.activeTurn && current.activeTurn.expiresAt > (options.now?.() ?? new Date()).getTime()) return fail(409, 'ACTION_ALREADY_DECIDED', 'This action was already decided.')
         // Replay of a settled decision: answer from the recorded transcript; no lease, tool, or model call.
         const stored = memory ? await withTimeout(async callbackSignal => memory.load({ signal: callbackSignal }), timeoutMs, signal) : []
         await withTimeout(callbackSignal => session.persist(callbackSignal), timeoutMs, signal)

@@ -12,7 +12,7 @@ import { createChatHandler } from '../src/index.js'
 const copy = <T>(value: T): T => structuredClone(value)
 
 /** Everything that survives a server restart: session snapshot, memory, decisions, and the domain table. */
-const createWorld = (options: { readonly failTool?: boolean; readonly toolDelayMs?: number } = {}) => {
+const createWorld = (options: { readonly failTool?: boolean; readonly toolDelayMs?: number; readonly resumeDelayMs?: number } = {}) => {
   let session: SessionSnapshot | undefined
   const memory: ChatMemory = createInMemoryMemory()
   const decisions = new Map<string, ToolDecisionRecord>()
@@ -49,6 +49,7 @@ const createWorld = (options: { readonly failTool?: boolean; readonly toolDelayM
         if (!request.messages.some(message => message.role === 'tool')) {
           yield { type: 'tool_call', toolCall: { id: 'call-1', name: 'save_expense', args: '{"amount":42}' } }
         } else {
+          if (options.resumeDelayMs) await new Promise(resolve => setTimeout(resolve, options.resumeDelayMs))
           yield { type: 'text', content: 'Saved.' }
         }
         yield { type: 'done' }
@@ -201,6 +202,22 @@ describe('client.action.decide (RF-17..RF-24)', () => {
     expect((await first).status).toBe(200)
     await (await first).text()
     expect(world.domainRows).toHaveLength(1)
+  })
+
+  it('does not replay a settled decision while its model resume is still active', async () => {
+    const world = createWorld({ resumeDelayMs: 30 })
+    await propose(world)
+    const first = await decide(world, 'approve')
+    const drain = lastSnapshot(first)
+    while (world.decisions.get('call-1')?.status !== 'complete') await new Promise(resolve => setTimeout(resolve, 1))
+    const late = await decide(world, 'approve')
+    expect(late.status).toBe(409)
+    expect(await error(late)).toBe('ACTION_ALREADY_DECIDED')
+    expect((await drain).payload.messages.at(-1)?.content).toBe('Saved.')
+    const replay = await lastSnapshot(await decide(world, 'approve'))
+    expect(replay.payload.messages.at(-1)?.content).toBe('Saved.')
+    expect(world.domainRows).toHaveLength(1)
+    expect(world.modelRequests).toHaveLength(2)
   })
 
   it('RF-20: resending the same approval replays the recorded result without calling the tool or the model', async () => {
