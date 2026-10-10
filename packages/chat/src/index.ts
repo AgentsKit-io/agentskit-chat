@@ -791,8 +791,9 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
     const sessionAware = adapter as ChatConfig['adapter'] & {
       readonly createSourceForSession?: (request: AdapterRequest, sessionId: string) => StreamSource
     }
-    return new Proxy(adapter, {
-      get(target, property) {
+    return new Proxy(Object.create(adapter) as typeof adapter, {
+      get(_target, property) {
+        const target = adapter
         if (property === 'createSource') return (request: AdapterRequest) => sessionAware.createSourceForSession?.(request, sessionId) ?? adapter.createSource(request)
         const value: unknown = Reflect.get(target, property, target)
         return typeof value === 'function' ? value.bind(target) : value
@@ -933,8 +934,9 @@ export const createChatSession = (definition: ChatDefinition, options: ChatSessi
   const updateChat = (chat: ChatConfig): ChatConfig => {
     const adapter = wrappedAdapters.get(chat.adapter) ?? chat.adapter
     const scoped = scopeAdapter(adapter)
-    const wrapped = new Proxy(scoped, {
-      get(target, property) {
+    const wrapped = new Proxy(Object.create(scoped) as typeof scoped, {
+      get(_target, property) {
+        const target = scoped
         return property === 'createSource' ? (request: AdapterRequest) => createSource(scoped, request) : Reflect.get(target, property)
       },
     })

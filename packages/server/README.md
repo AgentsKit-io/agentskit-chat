@@ -92,7 +92,8 @@ Reference validation rejects cross-tenant/session keys (403), disallowed size/ty
 at most the declared upload size and buffer it within `maxBytes`; choose a conservative
 limit. With core 1.15, verified references reach the adapter as short signed GET URLs
 (default) or data URLs (`uploads.delivery: 'bytes'`). In bytes mode, `maxBytes`
-is also the total raw-byte budget per model call, including transcript history. Memory and snapshots keep only
+limits each file; `maxTotalBytes` separately limits total raw bytes per model call, including transcript history
+(default: ten times `maxBytes`, capped at the largest safe integer). Memory and snapshots keep only
 opaque references. Earlier turns receive fresh URLs on each model call, including
 a resumed decision. Configure immutable objects: a still-valid signed PUT otherwise
 allows an upload to change after verification.

@@ -26,7 +26,9 @@ session scope:
 - `delivery: 'url'` (default): a GET URL signed by `BlobStore.presignGet` for the policy's
   `expiresIn` (300 s by default, 600 s at most);
 - `delivery: 'bytes'`: the object's bytes as a `data:` URL, read with the policy's `maxBytes` limit,
-  for providers that cannot fetch a URL.
+  for providers that cannot fetch a URL. `maxBytes` bounds each file; optional `maxTotalBytes` bounds
+  the total raw bytes per model call, including history (default: ten times `maxBytes`, capped at
+  the largest safe integer). Exceeding either limit fails before adapter dispatch.
 
 Because the exchange happens per model call, earlier turns replayed from the transcript get a fresh
 URL each time, including the resume after `client.action.decide`. Sources outside the scope pass
@@ -56,7 +58,7 @@ adapters) and #1828 (`send` with parts), both unreleased when this was written.
 - A stored object is verified (size, MIME, SHA-256) when it is submitted, not again on later
   deliveries. A host that needs that guarantee over time must make uploaded objects immutable
   (versioned bucket or write-once keys); a still-valid signed PUT can otherwise replace the object.
-- `delivery: 'bytes'` reads every referenced object again on each model call. Keep `maxBytes`
+- `delivery: 'bytes'` reads every referenced object again on each model call. Keep `maxBytes` and `maxTotalBytes`
   conservative or prefer `'url'` where the provider supports it.
 - An object that disappears before delivery fails the turn (`CHAT_TURN_FAILED`); the model is not
   called with a partial request.
@@ -64,3 +66,5 @@ adapters) and #1828 (`send` with parts), both unreleased when this was written.
   which names the reference.
 - Exercised with a fake store and adapter, and with a real S3-compatible store where the
   environment provides one. R2, MinIO and a real provider call are not certified by this change.
+
+Adapters may be frozen objects or classes with private state. Each decorator uses a separate proxy target, forwarding property access and calls to the original adapter to preserve receivers without violating frozen-property invariants.

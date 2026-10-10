@@ -13,6 +13,8 @@ export interface BlobStore {
 export interface UploadPolicy {
   readonly store: BlobStore
   readonly maxBytes: number
+  /** Total raw bytes per model call in bytes mode, including history; defaults to ten times maxBytes. */
+  readonly maxTotalBytes?: number
   readonly mimeTypes: readonly string[]
   readonly expiresIn?: number
   /**
@@ -33,6 +35,7 @@ const prefix = (tenantId: string, sessionId: string): string => {
 }
 export const validateUploadPolicy = (policy: UploadPolicy): void => {
   if (!Number.isSafeInteger(policy.maxBytes) || policy.maxBytes < 1 || !policy.mimeTypes.length ||
+    (policy.maxTotalBytes !== undefined && (!Number.isSafeInteger(policy.maxTotalBytes) || policy.maxTotalBytes < 1)) ||
     !Number.isInteger(policy.expiresIn ?? 300) || (policy.expiresIn ?? 300) < 1 || (policy.expiresIn ?? 300) > 600) {
     fail(500, 'UPLOAD_CONFIG_INVALID', 'Upload policy is invalid.')
   }
@@ -132,8 +135,10 @@ const dataUrl = (bytes: Uint8Array, mimeType: string): string => {
  */
 export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy, tenantId: string, sessionId: string, signal: AbortSignal): AdapterFactory => {
   const expectedPrefix = prefix(tenantId, sessionId)
-  return new Proxy(adapter, {
-    get(target, property) {
+  // A separate target allows decoration of frozen adapters without violating Proxy invariants.
+  return new Proxy(Object.create(adapter) as AdapterFactory, {
+    get(_target, property) {
+      const target = adapter
       if (property !== 'createSource' && property !== 'createSourceForSession') {
         const value: unknown = Reflect.get(target, property, target)
         return typeof value === 'function' ? value.bind(target) : value
@@ -145,7 +150,7 @@ export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy
         let aborted = false
         return {
           async *stream() {
-            let remaining = policy.maxBytes
+            let remaining = policy.maxTotalBytes ?? Math.min(Number.MAX_SAFE_INTEGER, policy.maxBytes * 10)
             const messages: Message[] = []
             for (const message of request.messages) {
               if (!message.parts) { messages.push(message); continue }
@@ -153,7 +158,7 @@ export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy
               for (const part of message.parts) {
                 if (part.type === 'text' || !part.source.startsWith(expectedPrefix) || !reference.test(part.source.slice(expectedPrefix.length))) { parts.push(part); continue }
                 if (policy.delivery !== 'bytes') { parts.push({ ...part, source: await policy.store.presignGet(part.source, policy.expiresIn ?? 300, signal) }); continue }
-                const stored = await readStored(policy, part.source, remaining, signal)
+                const stored = await readStored(policy, part.source, Math.min(policy.maxBytes, remaining), signal)
                 remaining -= stored.bytes.byteLength
                 parts.push({ ...part, source: dataUrl(stored.bytes, part.mimeType ?? stored.mimeType ?? 'application/octet-stream') })
               }

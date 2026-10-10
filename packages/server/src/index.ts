@@ -200,8 +200,9 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const loaded = memory ? await withTimeout(async callbackSignal => memory.load({ signal: callbackSignal }), timeoutMs, signal) : definition.chat.initialMessages ?? []
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
-      const meteredAdapter = new Proxy(chat.adapter, {
-        get(target, property) {
+      const meteredAdapter = new Proxy(Object.create(chat.adapter) as typeof chat.adapter, {
+        get(_target, property) {
+          const target = chat.adapter
           const value: unknown = Reflect.get(target, property, target)
           if (typeof value !== 'function') return value
           if (property === 'createSource' || property === 'createSourceForSession') return (...args: unknown[]) => { modelStarted = true; return Reflect.apply(value, target, args) }

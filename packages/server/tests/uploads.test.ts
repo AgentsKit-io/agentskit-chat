@@ -134,7 +134,7 @@ describe('upload trust boundary and recovery', () => {
     expect((await upload(new Request('http://localhost/uploads'))).status).toBe(405)
     expect((await upload(new Request('http://localhost/uploads', { method: 'POST', body: '{}' }))).status).toBe(415)
     expect((await upload(new Request('http://localhost/uploads', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{' }))).status).toBe(400)
-    for (const overrides of [{ maxBytes: 0 }, { mimeTypes: [] }, { expiresIn: 601 }, { expiresIn: 0 }, { timeoutMs: 0 }]) {
+    for (const overrides of [{ maxBytes: 0 }, { maxTotalBytes: 0 }, { maxTotalBytes: 1.5 }, { mimeTypes: [] }, { expiresIn: 601 }, { expiresIn: 0 }, { timeoutMs: 0 }]) {
       expect(() => createUploadHandler({ ...policy, ...overrides, authorize: async () => ({ tenantId: 'tenant' }) })).toThrow()
     }
     const defaultExpiry = createUploadHandler({ ...policy, expiresIn: 60, authorize: async () => ({ tenantId: 'tenant' }) })
@@ -235,7 +235,7 @@ describe('upload failure contracts', () => {
 
 describe('parts delivery to the adapter', () => {
   const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
-  const fixture = (overrides: { readonly delivery?: 'url' | 'bytes'; readonly multiModal?: boolean; readonly history?: Message[] } = {}) => {
+  const fixture = (overrides: { readonly delivery?: 'url' | 'bytes'; readonly multiModal?: boolean; readonly history?: Message[]; readonly maxBytes?: number; readonly frozen?: boolean } = {}) => {
     const seen: Message[][] = []
     let saved: Message[] = overrides.history ?? []
     let signed = 0
@@ -244,9 +244,9 @@ describe('parts delivery to the adapter', () => {
       ...(overrides.multiModal === undefined ? {} : { capabilities: { multiModal: overrides.multiModal } }),
     }
     const handler = createChatHandler({
-      resolveDefinition: () => ({ id: 'test', chat: { adapter, memory: { load: async () => saved, save: async messages => { saved = [...messages] } } } }),
+      resolveDefinition: () => ({ id: 'test', chat: { adapter: overrides.frozen ? Object.freeze(adapter) : adapter, memory: { load: async () => saved, save: async messages => { saved = [...messages] } } } }),
       sessionStorage: () => ({ load: () => undefined, save: () => true }),
-      uploads: { ...policy, store: { ...store, presignGet: async target => `https://storage.invalid/short/${++signed}?ref=${encodeURIComponent(target)}` }, tenantId: () => 'tenant', ...(overrides.delivery ? { delivery: overrides.delivery } : {}) },
+      uploads: { ...policy, maxBytes: overrides.maxBytes ?? policy.maxBytes, store: { ...store, presignGet: async target => `https://storage.invalid/short/${++signed}?ref=${encodeURIComponent(target)}` }, tenantId: () => 'tenant', ...(overrides.delivery ? { delivery: overrides.delivery } : {}) },
     })
     const post = (turnId: string, payload: unknown) => handler(request({ ...event, turnId, payload }))
     return { post, seen, saved: () => saved }
@@ -283,6 +283,24 @@ describe('parts delivery to the adapter', () => {
     const followUp = await post('turn-2', { input: 'and now?' }); expect(followUp.status).toBe(200); await followUp.text()
     expect(partsOf(seen[1]?.slice(1))).toEqual([{ type: 'image', source: `https://storage.invalid/short/2?ref=${encodeURIComponent(ref)}`, mimeType: 'image/png' }])
     expect(seen[1]?.[0]?.parts).toEqual([foreign])
+  })
+  for (const delivery of ['url', 'bytes'] as const) it(`delivers and replays two files through frozen adapters (${delivery})`, async () => {
+    const { post, seen, saved } = fixture({ delivery, frozen: true, maxBytes: bytes.length })
+    const second = { ...part, ref: ref.replace('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb') }
+    for (const [turnId, payload] of [
+      ['turn-1', { input: [part], capabilities: ['turn-parts-v1'] }],
+      ['turn-2', { input: [second], capabilities: ['turn-parts-v1'] }],
+      ['turn-3', { input: 'and now?' }],
+    ] as const) {
+      const response = await post(turnId, payload)
+      expect(response.status).toBe(200)
+      expect(await response.text()).not.toContain('CHAT_TURN_FAILED')
+    }
+    expect(seen).toHaveLength(3)
+    const replayed = seen[2]!.flatMap(message => message.parts ?? []).filter(part => part.type !== 'text')
+    expect(replayed).toHaveLength(2)
+    expect(replayed.every(part => part.source.startsWith(delivery === 'bytes' ? 'data:' : 'https:'))).toBe(true)
+    expect(JSON.stringify(saved())).toContain(second.ref)
   })
   it('maps non-image references to file parts', async () => {
     const pdf = { ...part, mimeType: 'application/pdf' }
@@ -321,9 +339,18 @@ describe('adapter delivery limits and class contracts', () => {
   it('caps total bytes across historical messages before dispatch', async () => {
     let calls = 0
     const adapter: AdapterFactory = { createSource: () => { calls++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
-    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length }, 'tenant', 'session', new AbortController().signal)
+    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length, maxTotalBytes: bytes.length }, 'tenant', 'session', new AbortController().signal)
     const message: Message = { id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }
     const source = wrapped.createSource({ messages: [message, { ...message, id: 'm2' }] })
+    await expect(async () => { for await (const _chunk of source.stream()) { /* drain */ } }).rejects.toThrow('size limit')
+    expect(calls).toBe(0)
+  })
+
+  it('keeps the per-file byte limit independent of the total budget', async () => {
+    let calls = 0
+    const adapter: AdapterFactory = { createSource: () => { calls++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const wrapped = deliverUploadParts(adapter, { ...policy, delivery: 'bytes', maxBytes: bytes.length - 1, maxTotalBytes: 1024 }, 'tenant', 'session', new AbortController().signal)
+    const source = wrapped.createSource({ messages: [{ id: 'm', role: 'user', content: '', status: 'complete', createdAt: new Date(), parts: [{ type: 'image', source: ref }] }] })
     await expect(async () => { for await (const _chunk of source.stream()) { /* drain */ } }).rejects.toThrow('size limit')
     expect(calls).toBe(0)
   })
@@ -336,7 +363,7 @@ describe('adapter delivery limits and class contracts', () => {
       createSourceForSession(input: Parameters<AdapterFactory['createSource']>[0]) { expect(input.messages[0]?.parts?.[0]).toMatchObject({ source: 'https://storage.invalid/short' }); return this.createSource() }
       createSource() { this.#calls++; return { async *stream() { yield { type: 'done' as const } }, abort() {} } }
     }
-    const adapter = new ClassAdapter()
+    const adapter = Object.freeze(new ClassAdapter())
     const wrapped = deliverUploadParts(adapter, policy, 'tenant', 'session', new AbortController().signal)
     expect(wrapped.capabilities).toEqual({ multiModal: false })
     for await (const _chunk of wrapped.createSource({ messages: [] }).stream()) { /* drain */ }

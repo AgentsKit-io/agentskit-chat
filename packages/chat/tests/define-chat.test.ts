@@ -36,6 +36,27 @@ describe('defineChat', () => {
     expect(definition.chat).toBe(chat)
   })
 
+  for (const deterministic of [false, true]) it(`accepts frozen session-aware adapters (conversation: ${deterministic})`, async () => {
+    let calls = 0
+    const frozen = Object.freeze({
+      createSource: () => { throw new Error('Expected session-aware source') },
+      createSourceForSession: (request: AdapterRequest, sessionId: string) => {
+        expect(sessionId).toBe('frozen-session')
+        expect(request.messages).toHaveLength(2)
+        calls++
+        return { async *stream() { yield { type: 'text' as const, content: 'ok' }; yield { type: 'done' as const } }, abort() {} }
+      },
+    })
+    const definition = defineChat({ id: 'frozen', chat: { adapter: frozen },
+      ...(deterministic ? { conversation: { initial: 'ready', states: { ready: {} }, routes: [] } } : {}) })
+    const session = createChatSession(definition, { sessionId: 'frozen-session' })
+    const controller = createChatController(session.chat)
+    await controller.send('hello')
+    expect(controller.getState().error).toBeNull()
+    expect(controller.getState().messages.at(-1)?.content).toBe('ok')
+    expect(calls).toBe(1)
+  })
+
   it('rejects a prepared session from another definition', () => {
     const first = defineChat({ id: 'first', chat: { adapter } })
     const session = createChatSession(first, { sessionId: 'shared' })
