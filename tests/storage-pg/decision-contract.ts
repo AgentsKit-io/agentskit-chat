@@ -27,6 +27,53 @@ const adapter: AdapterFactory = {
   }),
 }
 
+/** Exercise core 1.15's re-registration of earlier pending calls with an evolving transcript. */
+export const runPendingProposalContract = async (stores: Stores, laterTurn: boolean): Promise<string> => {
+  const sessionId = `pending-${crypto.randomUUID()}`
+  let transcript: Message[] = []
+  let modelCalls = 0
+  const memory: ChatMemory = { load: async () => transcript, save: async messages => { transcript = structuredClone([...messages]) } }
+  const store = stores.decisions('tenant-a', sessionId)
+  const proposing: AdapterFactory = {
+    createSource: () => ({
+      async *stream() {
+        modelCalls++
+        const ids = laterTurn ? [`call-${modelCalls}`] : ['call-1', 'call-2']
+        for (const id of ids) yield { type: 'tool_call', toolCall: { id, name: 'save_expense', args: '{"amount":42}' } }
+        yield { type: 'done' }
+      },
+      abort() {},
+    }),
+  }
+  const post = async (): Promise<void> => {
+    const handler = createChatHandler({
+      resolveDefinition: () => ({ id: 'pending-contract', chat: { adapter: proposing, memory,
+        tools: [{ name: 'save_expense', requiresConfirmation: true, execute: () => { throw new Error('Unapproved tool executed') } }] } }),
+      sessionStorage: () => stores.sessions('tenant-a'), decisions: () => store,
+    })
+    const response = await handler(new Request('http://localhost/chat', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ protocol: 'agentskit.chat.turn', version: 1, eventId: crypto.randomUUID(), sessionId,
+        turnId: crypto.randomUUID(), sequence: 0, emittedAt: new Date().toISOString(), event: 'client.turn.submit', payload: { input: 'save it' } }),
+    }))
+    check(response.status === 200, 'pending proposal request succeeds')
+    const events = (await response.text()).trim().split(/\r?\n/).map(line => JSON.parse(line) as { payload?: { status?: string; error?: unknown } })
+    check(events.every(event => event.payload?.status !== 'error' && !event.payload?.error), 'pending proposal stream has no errors')
+  }
+  try {
+    await post()
+    const first = await store.get('call-1')
+    check(first?.status === 'pending', 'first proposal remains pending')
+    if (laterTurn) await post()
+    const second = await store.get('call-2')
+    check(second?.status === 'pending', 'second proposal is persisted')
+    check(JSON.stringify((await store.get('call-1'))?.messages) === JSON.stringify(first?.messages), 'pending duplicate never overwrites the first snapshot')
+    check((second?.messages.flatMap(message => message.toolCalls ?? []) ?? []).some(call => call.id === 'call-1'), 'second snapshot includes earlier pending call')
+    check(first!.messages.length === 2 && first!.messages.flatMap(message => message.toolCalls ?? []).length === 1, 'first snapshot stays at the original proposal')
+    return laterTurn ? 'new proposal in a later turn while an earlier call is pending' : 'two confirmation calls in the same model turn'
+  } finally { await stores.sessions('tenant-a').delete?.(sessionId) }
+}
+
 /** Same acceptance flow on a Node pool and a Worker request client; no database mocks. */
 export const runDecisionStoreContract = async (stores: Stores, rounds = 100): Promise<string[]> => {
   const run = crypto.randomUUID()
@@ -107,5 +154,6 @@ export const runDecisionStoreContract = async (stores: Stores, rounds = 100): Pr
   }
   check(writes === rounds && modelCalls === rounds * 2, `RF-19 ${writes} writes and ${modelCalls} model calls over ${rounds} rounds`)
   passed.push(`RF-18/RF-19/RF-20 handler: ${rounds} rounds of 4 concurrent approvals across fresh handlers, one execution and one model resume each`)
+  passed.push(await runPendingProposalContract(stores, false), await runPendingProposalContract(stores, true))
   return passed
 }

@@ -5,6 +5,8 @@ import { ACTION_DECIDE_CAPABILITY, decodeTurnEvent } from '@agentskit/chat/proto
 import type { SessionSnapshot, SnapshotTurnEvent } from '@agentskit/chat/protocol'
 import { describe, expect, it } from 'vitest'
 
+import { runPendingProposalContract } from '../../../tests/storage-pg/decision-contract.js'
+
 import { createChatHandler } from '../src/index.js'
 
 const copy = <T>(value: T): T => structuredClone(value)
@@ -76,7 +78,7 @@ const createWorld = (options: { readonly failTool?: boolean; readonly toolDelayM
     sessionStorage: () => storage,
     ...(withDecisions ? { decisions: () => store } : {}),
   })
-  return { handler, decisions, domainRows, modelRequests, memory }
+  return { handler, decisions, domainRows, modelRequests, memory, storage, store }
 }
 
 let sequence = 0
@@ -119,6 +121,12 @@ const decideUntilSettled = async (world: ReturnType<typeof createWorld>, decisio
 }
 
 describe('client.action.decide (RF-17..RF-24)', () => {
+  for (const laterTurn of [false, true]) it(`keeps pending proposals with evolving messages (${laterTurn ? 'later turn' : 'same turn'})`, async () => {
+    const world = createWorld()
+    await runPendingProposalContract({ sessions: () => world.storage, decisions: () => world.store }, laterTurn)
+    expect(world.decisions.size).toBe(2)
+  })
+
   it('RF-17: validates the decision payload and announces the capability', async () => {
     const world = createWorld()
     const first = await post(world.handler(), event('client.turn.submit', { input: 'I spent 42 on lunch' }))

@@ -25,8 +25,8 @@ Protocol v1 gains the additive client event `client.action.decide` with payload 
 
 `createChatHandler` takes `cost(context, sessionId, signal)`, which returns a `TurnCostPolicy` or `undefined` for an unmetered turn. The policy carries the upstream `CostStore`, the tenant, the cap read from the host's plan data, the amount to reserve, and a pricing function.
 
-- After the turn lease is claimed the handler reserves `reserveUsd` under the id `sessionId:turnId`. A denied reservation releases the lease and returns 402 `QUOTA_EXCEEDED` before any model call.
-- A turn that finishes commits `priceUsd(usage)` with one ledger entry. A turn that fails, times out, or is cancelled releases the reservation.
+- After the turn lease is claimed the handler reserves `reserveUsd` under the unique id `sessionId:turnId:createId()`. A denied reservation releases the lease and returns 402 `QUOTA_EXCEEDED` before any model call.
+- After model dispatch, every turn commits `priceUsd(usage)` with one ledger entry, including failure, timeout, or cancellation; unknown usage charges `reserveUsd`. The reservation is released only when no model call started. A custom `createId` must return a unique ID on every call to prevent reservation reuse and quota bypass.
 - The first snapshot of a metered turn carries the additive field `quota: { utilization, warning }`; `warning` is true from `warnAt` (default 0.8).
 
 ## Upstream boundary
