@@ -1,5 +1,6 @@
 import { AwsClient } from 'aws4fetch'
 import { withTimeout } from '@agentskit/net'
+import type { AdapterFactory, ContentPart, Message } from '@agentskit/core'
 import type { TurnInputPart } from '@agentskit/chat-protocol'
 import { readBoundedJson } from './internal.js'
 
@@ -14,6 +15,11 @@ export interface UploadPolicy {
   readonly maxBytes: number
   readonly mimeTypes: readonly string[]
   readonly expiresIn?: number
+  /**
+   * How a verified reference reaches the adapter: a short signed GET URL (default), or the object's bytes as a
+   * data URL for providers that cannot fetch a URL. Choose by provider.
+   */
+  readonly delivery?: 'url' | 'bytes'
 }
 
 export class UploadError extends Error {
@@ -68,37 +74,89 @@ export const createUploadHandler = (options: UploadPolicy & {
   }
 }
 
+const reference = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
+/** Reads one stored object, refusing anything past `limit` instead of buffering it. */
+const readStored = async (policy: UploadPolicy, ref: string, limit: number, signal: AbortSignal): Promise<{ readonly bytes: Uint8Array<ArrayBuffer>; readonly mimeType: string | undefined }> => {
+  const response = await policy.store.read(ref, signal)
+  if (!response.ok || !response.body) return fail(422, 'UPLOAD_REFERENCE_UNAVAILABLE', 'Upload reference is unavailable.')
+  const reader = response.body.getReader()
+  // ponytail: checksum buffers up to maxBytes; use incremental hashing if large-file support is needed.
+  const chunks: Uint8Array[] = []
+  let length = 0
+  try {
+    while (true) {
+      signal.throwIfAborted()
+      const item = await reader.read()
+      if (item.done) break
+      length += item.value.byteLength
+      if (length > limit) fail(413, 'UPLOAD_TOO_LARGE', 'Stored upload exceeds the size limit.')
+      chunks.push(item.value)
+    }
+  } finally { await reader.cancel(); reader.releaseLock() }
+  const bytes = new Uint8Array(length)
+  let offset = 0
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length }
+  return { bytes, mimeType: response.headers.get('content-type')?.split(';')[0] }
+}
+
 /** Resolve only tenant/session-bound references, checking the actual stored object before signing a short GET. */
 export const resolveUploadParts = async (policy: UploadPolicy, tenantId: string, sessionId: string, parts: readonly TurnInputPart[], signal: AbortSignal): Promise<readonly TurnInputPart[]> => {
   const expectedPrefix = prefix(tenantId, sessionId)
   for (const part of parts) {
     if (part.type === 'text') continue
-    if (!part.ref.startsWith(expectedPrefix) || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(part.ref.slice(expectedPrefix.length))) fail(403, 'UPLOAD_REFERENCE_FORBIDDEN', 'Upload reference does not belong to this session.')
+    if (!part.ref.startsWith(expectedPrefix) || !reference.test(part.ref.slice(expectedPrefix.length))) fail(403, 'UPLOAD_REFERENCE_FORBIDDEN', 'Upload reference does not belong to this session.')
     validateMetadata(policy, part.bytes, part.mimeType)
-    const response = await policy.store.read(part.ref, signal)
-    if (!response.ok || !response.body) fail(422, 'UPLOAD_REFERENCE_UNAVAILABLE', 'Upload reference is unavailable.')
-    const reader = response.body!.getReader()
-    // ponytail: checksum buffers up to maxBytes; use incremental hashing if large-file support is needed.
-    const chunks: Uint8Array[] = []
-    let length = 0
-    try {
-      while (true) {
-        signal.throwIfAborted()
-        const item = await reader.read()
-        if (item.done) break
-        length += item.value.byteLength
-        if (length > part.bytes || length > policy.maxBytes) fail(413, 'UPLOAD_TOO_LARGE', 'Stored upload exceeds the size limit.')
-        chunks.push(item.value)
-      }
-    } finally { await reader.cancel(); reader.releaseLock() }
-    if (length !== part.bytes || response.headers.get('content-type')?.split(';')[0] !== part.mimeType) fail(422, 'UPLOAD_METADATA_MISMATCH', 'Stored upload metadata does not match.')
-    const data = new Uint8Array(length)
-    let offset = 0
-    for (const chunk of chunks) { data.set(chunk, offset); offset += chunk.length }
-    const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', data)), byte => byte.toString(16).padStart(2, '0')).join('')
+    const data = await readStored(policy, part.ref, Math.min(part.bytes, policy.maxBytes), signal)
+    if (data.bytes.length !== part.bytes || data.mimeType !== part.mimeType) fail(422, 'UPLOAD_METADATA_MISMATCH', 'Stored upload metadata does not match.')
+    const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', data.bytes)), byte => byte.toString(16).padStart(2, '0')).join('')
     if (digest !== part.sha256) fail(422, 'UPLOAD_CHECKSUM_MISMATCH', 'Stored upload checksum does not match.')
   }
   return parts
+}
+
+/** Core parts of a verified submission. The transcript keeps the opaque reference as `source`: nothing signed or binary is stored. */
+export const toContentParts = (parts: readonly TurnInputPart[]): ContentPart[] => parts.map((part): ContentPart => {
+  if (part.type === 'text') return { type: 'text', text: part.text }
+  return { type: part.mimeType.startsWith('image/') ? 'image' : 'file', source: part.ref, mimeType: part.mimeType }
+})
+
+const dataUrl = (bytes: Uint8Array, mimeType: string): string => {
+  let binary = ''
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000))
+  return `data:${mimeType};base64,${btoa(binary)}`
+}
+
+/**
+ * Wraps the definition's adapter so this session's references are exchanged for a short signed URL or bytes on every
+ * model call, including earlier turns replayed from the transcript. Sources outside the tenant/session scope pass through untouched.
+ */
+export const deliverUploadParts = (adapter: AdapterFactory, policy: UploadPolicy, tenantId: string, sessionId: string, signal: AbortSignal): AdapterFactory => {
+  const expectedPrefix = prefix(tenantId, sessionId)
+  const deliver = async (part: Exclude<ContentPart, { type: 'text' }>): Promise<ContentPart> => {
+    if (!part.source.startsWith(expectedPrefix) || !reference.test(part.source.slice(expectedPrefix.length))) return part
+    if (policy.delivery !== 'bytes') return { ...part, source: await policy.store.presignGet(part.source, policy.expiresIn ?? 300, signal) }
+    const stored = await readStored(policy, part.source, policy.maxBytes, signal)
+    return { ...part, source: dataUrl(stored.bytes, part.mimeType ?? stored.mimeType ?? 'application/octet-stream') }
+  }
+  const resolve = (message: Message): Promise<Message> | Message => message.parts?.some(part => part.type !== 'text')
+    ? Promise.all(message.parts.map(part => part.type === 'text' ? part : deliver(part))).then(parts => ({ ...message, parts }))
+    : message
+  return {
+    ...adapter,
+    createSource: request => {
+      let source: ReturnType<AdapterFactory['createSource']> | undefined
+      let aborted = false
+      return {
+        async *stream() {
+          const messages = await Promise.all(request.messages.map(resolve))
+          if (aborted) return
+          source = adapter.createSource({ ...request, messages })
+          yield* source.stream()
+        },
+        abort() { aborted = true; source?.abort() },
+      }
+    },
+  }
 }
 
 /** SigV4 is delegated to aws4fetch; credentials are supplied by the host, never logged. */

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createS3BlobStore, createUploadHandler, resolveUploadParts } from '../src/uploads.js'
 import type { BlobStore } from '../src/uploads.js'
 import { createChatHandler } from '../src/index.js'
-import type { AdapterFactory } from '@agentskit/core'
+import type { AdapterFactory, Message } from '@agentskit/core'
 
 const bytes = new TextEncoder().encode('local upload')
 const sha256 = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), n => n.toString(16).padStart(2, '0')).join('')
@@ -36,14 +36,13 @@ describe('upload reference policy', () => {
     await expect(resolveUploadParts(policy, 'tenant', 'session', [{ ...part, sha256: '0'.repeat(64) }], AbortSignal.timeout(1000))).rejects.toMatchObject({ status: 422, code: 'UPLOAD_CHECKSUM_MISMATCH' })
     await expect(resolveUploadParts(policy, 'tenant', 'session', [{ ...part, bytes: 1 }], AbortSignal.timeout(1000))).rejects.toMatchObject({ status: 413 })
   })
-  it('preserves string turns and never silently drops parts when upstream capability is unavailable', async () => {
+  it('preserves string turns and rejects unnegotiated, cross-tenant and mismatched parts', async () => {
     const adapter: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'done' } }, abort() {} }) }
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }), uploads: { ...policy, tenantId: () => 'tenant' } })
     const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', turnId: 'turn', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
     const post = (payload: unknown) => handler(request({ ...event, payload }))
-    const legacy = await post({ input: 'hello' }); expect(legacy.status).toBe(200); expect(await legacy.text()).not.toContain('turn-parts-v1')
+    const legacy = await post({ input: 'hello' }); expect(legacy.status).toBe(200); expect(await legacy.text()).toContain('"capabilities":["turn-parts-v1"]')
     expect((await post({ input: [part] })).status).toBe(400)
-    expect((await post({ input: [part], capabilities: ['turn-parts-v1'] })).status).toBe(501)
     expect((await post({ input: [{ ...part, ref: ref.replace('tenant', 'other') }], capabilities: ['turn-parts-v1'] })).status).toBe(403)
     expect((await post({ input: [{ ...part, sha256: '0'.repeat(64) }], capabilities: ['turn-parts-v1'] })).status).toBe(422)
   })
@@ -85,7 +84,7 @@ describe.skipIf(!workerUrl)('real wrangler dev HTTP flow', () => {
     const body = { ...event, payload: { input: [realPart], capabilities: ['turn-parts-v1'] } }
     expect((await post('/chat', body, 'other')).status).toBe(403)
     expect((await post('/chat', { ...body, payload: { ...body.payload, input: [{ ...realPart, sha256: '0'.repeat(64) }] } })).status).toBe(422)
-    expect((await post('/chat', body)).status).toBe(501)
+    const delivered = await post('/chat', body); expect(delivered.status).toBe(200); await delivered.text()
     expect((await post('/uploads', { ...metadata, bytes: 1025 })).status).toBe(413)
     expect((await post('/uploads', { ...metadata, mimeType: 'text/html' })).status).toBe(415)
     expect((await post('/uploads', { ...metadata, sessionId: 'forbidden' })).status).toBe(403)
@@ -187,7 +186,7 @@ describe('upload failure contracts', () => {
     await expect(storage.presignGet(ref, 60, AbortSignal.abort())).rejects.toMatchObject({ name: 'AbortError' })
   })
 
-  it('keeps parts disabled without upload policy and never starts the adapter', async () => {
+  it('keeps parts disabled without upload policy, advertises nothing and never starts the adapter', async () => {
     let starts = 0
     const adapter: AdapterFactory = { createSource: () => { starts++; return { async *stream() { yield { type: 'done' } }, abort() {} } } }
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }) })
@@ -195,5 +194,90 @@ describe('upload failure contracts', () => {
     expect(response.status).toBe(501)
     expect(await response.json()).toMatchObject({ error: { code: 'TURN_PARTS_UNAVAILABLE' } })
     expect(starts).toBe(0)
+    const legacy = await handler(request({ protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', turnId: 'turn-2', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }))
+    expect(await legacy.text()).not.toContain('turn-parts-v1')
+  })
+})
+
+describe('parts delivery to the adapter', () => {
+  const event = { protocol: 'agentskit.chat.turn', version: 1, eventId: 'submit', sessionId: 'session', sequence: 0, emittedAt: '2026-10-06T00:00:00.000Z', event: 'client.turn.submit' }
+  const fixture = (overrides: { readonly delivery?: 'url' | 'bytes'; readonly multiModal?: boolean; readonly history?: Message[] } = {}) => {
+    const seen: Message[][] = []
+    let saved: Message[] = overrides.history ?? []
+    let signed = 0
+    const adapter: AdapterFactory = {
+      createSource: input => { seen.push(input.messages); return { async *stream() { yield { type: 'text', content: 'seen' }; yield { type: 'done' } }, abort() {} } },
+      ...(overrides.multiModal === undefined ? {} : { capabilities: { multiModal: overrides.multiModal } }),
+    }
+    const handler = createChatHandler({
+      resolveDefinition: () => ({ id: 'test', chat: { adapter, memory: { load: async () => saved, save: async messages => { saved = [...messages] } } } }),
+      sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, store: { ...store, presignGet: async target => `https://storage.invalid/short/${++signed}?ref=${encodeURIComponent(target)}` }, tenantId: () => 'tenant', ...(overrides.delivery ? { delivery: overrides.delivery } : {}) },
+    })
+    const post = (turnId: string, payload: unknown) => handler(request({ ...event, turnId, payload }))
+    return { post, seen, saved: () => saved }
+  }
+  const text = { type: 'text' as const, text: 'What is in this image?' }
+  const partsOf = (messages: Message[] | undefined) => messages?.find(message => message.role === 'user' && message.parts)?.parts
+
+  it('RF-07/RF-11: delivers a short signed URL to the adapter and keeps only the reference in the transcript', async () => {
+    const { post, seen, saved } = fixture()
+    const response = await post('turn-1', { input: [text, part], capabilities: ['turn-parts-v1'] })
+    expect(response.status).toBe(200)
+    const stream = await response.text()
+    expect(partsOf(seen[0])).toEqual([text, { type: 'image', source: `https://storage.invalid/short/1?ref=${encodeURIComponent(ref)}`, mimeType: 'image/png' }])
+    expect(stream).toContain('"capabilities":["turn-parts-v1"]')
+    expect(stream).toContain(ref)
+    expect(stream).not.toContain('storage.invalid')
+    expect(partsOf(saved())).toEqual([text, { type: 'image', source: ref, mimeType: 'image/png' }])
+    expect(JSON.stringify(saved())).not.toContain('storage.invalid')
+  })
+  it('RF-11: delivers bytes as a data URL when the provider cannot fetch URLs, without persisting them', async () => {
+    const { post, seen, saved } = fixture({ delivery: 'bytes' })
+    const response = await post('turn-1', { input: [part], capabilities: ['turn-parts-v1'] })
+    expect(response.status).toBe(200)
+    const stream = await response.text()
+    const expected = `data:image/png;base64,${btoa('local upload')}`
+    expect(partsOf(seen[0])).toEqual([{ type: 'image', source: expected, mimeType: 'image/png' }])
+    expect(stream).not.toContain(expected)
+    expect(JSON.stringify(saved())).not.toContain('base64')
+  })
+  it('signs earlier references again on a later text turn and leaves foreign sources untouched', async () => {
+    const foreign = { type: 'image' as const, source: 'other/session/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' }
+    const { post, seen } = fixture({ history: [{ id: 'old', role: 'user', content: 'earlier', parts: [foreign], status: 'complete', createdAt: new Date(0) }] })
+    await (await post('turn-1', { input: [{ ...part, mimeType: 'image/png' }], capabilities: ['turn-parts-v1'] })).text()
+    const followUp = await post('turn-2', { input: 'and now?' }); expect(followUp.status).toBe(200); await followUp.text()
+    expect(partsOf(seen[1]?.slice(1))).toEqual([{ type: 'image', source: `https://storage.invalid/short/2?ref=${encodeURIComponent(ref)}`, mimeType: 'image/png' }])
+    expect(seen[1]?.[0]?.parts).toEqual([foreign])
+  })
+  it('maps non-image references to file parts', async () => {
+    const pdf = { ...part, mimeType: 'application/pdf' }
+    const seen: Message[][] = []
+    const adapter: AdapterFactory = { createSource: input => { seen.push(input.messages); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, mimeTypes: ['application/pdf'], store: { ...store, read: async () => new Response(bytes, { headers: { 'content-type': 'application/pdf' } }) }, tenantId: () => 'tenant' } })
+    const response = await handler(request({ ...event, turnId: 'turn-1', payload: { input: [pdf], capabilities: ['turn-parts-v1'] } }))
+    expect(response.status).toBe(200); await response.text()
+    expect(partsOf(seen[0])).toEqual([{ type: 'file', source: 'https://storage.invalid/short', mimeType: 'application/pdf' }])
+  })
+  it('refuses file parts for an adapter that declares no multimodal support, and still accepts text parts', async () => {
+    const { post, seen } = fixture({ multiModal: false })
+    const refused = await post('turn-1', { input: [text, part], capabilities: ['turn-parts-v1'] })
+    expect(refused.status).toBe(422)
+    expect(await refused.json()).toMatchObject({ error: { code: 'TURN_PARTS_UNSUPPORTED' } })
+    expect(seen).toHaveLength(0)
+    const accepted = await post('turn-2', { input: [text], capabilities: ['turn-parts-v1'] }); expect(accepted.status).toBe(200); await accepted.text()
+    expect(partsOf(seen[0])).toEqual([text])
+  })
+  it('fails the turn instead of sending a partial request when a stored reference disappears before delivery', async () => {
+    let reads = 0
+    const adapterStarts: number[] = []
+    const adapter: AdapterFactory = { createSource: () => { adapterStarts.push(1); return { async *stream() { yield { type: 'done' } }, abort() {} } } }
+    const handler = createChatHandler({ resolveDefinition: () => ({ id: 'test', chat: { adapter } }), sessionStorage: () => ({ load: () => undefined, save: () => true }),
+      uploads: { ...policy, delivery: 'bytes', store: { ...store, read: async () => ++reads === 1 ? new Response(bytes, { headers: { 'content-type': 'image/png' } }) : new Response(null, { status: 404 }) }, tenantId: () => 'tenant' } })
+    const response = await handler(request({ ...event, turnId: 'turn-1', payload: { input: [part], capabilities: ['turn-parts-v1'] } }))
+    expect(response.status).toBe(200)
+    expect(await response.text()).toContain('CHAT_TURN_FAILED')
+    expect(adapterStarts).toHaveLength(0)
   })
 })

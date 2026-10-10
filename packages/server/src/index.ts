@@ -1,13 +1,13 @@
 import { anySignal, withTimeout } from '@agentskit/net'
 import { createChatController } from '@agentskit/core'
-import type { ChatState, Message, TokenUsage, ToolDecisionStore } from '@agentskit/core'
+import type { ChatState, ContentPart, Message, TokenUsage, ToolDecisionStore } from '@agentskit/core'
 import type { CostStore } from '@agentskit/observability'
 import { resumeChatSession, SessionConflictError } from '@agentskit/chat'
 import type { ChatDefinition, SessionStorage } from '@agentskit/chat'
 import { ACTION_DECIDE_CAPABILITY, createSnapshotEvent, decodeTurnEvent, encodeTurnEvent, TURN_PARTS_CAPABILITY, TurnEventSchema } from '@agentskit/chat-protocol'
 import type { TurnDiagnostic } from '@agentskit/chat-protocol'
 
-import { resolveUploadParts, UploadError, validateUploadPolicy } from './uploads.js'
+import { deliverUploadParts, resolveUploadParts, toContentParts, UploadError, validateUploadPolicy } from './uploads.js'
 import type { UploadPolicy } from './uploads.js'
 
 import { readBoundedJson } from './internal.js'
@@ -119,18 +119,22 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const decision = submission.event === 'client.action.decide' ? submission.payload : undefined
       if (decision && !options.decisions) return fail(501, 'ACTION_DECIDE_UNAVAILABLE', 'Action decisions are not enabled on this server.')
       const input = submission.event === 'client.turn.submit' ? submission.payload.input : ''
-      const text = typeof input === 'string' ? input : ''
+      const uploads = options.uploads
       if (submission.event === 'client.turn.submit' && typeof input !== 'string') {
         if (!submission.payload.capabilities?.includes(TURN_PARTS_CAPABILITY)) fail(400, 'TURN_CAPABILITY_REQUIRED', 'Parts require explicit capability negotiation.')
-        const uploads = options.uploads
-        if (!uploads) return fail(501, 'TURN_PARTS_UNAVAILABLE', 'Parts are unavailable until the supported upstream controller accepts them.')
-        const tenantId = await withTimeout(callbackSignal => Promise.resolve(uploads.tenantId(context, submission.sessionId, callbackSignal)), timeoutMs, signal)
-        const parts = input
-        await withTimeout(callbackSignal => resolveUploadParts(uploads, tenantId, submission.sessionId, parts, callbackSignal), timeoutMs, signal)
-        // Upstream ChatController.send still accepts only string. Never silently flatten or discard parts.
-        return fail(501, 'TURN_PARTS_UNAVAILABLE', 'Parts are unavailable until the supported upstream controller accepts them.')
+        if (!uploads) return fail(501, 'TURN_PARTS_UNAVAILABLE', 'Parts are not enabled on this server.')
+      }
+      // The upload scope is resolved for every turn: earlier turns of the transcript may carry references too.
+      const tenantId = uploads ? await withTimeout(callbackSignal => Promise.resolve(uploads.tenantId(context, submission.sessionId, callbackSignal)), timeoutMs, signal) : undefined
+      let content: string | ContentPart[] = typeof input === 'string' ? input : []
+      if (uploads && tenantId !== undefined && typeof input !== 'string') {
+        content = toContentParts(await withTimeout(callbackSignal => resolveUploadParts(uploads, tenantId, submission.sessionId, input, callbackSignal), timeoutMs, signal))
       }
       const definition = await withTimeout(callbackSignal => Promise.resolve(options.resolveDefinition(context, submission.sessionId, callbackSignal)), timeoutMs, signal)
+      // An adapter that declares it cannot take binary parts is refused here; parts are never flattened to text.
+      if (typeof content !== 'string' && definition.chat.adapter.capabilities?.multiModal === false && content.some(part => part.type !== 'text')) {
+        return fail(422, 'TURN_PARTS_UNSUPPORTED', 'The configured model does not accept file parts.')
+      }
       const decisions = options.decisions
       const decisionStore = decisions ? await withTimeout(callbackSignal => Promise.resolve(decisions(context, submission.sessionId, callbackSignal)), timeoutMs, signal) : undefined
       const memory = definition.chat.memory
@@ -188,8 +192,9 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const loaded = memory ? await withTimeout(async callbackSignal => memory.load({ signal: callbackSignal }), timeoutMs, signal) : definition.chat.initialMessages ?? []
       const messages: readonly Message[] = loaded.length > 0 ? loaded : definition.chat.initialMessages ?? []
       const { memory: _memory, ...chat } = definition.chat
-      const controller = createChatController(session.updateChat({ ...chat, initialMessages: [...messages], ...(decisionStore ? { decisionStore } : {}) }))
-      const capabilities = decisionStore ? [ACTION_DECIDE_CAPABILITY] : []
+      const adapter = uploads && tenantId !== undefined ? deliverUploadParts(chat.adapter, uploads, tenantId, submission.sessionId, signal) : chat.adapter
+      const controller = createChatController(session.updateChat({ ...chat, adapter, initialMessages: [...messages], ...(decisionStore ? { decisionStore } : {}) }))
+      const capabilities = [...(decisionStore ? [ACTION_DECIDE_CAPABILITY] : []), ...(uploads ? [TURN_PARTS_CAPABILITY] : [])]
       let announcedCapabilities = false
       let failure: unknown
       let pending: ChatState | undefined
@@ -207,7 +212,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       let cleanup: (stop: boolean) => Promise<void> = async () => undefined
       const abort = (): void => { controller.stop(); void cleanup(true).catch(() => undefined) }
       signal.addEventListener('abort', abort, { once: true })
-      const send = (decision ? controller.decide(decision.token, decision.decision, decision.reason).then(() => undefined) : controller.send(text))
+      const send = (decision ? controller.decide(decision.token, decision.decision, decision.reason).then(() => undefined) : controller.send(content))
         .catch((error: unknown) => { if (decision) failure = decisionError(error) })
         .finally(() => { done = true; notify() })
 
