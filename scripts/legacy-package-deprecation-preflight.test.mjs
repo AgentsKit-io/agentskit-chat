@@ -26,6 +26,9 @@ const consolidated = {
     '0.4.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },
+    '0.5.0': {
+      exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
+    },
     '0.6.0': {
       exports: Object.fromEntries(plan.packages.map(entry => [`.${entry.replacement.slice('@agentskit/chat'.length)}`, './dist/index.js'])),
     },

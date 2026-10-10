@@ -108,7 +108,7 @@ describe('ecosystem adoption contract', () => {
     expect(() => parseEcosystemAdoption(stale)).toThrow('exact supported consolidated framework version')
 
     const future = clone(manifest)
-    future.consumers[0].packageVersion = '0.6.0'
+    future.consumers[0].packageVersion = '0.7.0'
     expect(() => parseEcosystemAdoption(future)).toThrow('exact supported consolidated framework version')
 
     const unproved = clone(manifest)
