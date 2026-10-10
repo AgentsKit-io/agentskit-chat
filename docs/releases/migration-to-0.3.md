@@ -4,8 +4,8 @@ AgentsKit Chat `0.3.0` reduces the public npm graph to `@agentskit/chat` and
 `@agentskit/chat-cli`. Remove the former standalone Chat packages after moving
 their imports to the corresponding subpaths.
 
-The current stable release is `0.5.0`. It preserves this package graph and the
-`0.3.0` import contract, so new migrations should install `0.5.0` directly.
+The current stable release is `0.6.0`. It preserves this package graph and the
+`0.3.0` import contract, so new migrations should install `0.6.0` directly.
 
 | Former package | `0.3.0` import |
 |---|---|
@@ -24,8 +24,8 @@ Install only the consolidated package, the AgentsKit binding, and framework
 peers used by the host:
 
 ```bash
-npm install @agentskit/chat@0.5.0 @agentskit/react react
-npm install --save-dev @agentskit/chat-cli@0.5.0
+npm install @agentskit/chat@0.6.0 @agentskit/react react
+npm install --save-dev @agentskit/chat-cli@0.6.0
 ```
 
 Protocol versions, deterministic answers, Ask requests, session persistence,

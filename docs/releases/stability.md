@@ -14,7 +14,7 @@ AgentsKit Chat follows SemVer as a fixed package group.
 - AgentsKit peer minimums change only after upstream-first inspection and the
   full release matrix. No upstream implementation is copied downstream.
 
-Applications should pin a minor line (`^0.5.0` for this release), commit their
+Applications should pin a minor line (`^0.6.0` for this release), commit their
 lockfile, run renderer conformance and host E2E before upgrades, and review both
 the changelog and migration guide.
 
@@ -27,11 +27,10 @@ public product site):
 - [Alpha → stable migration](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-from-alpha.md)
 - [0.3 package consolidation](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/releases/migration-to-0.3.md)
 
-Applications already on `0.3.x` can adopt `0.5.0` without changing their
-definition-owned sessions; controlled React and Ink modes are additive.
+Applications upgrading to `0.6.0` must use `@agentskit/core ^1.15.0`.
+Custom `ControlledChatActions.send` implementations must accept both
+`string` and `ContentPart[]`. Hosts using cost policy also need the optional
+`@agentskit/observability >=0.13.0 <1` peer.
 
-See also [Compatibility](/docs/releases/compatibility).
-
-The `0.5.0` storage and referenced-upload integrations are opt-in. Protocol v1
-remains compatible; parts delivery stays unavailable pending published upstream support.
-See [0.5 release notes](./v0.5.0.md) for integration constraints.
+See [Compatibility](/docs/releases/compatibility) and
+[0.6 release notes](./v0.6.0.md) for integration constraints.
