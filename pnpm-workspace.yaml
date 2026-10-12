@@ -44,7 +44,7 @@ overrides:
   browserslist: ">=4.28.7 <5"
   # ponytail: pin the doc tooling subtree to the workspace React/Ink/zod; duplicates break Ink tests, fixtures, and the docs bundle budget.
   '@agentskit/harness>react': "19.2.7"
-  '@agentskit/harness>ink': "7.1.0"
+  '@agentskit/harness>ink': "7.1.1"
   '@agentskit/doc-bridge>react': "19.2.7"
   '@agentskit/doc-bridge>zod': "4.4.3"
   '@agentskit/harness>zod': "4.4.3"
