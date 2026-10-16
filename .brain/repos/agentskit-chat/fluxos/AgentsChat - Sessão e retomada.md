@@ -4,12 +4,9 @@ repo: agentskit-chat
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits:
-  agentskit: 779aa601
-  agentskit-chat: 8aeeffd
-  agentskit-registry: 49952c7
-metodo: análise estática; nada foi executado
-fontes: ["agentskit-chat/packages/chat/src/index.ts", "agentskit-chat/packages/server/src/index.ts"]
+commits: { agentskit-chat: f0840fb }
+metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos"
+fontes: ["packages/chat/src/index.ts", "packages/server/src/index.ts"]
 tags: [fluxo, repo/agentskit-chat]
 ---
 
@@ -47,8 +44,8 @@ flowchart LR
 O pacote define interfaces de persistência; isso não prova um banco ativo. O subpath `@agentskit/chat/drizzle-pg` é uma opção pública. Retenção, identidade e recuperação após conflito pertencem à composição do hospedeiro.
 
 > [!info]- Detalhe técnico
-> - `agentskit-chat/packages/chat/src/index.ts:579` — storage.save com expectedCursor
-> - `agentskit-chat/packages/chat/src/index.ts:690` — createChatSession
-> - `agentskit-chat/packages/chat/src/index.ts:766` — salvamento e SessionConflictError
-> - `agentskit-chat/packages/chat/src/index.ts:961` — resumeChatSession e checagem de identidade/revisão
-> - `agentskit-chat/packages/server/src/index.ts:96` — handler HTTP
+> - `packages/chat/src/index.ts:579` — storage.save com expectedCursor
+> - `packages/chat/src/index.ts:690` — createChatSession
+> - `packages/chat/src/index.ts:766` — salvamento e SessionConflictError
+> - `packages/chat/src/index.ts:961` — resumeChatSession e checagem de identidade/revisão
+> - `packages/server/src/index.ts:96` — handler HTTP

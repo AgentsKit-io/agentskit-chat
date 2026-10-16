@@ -4,12 +4,9 @@ repo: agentskit-chat
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits:
-  agentskit: 779aa601
-  agentskit-chat: 8aeeffd
-  agentskit-registry: 49952c7
-metodo: análise estática; nada foi executado
-fontes: ["agentskit-chat/packages/chat/src/deterministic.ts", "agentskit-chat/packages/server/src/ask-service.ts"]
+commits: { agentskit-chat: f0840fb }
+metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos"
+fontes: ["packages/chat/src/deterministic.ts", "packages/server/src/ask-service.ts"]
 tags: [fluxo, repo/agentskit-chat]
 ---
 
@@ -47,7 +44,7 @@ flowchart LR
 Não há recomendação semântica disfarçada de busca local: miss e conhecimento expirado produzem envelope de escalada. A implantação concreta do Ask do ecossistema está em [[agentskit-ask-backend]]; esta nota descreve o contrato reutilizável.
 
 > [!info]- Detalhe técnico
-> - `agentskit-chat/packages/chat/src/deterministic.ts:53` — resolver local
-> - `agentskit-chat/packages/chat/src/deterministic.ts:85` — stale, miss e ambiguidades
-> - `agentskit-chat/packages/chat/src/deterministic.ts:300` — adaptador com fallback
-> - `agentskit-chat/packages/server/src/ask-service.ts:67` — contratos de autenticação, site, gerador e stores
+> - `packages/chat/src/deterministic.ts:53` — resolver local
+> - `packages/chat/src/deterministic.ts:85` — stale, miss e ambiguidades
+> - `packages/chat/src/deterministic.ts:300` — adaptador com fallback
+> - `packages/server/src/ask-service.ts:67` — contratos de autenticação, site, gerador e stores
