@@ -4,8 +4,8 @@ repo: agentskit-chat
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["packages/chat/src/index.ts", "packages/server/src/index.ts"]
 tags: [fluxo, repo/agentskit-chat, camada/ferramenta]
 ---
@@ -46,6 +46,9 @@ O pacote define interfaces de persistência; isso não prova um banco ativo. O s
 > [!info]- Detalhe técnico
 > - `packages/chat/src/index.ts:579` — storage.save com expectedCursor
 > - `packages/chat/src/index.ts:690` — createChatSession
-> - `packages/chat/src/index.ts:766` — salvamento e SessionConflictError
-> - `packages/chat/src/index.ts:961` — resumeChatSession e checagem de identidade/revisão
+> - `packages/chat/src/index.ts:765-767` — cursor esperado, `buildSnapshot(cursor + 1)` e `SessionConflictError` quando `save` devolve `false`
+> - `packages/chat/src/index.ts:599` — classe `SessionConflictError`
+> - `packages/chat/src/index.ts:961` — resumeChatSession: sem snapshot salvo cria sessão nova (`:963`); snapshot inválido ou com `sessionId`/`definitionId`/`definitionRevision` diferentes falha via `invalidConversation` (`:965-969`)
 > - `packages/server/src/index.ts:96` — handler HTTP
+> - `packages/server/src/index.ts:150` — o handler chama `resumeChatSession` por requisição, com `storage` do host
+> - Testes: `packages/chat/tests/define-chat.test.ts`, `packages/server/tests/handler.test.ts`, contrato Postgres em `tests/storage-pg/contract.ts` (`pnpm test:storage:pg`)

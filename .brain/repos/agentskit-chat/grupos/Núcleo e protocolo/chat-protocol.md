@@ -5,8 +5,8 @@ grupo: Núcleo e protocolo
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente)"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente); auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["docs/architecture/upstream-adoption.md", "docs/for-agents/packages/protocol.md", "packages/protocol/fixtures/readme-example.ts", "packages/protocol/package.json", "packages/protocol/src/backend.ts", "packages/protocol/src/index.ts", "packages/protocol/tests/parts.test.ts", "packages/protocol/tests/protocol.test.ts"]
 tags: [pacote, repo/agentskit-chat, grupo/nucleo-e-protocolo, camada/ferramenta]
 ---
@@ -44,8 +44,8 @@ if (result.ok) throw new Error('expected invalid turn event')
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]], [[chat-server]], renderers via fixtures |
-| Dependências | Zod, `@noble/hashes`, [[00 Hub - agentskit]] para validação de memória canônica |
+| Consumidores | [[chat]] (`packages/chat/src/index.ts:20`, `ask.ts:17`, `deterministic.ts:19`; embutido no build) e [[chat-server]] (`packages/server/src/index.ts:7`); os testes de conformidade dos renderers usam as fixtures via `@agentskit/chat/protocol/fixtures` |
+| Dependências | Zod e `@noble/hashes` (`packages/protocol/package.json:43-46`); [[00 Hub - agentskit]]: `@agentskit/core` (`deserializeMessages`, `validateMemoryRecord` — `packages/protocol/src/index.ts:1-3`). Não importa nenhum outro pacote deste repo |
 
 ## Dados e efeitos
 
@@ -55,8 +55,9 @@ Valida dados recebidos e produz envelopes JSON; não persiste, não abre rede e 
 
 - **Entrada:** `packages/protocol/src/index.ts`.
 - **Invariantes:** Eventos externos, frames e partes são dados não confiáveis: validar versão e limites; não recriar schemas de mensagens do Core.
-- **Testes:** `packages/protocol/tests/protocol.test.ts`; packages/protocol/tests/parts.test.ts.
-- **Validação:** `pnpm --filter @agentskit/chat-protocol lint && pnpm --filter @agentskit/chat-protocol test`.
+- **Testes:** `packages/protocol/tests/protocol.test.ts`, `packages/protocol/tests/parts.test.ts`, `packages/protocol/tests/ask.test.ts`, `packages/protocol/tests/backend.test.ts`, `packages/protocol/tests/decide.test.ts`, `packages/protocol/tests/deterministic.test.ts`.
+- **Validação:** `pnpm --filter @agentskit/chat-protocol lint && pnpm --filter @agentskit/chat-protocol test` (`lint` = `tsc --noEmit`, `test` = `vitest run --coverage`, `packages/protocol/package.json:37-38`). Conformidade de turno entre renderers: `tests/turn-protocol-conformance.ts` (raiz).
+- **Subpaths:** `@agentskit/chat-protocol` expõe `.` e `./fixtures` (`packages/protocol/package.json:20-31`); outros módulos fonte: `ask.ts`, `backend.ts`, `deterministic.ts`, `fixtures.ts`.
 - **Armadilhas:** Não tratar payload como estado de renderer nem vazar diagnóstico bruto de Zod.
 - **Adoção upstream:** revisar o contrato descrito em `docs/architecture/upstream-adoption.md`; AgentsKit fornece os primitivos e este módulo apenas os compõe.
 

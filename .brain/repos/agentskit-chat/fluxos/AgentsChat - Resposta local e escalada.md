@@ -4,8 +4,8 @@ repo: agentskit-chat
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática; doc-bridge CLI indisponível por pnpm ausente; fluxo mantido e backlinks conferidos; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["packages/chat/src/deterministic.ts", "packages/server/src/ask-service.ts"]
 tags: [fluxo, repo/agentskit-chat, camada/ferramenta]
 ---
@@ -45,6 +45,7 @@ Não há recomendação semântica disfarçada de busca local: miss e conhecimen
 
 > [!info]- Detalhe técnico
 > - `packages/chat/src/deterministic.ts:53` — resolver local
-> - `packages/chat/src/deterministic.ts:85` — stale, miss e ambiguidades
+> - `packages/chat/src/deterministic.ts:85` — `resolve`: conhecimento expirado (`:86-87`), consulta longa demais (`:89-93`) e ambiguidade (`:104`); artefato inválido vira escalada `corrupt` (`:58-61`)
+> - Testes: `packages/chat/tests/deterministic.test.ts`, `packages/server/tests/ask-service.test.ts`
 > - `packages/chat/src/deterministic.ts:300` — adaptador com fallback
 > - `packages/server/src/ask-service.ts:67` — contratos de autenticação, site, gerador e stores

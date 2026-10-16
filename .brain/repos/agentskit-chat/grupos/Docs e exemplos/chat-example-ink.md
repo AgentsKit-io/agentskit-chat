@@ -5,8 +5,8 @@ grupo: Docs e exemplos
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["apps/example-ink/package.json", "apps/example-ink/src/index.tsx", "apps/example-ink/tests/ink-pty.test.ts", "docs/for-agents/apps/example-ink.md"]
 tags: [app, repo/agentskit-chat, grupo/docs-e-exemplos, camada/ferramenta]
 ---
@@ -26,7 +26,7 @@ Prova terminal executável dos mesmos fluxos de suporte, onboarding, operações
 
 | Símbolo | Tipo | Para que serve | Onde |
 |---|---|---|---|
-| `render(controlled` | exportação/entrada demonstrativa | Composição real do host ou definição | `apps/example-ink/src/index.tsx:11` |
+| `render(...)` | entrada do app (Ink `render`) | Escolhe entre exemplo controlado (`ControlledInkExample`), RAG, operações, onboarding ou suporte conforme a variável de ambiente `AK_EXAMPLE` (`controlled`, `rag`, `operations`, `onboarding`; ausente = suporte; lidas em `:7-10`) | `apps/example-ink/src/index.tsx:11` |
 
 Exemplo real (`apps/example-ink/src/index.tsx:11`):
 
@@ -46,21 +46,21 @@ Source: ${url}
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]]; [[chat-example-shared]] |
-| Dependências | [[00 Hub - agentskit]] e workspace `@agentskit/chat` conforme manifesto. |
+| Consumidores | Nenhum workspace; é exercitado por `pnpm test:pty` (script da raiz, `package.json:15`) |
+| Dependências | [[chat]] (subpath `@agentskit/chat/ink`, `apps/example-ink/src/index.tsx:2` — não depende do workspace [[chat-ink]]), [[chat-example-shared]] (`:1`), [[agentskit-ink]], `ink ^7.1.0` (`apps/example-ink/package.json:12-18`); `node-pty` em devDependencies |
 
 ## Dados e efeitos
 
-Lê módulos e fixtures locais. O host de docs pode expor HTTP e consultar serviço configurado; exemplos usam serviços em memória ou adapters injetados. Nenhum segredo ou valor de ambiente é registrado nesta nota.
+Lê a variável de ambiente `AK_EXAMPLE` (só o nome é citado). Sem outro I/O além do terminal: usa as aplicações em memória de [[chat-example-shared]] e escreve links de fonte em `process.stdout` (`index.tsx:11-14`). O teste PTY abre um pseudoterminal real. Nenhum segredo ou valor de ambiente é registrado nesta nota.
 
 ## Como mexer (para agentes)
 
 - **Entrada:** `apps/example-ink/src/index.tsx`.
-- **Invariantes:** Suite PTY verifica fluxo, cancelamento Escape e saída Ctrl+C.
+- **Invariantes:** Suite PTY verifica fluxo, cancelamento Escape (`apps/example-ink/tests/ink-pty.test.ts:92`) e saída Ctrl+C (`:119`).
 - **Testes:** `apps/example-ink/tests/ink-pty.test.ts`.
-- **Validação:** `pnpm --filter @agentskit/chat-example-ink lint && pnpm test:pty`.
+- **Validação:** `pnpm --filter @agentskit/chat-example-ink lint && pnpm test:pty` — `test:pty` compila protocol, chat, devtools e chat-ink, monta o pacote (`assemble-chat-package.mjs ink`), compila o app e roda o vitest PTY (`apps/example-ink/package.json:10`).
 - **Armadilhas:** manter a fonte canônica de domínio em example-shared; não afirmar deploy a partir de configuração local.
-- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:1`.
+- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:19`.
 
 ## Decisões e história
 

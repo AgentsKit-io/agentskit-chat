@@ -5,8 +5,8 @@ grupo: Docs e exemplos
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["apps/example-react-native/App.tsx", "apps/example-react-native/package.json", "apps/example-shared/tests/support.test.ts", "docs/for-agents/apps/example-react-native.md"]
 tags: [app, repo/agentskit-chat, grupo/docs-e-exemplos, camada/ferramenta]
 ---
@@ -44,21 +44,21 @@ export default function App() {
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]]; [[chat-react]] |
-| Dependências | [[00 Hub - agentskit]] e workspace `@agentskit/chat` conforme manifesto. |
+| Consumidores | Nenhum workspace; o e2e `pnpm test:e2e --project=react-native` (`playwright.config.ts:35`) e `pnpm test:expo` (`package.json:16`) o exportam |
+| Dependências | [[chat]] (subpaths `@agentskit/chat`, `/protocol`, `/protocol/fixtures`, `/react-native` — `apps/example-react-native/App.tsx:2-5`; não depende do workspace [[chat-react-native]]), [[chat-example-shared]] (`App.tsx:1`), [[agentskit-react-native]], Expo `^57` e `react-native ^0.86` (`apps/example-react-native/package.json:11-20`) |
 
 ## Dados e efeitos
 
-Lê módulos e fixtures locais. O host de docs pode expor HTTP e consultar serviço configurado; exemplos usam serviços em memória ou adapters injetados. Nenhum segredo ou valor de ambiente é registrado nesta nota.
+Sem I/O próprio: usa as aplicações em memória de [[chat-example-shared]] e fixtures de turno do protocolo. Nenhum segredo ou valor de ambiente é registrado nesta nota.
 
 ## Como mexer (para agentes)
 
 - **Entrada:** `apps/example-react-native/App.tsx`.
 - **Invariantes:** Dependências de módulos nativos ficam no host Expo.
-- **Testes:** `apps/example-shared/tests/support.test.ts`.
-- **Validação:** `pnpm --filter @agentskit/chat-example-react-native build`.
+- **Testes:** `tests/e2e/react-native-hello-world.spec.ts` (projeto `react-native`); o domínio é coberto por `apps/example-shared/tests/support.test.ts`.
+- **Validação:** `pnpm --filter @agentskit/chat-example-react-native build` (apenas `tsc --noEmit`, `apps/example-react-native/package.json:9`) e, para o bundle Expo, `pnpm test:expo` (`package.json:16`).
 - **Armadilhas:** manter a fonte canônica de domínio em example-shared; não afirmar deploy a partir de configuração local.
-- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:1`.
+- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:19`.
 
 ## Decisões e história
 

@@ -5,10 +5,10 @@ grupo: Núcleo e protocolo
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática; mapa declarativo consultado em doc-bridge.config.json; doc-bridge CLI indisponível"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática; mapa declarativo consultado em doc-bridge.config.json; doc-bridge CLI indisponível; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["docs/architecture/overview.md"]
-tags: [grupo, repo/agentskit-chat, grupo/nucleo-e-protocolo, grupo/nucleo-e-protocolo, camada/ferramenta]
+tags: [grupo, repo/agentskit-chat, grupo/nucleo-e-protocolo, camada/ferramenta]
 ---
 
 # Núcleo e protocolo
@@ -20,7 +20,7 @@ tags: [grupo, repo/agentskit-chat, grupo/nucleo-e-protocolo, grupo/nucleo-e-prot
 
 ## Responsabilidade
 
-Concentra as fronteiras framework-neutral e Web-standard. A definição local compõe APIs publicadas do AgentsKit; schemas versionados validam dados externos; servidor injeta autenticação e infraestrutura do host; devtools compõe replay upstream. O limite não inclui controller, lifecycle, execução de tools, memória ou replay próprios (`AGENTS.md:1`, `docs/architecture/overview.md:1`).
+Concentra as fronteiras framework-neutral e Web-standard. A definição local compõe APIs publicadas do AgentsKit; schemas versionados validam dados externos; servidor injeta autenticação e infraestrutura do host; devtools compõe replay upstream. O limite não inclui controller, lifecycle, execução de tools, memória ou replay próprios (`AGENTS.md:11`, `docs/architecture/overview.md:1`).
 
 ## Módulos
 
@@ -32,4 +32,4 @@ Concentra as fronteiras framework-neutral e Web-standard. A definição local co
 | [[chat-devtools]] | Captura de rastros e comparação semântica. |
 
 > [!info]- Detalhe técnico
-> `doc-bridge.config.json:1` lista ownership e arestas entre `@agentskit/chat`, protocolo e servidor. `AGENTS.md:1` define a regra upstream-first.
+> `doc-bridge.config.json:1` lista ownership e arestas entre `@agentskit/chat`, protocolo e servidor. `AGENTS.md:11` define a regra upstream-first.

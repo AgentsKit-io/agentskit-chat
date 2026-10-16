@@ -5,10 +5,10 @@ grupo: Docs e exemplos
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática; ownership consultado em doc-bridge.config.json; CLI indisponível"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática; ownership consultado em doc-bridge.config.json; CLI indisponível; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["apps/example-shared/src/index.ts", "docs/for-agents/index.md"]
-tags: [grupo, repo/agentskit-chat, grupo/docs-e-exemplos, grupo/docs-e-exemplos, camada/ferramenta]
+tags: [grupo, repo/agentskit-chat, grupo/docs-e-exemplos, camada/ferramenta]
 ---
 
 # Docs e exemplos

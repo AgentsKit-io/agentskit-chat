@@ -5,10 +5,10 @@ grupo: Interfaces
 camada: ferramenta
 visibilidade: publico
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática; ownership e relações consultados em doc-bridge.config.json; CLI indisponível"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática; ownership e relações consultados em doc-bridge.config.json; CLI indisponível; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["docs/for-agents/packages/cli.md"]
-tags: [grupo, repo/agentskit-chat, grupo/interfaces, grupo/interfaces, camada/ferramenta]
+tags: [grupo, repo/agentskit-chat, grupo/interfaces, camada/ferramenta]
 ---
 
 # Interfaces
@@ -20,7 +20,7 @@ tags: [grupo, repo/agentskit-chat, grupo/interfaces, grupo/interfaces, camada/fe
 
 ## Fronteira
 
-Cada shell deve consumir o binding correspondente do AgentsKit e preservar a lógica compartilhada sem importar primitivos de framework para os contratos comuns (`AGENTS.md:1`). A matriz de renderers fechada é declarada pela documentação de CLI em `docs/for-agents/packages/cli.md:1`.
+Cada shell deve consumir o binding correspondente do AgentsKit e preservar a lógica compartilhada sem importar primitivos de framework para os contratos comuns (`AGENTS.md:12`). A matriz de renderers fechada é declarada pela documentação de CLI em `docs/for-agents/packages/cli.md:1`.
 
 ## Módulos
 
@@ -36,4 +36,4 @@ Cada shell deve consumir o binding correspondente do AgentsKit e preservar a ló
 | [[chat-cli]] | Detecção e scaffolding |
 
 > [!info]- Detalhe técnico
-> `doc-bridge.config.json:1` relaciona os pacotes aos contratos de definição de chat; `AGENTS.md:1` estabelece a interoperabilidade como requisito.
+> `doc-bridge.config.json:1` relaciona os pacotes aos contratos de definição de chat; `AGENTS.md:12` estabelece a interoperabilidade como requisito.

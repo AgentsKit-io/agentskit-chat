@@ -5,8 +5,8 @@ grupo: Docs e exemplos
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["apps/example-shared/package.json", "apps/example-shared/src/index.ts", "apps/example-shared/tests/support.test.ts", "docs/for-agents/apps/example-shared.md"]
 tags: [app, repo/agentskit-chat, grupo/docs-e-exemplos, camada/ferramenta]
 ---
@@ -44,21 +44,21 @@ export const createSupportApplication = ({ context, ticketService, adapter = det
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]]; renderers |
-| Dependências | [[00 Hub - agentskit]] e workspace `@agentskit/chat` conforme manifesto. |
+| Consumidores | [[chat-example-react]], [[chat-example-vue]], [[chat-example-svelte]], [[chat-example-solid]], [[chat-example-react-native]] e [[chat-example-ink]] (todos declaram `@agentskit/chat-example-shared: workspace:*` em `package.json:13`) |
+| Dependências | [[chat]] (`workspace:*`); [[00 Hub - agentskit]]: `@agentskit/core`, `@agentskit/rag`, `@agentskit/validation` (`apps/example-shared/package.json:9-14`) |
 
 ## Dados e efeitos
 
-Lê módulos e fixtures locais. O host de docs pode expor HTTP e consultar serviço configurado; exemplos usam serviços em memória ou adapters injetados. Nenhum segredo ou valor de ambiente é registrado nesta nota.
+Sem I/O próprio: os domínios de suporte, onboarding, operações e RAG usam serviços em memória ou injetados pelo host (`ticketService`, `adapter` em `createSupportApplication`, `apps/example-shared/src/index.ts:98`). Nenhum segredo ou valor de ambiente é registrado nesta nota.
 
 ## Como mexer (para agentes)
 
 - **Entrada:** `apps/example-shared/src/index.ts`.
 - **Invariantes:** Não importar DOM, React ou Expo; dados de demonstração são fixtures locais.
 - **Testes:** `apps/example-shared/tests/support.test.ts`.
-- **Validação:** `pnpm --filter @agentskit/chat-example-shared lint && pnpm --filter @agentskit/chat-example-shared test`.
+- **Validação:** `pnpm --filter @agentskit/chat-example-shared lint && pnpm --filter @agentskit/chat-example-shared test` (`apps/example-shared/package.json:16-17`; o `test` compila `@agentskit/chat` antes e roda `vitest run --coverage`).
 - **Armadilhas:** manter a fonte canônica de domínio em example-shared; não afirmar deploy a partir de configuração local.
-- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:1`.
+- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:19`.
 
 ## Decisões e história
 

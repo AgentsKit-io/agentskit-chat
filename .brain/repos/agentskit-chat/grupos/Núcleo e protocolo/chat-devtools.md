@@ -5,8 +5,8 @@ grupo: Núcleo e protocolo
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente)"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente); auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["docs/architecture/upstream-adoption.md", "docs/for-agents/packages/devtools.md", "packages/devtools/fixtures/readme-example.ts", "packages/devtools/package.json", "packages/devtools/src/index.ts", "packages/devtools/tests/devtools.test.ts", "packages/devtools/tests/fixtures/captured-session.json"]
 tags: [pacote, repo/agentskit-chat, grupo/nucleo-e-protocolo, camada/ferramenta]
 ---
@@ -41,25 +41,25 @@ import { createReplayFixture } from '@agentskit/chat/devtools'
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]]; testes de paridade dos renderers |
-| Dependências | [[00 Hub - agentskit]] Eval replay; Zod |
+| Consumidores | Apps host e testes de paridade dos renderers; publicado como subpath `@agentskit/chat/devtools` (`packages/chat/package.json:40`). `apps/example-ink` o compila no script `test:pty` (`apps/example-ink/package.json:10`) |
+| Dependências | [[chat]] (`workspace:*`; só tipos `ActionConfirmation`, `ActionPolicyTrace`, `TurnTrace` — `packages/devtools/src/index.ts:2`); [[00 Hub - agentskit]]: `@agentskit/eval/replay` (`parseCassette`, `serializeCassette` — `index.ts:1`); Zod |
 
 ## Dados e efeitos
 
-Lê e serializa JSON de traces/fixtures; não executa rede, ações ou ferramentas. Dados sensíveis são redigidos conforme configuração.
+Lê e serializa JSON de traces/fixtures; não executa rede, ações ou ferramentas. Campos listados em `redactFields` (opção de `createTraceCapture`) são trocados por `[REDACTED]` (`packages/devtools/src/index.ts:17,35,46`); sem a opção nada é redigido.
 
 ## Como mexer (para agentes)
 
 - **Entrada:** `packages/devtools/src/index.ts`.
 - **Invariantes:** Replay é responsabilidade de `@agentskit/eval/replay`; pais antecedem filhos e sequência deve ser contínua; comparar semântica, nunca markup/pixel.
-- **Testes:** `packages/devtools/tests/devtools.test.ts`; packages/devtools/tests/fixtures/captured-session.json.
+- **Testes:** `packages/devtools/tests/devtools.test.ts`, com as fixtures `packages/devtools/tests/fixtures/captured-session.json` e `renderer-outcomes.json`.
 - **Validação:** `pnpm --filter @agentskit/chat-devtools lint && pnpm --filter @agentskit/chat-devtools test`.
 - **Armadilhas:** Não registrar chunks ou requests do adapter.
 - **Adoção upstream:** revisar o contrato descrito em `docs/architecture/upstream-adoption.md`; AgentsKit fornece os primitivos e este módulo apenas os compõe.
 
 ## Decisões e história
 
-ADR-0017.
+[[agentskit-chat ADR-0017 - Traces da aplicação compõem o replay do upstream]].
 
 Histórico recente do caminho: 2026-10-10 · 4891be6 versão 0.6.0; 2026-10-02 · 0bfd034 floors de cobertura; 2026-07-14 · 40ee0fd consolidação.
 

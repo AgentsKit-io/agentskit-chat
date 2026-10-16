@@ -6,8 +6,8 @@ camada: ferramenta
 visibilidade: publico
 npm: "@agentskit/chat"
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente)"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; ownership/validação consultados no doc-bridge.config.json; índice não disponível e CLI não executável (pnpm ausente); auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["docs/architecture/upstream-adoption.md", "docs/for-agents/packages/chat.md", "packages/chat/fixtures/readme-example.ts", "packages/chat/package.json", "packages/chat/src/deterministic.ts", "packages/chat/src/drizzle-pg.ts", "packages/chat/src/index.ts", "packages/chat/tests/define-chat.test.ts", "packages/chat/tests/deterministic.test.ts"]
 tags: [pacote, repo/agentskit-chat, grupo/nucleo-e-protocolo, camada/ferramenta]
 ---
@@ -29,9 +29,13 @@ Define comportamento de aplicação, rotas determinísticas, políticas, compone
 |---|---|---|---|
 | `defineChat(definition)` | função | Preserva a definição tipada | `packages/chat/src/index.ts:555` |
 | `createChatSession(definition, options?)` | função | Projeta sessão local e rotas | `packages/chat/src/index.ts:690` |
-| `createDeterministicAnswerResolver(options)` | função | Busca exata limitada em artefato | `packages/chat/src/deterministic.ts:53` |
+| `createDeterministicAnswerResolver(artifact, options)` | função | Busca exata limitada em artefato verificado; artefato inválido devolve escalada `corrupt` | `packages/chat/src/deterministic.ts:53` |
+| `createDeterministicAnswerAdapter(options)` | função | Adapter que tenta o resolver local antes do adapter de backend | `packages/chat/src/deterministic.ts:300` |
+| `resumeChatSession(definition, options)` | função | Retoma sessão salva; compara identidade/revisão | `packages/chat/src/index.ts:961` |
+| `SessionConflictError` | classe | Lançada quando `storage.save` recusa o cursor esperado | `packages/chat/src/index.ts:599` |
+| `chatSessionTable` / `chatDecisionTable` | tabelas Drizzle | Subpath `@agentskit/chat/drizzle-pg` | `packages/chat/src/drizzle-pg.ts:11`, `:61` |
 
-Exemplo real (`packages/chat/fixtures/readme-example.ts:4`):
+Exemplo real (`packages/chat/fixtures/readme-example.ts:1-7`):
 
 ```ts
 import { defineChat } from '@agentskit/chat'
@@ -48,8 +52,8 @@ export const createSupportChat = (adapter: AdapterFactory) => defineChat({
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat-react]], [[chat-server]], [[chat-protocol]], [[chat-cli]] |
-| Dependências | [[00 Hub - agentskit]] (Core, statechart, memory, observability); Zod; subpaths internos conforme `packages/chat/package.json:19` |
+| Consumidores | [[chat-server]] (`packages/server/src/index.ts:5` importa `resumeChatSession`), [[chat-devtools]] (`packages/devtools/src/index.ts:2`, tipos), [[chat-cli]] (`packages/cli/src/index.ts:4`, `STANDARD_COMPONENT_KEYS`), os shells de renderer ([[chat-react]], [[chat-vue]], …) e os apps de exemplo (`@agentskit/chat/<renderer>`) |
+| Dependências | [[chat-protocol]] (importado em `packages/chat/src/index.ts:20`, embutido pelo build — `devDependency` workspace); [[00 Hub - agentskit]]: `@agentskit/core` (peer), `@agentskit/statechart` (`index.ts:3`), `@agentskit/memory/web-storage` (`ask.ts:2`); Zod; `drizzle-orm` e `@agentskit/observability` são peers opcionais. Subpaths públicos (`./protocol`, `./server`, `./devtools`, `./react`…`./angular`, `./drizzle-pg`) em `packages/chat/package.json:19` |
 
 ## Dados e efeitos
 
@@ -59,8 +63,8 @@ Lê definição e mensagens do AgentsKit; session storage opcional lê/grava env
 
 - **Entrada:** `packages/chat/src/index.ts`.
 - **Invariantes:** Não implementar controller, reducer, lifecycle, tool execution ou transições genéricas; mensagens canônicas ficam em ChatMemory upstream. Frames só são aceitos após manifest/schema; ações exigem política e confirmação.
-- **Testes:** `packages/chat/tests/define-chat.test.ts`; packages/chat/tests/deterministic.test.ts.
-- **Validação:** `pnpm --filter @agentskit/chat lint && pnpm --filter @agentskit/chat test`.
+- **Testes:** `packages/chat/tests/define-chat.test.ts` (definição/sessão), `packages/chat/tests/deterministic.test.ts`, `packages/chat/tests/ask.test.ts`, `packages/chat/tests/controlled-driver.test.ts`, `packages/chat/tests/presentation.test.ts`, `packages/chat/tests/drizzle-pg.test.ts`.
+- **Validação:** `pnpm --filter @agentskit/chat lint && pnpm --filter @agentskit/chat test` — `lint` = `tsc --noEmit`; `test` compila `@agentskit/chat-protocol` e roda `vitest run --coverage` (`packages/chat/package.json:90-91`). Contrato de storage Postgres: `pnpm test:storage:pg` (raiz).
 - **Armadilhas:** Não adicionar busca semântica/fuzzy; rota é avaliada na ordem declarada.
 - **Adoção upstream:** revisar o contrato descrito em `docs/architecture/upstream-adoption.md`; AgentsKit fornece os primitivos e este módulo apenas os compõe.
 

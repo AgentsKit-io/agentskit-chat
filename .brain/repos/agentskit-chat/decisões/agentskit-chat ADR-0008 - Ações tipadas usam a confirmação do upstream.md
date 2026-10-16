@@ -5,38 +5,44 @@ camada: ferramenta
 visibilidade: publico
 status: aceito
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "transcrição resumida do ADR versionado; análise estática"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "resumo do ADR versionado, com referências conferidas contra o código; auditado em 2026-10-16; nada foi executado"
 fontes: ["docs/architecture/adrs/0008-typed-actions-use-upstream-confirmation.md"]
 tags: [adr, repo/agentskit-chat, camada/ferramenta]
 ---
-
 # agentskit-chat ADR-0008 - Ações tipadas usam a confirmação do upstream
 
 > [!tldr] Em linguagem comum
-> Resume uma decisão arquitetural que delimita contratos ou implementação no AgentsKit Chat.
+> Uma ação com efeito colateral escolhida na tela passa pela confirmação e pela execução do AgentsKit; o Chat só amarra a confirmação à sessão.
 
 ← [[00 Decisões - agentskit-chat]]
 
 ## Status e datas
 
-Status registrado na fonte: Accepted. Data de verificação desta nota: 2026-10-16 (`docs/architecture/adrs/0008-typed-actions-use-upstream-confirmation.md:1`).
+Status na fonte: Accepted. Data: 2026-07-11. Fonte: `docs/architecture/adrs/0008-typed-actions-use-upstream-confirmation.md`.
 
 ## Decisão em linguagem comum
 
-Typed actions use upstream confirmation. O texto-fonte define o limite de arquitetura e suas consequências; consulte a fonte antes de alterar o contrato.
+Uma escolha acionável de `ChoiceList` carrega `{ name, input }` e é enviada à API `ChatReturn.proposeToolCall` do AgentsKit; só ferramentas registradas, executáveis e com `requiresConfirmation` viram chamadas pendentes, e o `ArgsValidator` upstream valida e congela os argumentos. `createActionConfirmation` amarra um handle opaco ao id da sessão, ao id canônico da tool call, ao nome da ação, ao snapshot de argumentos e a uma expiração absoluta; aprovação e rejeição reivindicam o registro local antes de delegar exclusivamente a `approve`/`deny` do AgentsKit; repetições devolvem o registro terminal; a expiração delega negação e nunca executa. Os renderers usam o `ToolConfirmation` oficial. O handle é correlação/idempotência, não autenticação.
 
 ## Contexto e consequências
 
-Resumo: ver a decisão completa em `docs/architecture/adrs/0008-typed-actions-use-upstream-confirmation.md:1`. O corpo fonte contém contexto, decisão e consequências mantidos pelo projeto.
+**Contexto.** Uma escolha determinística pode representar intenção com efeito colateral; o AgentsKit já é dono do registro de tools, validação, estado canônico, UI de confirmação e execução exatamente uma vez. A lacuna upstream foi resolvida na issue #1144 / PR #1145 (`@agentskit/core@1.11.0`).
+
+**Consequências.**
+
+- Execução e validação de tools ficam em uma só fonte (AgentsKit).
+- Todos os renderers de prova compartilham um ciclo de vida neutro.
+- Registros de confirmação em memória são por sessão (a recuperação durável veio depois, ADR-0011/0037).
+- Uma aprovação reivindicada nunca é repetida automaticamente após falha upstream.
 
 ## Pacotes afetados
 
-Consulte o índice [[00 Decisões - agentskit-chat]]; a associação por pacote deve ser lida com os handoffs de `docs/for-agents/` e não inferida pelo nome do ADR.
+[[chat]] (`createActionConfirmation`), [[chat-react]], [[chat-react-native]], [[chat-ink]] (renderizam `ToolConfirmation` upstream).
 
 ## Substitui / substituído por
 
-Não declarado nesta nota; verifique a fonte.
+Não declarado na fonte.
 
 ## Fonte
 

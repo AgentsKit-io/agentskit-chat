@@ -5,38 +5,44 @@ camada: ferramenta
 visibilidade: publico
 status: aceito
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "transcrição resumida do ADR versionado; análise estática"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "resumo do ADR versionado, com referências conferidas contra o código; auditado em 2026-10-16; nada foi executado"
 fontes: ["docs/architecture/adrs/0005-upstream-memory-record-validation.md"]
 tags: [adr, repo/agentskit-chat, camada/ferramenta]
 ---
-
 # agentskit-chat ADR-0005 - Validação de registros de memória no upstream
 
 > [!tldr] Em linguagem comum
-> Resume uma decisão arquitetural que delimita contratos ou implementação no AgentsKit Chat.
+> Para validar mensagens salvas, o Chat usa o validador do AgentsKit em vez de reescrever os formatos de mensagem.
 
 ← [[00 Decisões - agentskit-chat]]
 
 ## Status e datas
 
-Status registrado na fonte: Accepted. Data de verificação desta nota: 2026-10-16 (`docs/architecture/adrs/0005-upstream-memory-record-validation.md:1`).
+Status na fonte: Accepted. Data: 2026-07-11. Fonte: `docs/architecture/adrs/0005-upstream-memory-record-validation.md`.
 
 ## Decisão em linguagem comum
 
-Upstream memory-record validation. O texto-fonte define o limite de arquitetura e suas consequências; consulte a fonte antes de alterar o contrato.
+`@agentskit/chat-protocol` delega a validação de registros canônicos de mensagem ao subpath publicado `@agentskit/core/memory-validation`. O protocolo é dono apenas do envelope de aplicação, dos campos de ciclo de vida, dos diagnósticos e da política de compatibilidade. Se o validador upstream não expressar um registro canônico necessário, muda-se e publica-se o AgentsKit primeiro; é proibido validador paralelo, type assertion, cast de compatibilidade ou cópia local do schema.
 
 ## Contexto e consequências
 
-Resumo: ver a decisão completa em `docs/architecture/adrs/0005-upstream-memory-record-validation.md:1`. O corpo fonte contém contexto, decisão e consequências mantidos pelo projeto.
+**Contexto.** O envelope de snapshot precisa validar mensagens serializadas do AgentsKit; recriar schemas de mensagem, partes, tool calls, metadados ou memória duplicaria contratos canônicos e deixaria o framework divergir da base.
+
+**Consequências.**
+
+- O AgentsKit segue como fonte única dos registros de mensagem.
+- Correções upstream chegam por atualização de dependência.
+- Os testes do protocolo devem provar que registros hostis, cíclicos, profundos e não JSON falham de forma inerte.
+- Um release do protocolo pode esperar um patch upstream.
 
 ## Pacotes afetados
 
-Consulte o índice [[00 Decisões - agentskit-chat]]; a associação por pacote deve ser lida com os handoffs de `docs/for-agents/` e não inferida pelo nome do ADR.
+[[chat-protocol]] (importa `validateMemoryRecord` de `@agentskit/core/memory-validation`, `packages/protocol/src/index.ts:3`); também `packages/chat/src/controlled.ts:2` em [[chat]].
 
 ## Substitui / substituído por
 
-Não declarado nesta nota; verifique a fonte.
+Não declarado na fonte.
 
 ## Fonte
 

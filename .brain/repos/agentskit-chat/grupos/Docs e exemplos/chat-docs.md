@@ -5,8 +5,8 @@ grupo: Docs e exemplos
 camada: ferramenta
 visibilidade: privado
 verificado-em: 2026-10-16
-commits: { agentskit-chat: f0840fb }
-metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente"
+commits: { agentskit-chat: d8aa3a5 }
+metodo: "análise estática no HEAD; routing/ownership consultado em doc-bridge.config.json; CLI doc-bridge indisponível por pnpm ausente; auditado em 2026-10-16 (referências e símbolos conferidos contra o código)"
 fontes: ["apps/docs/lib/chat-definition.ts", "apps/docs/package.json", "apps/docs/tests/dogfood.test.ts", "docs/for-agents/apps/docs.md"]
 tags: [app, repo/agentskit-chat, grupo/docs-e-exemplos, camada/ferramenta]
 ---
@@ -44,21 +44,21 @@ export const docsChatDefinition = defineChat({
 
 | Relação | Notas e evidência |
 |---|---|
-| Consumidores | [[chat]]; [[chat-example-shared]] |
-| Dependências | [[00 Hub - agentskit]] e workspace `@agentskit/chat` conforme manifesto. |
+| Consumidores | Nenhum workspace depende dele; é o site publicado (deploy Cloudflare via `cf:*`, `apps/docs/package.json:11-13`) |
+| Dependências | [[chat]] (`workspace:*`, `apps/docs/package.json:20`; o `tsconfig` mapeia também `@agentskit/chat-server` para a fonte, `apps/docs/tsconfig.json:24`); [[00 Hub - agentskit]]: `@agentskit/core`, `@agentskit/react`; Fumadocs, Next 15, Mermaid. **Não** importa [[chat-example-shared]] |
 
 ## Dados e efeitos
 
-Lê módulos e fixtures locais. O host de docs pode expor HTTP e consultar serviço configurado; exemplos usam serviços em memória ou adapters injetados. Nenhum segredo ou valor de ambiente é registrado nesta nota.
+Lê o corpus `docs/` e gera o índice em `prebuild` (`apps/docs/scripts/build-docs-index.mjs`, saída tipada em `apps/docs/lib/docs-index-generated.d.ts`). Expõe rotas HTTP em `apps/docs/app/` (`api/ask`, `api/demo-ask`, `api/search`, `llms.txt`, `llms-full.txt`, `deterministic/knowledge.json`, `deterministic/site-config.json`, `raw/[...path]`). Não grava dados. Nenhum segredo ou valor de ambiente é registrado nesta nota.
 
 ## Como mexer (para agentes)
 
 - **Entrada:** `apps/docs/lib/chat-definition.ts`.
-- **Invariantes:** Não duplicar corpus, busca semântica ou memória; `/api/ask` fecha sem backend explicitamente configurado.
-- **Testes:** `apps/docs/tests/dogfood.test.ts`.
-- **Validação:** `pnpm --filter @agentskit/chat-docs lint && pnpm --filter @agentskit/chat-docs test && pnpm --filter @agentskit/chat-docs build`.
-- **Armadilhas:** manter a fonte canônica de domínio em example-shared; não afirmar deploy a partir de configuração local.
-- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:1`.
+- **Invariantes:** Não duplicar corpus, busca semântica ou memória. `POST /api/ask` hoje responde sempre 503 `ASK_INTERNAL` ("backend não configurado"): a rota só chama `unavailableAskResponse()` (`apps/docs/app/api/ask/route.ts:7`, `apps/docs/lib/ask-handler.ts:13-15`); `/api/demo-ask` e `/api/search` são rotas separadas em `apps/docs/app/api/`.
+- **Testes:** `apps/docs/tests/dogfood.test.ts`, `apps/docs/tests/frontmatter.test.ts`, `apps/docs/lib/observability-demo.test.ts` (vitest, `test` = `vitest run`); e2e e acessibilidade em `apps/docs/tests/e2e/docs.spec.ts` (`pnpm --filter @agentskit/chat-docs test:e2e`, projeto `docs` do `playwright.config.ts:37`).
+- **Validação:** `pnpm --filter @agentskit/chat-docs lint && pnpm --filter @agentskit/chat-docs test && pnpm --filter @agentskit/chat-docs build` (`apps/docs/package.json:9,15-17`; o `build` roda `prebuild` — `scripts/build-docs-index.mjs` — e `check-build-budget.mjs`). O gate documental é `pnpm docs:bridge:gate` (`doc-bridge.config.json:98-110`).
+- **Armadilhas:** o corpus vem de `docs/` na raiz (não de `apps/docs`); `postinstall` roda `fumadocs-mdx`; não afirmar deploy a partir de configuração local.
+- **Adoção upstream:** compor pacotes publicados; gaps genéricos pertencem ao AgentsKit conforme `AGENTS.md:19`.
 
 ## Decisões e história
 
