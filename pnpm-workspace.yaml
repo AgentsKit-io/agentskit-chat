@@ -19,7 +19,7 @@ overrides:
   # CJS default export of brace-expansion 2.x; pinned to the latest 2.x release (2.1.7).
   "minimatch@8>brace-expansion": "2.1.7"
   # GHSA-p98j-92pf-mc4p
-  dompurify: "3.4.16"
+  dompurify: "3.4.17"
   # GHSA-j22f-vq7h-c4qm, GHSA-mcm9-63f2-9j32, GHSA-x5rw-q4pp-hg5g,
   # GHSA-4q55-j62x-fr9h, GHSA-9rgm-9g3h-6x36, GHSA-hx4r-w6wj-j8fg
   devalue: "5.9.3"
