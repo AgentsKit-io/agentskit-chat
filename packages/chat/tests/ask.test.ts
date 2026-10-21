@@ -73,6 +73,11 @@ describe('Ask event boundary', () => {
 })
 
 describe('Ask adapter', () => {
+  it('requires an explicit endpoint instead of defaulting to a hosted service', () => {
+    expect(() => createAskAdapter({} as never)).toThrow(/requires an "endpoint"/)
+    expect(() => createAskAdapter({ endpoint: ' ' })).toThrow(/requires an "endpoint"/)
+  })
+
   it('sends projected history and streams NDJSON as ordered canonical content', async () => {
     const fetchMock = vi.fn(async () => response([
       '{"type":"text","delta":"Hello "}\n{"type":"tool","id":"cite","name":"cite","args":{"sources":[{"title":"Docs","path":"/docs"}]}}\n',
@@ -124,7 +129,7 @@ describe('Ask adapter', () => {
 
   it('supports plain-text fallback and chunks long text safely', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response([`plain ${'x'.repeat(20_000)}`])))
-    const chunks = await read(createAskAdapter({ corpus: 'docs' }).createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask', corpus: 'docs' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     const decoded = decodeAssistantContent(content)
     expect(decoded.ok && decoded.parts.filter(part => part.kind === 'text').map(part => part.text).join('')).toHaveLength(20_006)
@@ -133,7 +138,7 @@ describe('Ask adapter', () => {
 
   it('uses a declared plain-text content type when the body begins with JSON syntax', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'], 200, { 'content-type': 'text/plain' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content)).toEqual({
       ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
@@ -145,7 +150,7 @@ describe('Ask adapter', () => {
       '{"type":"text","delta":"Hello "}\n',
       '{"type":"text","delta":"world"}\n{"type":"done"}\n',
     ], 200, { 'content-type': 'text/plain; charset=utf-8' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content)).toEqual({
       ok: true, complete: true, parts: [
@@ -158,7 +163,7 @@ describe('Ask adapter', () => {
 
   it('falls back to text for an untyped JSON-shaped body that is not an Ask event', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'])))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content)).toEqual({
       ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
@@ -167,7 +172,7 @@ describe('Ask adapter', () => {
 
   it('falls back to text for application/json that is not an Ask event', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['{"this":"is prose"}'], 200, { 'content-type': 'application/json' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content)).toEqual({
       ok: true, complete: true, parts: [{ kind: 'text', text: '{"this":"is prose"}' }],
@@ -180,7 +185,7 @@ describe('Ask adapter', () => {
       '{"type":"text","delta":"injected"}\n',
       '{"type":"text","delta":"safe"}\n{"type":"done"}\n',
     ], 200, { 'content-type': 'application/x-ndjson' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content)).toEqual({
       ok: true, complete: true, parts: [{ kind: 'text', text: 'safe' }],
@@ -190,7 +195,7 @@ describe('Ask adapter', () => {
   it('stops before producing an invalid oversized assistant-content envelope', async () => {
     const records = Array.from({ length: 40 }, () => JSON.stringify({ type: 'text', delta: 'x'.repeat(8_192) })).join('\n')
     vi.stubGlobal('fetch', vi.fn(async () => response([`${records}\n`], 200, { 'content-type': 'application/x-ndjson' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     expect(chunks.at(-1)).toEqual({ type: 'error', content: 'Ask response exceeded the assistant content byte limit.' })
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     expect(decodeAssistantContent(content).ok).toBe(true)
@@ -200,7 +205,7 @@ describe('Ask adapter', () => {
   it('enforces the cumulative assistant-content record limit', async () => {
     const records = `${JSON.stringify({ type: 'text', delta: 'x' })}\n`.repeat(513)
     vi.stubGlobal('fetch', vi.fn(async () => response([records], 200, { 'content-type': 'application/x-ndjson' })))
-    const chunks = await read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const chunks = await read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     expect(chunks.at(-1)).toEqual({ type: 'error', content: 'Ask response exceeded the assistant content record limit.' })
     const content = chunks.filter(chunk => chunk.type === 'text').map(chunk => chunk.content).join('')
     const decoded = decodeAssistantContent(content)
@@ -217,7 +222,7 @@ describe('Ask adapter', () => {
         }, 35_000)
       },
     }))))
-    const reading = read(createAskAdapter().createSource({ messages: [message('user', 'Q')] }))
+    const reading = read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] }))
     await vi.advanceTimersByTimeAsync(35_000)
     await expect(reading).resolves.toEqual([
       expect.objectContaining({ type: 'text' }),
@@ -229,7 +234,7 @@ describe('Ask adapter', () => {
     vi.stubGlobal('fetch', vi.fn((_input: RequestInfo | URL, init?: RequestInit) => new Promise<Response>((_resolve, reject) => {
       init?.signal?.addEventListener('abort', () => reject(init.signal?.reason), { once: true })
     })))
-    const source = createAskAdapter().createSource({ messages: [message('user', 'Q')] })
+    const source = createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [message('user', 'Q')] })
     const reading = read(source)
     source.abort()
     await expect(reading).resolves.toEqual([])
@@ -237,7 +242,7 @@ describe('Ask adapter', () => {
 
   it('reports HTTP failures as error chunks', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => response(['failure'], 503)))
-    await expect(read(createAskAdapter().createSource({ messages: [] }))).resolves.toEqual([
+    await expect(read(createAskAdapter({ endpoint: '/api/ask' }).createSource({ messages: [] }))).resolves.toEqual([
       { type: 'error', content: 'Ask request failed (503).' },
     ])
   })

@@ -18,7 +18,6 @@ import {
 
 const MAX_TEXT_CHARS = 16_384
 const DEFAULT_CONNECTION_TIMEOUT_MS = 30_000
-const DEFAULT_ENDPOINT = 'https://ask.agentskit.io/v1/ask'
 
 export type AskToolProjector = (event: AskToolEvent) => ComponentRenderFrame | undefined
 
@@ -29,7 +28,8 @@ export type AskProjection =
   | { readonly kind: 'done' }
 
 export interface AskAdapterOptions {
-  readonly endpoint?: string
+  /** Ask service URL, or a same-origin relative path. Required: there is no hosted default. */
+  readonly endpoint: string
   readonly corpus?: string
   readonly persona?: string
   readonly projectTool?: AskToolProjector
@@ -140,7 +140,7 @@ export function projectAskMessages(messages: readonly Message[]): Array<{ readon
   return projected
 }
 
-const endpointWithParams = ({ endpoint = DEFAULT_ENDPOINT, corpus, persona }: AskAdapterOptions): string => {
+const endpointWithParams = ({ endpoint, corpus, persona }: AskAdapterOptions): string => {
   const relative = endpoint.startsWith('/')
   const origin = typeof globalThis.location === 'undefined' ? 'http://localhost' : globalThis.location.origin
   const url = new URL(endpoint, origin)
@@ -173,7 +173,10 @@ const encodeText = function* (encode: EncodeAssistantPart, text: string): Genera
 }
 
 /** Creates the shared Ask adapter without replacing the AgentsKit controller or message model. */
-export function createAskAdapter(options: AskAdapterOptions = {}): AskAdapter {
+export function createAskAdapter(options: AskAdapterOptions): AskAdapter {
+  if (typeof options?.endpoint !== 'string' || options.endpoint.trim() === '') {
+    throw new Error('createAskAdapter requires an "endpoint" (Ask service URL or same-origin path); there is no default host.')
+  }
   const createSourceForSession = (request: AdapterRequest, sessionId: string): StreamSource => {
     const controller = new AbortController()
     const escalation = AnswerResponseSchema.safeParse(request.context?.metadata?.['agentskit.chat.escalation'])
