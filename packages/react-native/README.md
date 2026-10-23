@@ -23,11 +23,11 @@ npm install @agentskit/chat @agentskit/react-native
 import { AgentChatNative } from '@agentskit/chat/react-native'
 ```
 
-`ChoiceListNative` renders a validated shared frame with native accessibility roles and labels. Use `theme` and `slots` with `toChatNativeStyles` for semantic styling. See [theming and composition](../../docs/theming-and-composition.md).
+`ChoiceListNative` renders a validated shared frame with native accessibility roles and labels. Use `theme` and `slots` with `toChatNativeStyles` for semantic styling. See [theming and composition](../../docs/theming-and-composition.mdx).
 
 ```mermaid
 flowchart LR
-  D["definition"] --> A["AgentChat"]
+  D["definition"] --> A["AgentChatNative"]
   A --> H["@agentskit/react-native headless"]
 ```
 

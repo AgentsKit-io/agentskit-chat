@@ -667,8 +667,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/vue/README.md",
           "packages/vue/package.json",
@@ -684,7 +684,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -745,8 +745,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/svelte/README.md",
           "packages/svelte/package.json",
@@ -762,7 +762,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -823,8 +823,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/solid/README.md",
           "packages/solid/package.json",
@@ -840,7 +840,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -887,7 +887,7 @@
       "commands": [
         {
           "id": "install-angular",
-          "command": "npm install @agentskit/chat @agentskit/angular",
+          "command": "npm install @agentskit/chat @agentskit/angular@^0.4.6",
           "test": "packages/angular/tests/agent-chat.test.ts",
           "testCommand": "pnpm test"
         }
@@ -901,8 +901,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/angular/README.md",
           "packages/angular/package.json",
@@ -910,7 +910,7 @@
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.mdx"
         ],
-        "sourceHash": "sha256:c5f5fede63f1989e13a843627fa0e5e48b7e8270339b6aef2cf2ea73fd1b798b"
+        "sourceHash": "sha256:c00cf7471b3dd43e6bb3f342a0f70ff93d9ebb022c34cf7c63cf7c1da44dff90"
       },
       "exceptions": [
         {
@@ -918,7 +918,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -979,8 +979,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/react-native/README.md",
           "packages/react-native/package.json",
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.mdx"
         ],
-        "sourceHash": "sha256:7d23a3f155877999e491126bcb1b869bb98ee7545213f4bad7236dc48649fb96"
+        "sourceHash": "sha256:df5e7393c14a527dd0d4ac6905582183b2aad6a31d5af22226b9aaaa33960d4a"
       },
       "exceptions": [
         {
@@ -996,7 +996,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -1057,8 +1057,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/ink/README.md",
           "packages/ink/package.json",
@@ -1074,7 +1074,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     },
@@ -1121,7 +1121,7 @@
       "commands": [
         {
           "id": "install-devtools",
-          "command": "npm install @agentskit/chat @agentskit/eval",
+          "command": "npm install @agentskit/chat @agentskit/eval@^0.4.19",
           "test": "packages/devtools/tests/devtools.test.ts",
           "testCommand": "pnpm test"
         }
@@ -1135,8 +1135,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-10",
-        "reviewDueOn": "2027-04-08",
+        "reviewedOn": "2026-10-22",
+        "reviewDueOn": "2027-04-20",
         "sources": [
           "packages/devtools/README.md",
           "packages/devtools/package.json",
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:7432d94cf23f1f8b70598387a56f46eba640330c80c57a2cd316750425b6ba18"
+        "sourceHash": "sha256:29ee11d0057274c15073c371cbd4e4e51b4fd5d8d8417ab28c5b46bbb46262c3"
       },
       "exceptions": [
         {
@@ -1152,7 +1152,7 @@
           "reason": "Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.",
           "approvedBy": "EmersonBraun",
           "trackingUrl": "https://github.com/AgentsKit-io/agentskit-chat/issues/84",
-          "reviewOn": "2027-04-08"
+          "reviewOn": "2027-04-20"
         }
       ]
     }
