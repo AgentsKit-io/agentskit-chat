@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:b119fa662d61c5c3ff2e6b980c2dc492d94d346fb7382ffd1a7864d2d74e8c52"
+        "sourceHash": "sha256:917f5c34c7c1722b5a95ddbc4750f4075d5e55b604754366e68950ecbe7a8275"
       },
       "exceptions": []
     },
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:cf1e0c9ef2af3e42e6724e9115a3c7fa8d3482a19db461511130fce9616d7a4d"
+        "sourceHash": "sha256:b7127149ff241aeb350bcd8347d2afccfdc6e08926e04d9bb8f907a0505ceca9"
       },
       "exceptions": []
     },
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:8b5ebdd8831a5d70f09a237a26a5fd388b638ed86cb7792dd643b5d254f18c3a"
+        "sourceHash": "sha256:e7fa06b6799861f3f20cfb2d92906ccfad2c9c3ab669b90450802ac2f6b31a33"
       },
       "exceptions": []
     },
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:98d2ac065a8ad69ca3a7cf012256755417b4c9f614c85a23933b60e089ec7d0e"
+        "sourceHash": "sha256:72250a52accc9b71089bd7f1af54773bfec464597290c12199fa538c10fa701c"
       },
       "exceptions": []
     },
@@ -528,7 +528,7 @@
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.mdx"
         ],
-        "sourceHash": "sha256:5da5de395076c12cc1614cbbbe7221df7153a4c7846f0fa8e693c7a9237f29b4"
+        "sourceHash": "sha256:8fc459a9c009a161f1b22aec054bdc4ce9e0451e74cb2cf33128f114cf2303e1"
       },
       "exceptions": []
     },
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:17d7261bf55a4b5ac163f1bd0f7f6e036cbe1d7aae5a509c3f4d11be08b09d8a"
+        "sourceHash": "sha256:3866e268c91c103514878fdace84cdb1206c6363aa422cbb584092230bb11398"
       },
       "exceptions": []
     },
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:1d347d3996f79c832ab25cb93a2b8073518cebe8193cfe3b224af701ebf995c2"
+        "sourceHash": "sha256:2e0feabd185127bdd45b3282a574e6d8c5245a528f1d110e711d2255bc439fc1"
       },
       "exceptions": [
         {
@@ -754,7 +754,7 @@
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.mdx"
         ],
-        "sourceHash": "sha256:c8589b99d2e76aba21c20edc3993c647f29cb4eda87c972cc28b9861303b3224"
+        "sourceHash": "sha256:852c45e9fa00f5f790d1b92bb337997b24c25f4bc385eb9bb70ccd4003dec3d1"
       },
       "exceptions": [
         {
@@ -832,7 +832,7 @@
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.mdx"
         ],
-        "sourceHash": "sha256:d9594d2f091b97095b5121e52b2bdf562ddae283b5c4f2c71d86e0f3f899f96c"
+        "sourceHash": "sha256:3b8ce2cdf42a7af87281141d0168e6c9976c2fb1e8487f86bfe42cdba9a445e6"
       },
       "exceptions": [
         {
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.mdx"
         ],
-        "sourceHash": "sha256:df5e7393c14a527dd0d4ac6905582183b2aad6a31d5af22226b9aaaa33960d4a"
+        "sourceHash": "sha256:a337d653e7346da9fe4da338a81943fdb1ddbfb850440cb230978264c233c711"
       },
       "exceptions": [
         {
@@ -1066,7 +1066,7 @@
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.mdx"
         ],
-        "sourceHash": "sha256:0dbb2f9036a23fdb2cad6dc75de6a363472029face081bec2f15286fab13f096"
+        "sourceHash": "sha256:95509bf62b7b6a97f92c0c5139f5f84949ceef450185078178070ba30e363c2b"
       },
       "exceptions": [
         {
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:29ee11d0057274c15073c371cbd4e4e51b4fd5d8d8417ab28c5b46bbb46262c3"
+        "sourceHash": "sha256:cedf01eeeb24cdc40964f26b4308ec3898b458e16648c4c518c763806925b1d4"
       },
       "exceptions": [
         {
