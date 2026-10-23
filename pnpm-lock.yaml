@@ -30,7 +30,7 @@ overrides:
   '@angular/compiler': '>=21.2.19 <22'
   browserslist: '>=4.28.7 <5'
   '@agentskit/harness>react': 19.2.7
-  '@agentskit/harness>ink': 7.1.0
+  '@agentskit/harness>ink': 7.1.1
   '@agentskit/doc-bridge>react': 19.2.7
   '@agentskit/doc-bridge>zod': 4.4.3
   '@agentskit/harness>zod': 4.4.3
@@ -48,11 +48,11 @@ importers:
         specifier: workspace:*
         version: link:packages/chat
       '@agentskit/cross-platform':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@agentskit/doc-bridge':
         specifier: 1.14.0-next.2
-        version: 1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
+        version: 1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.12.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1))(@agentskit/rag@0.7.0(@aws-sdk/client-s3@3.984.0))(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
       '@changesets/cli':
         specifier: ^2.31.1
         version: 2.31.1(@types/node@26.1.1)
@@ -93,14 +93,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/chat
       '@agentskit/core':
-        specifier: ^1.12.3
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/cross-platform':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@agentskit/react':
-        specifier: ^0.7.4
-        version: 0.7.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.8.10
+        version: 0.8.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       fumadocs-core:
         specifier: 15.6.5
         version: 15.6.5(@types/react@19.2.17)(next@15.5.28(@playwright/test@1.63.0)(@types/node@22.20.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -172,11 +172,11 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/ink':
-        specifier: ^0.10.1
-        version: 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^0.10.16
+        version: 0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       ink:
-        specifier: ^7.1.0
-        version: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^7.1.1
+        version: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -203,11 +203,11 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/react':
-        specifier: ^0.7.1
-        version: 0.7.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^0.8.10
+        version: 0.8.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -237,8 +237,8 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/react-native':
-        specifier: ^0.4.4
-        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
+        specifier: ^0.5.10
+        version: 0.5.10(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
       expo:
         specifier: ^57.0.23
         version: 57.0.23(@babel/core@7.29.7)(@expo/dom-webview@57.0.0)(react-dom@19.2.3(react@19.2.3))(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
@@ -265,14 +265,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/chat
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/rag':
-        specifier: ^0.4.14
-        version: 0.4.14
+        specifier: ^0.7.0
+        version: 0.7.0(@aws-sdk/client-s3@3.984.0)
       '@agentskit/validation':
-        specifier: ^0.2.1
-        version: 0.2.11
+        specifier: ^0.2.12
+        version: 0.2.12
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^4.1.11
@@ -290,11 +290,11 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/solid':
-        specifier: ^0.4.4
-        version: 0.4.4(solid-js@1.9.15)
+        specifier: ^0.5.10
+        version: 0.5.10(solid-js@1.9.15)
       solid-js:
         specifier: ^1.9.15
         version: 1.9.15
@@ -315,11 +315,11 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/svelte':
-        specifier: ^0.4.4
-        version: 0.4.4(svelte@5.57.0)
+        specifier: ^0.6.0
+        version: 0.6.0(svelte@5.57.0)
       svelte:
         specifier: ^5.57.0
         version: 5.57.0
@@ -343,11 +343,11 @@ importers:
         specifier: workspace:*
         version: link:../example-shared
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/vue':
-        specifier: ^0.4.4
-        version: 0.4.4(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.5.10
+        version: 0.5.10(vue@3.5.39(typescript@6.0.3))
       vue:
         specifier: 3.5.39
         version: 3.5.39(typescript@6.0.3)
@@ -368,15 +368,15 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ~1.12.2
+        version: 1.12.4
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@agentskit/angular':
         specifier: ^0.4.6
-        version: 0.4.6(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
+        version: 0.4.8(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
       '@angular/common':
         specifier: '>=21.2.19 <22'
         version: 21.2.23(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
@@ -418,46 +418,25 @@ importers:
     dependencies:
       '@agentskit/angular':
         specifier: ^0.4.6
-        version: 0.4.6(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
+        version: 0.4.8(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
       '@agentskit/eval':
-        specifier: ^0.4.17
-        version: 0.4.19
-      '@agentskit/ink':
-        specifier: ^0.10.1
-        version: 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^0.7.0
+        version: 0.7.0
       '@agentskit/memory':
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^0.12.0
+        version: 0.12.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
       '@agentskit/net':
-        specifier: ^0.2.0
-        version: 0.2.0
-      '@agentskit/react':
-        specifier: '>=0.7.1 <1'
-        version: 0.7.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@agentskit/react-native':
-        specifier: '>=0.4.4 <1'
-        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
-      '@agentskit/solid':
-        specifier: '>=0.4.4 <1'
-        version: 0.4.4(solid-js@1.9.14)
+        specifier: ^0.2.3
+        version: 0.2.3
       '@agentskit/statechart':
-        specifier: ^0.2.0
-        version: 0.2.0
-      '@agentskit/svelte':
-        specifier: '>=0.4.4 <1'
-        version: 0.4.4(svelte@5.56.4)
-      '@agentskit/vue':
-        specifier: '>=0.4.4 <1'
-        version: 0.4.4(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.3.2
+        version: 0.3.2
       '@angular/common':
         specifier: '>=21.2.19 <22'
         version: 21.2.23(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
       '@angular/core':
         specifier: '>=21.2.19 <22'
         version: 21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3)
-      ink:
-        specifier: '>=7.1.0'
-        version: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react:
         specifier: '>=18'
         version: 19.2.7
@@ -469,10 +448,10 @@ importers:
         version: 7.8.2
       solid-js:
         specifier: ^1.9.0
-        version: 1.9.14
+        version: 1.9.15
       svelte:
         specifier: ^5.0.0
-        version: 5.56.4
+        version: 5.57.0
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -489,15 +468,36 @@ importers:
       '@agentskit/core':
         specifier: ^1.15.0
         version: 1.15.0
+      '@agentskit/ink':
+        specifier: ^0.10.16
+        version: 0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@agentskit/observability':
         specifier: ^0.13.0
         version: 0.13.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
+      '@agentskit/react':
+        specifier: ^0.8.10
+        version: 0.8.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@agentskit/react-native':
+        specifier: ^0.5.10
+        version: 0.5.10(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
+      '@agentskit/solid':
+        specifier: ^0.5.10
+        version: 0.5.10(solid-js@1.9.15)
+      '@agentskit/svelte':
+        specifier: ^0.6.0
+        version: 0.6.0(svelte@5.57.0)
+      '@agentskit/vue':
+        specifier: ^0.5.10
+        version: 0.5.10(vue@3.5.39(typescript@6.0.3))
       '@types/node':
         specifier: ^25.9.7
         version: 25.9.7
       drizzle-orm:
         specifier: 0.45.3
         version: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)
+      ink:
+        specifier: ^7.1.1
+        version: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.31)(typescript@6.0.3)(yaml@2.9.1)
@@ -508,8 +508,8 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/cross-platform':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.3.0
+        version: 0.3.0
       zod:
         specifier: ^4.3.6
         version: 4.4.3
@@ -530,15 +530,15 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/eval':
-        specifier: ^0.4.19
-        version: 0.4.19
+        specifier: ^0.7.0
+        version: 0.7.0
       zod:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@types/node':
         specifier: ^25.9.7
         version: 25.9.7
@@ -553,17 +553,17 @@ importers:
         version: link:../chat
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/ink':
-        specifier: ^0.10.1
-        version: 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^0.10.16
+        version: 0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
       ink:
-        specifier: ^7.1.0
-        version: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^7.1.1
+        version: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       ink-testing-library:
         specifier: ^4.0.0
         version: 4.0.0(@types/react@19.2.17)
@@ -584,8 +584,8 @@ importers:
         version: 4.4.3
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.31)(typescript@6.0.3)(yaml@2.9.1)
@@ -597,11 +597,11 @@ importers:
         version: link:../chat
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/react':
-        specifier: '>=0.7.1 <1'
-        version: 0.7.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: '>=0.8.10 <1'
+        version: 0.8.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@testing-library/react':
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -628,11 +628,11 @@ importers:
         version: link:../chat
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/react-native':
-        specifier: '>=0.4.4 <1'
-        version: 0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
+        specifier: '>=0.5.10 <1'
+        version: 0.5.10(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
       '@testing-library/react':
         specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -664,8 +664,8 @@ importers:
         specifier: workspace:*
         version: link:../protocol
       '@agentskit/net':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.3
+        version: 0.2.3
       aws4fetch:
         specifier: 1.0.20
         version: 1.0.20
@@ -686,12 +686,12 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
     devDependencies:
       '@agentskit/solid':
-        specifier: ^0.4.4
-        version: 0.4.4(solid-js@1.9.15)
+        specifier: ^0.5.10
+        version: 0.5.10(solid-js@1.9.15)
       '@solidjs/testing-library':
         specifier: ^0.8.10
         version: 0.8.10(solid-js@1.9.15)
@@ -720,12 +720,12 @@ importers:
         specifier: workspace:*
         version: link:../chat
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
     devDependencies:
       '@agentskit/svelte':
-        specifier: ^0.4.4
-        version: 0.4.4(svelte@5.57.0)
+        specifier: ^0.6.0
+        version: 0.6.0(svelte@5.57.0)
       '@sveltejs/package':
         specifier: ^2.5.8
         version: 2.5.8(svelte@5.57.0)(typescript@6.0.3)
@@ -755,11 +755,11 @@ importers:
         version: link:../chat
     devDependencies:
       '@agentskit/core':
-        specifier: ^1.12.2
-        version: 1.12.3
+        specifier: ^1.15.0
+        version: 1.15.0
       '@agentskit/vue':
-        specifier: ^0.4.4
-        version: 0.4.4(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.5.10
+        version: 0.5.10(vue@3.5.39(typescript@6.0.3))
       happy-dom:
         specifier: ^20.14.5
         version: 20.14.5
@@ -772,23 +772,17 @@ importers:
 
 packages:
 
-  '@agentskit/angular@0.4.6':
-    resolution: {integrity: sha512-4zuUuecYO8lH3fXtzqjhdZn1u4Zxq8MY1D9tpKVYJ95Hkb4I43QUHxfjx9WVI5iE5oC3OftgTHSGyHhThjdwXQ==}
+  '@agentskit/angular@0.4.8':
+    resolution: {integrity: sha512-x5/DPP9mkbhHzy2dPZ9bsmhXQSkFgZcJJHUY9+4GAQ5Z7M+7PcoF+gYGn/ycf9Gc06bJsoAnG9zTOyMbyuHzGA==}
     peerDependencies:
       '@angular/core': '>=21.2.19 <22'
       rxjs: ^7.0.0
 
-  '@agentskit/core@1.12.0':
-    resolution: {integrity: sha512-xDAEThtU2JDKxknKucY4T0bcssh7sv2JNxXisUTX/ncVvgnInonEGSjyuGC3uegJf+quXGn/UM90OMEgURW+pg==}
-
-  '@agentskit/core@1.12.10':
-    resolution: {integrity: sha512-dKffCjASPBPvV2xq810dS7X1+/bNfxAJYdI3mPaK1Sj/Scbh8xR37lxo2AWBK+JNL40ffDe/pIJf72S+MUA+bw==}
-
-  '@agentskit/core@1.12.2':
-    resolution: {integrity: sha512-QujFUgjJhzSleWpYjaGzWI1d1V7NIZDKVKIbX1YExOxY/n1laazBNVUK/Jc94dyNOM4oRu/urzeztScY2qMDPg==}
-
   '@agentskit/core@1.12.3':
     resolution: {integrity: sha512-fNHrzpEoCaWHDK2fwk/BIhcPseN6zCdy3N0WjzdelnmRuh7zy9/Ki0zcukesK5ZAAmXdz2+Dj8FI7AM32JyOKw==}
+
+  '@agentskit/core@1.12.4':
+    resolution: {integrity: sha512-6ir65nEAVbh1ZuuQP9vxJ8Jmo4wabQyS193BL78SINa519xyC4WuCx71uXUD6mn/yr5kk6A+BpYBcOoCGmotwg==}
 
   '@agentskit/core@1.13.0':
     resolution: {integrity: sha512-KgBCpF8232hfGm5ZIzAIEVtjQdLAroGNS2Sd091S0oDr5ouDXvqwk66tVHyVOqezFTulcAyiMKvDVw4Vg89yBA==}
@@ -800,13 +794,13 @@ packages:
     resolution: {integrity: sha512-qJxJXAUBbx7BpjfkF/2YCQ9i0voimTfDbDFLRvaOsLkxa2O0ZC5yMQFdTqE8++yGPVPm14Dlc+TMxlNcCaNz9w==}
     engines: {node: '>=20.19'}
 
-  '@agentskit/cross-platform@0.1.0':
-    resolution: {integrity: sha512-yl0VHjvs6pjtTYSYOxm3ADTnjC1m3ZAuHh11oDKwmSxEE9u09NLhsGcRFA3tJkWwNHH62a+pV3T0NwLvr0NtPw==}
+  '@agentskit/cross-platform@0.2.1':
+    resolution: {integrity: sha512-RXbvF8hgA1X4dMkdkhx1vRy0L4JIx9eST5BZEu+ErGpTaqcAkX4y8eH0QuEmy9CR66yxFc655s0XxAOqdADw4A==}
     engines: {node: '>=20.19'}
     hasBin: true
 
-  '@agentskit/cross-platform@0.2.1':
-    resolution: {integrity: sha512-RXbvF8hgA1X4dMkdkhx1vRy0L4JIx9eST5BZEu+ErGpTaqcAkX4y8eH0QuEmy9CR66yxFc655s0XxAOqdADw4A==}
+  '@agentskit/cross-platform@0.3.0':
+    resolution: {integrity: sha512-UndmyjQkR+3u/3EqUrBfz7sO16hBhWB+dkJoMepvuENcpwQe5c+jcRW5neNKpxmThhrast4KdD6l1Mi92FHT+w==}
     engines: {node: '>=20.19'}
     hasBin: true
 
@@ -835,21 +829,40 @@ packages:
       react:
         optional: true
 
-  '@agentskit/eval@0.4.19':
-    resolution: {integrity: sha512-DYjEa6bgzP/rVqTZBuguXjn+JuoPG9NfVUa/ogubm5hPlVKL0SVD1ThTDfuhTqrMqOgqHIBwIHv5yFbjnqheDg==}
+  '@agentskit/eval@0.7.0':
+    resolution: {integrity: sha512-PT+bUlVVNpTKMNXXFVrC9+TI48SaIxZdLzmO34nz38L52giBRKqNpt83NNcemGp69B3m9qux1490ZsIpS0jtTg==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      braintrust: ^3.21.0
+    peerDependenciesMeta:
+      braintrust:
+        optional: true
 
   '@agentskit/harness@0.22.3':
     resolution: {integrity: sha512-GmyA3jeeAYMIYEWup2BPL+Dyd1iPO49ukUAT7gALDakw+nhpa53pGyeIWabc90XEOZA7syIlOeWfpEeiWypA6Q==}
     engines: {node: '>=22'}
     hasBin: true
 
-  '@agentskit/ink@0.10.1':
-    resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
+  '@agentskit/ink@0.10.16':
+    resolution: {integrity: sha512-mTe4O0POBc3ldka5v74zCw3IpSZNwiFeA08DLPASkoGRCO29z6HX5/EaUgLzhXrx7jXNrX8loap4GcGYBleKsw==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       react: '>=18.0.0'
 
-  '@agentskit/memory@0.11.0':
-    resolution: {integrity: sha512-sTAVVmaHIKLUYH3nFfbjmWwm3zfQ1Ljy1ct4mVhOlrvqfequ+sekrA+dzStX4PrQEtGob3MEy3qZlwwA+oxsqw==}
+  '@agentskit/memory@0.12.0':
+    resolution: {integrity: sha512-lsHzCUwJxJGWskDU8t4fbEixbqpNaU5s96/2Fy5jEdwgkuFNUu9e/2ouKFKt+0XO3q8v+9Z4w3upgnn5AlPoaA==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      drizzle-orm: ^0.44.0 || ^0.45.3
+      pg: ^8.23.1
+      vectra: ^0.15.0
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+      pg:
+        optional: true
+      vectra:
+        optional: true
 
   '@agentskit/net@0.2.0':
     resolution: {integrity: sha512-GKagBMg+fUY5QEKTy7wmXVqVjV1xn1J1iuEzDoaU6cJwzupZDHbXdZhFq8YXuuknofPwLyNounPfJ4YNy+4Eug==}
@@ -886,45 +899,51 @@ packages:
       pg:
         optional: true
 
-  '@agentskit/rag@0.4.14':
-    resolution: {integrity: sha512-MYIKHWuoBHf+5Nvmtp7RsPogQCdy/WLKvepl7L2+iU74x/vpTNuCjeQZz7Hqu9BWwAgGShejHoLNHlRLQSYtNw==}
+  '@agentskit/rag@0.7.0':
+    resolution: {integrity: sha512-SR6uXS4xl/dkLZ/1Cs18W8xafqiHYA9XFGoR7tNnI/GXz56Io037SH4rNDXhey6IxyjSrLLFCoXUE9KX3NV2Gg==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      '@aws-sdk/client-s3': ^3.0.0
+    peerDependenciesMeta:
+      '@aws-sdk/client-s3':
+        optional: true
 
-  '@agentskit/react-native@0.4.4':
-    resolution: {integrity: sha512-zdFpQL8M8LpIRV3XTpGPXf1eNMIsw36Fel/6ICtB6aFEE4jExb2b4ro8fWNIJQjNRSwUG0JBpg3Qyb4W+ZfLng==}
+  '@agentskit/react-native@0.5.10':
+    resolution: {integrity: sha512-2O75Y+/yLifo7jYaHHFxoEA6ZQ6jSrztAmKjFxdlRDmO6u0Yip6JokCllTFnVIW8ah9Z6L3ilo+PZjoGn9z3Wg==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-native: '*'
 
-  '@agentskit/react@0.7.1':
-    resolution: {integrity: sha512-ffmJ1UvcMKEMnmYmK1GFPZehrXYK4UF/CzL4Y0K0Wb3EzOeWVy4n/d/0MIFqqiRakjaikiX/cNPz+L0FYMV+JQ==}
+  '@agentskit/react@0.8.10':
+    resolution: {integrity: sha512-Jx4dZF8WloAVdN0f2u+zM3xRchgF5iWBFt9L1B2zVebeTl1/UM2yCcztpVYy8daZ+nLmEEJZMEkiAsPKcRcl2g==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
-  '@agentskit/react@0.7.4':
-    resolution: {integrity: sha512-puGYPDczHwPwGAkdr58Nbt67lkmAQWVujDeuas5NzGOfAGB2/oQMUU1L8qN6qODvQbEhsKOFQYYBUMXnS7Utvg==}
-    peerDependencies:
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
-
-  '@agentskit/solid@0.4.4':
-    resolution: {integrity: sha512-NIdOTqhRyZcp4y4Me3UoI8rYiqFUUL9qvjVmKrh+TQ9oyN9Yxk1E72xNJJfsEsNq+gk/gjL5fez7caYLnvOnfw==}
+  '@agentskit/solid@0.5.10':
+    resolution: {integrity: sha512-FD9FZNA+HFuV5X2t+nVNbRVigEVCK5Vds0ObGDHJ3ja6cnB7nepB5jK23li+i3h46IsCrPc1Q9JWX50GuoNfNw==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       solid-js: ^1.8.0
 
-  '@agentskit/statechart@0.2.0':
-    resolution: {integrity: sha512-P1wn2s5tcKe/WvtJWySm7/Pu1tKAKbet6vqocJuQUTlzRgdQeGq9l8DEj1mqR6duYSaQJW2Kb0w2zPLFUNLosQ==}
+  '@agentskit/statechart@0.3.2':
+    resolution: {integrity: sha512-X6sUpJt0zQIs52iHXlyHqcxZDu5RalXjLOaAxWrRSEwyqxQpzsFDKIAegTP6oFqtLySvTPWykLwlrCQLtTkPig==}
+    engines: {node: '>=20'}
 
-  '@agentskit/svelte@0.4.4':
-    resolution: {integrity: sha512-6sMNXZ5p5PC6rlNvtlsLpzb469GNxI8MlEJkYgUlW6pAd3rfPDceLZpkndJL/aiEXBChPPYR5vuCSy64PB5fCQ==}
+  '@agentskit/svelte@0.6.0':
+    resolution: {integrity: sha512-uDWbl3vSGvV0GykA9bnu6/RI2ALbV9wCqZHjig5lMLg4/CBH2BQtdsxxBWcYFJPvj7QpVvXnhIkxVpMWmQm3gQ==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       svelte: ^5.0.0
 
-  '@agentskit/validation@0.2.11':
-    resolution: {integrity: sha512-5d8+bODwV3WXeRQqYcZ1WPoEvgmJHKf+rHNCjtDbk7fCPQiJpZ4PrRUOXTFAlHb+JxUhIV8hZ32oUJDyrZQByA==}
+  '@agentskit/validation@0.2.12':
+    resolution: {integrity: sha512-Bbmwpezu3QRV0wmG/kpuRA2WYZBk45yn2oNOCNbPluUHL8TP0lql2tiDSa291DBXhNO7HCr+NF1RuHhv3+PPog==}
 
-  '@agentskit/vue@0.4.4':
-    resolution: {integrity: sha512-Bc2ci80wbjzuclQXYr2uvTETvM9ixCql8HJR7Ek5fCrfzcw5iikmVhy7hIjWENsqe8Vii0SxC/+BXcg6Z84LnA==}
+  '@agentskit/vue@0.5.10':
+    resolution: {integrity: sha512-cQ0Vr0kaXI72Nl9oh9zntJPmqJlqdbmcE8d7YrYYY90BNDY8vK+b0OJf+iSlHch9cUc1Ns20m41FqIzaAG3lOA==}
+    engines: {node: '>=20.19'}
     peerDependencies:
       vue: ^3.4.0
 
@@ -5680,8 +5699,8 @@ packages:
       '@types/react':
         optional: true
 
-  ink@7.1.0:
-    resolution: {integrity: sha512-VWE6/yeLtFCJBNLflyI2OSylyXK1Rc24LuXup8Qt+icwkmmycFNdbn8IkSp6Frc0h1iA0NOvvi1ajW44U/w3Qg==}
+  ink@7.1.1:
+    resolution: {integrity: sha512-Y43xxa1ZSPvpmfLHcN5o+OdP8Rf8ykkNJEuKYOUNZKT8wXVNLFTtEm1nSDMQkfBH+YANF4Xuu0hhZ4ejqAtN2w==}
     engines: {node: '>=22'}
     peerDependencies:
       '@types/react': '>=19.2.0'
@@ -7489,9 +7508,6 @@ packages:
     resolution: {integrity: sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==}
     engines: {node: '>=8.0.0'}
 
-  solid-js@1.9.14:
-    resolution: {integrity: sha512-sAEXC0Kk0S1EDg+8ysEWJDbYhA3RRoEjwuySUGlKIemeo0I5YZfOyumNjNs9Sv3y2nmhD+0rW66ag2HsMuQiGQ==}
-
   solid-js@1.9.15:
     resolution: {integrity: sha512-EeiY2xfpZJqPLjXspVEKjAII4yv8NyG//NxZ3IpOFHdUNnnTyL0uJOeS9LWGvA7cFCz5y94cjFwYlmw5Luncsg==}
 
@@ -7685,10 +7701,6 @@ packages:
     peerDependencies:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
       typescript: ^4.9.4 || ^5.0.0 || ^6.0.0
-
-  svelte@5.56.4:
-    resolution: {integrity: sha512-/d0QHehmRuJW8gVz395MTkPcPozxzdjBMBE8oEYGz8O3b9KTMzzQ9ZHJQLuFKOHOPQbU6kx/X4iid/EBBzH7iw==}
-    engines: {node: '>=18'}
 
   svelte@5.57.0:
     resolution: {integrity: sha512-NdbDn7fl4be1ViUG0oq/lvG6OZy3oENolV2ONjiqqsfVoeAfzaQAKUcEX3MrQod/Bebv1PgwET9rfXhgn9s4Kg==}
@@ -8284,35 +8296,22 @@ packages:
 
 snapshots:
 
-  '@agentskit/angular@0.4.6(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)':
+  '@agentskit/angular@0.4.8(@angular/core@21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.12.4
       '@angular/core': 21.2.23(@angular/compiler@21.2.23)(rxjs@7.8.2)(zone.js@0.16.3)
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@agentskit/core@1.12.0': {}
-
-  '@agentskit/core@1.12.10': {}
-
-  '@agentskit/core@1.12.2': {}
-
   '@agentskit/core@1.12.3': {}
+
+  '@agentskit/core@1.12.4': {}
 
   '@agentskit/core@1.13.0': {}
 
   '@agentskit/core@1.14.1': {}
 
   '@agentskit/core@1.15.0': {}
-
-  '@agentskit/cross-platform@0.1.0':
-    dependencies:
-      '@agentskit/core': 1.12.10
-      cross-spawn: 7.0.6
-      graceful-fs: 4.2.11
-      pathe: 2.0.3
-      tree-kill: 1.2.2
-      which: 2.0.2
 
   '@agentskit/cross-platform@0.2.1':
     dependencies:
@@ -8323,7 +8322,16 @@ snapshots:
       tree-kill: 1.2.2
       which: 2.0.2
 
-  '@agentskit/doc-bridge@1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
+  '@agentskit/cross-platform@0.3.0':
+    dependencies:
+      '@agentskit/core': 1.15.0
+      cross-spawn: 7.0.6
+      graceful-fs: 4.2.11
+      pathe: 2.0.3
+      tree-kill: 1.2.2
+      which: 2.0.2
+
+  '@agentskit/doc-bridge@1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.12.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1))(@agentskit/rag@0.7.0(@aws-sdk/client-s3@3.984.0))(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:
       '@agentskit/cross-platform': 0.2.1
       '@agentskit/harness': 0.22.3(@types/react@19.2.17)(react-devtools-core@6.1.5)
@@ -8351,9 +8359,9 @@ snapshots:
       zod: 4.4.3
     optionalDependencies:
       '@agentskit/core': 1.15.0
-      '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
-      '@agentskit/memory': 0.11.0
-      '@agentskit/rag': 0.4.14
+      '@agentskit/ink': 0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      '@agentskit/memory': 0.12.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
+      '@agentskit/rag': 0.7.0(@aws-sdk/client-s3@3.984.0)
       react: 19.2.7
     transitivePeerDependencies:
       - '@types/react'
@@ -8363,15 +8371,16 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@agentskit/eval@0.4.19':
+  '@agentskit/eval@0.7.0':
     dependencies:
-      '@agentskit/core': 1.12.3
+      '@agentskit/core': 1.15.0
+      '@agentskit/cross-platform': 0.3.0
 
   '@agentskit/harness@0.22.3(@types/react@19.2.17)(react-devtools-core@6.1.5)':
     dependencies:
       commander: 14.0.3
       cross-spawn: 7.0.6
-      ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react: 19.2.7
       yaml: 2.9.1
       zod: 4.4.3
@@ -8381,10 +8390,10 @@ snapshots:
       - react-devtools-core
       - utf-8-validate
 
-  '@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)':
+  '@agentskit/ink@0.10.16(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)':
     dependencies:
-      '@agentskit/core': 1.12.0
-      ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      '@agentskit/core': 1.15.0
+      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
       react: 19.2.7
@@ -8394,9 +8403,13 @@ snapshots:
       - react-devtools-core
       - utf-8-validate
 
-  '@agentskit/memory@0.11.0':
+  '@agentskit/memory@0.12.0(drizzle-orm@0.45.3(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)':
     dependencies:
-      '@agentskit/core': 1.12.3
+      '@agentskit/core': 1.15.0
+      '@agentskit/net': 0.2.3
+    optionalDependencies:
+      drizzle-orm: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)
+      pg: 8.23.1
 
   '@agentskit/net@0.2.0':
     dependencies:
@@ -8418,64 +8431,52 @@ snapshots:
       drizzle-orm: 0.45.3(@types/pg@8.23.1)(pg@8.23.1)
       pg: 8.23.1
 
-  '@agentskit/rag@0.4.14':
+  '@agentskit/rag@0.7.0(@aws-sdk/client-s3@3.984.0)':
     dependencies:
-      '@agentskit/core': 1.12.3
+      '@agentskit/core': 1.15.0
+      '@agentskit/net': 0.2.3
+      yaml: 2.9.1
+    optionalDependencies:
+      '@aws-sdk/client-s3': 3.984.0
 
-  '@agentskit/react-native@0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)':
+  '@agentskit/react-native@0.5.10(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.15.0
       react: 19.2.3
       react-native: 0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.3)
 
-  '@agentskit/react-native@0.4.4(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)':
+  '@agentskit/react-native@0.5.10(react-native@0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.15.0
       react: 19.2.7
       react-native: 0.86.0(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7)
 
-  '@agentskit/react@0.7.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@agentskit/react@0.8.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@agentskit/core': 1.12.0
+      '@agentskit/core': 1.15.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@agentskit/react@0.7.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@agentskit/solid@0.5.10(solid-js@1.9.15)':
     dependencies:
-      '@agentskit/core': 1.12.3
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-
-  '@agentskit/solid@0.4.4(solid-js@1.9.14)':
-    dependencies:
-      '@agentskit/core': 1.12.2
-      solid-js: 1.9.14
-
-  '@agentskit/solid@0.4.4(solid-js@1.9.15)':
-    dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.15.0
       solid-js: 1.9.15
 
-  '@agentskit/statechart@0.2.0': {}
+  '@agentskit/statechart@0.3.2': {}
 
-  '@agentskit/svelte@0.4.4(svelte@5.56.4)':
+  '@agentskit/svelte@0.6.0(svelte@5.57.0)':
     dependencies:
-      '@agentskit/core': 1.12.2
-      svelte: 5.56.4
-
-  '@agentskit/svelte@0.4.4(svelte@5.57.0)':
-    dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.15.0
       svelte: 5.57.0
 
-  '@agentskit/validation@0.2.11':
+  '@agentskit/validation@0.2.12':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.12.3
       ajv: 8.20.0
 
-  '@agentskit/vue@0.4.4(vue@3.5.39(typescript@6.0.3))':
+  '@agentskit/vue@0.5.10(vue@3.5.39(typescript@6.0.3))':
     dependencies:
-      '@agentskit/core': 1.12.2
+      '@agentskit/core': 1.15.0
       vue: 3.5.39(typescript@6.0.3)
 
   '@alcalzone/ansi-tokenize@0.3.0':
@@ -10607,7 +10608,7 @@ snapshots:
       next: 15.5.28(@playwright/test@1.63.0)(@types/node@22.20.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.101.0)
       path-to-regexp: 6.3.0
       urlpattern-polyfill: 10.1.0
-      yaml: 2.9.0
+      yaml: 2.9.1
     transitivePeerDependencies:
       - supports-color
 
@@ -11949,7 +11950,8 @@ snapshots:
     dependencies:
       csstype: 3.2.3
 
-  '@types/trusted-types@2.0.7': {}
+  '@types/trusted-types@2.0.7':
+    optional: true
 
   '@types/unist@2.0.11': {}
 
@@ -13896,7 +13898,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.17
 
-  ink@7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7):
+  ink@7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7):
     dependencies:
       '@alcalzone/ansi-tokenize': 0.3.0
       ansi-escapes: 7.3.0
@@ -14598,7 +14600,7 @@ snapshots:
       metro-cache: 0.84.4
       metro-core: 0.84.4
       metro-runtime: 0.84.4
-      yaml: 2.9.0
+      yaml: 2.9.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -14613,7 +14615,7 @@ snapshots:
       metro-cache: 0.84.5
       metro-core: 0.84.5
       metro-runtime: 0.84.5
-      yaml: 2.9.0
+      yaml: 2.9.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -16403,12 +16405,6 @@ snapshots:
 
   slugify@1.6.9: {}
 
-  solid-js@1.9.14:
-    dependencies:
-      csstype: 3.2.3
-      seroval: 1.6.8
-      seroval-plugins: 1.5.5(seroval@1.6.8)
-
   solid-js@1.9.15:
     dependencies:
       csstype: 3.2.3
@@ -16588,27 +16584,6 @@ snapshots:
       scule: 1.3.0
       svelte: 5.57.0
       typescript: 6.0.3
-
-  svelte@5.56.4:
-    dependencies:
-      '@jridgewell/remapping': 2.3.5
-      '@jridgewell/sourcemap-codec': 1.5.5
-      '@sveltejs/acorn-typescript': 1.0.11(acorn@8.17.0)
-      '@types/estree': 1.0.9
-      '@types/trusted-types': 2.0.7
-      acorn: 8.17.0
-      aria-query: 5.3.1
-      axobject-query: 4.1.0
-      clsx: 2.1.1
-      devalue: 5.9.3
-      esm-env: 1.2.2
-      esrap: 2.2.13
-      is-reference: 3.0.3
-      locate-character: 3.0.0
-      magic-string: 0.30.21
-      zimmerframe: 1.1.4
-    transitivePeerDependencies:
-      - '@typescript-eslint/types'
 
   svelte@5.57.0:
     dependencies:
