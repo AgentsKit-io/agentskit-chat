@@ -43,6 +43,9 @@ overrides:
   '@angular/core': ">=21.2.19 <22"
   '@angular/compiler': ">=21.2.19 <22"
   browserslist: ">=4.28.7 <5"
+  # @vitest/coverage-v8 statement mapper: 1.0.5+ counts statements differently and drops the
+  # angular and ink packages below their coverage floors with unchanged tests; hold at 1.0.4.
+  ast-v8-to-istanbul: "1.0.4"
   # ponytail: pin the doc tooling subtree to the workspace React/Ink/zod; duplicates break Ink tests, fixtures, and the docs bundle budget.
   '@agentskit/harness>react': "19.3.1"
   '@agentskit/harness>ink': "7.1.1"
