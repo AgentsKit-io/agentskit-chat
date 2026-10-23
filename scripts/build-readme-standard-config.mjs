@@ -21,7 +21,7 @@ const visualException = {
   reason: 'Mermaid explains the binding journey; a raster diagram would duplicate the package guide without adding understanding.',
   approvedBy: 'EmersonBraun',
   trackingUrl: 'https://github.com/AgentsKit-io/agentskit-chat/issues/84',
-  reviewOn: '2026-10-12',
+  reviewOn: '2027-04-08',
 }
 
 const architectureVisual = {

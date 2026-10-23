@@ -33,7 +33,7 @@ const artifact = await verifyLocalKnowledgeArtifact(artifactJson, {
 // A corrupt local artifact must not prevent the backend chat from starting.
 const localArtifact = artifact.ok ? artifact.value : null
 const fallback = site.value.fallback.mode === 'backend'
-  ? createAskAdapter({ corpus: 'docs' })
+  ? createAskAdapter({ endpoint: '/api/ask', corpus: 'docs' })
   : undefined
 
 const adapter = createDeterministicAnswerAdapter({

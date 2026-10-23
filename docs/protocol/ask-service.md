@@ -9,7 +9,7 @@ const definition = defineChat({
   id: 'registry-ask',
   chat: {
     adapter: createAskAdapter({
-      endpoint: 'https://ask.agentskit.io/v1/ask',
+      endpoint: '/api/ask', // or your deployed Ask service URL (a Cloudflare Workers URL)
       corpus: 'registry',
       persona: 'registry-guide',
     }),
@@ -32,12 +32,13 @@ server resolves those fields from authenticated context using the
 
 Transport chunk boundaries do not affect decoding: limits apply to individual Ask records, the retained partial line, and a fixed per-decode record budget. An oversized partial line is discarded through its next newline so its suffix cannot become a separate event. The resulting assistant message also enforces the ordered-content byte and record limits before emitting a chunk, so a long service response cannot create canonical content that its renderers or memory reject.
 
-`endpoint`, `corpus`, and `persona` are the transport configuration seam. Relative endpoints remain relative for same-origin proxies. The 30-second deadline covers connection establishment only; after headers arrive, the stream continues until completion or the host calls the upstream stop/abort lifecycle.
+`endpoint`, `corpus`, and `persona` are the transport configuration seam. `endpoint` is required (there is no hosted default; `createAskAdapter` throws without it). Relative endpoints remain relative for same-origin proxies. The 30-second deadline covers connection establishment only; after headers arrive, the stream continues until completion or the host calls the upstream stop/abort lifecycle.
 
 Host-only application tools may be projected into a validated `ComponentRenderFrame`:
 
 ```ts
 createAskAdapter({
+  endpoint: '/api/ask',
   corpus: 'docs',
   projectTool(event) {
     if (event.name !== 'codeBlock') return undefined

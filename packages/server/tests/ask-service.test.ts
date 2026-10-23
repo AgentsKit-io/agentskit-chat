@@ -62,7 +62,7 @@ const baseOptions = (
   ...overrides,
 })
 
-const ask = (body: unknown, path = '/v1/ask', signal?: AbortSignal): Request => new Request(`https://ask.agentskit.io${path}`, {
+const ask = (body: unknown, path = '/v1/ask', signal?: AbortSignal): Request => new Request(`https://ask.example.test${path}`, {
   method: 'POST',
   headers: { 'content-type': 'application/json', authorization: 'Bearer valid' },
   body: JSON.stringify(body),
@@ -312,7 +312,7 @@ describe('trusted Ask backend vertical', () => {
     const limitedResponse = await limited(ask({ messages: [{ role: 'user', content: 'hello' }] }))
     expect(limitedResponse.status).toBe(429)
     expect(limitedResponse.headers.get('retry-after')).toBe('15')
-    const invalidButLimited = new Request('https://ask.agentskit.io/v1/ask', {
+    const invalidButLimited = new Request('https://ask.example.test/v1/ask', {
       method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer valid' }, body: '{',
     })
     expect((await limited(invalidButLimited)).status).toBe(429)
