@@ -30,7 +30,7 @@ overrides:
   '@angular/compiler': '>=21.2.19 <22'
   browserslist: '>=4.28.7 <5'
   '@agentskit/harness>react': 19.2.7
-  '@agentskit/harness>ink': 7.1.0
+  '@agentskit/harness>ink': 7.1.1
   '@agentskit/doc-bridge>react': 19.2.7
   '@agentskit/doc-bridge>zod': 4.4.3
   '@agentskit/harness>zod': 4.4.3
@@ -8389,7 +8389,7 @@ snapshots:
     dependencies:
       commander: 14.0.3
       cross-spawn: 7.0.6
-      ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       react: 19.2.7
       yaml: 2.9.1
       zod: 4.4.3
