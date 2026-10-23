@@ -18,7 +18,7 @@ This package does not record or replay model calls. Use `createRecordingAdapter`
 
 <!-- readme-command:install-devtools -->
 ```bash
-npm install @agentskit/chat @agentskit/eval
+npm install @agentskit/chat @agentskit/eval@^0.4.19
 ```
 
 <!-- readme-example:import-devtools -->

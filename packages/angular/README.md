@@ -15,7 +15,7 @@ Native Angular application shell for AgentsKit Chat. Composes `AgentskitChat` an
 
 <!-- readme-command:install-angular -->
 ```bash
-npm install @agentskit/chat @agentskit/angular
+npm install @agentskit/chat @agentskit/angular@^0.4.6
 ```
 
 <!-- readme-example:import-angular -->
@@ -23,7 +23,7 @@ npm install @agentskit/chat @agentskit/angular
 import { AgentChatComponent } from '@agentskit/chat/angular'
 ```
 
-The standalone component works with Angular 18–21. Use content templates named `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList` for Angular-native customization.
+The standalone component works with Angular 18.1–21. Use content templates named `container`, `message`, `input`, `thinking`, `confirmation`, and `choiceList` for Angular-native customization.
 
 ```mermaid
 flowchart LR
