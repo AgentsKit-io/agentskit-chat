@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@agentskit/core": "^1.15.0",
-    "@types/node": "^25.9.7",
+    "@types/node": "^25.9.9",
     "tsup": "^8.5.1"
   },
   "publishConfig": {}

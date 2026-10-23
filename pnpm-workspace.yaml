@@ -38,14 +38,14 @@ overrides:
   # GHSA-6h8r-xr42-gp59, GHSA-6gmq-8vp8-gcm6
   '@xmldom/xmldom@<0.9': "0.8.15"
   '@xmldom/xmldom@>=0.9 <1': "0.9.12"
-  '@angular/common': ">=21.2.19 <22"
-  '@angular/core': ">=21.2.19 <22"
-  '@angular/compiler': ">=21.2.19 <22"
+  '@angular/common': ">=21.2.25 <22"
+  '@angular/core': ">=21.2.25 <22"
+  '@angular/compiler': ">=21.2.25 <22"
   browserslist: ">=4.28.7 <5"
   # ponytail: pin the doc tooling subtree to the workspace React/Ink/zod; duplicates break Ink tests, fixtures, and the docs bundle budget.
-  '@agentskit/harness>react': "19.2.7"
+  '@agentskit/harness>react': "19.3.1"
   '@agentskit/harness>ink': "7.1.1"
-  '@agentskit/doc-bridge>react': "19.2.7"
+  '@agentskit/doc-bridge>react': "19.3.1"
   '@agentskit/doc-bridge>zod': "4.4.3"
   '@agentskit/harness>zod': "4.4.3"
 
