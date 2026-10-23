@@ -32,7 +32,7 @@
   $effect(() => {
     pendingChat = definition.chat
     if (activeChat !== pendingChat) {
-      if (status === 'streaming') currentStore?.stop()
+      if (status === 'streaming') currentStore?.destroy()
       activeChat = pendingChat
       bindingRevision += 1
     }
