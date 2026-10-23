@@ -35,7 +35,7 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/chat-protocol": "workspace:*",
-    "@agentskit/net": "^0.2.0",
+    "@agentskit/net": "^0.2.3",
     "aws4fetch": "1.0.20"
   },
   "peerDependencies": {
