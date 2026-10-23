@@ -51,8 +51,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@agentskit/doc-bridge':
-        specifier: 1.14.0-next.2
-        version: 1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)
+        specifier: ^2.4.0
+        version: 2.4.0(@agentskit/core@1.15.0)(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)
       '@changesets/cli':
         specifier: ^2.31.1
         version: 2.31.1(@types/node@26.1.1)
@@ -810,29 +810,23 @@ packages:
     engines: {node: '>=20.19'}
     hasBin: true
 
-  '@agentskit/doc-bridge@1.14.0-next.2':
-    resolution: {integrity: sha512-6QdC+4msJ6Jy6r5+i9KsqpmmJgSbvcBSTUNouwayicP/pnItcxMbMrhDqXf1IKlGf4/ehyi4Nq/BpyRmewlO/w==}
+  '@agentskit/doc-bridge@2.4.0':
+    resolution: {integrity: sha512-TNK1/hZTR/GIf8WFoEKEq8wcggNNfwLhLKbaSmkMqJ0bOkak2R/SPGZpbHCgwKuxiVejSc9DD1BzDjwFvSTHHA==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
       '@agentskit/adapters': '>=0.12.0 <1'
       '@agentskit/core': '>=1.0.0 <2'
-      '@agentskit/ink': '>=0.8.0 <1'
       '@agentskit/memory': '>=0.9.0 <1'
       '@agentskit/rag': '>=0.3.0 <1'
-      react: 19.2.7
     peerDependenciesMeta:
       '@agentskit/adapters':
         optional: true
       '@agentskit/core':
         optional: true
-      '@agentskit/ink':
-        optional: true
       '@agentskit/memory':
         optional: true
       '@agentskit/rag':
-        optional: true
-      react:
         optional: true
 
   '@agentskit/eval@0.4.19':
@@ -845,6 +839,11 @@ packages:
 
   '@agentskit/ink@0.10.1':
     resolution: {integrity: sha512-eLGl/UMf1hpuiLcBDK+nMW/x5STQ6c3MDCB5zI69WcssaBctJIY6L0sOB+6YIdOAAWnThbPkWULPQNeRRYFuAA==}
+    peerDependencies:
+      react: '>=18.0.0'
+
+  '@agentskit/ink@0.10.15':
+    resolution: {integrity: sha512-ZScGOrKtZtQ/MR1oP97FUqWiN0ICmb5J1yAGnXni8z1TxMuZLZB5HbA5iXv2nT2jJcsyWNITtc2uI/t0O4eU6w==}
     peerDependencies:
       react: '>=18.0.0'
 
@@ -2062,6 +2061,9 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@flowershow/remark-wiki-link@3.4.0':
+    resolution: {integrity: sha512-YeeIwZ630CgBRiVWwM5C8ikAyuT0nLjdjhAZxhOOBgUCA34LCQxFwCkEnA0BySDJr6NQiJjJfRvO/TxBs+deAA==}
 
   '@formatjs/intl-localematcher@0.6.2':
     resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
@@ -5693,6 +5695,19 @@ packages:
       react-devtools-core:
         optional: true
 
+  ink@7.1.1:
+    resolution: {integrity: sha512-Y43xxa1ZSPvpmfLHcN5o+OdP8Rf8ykkNJEuKYOUNZKT8wXVNLFTtEm1nSDMQkfBH+YANF4Xuu0hhZ4ejqAtN2w==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@types/react': '>=19.2.0'
+      react: '>=19.2.0'
+      react-devtools-core: '>=6.1.2'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-devtools-core:
+        optional: true
+
   inline-style-parser@0.2.7:
     resolution: {integrity: sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA==}
 
@@ -8315,11 +8330,14 @@ snapshots:
       tree-kill: 1.2.2
       which: 2.0.2
 
-  '@agentskit/doc-bridge@1.14.0-next.2(@agentskit/core@1.15.0)(@agentskit/ink@0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7))(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)(react@19.2.7)':
+  '@agentskit/doc-bridge@2.4.0(@agentskit/core@1.15.0)(@agentskit/memory@0.11.0)(@agentskit/rag@0.4.14)(@types/react@19.2.17)(graphology-types@0.24.8)(react-devtools-core@6.1.5)':
     dependencies:
       '@agentskit/cross-platform': 0.2.1
       '@agentskit/harness': 0.22.3(@types/react@19.2.17)(react-devtools-core@6.1.5)
-      '@agentskit/net': 0.2.0
+      '@agentskit/ink': 0.10.15(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      '@agentskit/net': 0.2.3
+      '@flowershow/remark-wiki-link': 3.4.0
+      commander: 14.0.3
       github-slugger: 2.0.0
       graphology: 0.26.0(graphology-types@0.24.8)
       graphology-communities-louvain: 2.0.2(graphology-types@0.24.8)
@@ -8327,11 +8345,13 @@ snapshots:
       graphology-metrics: 2.4.2(graphology-types@0.24.8)
       graphology-shortest-path: 2.1.0(graphology-types@0.24.8)
       ignore: 7.0.10
+      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       knap: 0.6.0
       mdast-util-to-string: 4.0.0
       mermaid: 11.17.2
       minimatch: 10.2.6
       packageurl-js: 2.0.1
+      react: 19.2.7
       remark-frontmatter: 5.0.0
       remark-gfm: 4.0.1
       remark-parse: 11.0.0
@@ -8339,14 +8359,12 @@ snapshots:
       typescript: 6.0.3
       unified: 11.0.5
       unist-util-visit: 5.1.0
-      yaml: 2.9.0
+      yaml: 2.9.1
       zod: 4.4.3
     optionalDependencies:
       '@agentskit/core': 1.15.0
-      '@agentskit/ink': 0.10.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       '@agentskit/memory': 0.11.0
       '@agentskit/rag': 0.4.14
-      react: 19.2.7
     transitivePeerDependencies:
       - '@types/react'
       - bufferutil
@@ -8377,6 +8395,19 @@ snapshots:
     dependencies:
       '@agentskit/core': 1.12.0
       ink: 7.1.0(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
+      marked: 15.0.12
+      marked-terminal: 7.3.0(marked@15.0.12)
+      react: 19.2.7
+    transitivePeerDependencies:
+      - '@types/react'
+      - bufferutil
+      - react-devtools-core
+      - utf-8-validate
+
+  '@agentskit/ink@0.10.15(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)':
+    dependencies:
+      '@agentskit/core': 1.14.1
+      ink: 7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7)
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
       react: 19.2.7
@@ -10221,6 +10252,13 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@flowershow/remark-wiki-link@3.4.0':
+    dependencies:
+      github-slugger: 2.0.0
+      mdast-util-to-markdown: 2.1.2
+      micromark-util-character: 2.1.1
+      micromark-util-symbol: 2.0.1
 
   '@formatjs/intl-localematcher@0.6.2':
     dependencies:
@@ -13927,6 +13965,41 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  ink@7.1.1(@types/react@19.2.17)(react-devtools-core@6.1.5)(react@19.2.7):
+    dependencies:
+      '@alcalzone/ansi-tokenize': 0.3.0
+      ansi-escapes: 7.3.0
+      ansi-styles: 6.2.3
+      auto-bind: 5.0.1
+      chalk: 5.6.2
+      cli-boxes: 4.0.1
+      cli-cursor: 4.0.0
+      cli-truncate: 6.1.1
+      code-excerpt: 4.0.0
+      es-toolkit: 1.49.0
+      indent-string: 5.0.0
+      is-in-ci: 2.0.0
+      patch-console: 2.0.0
+      react: 19.2.7
+      react-reconciler: 0.33.0(react@19.2.7)
+      scheduler: 0.27.0
+      signal-exit: 3.0.7
+      slice-ansi: 9.0.0
+      stack-utils: 2.0.6
+      string-width: 8.2.2
+      terminal-size: 4.0.1
+      type-fest: 5.8.0
+      widest-line: 6.0.0
+      wrap-ansi: 10.0.0
+      ws: 8.21.0
+      yoga-layout: 3.2.1
+    optionalDependencies:
+      '@types/react': 19.2.17
+      react-devtools-core: 6.1.5
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   inline-style-parser@0.2.7: {}
 
   inline-style-prefixer@7.0.1:
@@ -14594,7 +14667,7 @@ snapshots:
       metro-cache: 0.84.4
       metro-core: 0.84.4
       metro-runtime: 0.84.4
-      yaml: 2.9.0
+      yaml: 2.9.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -14609,7 +14682,7 @@ snapshots:
       metro-cache: 0.84.5
       metro-core: 0.84.5
       metro-runtime: 0.84.5
-      yaml: 2.9.0
+      yaml: 2.9.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
