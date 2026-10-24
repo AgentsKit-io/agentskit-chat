@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [javascript-typescript]
-    uses: AgentsKit-io/.github/.github/workflows/codeql.yml@5a584290feaaa0a800a28d24583d16f15102bea1 # main
+    uses: AgentsKit-io/.github/.github/workflows/codeql.yml@78545f7385473798d5ec690a4c675b42e544b40c # main
     with:
       languages: javascript-typescript
       queries: security-and-quality
