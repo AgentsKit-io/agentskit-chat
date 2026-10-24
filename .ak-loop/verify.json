@@ -1,0 +1,10 @@
+{ "ranAt": "2026-10-24T19:30:00Z", "command": "pnpm install --frozen-lockfile && pnpm run lint && pnpm run test && pnpm run build", "exitCode": 0,
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "vercel.json, .vercelignore removed via git rm; .vercel line dropped from .gitignore" },
+    { "id": "o2", "status": "passed", "evidence": "docs-deploy.yml deleted; grep -rniE vercel .github/workflows empty" },
+    { "id": "o3", "status": "passed", "evidence": "grep -niE vercel on the three files returns nothing" },
+    { "id": "o4", "status": "passed", "evidence": "no @vercel/analytics or speed-insights in any package.json/source" },
+    { "id": "o5", "status": "passed", "evidence": "grep vercel.json in scripts tests apps packages .github is empty; no _headers generator exists" },
+    { "id": "o6", "status": "passed", "evidence": "install, lint, test, build all exit 0" },
+    { "id": "o7", "status": "passed", "evidence": "single commit chore: remove Vercel deploy configuration, not pushed" }
+  ] }

@@ -1,0 +1,13 @@
+{ "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "Not applicable: change only deletes config and rewords comments; no new behaviour. Existing test suite passes." },
+    { "id": "no-todo", "status": "passed", "evidence": "Changed src-like files (route.ts comment) contain no TODO/FIXME" }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "files removed, gitignore entry dropped" },
+    { "id": "o2", "status": "passed", "evidence": "docs-deploy.yml deleted; no vercel in .github/workflows" },
+    { "id": "o3", "status": "passed", "evidence": "comments reworded; grep empty" },
+    { "id": "o4", "status": "passed", "evidence": "no such dependency exists" },
+    { "id": "o5", "status": "passed", "evidence": "no vercel.json readers; no headers generator" },
+    { "id": "o6", "status": "passed", "evidence": "install/lint/test/build exit 0" },
+    { "id": "o7", "status": "passed", "evidence": "single unpushed commit with required title" }
+  ] }

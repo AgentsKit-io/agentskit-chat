@@ -18,7 +18,6 @@ artifacts/
 .doc-bridge/memory-inbox/*
 !.doc-bridge/memory-inbox/.gitkeep
 .codex/verification/
-.vercel
 
 # Cloudflare (OpenNext / wrangler)
 .open-next/
