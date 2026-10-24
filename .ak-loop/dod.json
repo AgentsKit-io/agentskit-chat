@@ -1,0 +1,12 @@
+{ "project": [
+    { "id": "test-for-new-code", "status": "not-applicable", "evidence": "Pure removal and comment rewording; no new behaviour, so no test file changed" },
+    { "id": "no-todo", "status": "passed", "evidence": "Changed files under src/** : none; no TODO/FIXME added" } ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "no vercel.json/.vercelignore/.vercel tracked after removal" },
+    { "id": "o2", "status": "passed", "evidence": "no vercel match in .github scripts apps/docs/scripts" },
+    { "id": "o3", "status": "passed", "evidence": "no vercel match in the three files" },
+    { "id": "o4", "status": "passed", "evidence": "no @vercel/analytics or speed-insights anywhere" },
+    { "id": "o5", "status": "failed", "evidence": "build OOM-killed (137) in next type-check step in this sandbox; lint and test pass" },
+    { "id": "o6", "status": "passed", "evidence": "frozen install ok; docs:bridge:gate ok after ak-docs index" },
+    { "id": "o7", "status": "passed", "evidence": "workflow deleted, no deploy executed" },
+    { "id": "o8", "status": "passed", "evidence": "commit message conforms; unpushed" } ] }
