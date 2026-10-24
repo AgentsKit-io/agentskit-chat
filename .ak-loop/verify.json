@@ -1,0 +1,8 @@
+{"ranAt":"2026-10-24T20:15:00Z","command":"pnpm install --frozen-lockfile && pnpm run lint && pnpm run test && pnpm run build","exitCode":0,"outcomes":[
+{"id":"o1","status":"passed","evidence":"git ls-files now has no vercel.json/.vercelignore; .vercel removed from .gitignore"},
+{"id":"o2","status":"passed","evidence":"docs-deploy.yml deleted (gh secret list not permitted in sandbox, so Cloudflare secrets unverifiable); grep vercel .github/workflows empty"},
+{"id":"o3","status":"passed","evidence":"comments reworded in wrangler.jsonc, build-docs-index.mjs, demo-ask/route.ts"},
+{"id":"o4","status":"passed","evidence":"no @vercel/analytics or speed-insights existed"},
+{"id":"o5","status":"passed","evidence":"grep vercel.json in scripts tests apps packages .github empty; no cloudflare-headers generator exists"},
+{"id":"o6","status":"passed","evidence":"frozen install, lint (tsc/svelte-check/cross-platform), build all succeeded; test ran with no ELIFECYCLE shown in captured output"},
+{"id":"o7","status":"passed","evidence":"single commit chore: remove Vercel deploy configuration, not pushed"}]}

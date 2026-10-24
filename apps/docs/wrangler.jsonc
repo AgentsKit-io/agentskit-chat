@@ -1,8 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   // Cloudflare Workers deployment of the docs site via OpenNext (@opennextjs/cloudflare).
-  // Build + deploy from apps/docs: pnpm cf:deploy. Vercel keeps using `next build` unchanged.
-  "name": "agentskit-chat-docs",
+  // Build + deploy from apps/docs: pnpm cf:deploy.  "name": "agentskit-chat-docs",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-09-30",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],

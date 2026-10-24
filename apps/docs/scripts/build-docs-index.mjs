@@ -1,6 +1,6 @@
 // Bundles the PUBLIC docs (isPublicDocPath) into lib/docs-index.generated.json so llms.txt,
 // llms-full.txt and /raw/<path> can answer without a filesystem (Cloudflare Workers via
-// OpenNext). On Vercel the routes still read docs/ directly; this index is the fallback.
+// OpenNext). The routes read docs/ directly when it is available; this index is the fallback.
 // Run with: node --experimental-strip-types scripts/build-docs-index.mjs
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'

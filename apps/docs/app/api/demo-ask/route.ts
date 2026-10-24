@@ -27,7 +27,7 @@ type OpenRouterChunk = {
 }
 
 const requestIp = (request: Request): string =>
-  // cf-connecting-ip on Cloudflare Workers; x-real-ip / x-forwarded-for on Vercel.
+  // cf-connecting-ip on Cloudflare Workers; x-real-ip / x-forwarded-for elsewhere.
   request.headers.get('cf-connecting-ip')?.trim()
   ?? request.headers.get('x-real-ip')?.trim()
   ?? request.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()

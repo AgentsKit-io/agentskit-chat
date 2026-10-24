@@ -1,0 +1,11 @@
+{"project":[
+{"id":"test-for-new-code","status":"passed","evidence":"Not applicable: change is pure removal and comment rewording, no new behaviour; no test file changed (honest exception)"},
+{"id":"no-todo","status":"passed","evidence":"changed src files contain no TODO or FIXME"}],
+"outcomes":[
+{"id":"o1","status":"passed","evidence":"vercel.json, .vercelignore deleted; .gitignore entry removed"},
+{"id":"o2","status":"passed","evidence":"docs-deploy.yml deleted; docs deploy is manual (pnpm cf:deploy)"},
+{"id":"o3","status":"passed","evidence":"comments reworded"},
+{"id":"o4","status":"passed","evidence":"none present"},
+{"id":"o5","status":"passed","evidence":"nothing reads vercel.json; no _headers generator"},
+{"id":"o6","status":"passed","evidence":"install, lint, build passed; doc-bridge gate fails only for missing untracked .doc-bridge index (environmental)"},
+{"id":"o7","status":"passed","evidence":"commit created, not pushed"}]}
