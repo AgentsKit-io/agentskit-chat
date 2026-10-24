@@ -24,7 +24,7 @@ overrides:
   dompurify: "3.4.17"
   # GHSA-j22f-vq7h-c4qm, GHSA-mcm9-63f2-9j32, GHSA-x5rw-q4pp-hg5g,
   # GHSA-4q55-j62x-fr9h, GHSA-9rgm-9g3h-6x36, GHSA-hx4r-w6wj-j8fg
-  devalue: "5.9.3"
+  devalue: "5.9.4"
   # GHSA-67c8-pqhq-4rmx
   piscina: "5.3.2"
   mermaid: "11.17.2"
