@@ -13,6 +13,8 @@ overrides:
   postcss: ">=8.5.23 <9"
   nanoid: "3.3.18"
   image-size: "npm:image-size-next@1.2.2"
+  # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0)
+  "glob@>=10.2.0 <10.5.0": "10.5.0"
   # GHSA-q2hr-2g5m-vwhr
   brace-expansion: ">=5.0.12 <6"
   # @opennextjs/cloudflare (devDependency, build-time only) -> glob@9 -> minimatch@8 needs the
