@@ -184,8 +184,8 @@
     "@agentskit/solid": "^0.5.10",
     "@agentskit/svelte": "^0.6.0",
     "@agentskit/vue": "^0.5.10",
-    "@types/node": "^25.9.7",
-    "drizzle-orm": "0.45.3",
+    "@types/node": "^25.9.9",
+    "drizzle-orm": "0.45.4",
     "ink": "^7.1.1",
     "tsup": "^8.5.1",
     "@agentskit/observability": "^0.13.0"
