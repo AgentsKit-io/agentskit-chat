@@ -21,3 +21,8 @@ Semantic themes map only to published upstream CSS variables. Native slots stay 
 pnpm --filter @agentskit/chat-react lint
 pnpm --filter @agentskit/chat-react test
 ```
+
+
+## Tests and fixtures
+
+`packages/react/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/react/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

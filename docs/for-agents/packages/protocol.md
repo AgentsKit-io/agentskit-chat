@@ -42,3 +42,8 @@ pnpm --filter @agentskit/chat-protocol lint
 pnpm --filter @agentskit/chat-protocol test
 pnpm --filter @agentskit/chat-protocol build
 ```
+
+
+## Tests and fixtures
+
+`packages/protocol/tests` holds the package's Vitest suite. Its suite covers the turn, Ask, backend, decision, parts, and deterministic-answer schemas. `packages/protocol/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

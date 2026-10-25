@@ -13,3 +13,8 @@ pnpm --filter @agentskit/chat-devtools lint
 pnpm --filter @agentskit/chat-devtools test
 pnpm --filter @agentskit/chat-devtools build
 ```
+
+
+## Tests and fixtures
+
+`packages/devtools/tests` holds the package's Vitest suite. Its suite covers replayable traces and renderer parity. `packages/devtools/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

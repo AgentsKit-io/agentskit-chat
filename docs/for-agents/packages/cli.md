@@ -14,3 +14,8 @@ pnpm --filter @agentskit/chat-cli lint
 pnpm --filter @agentskit/chat-cli test
 pnpm --filter @agentskit/chat-cli build
 ```
+
+
+## Tests and fixtures
+
+`packages/cli/tests` holds the package's Vitest suite. Its suite covers `init` and the generated seven-renderer projects. `packages/cli/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.
