@@ -8,3 +8,5 @@ The PTY suite must prove the confirmed ticket flow, deterministic response outpu
 pnpm --filter @agentskit/chat-example-ink lint
 pnpm --filter @agentskit/chat-example-ink test:pty
 ```
+
+The PTY suite lives in `apps/example-ink/tests` (`ink-pty.test.ts`).

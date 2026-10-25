@@ -5,3 +5,8 @@
 Never add another controller, signal store, stream consumer, lifecycle implementation, confirmation engine, or container primitive. Each shell scopes the upstream service through its component provider. Config replacement and component destruction delegate cancellation to the upstream cleanup fixed in AgentsKit #1171/#1172.
 
 Checks: `pnpm --filter @agentskit/chat-angular lint && pnpm --filter @agentskit/chat-angular test && pnpm --filter @agentskit/chat-angular build`.
+
+
+## Tests and fixtures
+
+`packages/angular/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/angular/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

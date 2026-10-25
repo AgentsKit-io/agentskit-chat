@@ -5,3 +5,8 @@
 Never add another controller, store, stream consumer, lifecycle implementation, confirmation engine, or container primitive. The internal keyed binding calls the upstream `stop` action before replacing an actively streaming store and preserves application/session state.
 
 Checks: `pnpm --filter @agentskit/chat-svelte lint && pnpm --filter @agentskit/chat-svelte test && pnpm --filter @agentskit/chat-svelte build`.
+
+
+## Tests and fixtures
+
+`packages/svelte/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/svelte/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

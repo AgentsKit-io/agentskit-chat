@@ -38,3 +38,7 @@ pnpm release:pack
 
 Do not close a release issue until npm provenance, clean npm installation,
 GitHub checksums, host smoke tests, and human launch review are linked publicly.
+
+## Release scripts
+
+The repository-level `scripts` directory holds the gates and tooling behind these commands, such as `scripts/release-gate.mjs`, `scripts/pack-release.mjs`, `scripts/conformance-gate.mjs`, `scripts/bundle-budget.mjs` and the README-standard and publication-surface checks.

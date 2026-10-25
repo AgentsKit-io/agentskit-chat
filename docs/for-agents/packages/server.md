@@ -32,3 +32,8 @@ pnpm --filter @agentskit/chat-server lint
 pnpm --filter @agentskit/chat-server test
 pnpm --filter @agentskit/chat-server build
 ```
+
+
+## Tests and fixtures
+
+`packages/server/tests` holds the package's Vitest suite. Its suite covers the chat and Ask handlers, decisions, cost, uploads, and known gaps. `packages/server/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

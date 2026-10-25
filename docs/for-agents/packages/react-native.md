@@ -9,3 +9,8 @@
 - Render typed actions with the published upstream `ToolConfirmation`; do not add a native confirmation duplicate.
 - Map semantic themes through upstream `style` pass-throughs and native application styles. Slots remain React Native components; fully headless state uses upstream `useChat` directly.
 - Validate with lint, unit tests, Expo example build, E2E, and doc-bridge gates.
+
+
+## Tests and fixtures
+
+`packages/react-native/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/react-native/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.

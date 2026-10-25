@@ -19,3 +19,8 @@ pnpm --filter @agentskit/chat-ink lint
 pnpm --filter @agentskit/chat-ink test
 pnpm --filter @agentskit/chat-ink build
 ```
+
+
+## Tests and fixtures
+
+`packages/ink/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/ink/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.
