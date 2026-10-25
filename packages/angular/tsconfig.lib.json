@@ -5,8 +5,8 @@
     "inlineSources": true,
     "ignoreDeprecations": "5.0",
     "paths": {
-      "@agentskit/chat": ["packages/chat/dist/index.d.ts"],
-      "@agentskit/chat/protocol": ["packages/chat/dist/protocol.d.ts"]
+      "@agentskit/chat": ["../chat/dist/index.d.ts"],
+      "@agentskit/chat/protocol": ["../chat/dist/protocol.d.ts"]
     }
   },
   "angularCompilerOptions": { "compilationMode": "partial" },
