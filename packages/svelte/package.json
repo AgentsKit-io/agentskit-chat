@@ -47,7 +47,8 @@
     "@types/node": "^25.9.9",
     "happy-dom": "^20.14.5",
     "svelte": "^5.57.2",
-    "svelte-check": "^4.7.7"
+    "svelte-check": "^4.7.7",
+    "typescript": "^6.0.3"
   },
   "publishConfig": {},
   "private": true

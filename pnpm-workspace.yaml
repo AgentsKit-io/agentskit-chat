@@ -51,6 +51,13 @@ overrides:
   '@agentskit/doc-bridge>zod': "4.4.3"
   '@agentskit/harness>zod': "4.4.3"
 
+# svelte-package loads typescript optionally and otherwise falls back to the root TypeScript 7,
+# which has no JS API (ts.sys is undefined). Link the held-back TypeScript 6 explicitly.
+packageExtensions:
+  "@sveltejs/package":
+    dependencies:
+      typescript: "^6.0.3"
+
 patchedDependencies:
   image-size-next@1.2.2: patches/image-size-next@1.2.2.patch
 

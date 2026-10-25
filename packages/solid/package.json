@@ -47,6 +47,7 @@
     "happy-dom": "^20.14.5",
     "solid-js": "^1.9.17",
     "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
     "vite-plugin-solid": "^2.11.14"
   },
   "publishConfig": {},

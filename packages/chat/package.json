@@ -94,6 +94,7 @@
     "@agentskit/angular": "^0.4.6",
     "@agentskit/core": "^1.15.0",
     "@agentskit/ink": "^0.10.1",
+    "@agentskit/observability": ">=0.13.0 <1",
     "@agentskit/react": ">=0.7.1 <1",
     "@agentskit/react-native": ">=0.4.4 <1",
     "@agentskit/solid": ">=0.4.4 <1",
@@ -101,15 +102,14 @@
     "@agentskit/vue": ">=0.4.4 <1",
     "@angular/common": ">=18.1 <22",
     "@angular/core": ">=18.1 <22",
+    "drizzle-orm": "^0.45.3",
     "ink": ">=7.1.0",
     "react": ">=18",
     "react-native": "*",
     "rxjs": "^7.0.0",
     "solid-js": "^1.9.0",
     "svelte": "^5.0.0",
-    "vue": "^3.4.0",
-    "drizzle-orm": "^0.45.3",
-    "@agentskit/observability": ">=0.13.0 <1"
+    "vue": "^3.4.0"
   },
   "peerDependenciesMeta": {
     "@agentskit/angular": {
@@ -179,6 +179,7 @@
     "@agentskit/chat-protocol": "workspace:*",
     "@agentskit/core": "^1.15.0",
     "@agentskit/ink": "^0.10.16",
+    "@agentskit/observability": "^0.13.0",
     "@agentskit/react": "^0.8.10",
     "@agentskit/react-native": "^0.5.10",
     "@agentskit/solid": "^0.5.10",
@@ -188,7 +189,7 @@
     "drizzle-orm": "0.45.4",
     "ink": "^7.1.1",
     "tsup": "^8.5.1",
-    "@agentskit/observability": "^0.13.0"
+    "typescript": "^6.0.3"
   },
   "publishConfig": {
     "access": "public",

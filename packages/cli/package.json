@@ -42,7 +42,8 @@
   "devDependencies": {
     "@types/node": "^25.9.9",
     "node-pty": "^1.1.0",
-    "tsup": "^8.5.1"
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
   },
   "publishConfig": {
     "access": "public",

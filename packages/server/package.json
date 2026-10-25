@@ -44,8 +44,9 @@
   },
   "devDependencies": {
     "@agentskit/core": "^1.15.0",
+    "@agentskit/observability": "^0.13.0",
     "tsup": "^8.5.1",
-    "@agentskit/observability": "^0.13.0"
+    "typescript": "^6.0.3"
   },
   "publishConfig": {},
   "peerDependenciesMeta": {
