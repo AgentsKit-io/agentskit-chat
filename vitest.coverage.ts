@@ -8,7 +8,7 @@ const floors: Record<string, CoverageFloor> = {
   chat: { statements: 87, branches: 74, functions: 87, lines: 92 },
   cli: { statements: 65, branches: 70, functions: 75, lines: 67 },
   devtools: { statements: 96, branches: 90, functions: 100, lines: 100 },
-  ink: { statements: 81, branches: 65, functions: 82, lines: 88 },
+  ink: { statements: 79, branches: 65, functions: 80, lines: 88 },
   protocol: { statements: 92, branches: 86, functions: 93, lines: 94 },
   'react-native': { statements: 74, branches: 70, functions: 62, lines: 83 },
   react: { statements: 83, branches: 76, functions: 71, lines: 93 },

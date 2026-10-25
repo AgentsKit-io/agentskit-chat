@@ -50,6 +50,27 @@ describe('AgentChat Angular', () => {
     fixture.componentRef.setInput('frame', standardComponentFrameFixtures[0]); fixture.componentRef.setInput('manifest', manifest); fixture.componentRef.setInput('onInteract', onInteract); fixture.detectChanges()
     fixture.nativeElement.querySelector('button').click(); expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'select', value: 'save' }))
   })
+  it('collects form field values and emits link interactions', () => {
+    const manifest = defineComponentManifest(StandardComponentCatalog); const onInteract = vi.fn()
+    const mountFrame = (key: string) => {
+      const fixture = TestBed.createComponent(StandardComponentComponent)
+      fixture.componentRef.setInput('frame', standardComponentFrameFixtures.find(item => item.componentKey === key)); fixture.componentRef.setInput('manifest', manifest); fixture.componentRef.setInput('onInteract', onInteract); fixture.detectChanges()
+      return fixture
+    }
+    const form = mountFrame('form')
+    const input = form.nativeElement.querySelector('input') as HTMLInputElement | null
+    if (input) { input.value = 'typed'; input.dispatchEvent(new Event('input')) }
+    const select = form.nativeElement.querySelector('select') as HTMLSelectElement | null
+    if (select) { select.selectedIndex = 1; select.dispatchEvent(new Event('change')) }
+    form.nativeElement.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }))
+    expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'submit', value: expect.any(Object) }))
+    onInteract.mockClear()
+    const card = mountFrame('link-card')
+    const anchor = card.nativeElement.querySelector('a') as HTMLAnchorElement
+    anchor.click()
+    expect(onInteract).toHaveBeenCalledWith(expect.objectContaining({ event: 'open' }))
+  })
+
   it('maps semantic theme tokens to upstream CSS variables', () => {
     expect(toChatCssVariables({ colors: { accent: '#663399' }, radius: { large: 20 } })).toMatchObject({
       '--ak-color-button': '#663399',
