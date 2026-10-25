@@ -449,32 +449,37 @@
       }
     },
     {
-      "id": "question-pt-trilha-estado",
-      "input": "Qual é o estado real da trilha 04 por etapa?",
+      "id": "question-pt-aprovar-tool",
+      "input": "Como aprovar ou negar uma tool pendente no request seguinte?",
       "expected": {
         "regex": {
-          "body": "docs/trilha-04-estado\\.md"
+          "body": "docs/consumo-produtos\\.md|docs/server\\.mdx|docs/architecture/adrs/0037-durable-action-decisions-and-turn-cost\\.md|docs/protocol/v1\\.md"
         }
       },
       "metadata": {
         "expectedTargets": [
-          "docs/trilha-04-estado.md"
+          "docs/consumo-produtos.md",
+          "docs/server.mdx",
+          "docs/architecture/adrs/0037-durable-action-decisions-and-turn-cost.md",
+          "docs/protocol/v1.md"
         ],
         "lang": "pt",
         "kind": "question"
       }
     },
     {
-      "id": "question-pt-trilha-validacao",
-      "input": "Como foi a validação de continuidade da trilha 04?",
+      "id": "question-pt-teto-gasto",
+      "input": "Como limitar o gasto por usuário com reserva de custo?",
       "expected": {
         "regex": {
-          "body": "docs/trilha-04-validacao-2026-10-10\\.md"
+          "body": "docs/consumo-produtos\\.md|docs/server\\.mdx|docs/architecture/adrs/0037-durable-action-decisions-and-turn-cost\\.md"
         }
       },
       "metadata": {
         "expectedTargets": [
-          "docs/trilha-04-validacao-2026-10-10.md"
+          "docs/consumo-produtos.md",
+          "docs/server.mdx",
+          "docs/architecture/adrs/0037-durable-action-decisions-and-turn-cost.md"
         ],
         "lang": "pt",
         "kind": "question"
