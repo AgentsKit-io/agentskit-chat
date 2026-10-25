@@ -3,7 +3,8 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import ts from 'typescript'
+// TypeScript 7 ships no JS compiler API; the root devDependency aliases TypeScript 6 for it.
+import ts from 'typescript-js-api'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const packagesRoot = path.join(root, 'packages')
