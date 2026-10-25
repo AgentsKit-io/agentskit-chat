@@ -135,3 +135,7 @@ Before adding a primitive, inspect AgentsKit source and public exports. Reuse or
 - Compatibility policy for versioned events.
 - ADR for new public architectural decisions.
 - Upstream-adoption record proving no AgentsKit primitive was copied or reimplemented.
+
+## Repository-level tests
+
+The repository-level `tests` directory holds cross-package evidence: `tests/turn-protocol-conformance.ts` is the shared protocol conformance runner imported by the renderer conformance tests, `tests/conformance-gate.test.ts` covers the conformance gate, `tests/e2e` holds the Playwright quickstart and example specs, and `tests/storage-pg` holds the Postgres session-storage contract.

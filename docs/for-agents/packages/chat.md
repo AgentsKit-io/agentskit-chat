@@ -53,3 +53,8 @@ Docs, Registry, and Playbook must consume `createAskAdapter` and `createAskSessi
 pnpm --filter @agentskit/chat lint
 pnpm --filter @agentskit/chat test
 ```
+
+
+## Tests and fixtures
+
+`packages/chat/tests` holds the package's Vitest suite. Its suite covers `defineChat`, deterministic answers, the Ask client, the controlled driver, presentation, and the Drizzle Postgres session store. `packages/chat/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.
