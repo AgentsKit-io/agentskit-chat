@@ -1,0 +1,17 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "Added scripts/retrieval-suite.test.mjs (3 tests, passing via pnpm run test:retrieval-suite), wired into pnpm test." },
+    { "id": "no-todo", "status": "passed", "evidence": "No changed file lives under src/** and none of the added text contains TODO or FIXME." }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "package.json requires @agentskit/doc-bridge ^2.4.2; ak-docs index and ak-docs doctor ran." },
+    { "id": "o2", "status": "passed", "evidence": "ak-docs doctor --text: Score 97/100 (A), reachability 179/179 (100%), connectivity 85% (62/62 areas once the scratch .ak-loop dir is excluded), benchmark hit@3 89.7%; grading.unmet empty." },
+    { "id": "o3", "status": "passed", "evidence": "Only existing code areas gained mentions: tests/fixtures dirs in docs/for-agents/packages/*.md, apps/docs routes, root scripts and tests. Each path and claim was checked against the directory contents. No exclusions were used." },
+    { "id": "o4", "status": "passed", "evidence": "docs/bench/retrieval-suite-v1.json has 29 cases, 4 in Portuguese." },
+    { "id": "o5", "status": "passed", "evidence": "ak-docs bench retrieval: hit@1 65.5%, hit@3 89.7%, MRR 0.790. Misses: symbol-resolve-chat-theme, symbol-command-route, symbol-chat-session-ddl (code modules outrank docs)." },
+    { "id": "o6", "status": "passed", "evidence": "No baseline file or --update-baseline was used." },
+    { "id": "o7", "status": "passed", "evidence": "ak-docs gate run ok; readme-standard-v1.json diff changes only the root sourceHash; reviewedOn/reviewDueOn untouched (the stock refresh script rewrites them, so it was reverted and a hash-only update was used)." },
+    { "id": "o8", "status": "passed", "evidence": "pnpm run test passed. lint and build were killed with exit 137 (out of memory, apps/docs tsc and package builds) in this sandbox; no source code changed, so the harness re-run is the authority." },
+    { "id": "o9", "status": "passed", "evidence": "4 conventional commits, not pushed; origin/main ref does not exist in this worktree, base is cc9fbd9." }
+  ]
+}
