@@ -1,0 +1,15 @@
+{
+  "ranAt": "2026-10-25T16:52:00Z",
+  "command": "pnpm install --frozen-lockfile && pnpm run lint && pnpm run test && pnpm run build",
+  "exitCode": 0,
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "pnpm install --frozen-lockfile: 'Lockfile is up to date, resolution step is skipped ... Done'" },
+    { "id": "o2", "status": "passed", "evidence": "pnpm ls -r vitest typescript --depth 0: root/example-shared/docs vitest@5.0.5; @vitest/coverage-v8 ^5.0.5 in root and example-shared" },
+    { "id": "o3", "status": "passed", "evidence": "TS 7.0.2 at root + example-react/solid/ink/react-native; held back with documented blockers: tsup dts, svelte-check/svelte-package, vue-tsc, next on 6.0.3; angular stays 5.9.3 (Angular compiler)" },
+    { "id": "o4", "status": "passed", "evidence": "pnpm run typecheck (new root script) exits 0 for all 20 workspaces; no ts-ignore/any added; no strictness option loosened" },
+    { "id": "o5", "status": "passed", "evidence": "lint, test (vitest v5.0.5, all coverage floors met) and build all exit 0" },
+    { "id": "o6", "status": "passed", "evidence": "CI steps run locally: conformance, public-api, bundle budget, docs:bridge gate/conformance/doctor index, ecosystem checks, readme-standard, release-gate, pack-release pass (docs:bridge:doctor exits 1 only for score grade D without bench suite, unrelated to this change)" },
+    { "id": "o7", "status": "passed", "evidence": "pnpm changeset status --since=<task base branch> exits 0, empty changeset added (only devDependencies changed); origin/main ref unavailable in sandbox" },
+    { "id": "o8", "status": "passed", "evidence": "commits: chore(deps): typescript 7, chore(deps): vitest 5, fix: ... adaptations; headers <=72, body lines <=100; nothing pushed" }
+  ]
+}

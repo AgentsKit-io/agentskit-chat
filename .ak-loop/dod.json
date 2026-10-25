@@ -1,0 +1,16 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "packages/angular/tests/agent-chat.test.ts changed (new test 'collects form field values and emits link interactions')" },
+    { "id": "no-todo", "status": "passed", "evidence": "no TODO/FIXME added in any changed file under src/**" }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "passed", "evidence": "pnpm install --frozen-lockfile succeeds" },
+    { "id": "o2", "status": "passed", "evidence": "vitest@5.0.5 and @vitest/coverage-v8@5.0.5 in all declaring package.json" },
+    { "id": "o3", "status": "passed", "evidence": "TS 7.0.2 where possible; exceptions documented (tsup dts, svelte-check, svelte-package, vue-tsc, next, angular)" },
+    { "id": "o4", "status": "passed", "evidence": "pnpm run typecheck exits 0" },
+    { "id": "o5", "status": "passed", "evidence": "pnpm run lint && pnpm run test && pnpm run build exit 0" },
+    { "id": "o6", "status": "passed", "evidence": "CI coverage/docs checks pass locally" },
+    { "id": "o7", "status": "passed", "evidence": "empty changeset; pnpm changeset status clean" },
+    { "id": "o8", "status": "passed", "evidence": "git log shows conventional commits, nothing pushed" }
+  ]
+}
