@@ -85,8 +85,8 @@ importers:
         specifier: 4.152.0
         version: 4.152.0(@types/node@26.1.1)
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
 
   apps/docs:
     dependencies:
@@ -127,8 +127,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.14.0
@@ -460,8 +460,8 @@ importers:
         specifier: ^3.4.0
         version: 3.5.44(typescript@6.0.3)
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@agentskit/chat-protocol':
         specifier: workspace:*
@@ -512,8 +512,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: ^25.9.9
@@ -534,8 +534,8 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@agentskit/core':
         specifier: ^1.15.0
@@ -578,11 +578,11 @@ importers:
   packages/protocol:
     dependencies:
       '@noble/hashes':
-        specifier: 2.2.0
-        version: 2.2.0
+        specifier: ^2.4.0
+        version: 2.4.0
       zod:
-        specifier: ^4.3.6
-        version: 4.4.3
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@agentskit/core':
         specifier: ^1.15.0
@@ -2476,8 +2476,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@noble/hashes@2.2.0':
-    resolution: {integrity: sha512-IYqDGiTXab6FniAgnSdZwgWbomxpy9FtYvLKs7wCUs2a8RkITG+DFGO1DM9cr+E3/RgADRpFjrKVaJ1z6sjtEg==}
+  '@noble/hashes@2.4.0':
+    resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
     engines: {node: '>= 20.19.0'}
 
   '@node-minify/core@9.0.2':
@@ -6550,6 +6550,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -8152,6 +8153,9 @@ packages:
 
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zone.js@0.16.3:
     resolution: {integrity: sha512-ihXL9+vhYyEhXz4TDNpHeAOZN9FVrbog0Il64OIEI28UP/n5AaI6gsccRuOHBfx+206agzyoK527bYIO0Foy6A==}
@@ -10433,7 +10437,7 @@ snapshots:
   '@next/swc-win32-x64-msvc@15.5.28':
     optional: true
 
-  '@noble/hashes@2.2.0': {}
+  '@noble/hashes@2.4.0': {}
 
   '@node-minify/core@9.0.2':
     dependencies:
@@ -16864,6 +16868,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
+
+  zod@4.6.7: {}
 
   zone.js@0.16.3: {}
 

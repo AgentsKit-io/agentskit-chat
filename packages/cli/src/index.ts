@@ -30,7 +30,7 @@ const packageJson = (renderer: ChatRenderer): string => JSON.stringify({
   name: 'agentskit-chat-app', private: true, version: '0.0.0', type: 'module', ...(renderer === 'react-native' ? { main: 'expo/AppEntry.js' } : {}),
   scripts: { typecheck: renderer === 'svelte' ? 'svelte-check --tsconfig ./tsconfig.json' : 'tsc --noEmit', test: 'vitest run', ...(['react', 'vue', 'svelte', 'solid', 'angular'].includes(renderer) ? { dev: 'vite', build: 'vite build' } : renderer === 'react-native' ? { dev: 'expo start', build: 'expo export --platform web' } : { dev: 'tsx src/index.tsx' }) },
   dependencies: {
-    '@agentskit/chat': 'latest', '@agentskit/core': '^1.12.2', zod: '^4.3.6',
+    '@agentskit/chat': 'latest', '@agentskit/core': '^1.12.2', zod: '^4.6.7',
     ...(renderer === 'react' ? { '@agentskit/react': '^0.7.1', react: '^19.0.0', 'react-dom': '^19.0.0' }
       : renderer === 'react-native' ? { '@agentskit/react-native': '^0.4.4', expo: '^57.0.4', react: '19.2.3', 'react-dom': '19.2.3', 'react-native': '^0.86.0', 'react-native-web': '^0.21.2' }
         : renderer === 'ink' ? { '@agentskit/ink': '^0.10.1', ink: '^7.0.0', react: '^19.0.0' }
