@@ -1,0 +1,18 @@
+{
+  "project": [
+    { "id": "test-for-new-code", "status": "passed", "evidence": "Commit changes packages/cli/tests/generated-projects.test.ts (zod fixture 4.4.3 -> 4.6.7; the test failed type-check before the change and passed after)." },
+    { "id": "no-todo", "status": "passed", "evidence": "Changed src files: packages/cli/src/index.ts (one string literal changed); no TODO/FIXME added." }
+  ],
+  "outcomes": [
+    { "id": "o1", "status": "failed", "evidence": "Budget raised 780_000 -> 822_000. First full docs build (before the raise) measured 797824 bytes client JS (failed 780000 budget as expected). After the raise, `next build` was OOM-killed (exit 137) during 'Linting and checking validity of types' on every retry in this sandbox, so the budget script did not run end to end. 797824 < 822000 by arithmetic. Needs re-run on a host with more memory." },
+    { "id": "o2", "status": "passed", "evidence": "`pnpm run bundle:budget`: ok @agentskit/chat 180294 / 181200; was FAIL 180294 / 180000 before. All 12 packages ok." },
+    { "id": "o3", "status": "passed", "evidence": "Only the two budget lines changed (one -/+ pair each in scripts/bundle-budget.mjs and check-build-budget.mjs)." },
+    { "id": "o4", "status": "passed", "evidence": "zod ^4.6.7 in root, chat, protocol, cli, devtools, docs; @noble/hashes ^2.4.0 in protocol." },
+    { "id": "o5", "status": "passed", "evidence": "`pnpm install --frozen-lockfile`: Lockfile is up to date, Already up to date. Root resolved zod 4.6.7." },
+    { "id": "o6", "status": "passed", "evidence": "origin/main ref does not exist in this worktree; `pnpm changeset status --since=fleet-base/t-20261026015626-beecec71` (same base commit cc9fbd9) exit 0, lists @agentskit/chat and @agentskit/chat-cli at patch." },
+    { "id": "o7", "status": "passed", "evidence": "refresh run; reviewedOn/reviewDueOn reverted to originals by script; `pnpm check:readme-standard` PASS, sourceHash matches for all 13 surfaces; git diff shows only sourceHash lines in readme-standard-v1.json." },
+    { "id": "o8", "status": "failed", "evidence": "lint passed; test passed (after fixing the cli generated-project fixture); `pnpm run build` OOM-killed (137) in apps/docs next build type-check step. All packages built." },
+    { "id": "o9", "status": "failed", "evidence": "Passed: test:conformance, check:public-api, conformance:gate, bundle:budget, docs:bridge:index/gate/conformance/doctor, doc-bridge-index vitest, ecosystem claims/adoption, readme-standard check/test, release-gate, pack-release. Not run: pnpm audit (blocked by sandbox allowlist). pnpm build (docs) OOM-killed." },
+    { "id": "o10", "status": "passed", "evidence": "Commit header 'chore(deps): update zod to 4.6.7 and noble hashes to 2.4 (#236)' <=72; body lines <=100; not pushed." }
+  ]
+}

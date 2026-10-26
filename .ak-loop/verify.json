@@ -1,0 +1,17 @@
+{
+  "ranAt": "2026-10-26T02:15:00Z",
+  "command": "pnpm run lint && pnpm run test && pnpm run build (build OOM-killed in apps/docs)",
+  "exitCode": 137,
+  "outcomes": [
+    { "id": "o1", "status": "failed", "evidence": "docs build measured 797824 bytes; budget now 822000; next build killed (137) at type-check on retries" },
+    { "id": "o2", "status": "passed", "evidence": "ok   @agentskit/chat                    180294 / 181200" },
+    { "id": "o3", "status": "passed", "evidence": "only two budget constants changed" },
+    { "id": "o4", "status": "passed", "evidence": "package.json files updated" },
+    { "id": "o5", "status": "passed", "evidence": "Lockfile is up to date, resolution step is skipped" },
+    { "id": "o6", "status": "passed", "evidence": "changeset status --since=fleet-base/... exit 0" },
+    { "id": "o7", "status": "passed", "evidence": "README Standard v1 — PASS; only sourceHash changed" },
+    { "id": "o8", "status": "failed", "evidence": "build exit 137 (OOM) in apps/docs" },
+    { "id": "o9", "status": "failed", "evidence": "all listed scripts passed except pnpm audit (not permitted) and docs build" },
+    { "id": "o10", "status": "passed", "evidence": "commit created, not pushed" }
+  ]
+}
