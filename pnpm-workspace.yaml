@@ -48,8 +48,8 @@ overrides:
   '@agentskit/harness>react': "19.3.1"
   '@agentskit/harness>ink': "7.1.1"
   '@agentskit/doc-bridge>react': "19.3.1"
-  '@agentskit/doc-bridge>zod': "4.4.3"
-  '@agentskit/harness>zod': "4.4.3"
+  '@agentskit/doc-bridge>zod': "4.6.7"
+  '@agentskit/harness>zod': "4.6.7"
 
 patchedDependencies:
   image-size-next@1.2.2: patches/image-size-next@1.2.2.patch
