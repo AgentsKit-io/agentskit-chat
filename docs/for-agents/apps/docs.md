@@ -29,3 +29,16 @@ pnpm docs:bridge:gate
 ```
 
 The marketing hero demo has a Pause/Play control. Choosing a scene stops automatic scene advancement; Arrow keys, Home and End select scenes. Reduced motion renders the selected scene without automatic cycling. Verify these behaviors with `CHAT_BASE_URL=http://localhost:4312 node scripts/verify-home-ui.mjs` from apps/docs.
+
+## Source layout
+
+- `apps/docs/app/docs` is the catch-all Fumadocs route that renders the canonical `docs/` corpus.
+- `apps/docs/app/for-agents` redirects to these maintainer handoffs on GitHub.
+- `apps/docs/app/raw`, `apps/docs/app/llms.txt` and `apps/docs/app/llms-full.txt` are the raw-Markdown and llms.txt route handlers.
+- `apps/docs/app/api` holds the `ask`, `demo-ask` and `search` route handlers.
+- `apps/docs/app/demo` holds the `agent-observability` and `deterministic-chat` demo pages.
+- `apps/docs/app/deterministic` holds the `knowledge.json` and `site-config.json` deterministic-answer artifacts.
+- `apps/docs/app/assets` serves the allowlisted SVGs from `docs/assets`.
+- `apps/docs/scripts` holds the docs index builder, the build-budget check and the home-page UI verifier.
+- `apps/docs/tests` holds the Vitest dogfood and front matter tests and the Playwright specs in `apps/docs/tests/e2e`.
+- `apps/docs/types` holds ambient type declarations such as `css-modules.d.ts`.

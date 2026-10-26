@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:82674ebaf45dd720e41a3db166289e611603b7dce3a7aa42efadea2f32321be3"
+        "sourceHash": "sha256:16d38ea0b03a8199db6900e334bdec89c2acc68c0456f380287806431fe891e5"
       },
       "exceptions": []
     },
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:391789f0977d1086ef9a8da710d793e65d050fcc8826fee223e2f0765d907946"
+        "sourceHash": "sha256:fab82e979c0f1ea669bbe910bc43597450c6fe0e6186c9b852cb98600b4c9a86"
       },
       "exceptions": []
     },
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:e3e7b137d0153321775953cbd35e0e93339d03ebd99383057b516656b420759f"
+        "sourceHash": "sha256:45ce119ad48a897ab25a3ac5b7b8761b623992b558276f2532f55015bf94a78d"
       },
       "exceptions": [
         {
@@ -754,7 +754,7 @@
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.mdx"
         ],
-        "sourceHash": "sha256:2e7440e7b54abd6efc025200b019a12d8d1e3952177729139596851f8f2fa7ed"
+        "sourceHash": "sha256:8610d4b22e287eeb9971868838589d736c7e9072622882ecf109f499308cac31"
       },
       "exceptions": [
         {
@@ -832,7 +832,7 @@
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.mdx"
         ],
-        "sourceHash": "sha256:fe0007b8d414da6993dea6953cb981fe00e7b1ffc2f2eff01e0600efe8af8c89"
+        "sourceHash": "sha256:f8e68d5e35d2a04fbf43d81a41d082c16d69f9ed737604016ec792697de53b7e"
       },
       "exceptions": [
         {
@@ -910,7 +910,7 @@
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.mdx"
         ],
-        "sourceHash": "sha256:8b0d2a7d4a5aab8509353504064d825e7135e7bdfa7b94f8ba93ac22810e580b"
+        "sourceHash": "sha256:801855a5e3a38ba36ff006eb7478fea63e249d4df3ed1c52f8da26c98f606fc9"
       },
       "exceptions": [
         {
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.mdx"
         ],
-        "sourceHash": "sha256:ab40e84e13643db7e464915a893650ea354e8a4b877854d3ce5e7330763647b0"
+        "sourceHash": "sha256:67c8897b2ec6ce21955c4d011d797c8d6e54bab4e03b23579e45cef03323a580"
       },
       "exceptions": [
         {

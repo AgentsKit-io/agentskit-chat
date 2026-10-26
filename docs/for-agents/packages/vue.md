@@ -18,3 +18,8 @@ pnpm --filter @agentskit/chat-vue lint
 pnpm --filter @agentskit/chat-vue test
 pnpm --filter @agentskit/chat-vue build
 ```
+
+
+## Tests and fixtures
+
+`packages/vue/tests` holds the package's Vitest suite. Its suite covers the shell and the shared protocol conformance corpus. `packages/vue/fixtures` holds the executable README example that the README-standard gate keeps in sync with the package README.
