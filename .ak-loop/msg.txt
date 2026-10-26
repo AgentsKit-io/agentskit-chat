@@ -1,0 +1,19 @@
+chore(deps): update zod to 4.6.7 and noble hashes to 2.4 (#236)
+
+Update zod to ^4.6.7 (fixes a high advisory) and @noble/hashes to ^2.4.0 (was pinned 2.2.0)
+across the workspace, regenerate pnpm-lock.yaml and add a changeset for @agentskit/chat and
+@agentskit/chat-cli. The CLI component template and its generated-project test fixture now use
+zod 4.6.7 so the generated project resolves a single zod copy.
+
+Budgets raised (only these two):
+- apps/docs client JS: 780_000 -> 822_000. Measured 797_824 bytes after the zod 4.6.7 update
+  (which needed it); 822_000 is measured + ~3% headroom (821_759).
+- @agentskit/chat dist/index.js: 180_000 -> 181_200. Measured 180_294 bytes after the
+  @noble/hashes 2.4.0 update (which needed it); 181_200 is measured + ~0.5% headroom (181_195).
+
+The measured docs size is higher than the ~805 KB estimate in the issue, so the budget follows the
+measured value plus the stated 3% rather than the estimate.
+
+README-standard sourceHash values were regenerated; reviewedOn/reviewDueOn were left unchanged.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
