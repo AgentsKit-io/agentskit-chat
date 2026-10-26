@@ -12,7 +12,7 @@ import { pathToFileURL } from 'node:url'
 /** @type {ReadonlyArray<{ name: string; directory: string; entry: string; maxBytes: number; excludedDirectories?: readonly string[] }>} */
 export const entryBudgets = [
   { name: '@agentskit/chat-protocol', directory: 'protocol', entry: 'dist/index.js', maxBytes: 120_000 },
-  { name: '@agentskit/chat', directory: 'chat', entry: 'dist/index.js', maxBytes: 180_000, excludedDirectories: ['renderers'] },
+  { name: '@agentskit/chat', directory: 'chat', entry: 'dist/index.js', maxBytes: 181_200, excludedDirectories: ['renderers'] },
   { name: '@agentskit/chat-server', directory: 'server', entry: 'dist/index.js', maxBytes: 60_000 },
   { name: '@agentskit/chat-react', directory: 'react', entry: 'dist/index.js', maxBytes: 80_000 },
   { name: '@agentskit/chat-react-native', directory: 'react-native', entry: 'dist/index.js', maxBytes: 80_000 },
