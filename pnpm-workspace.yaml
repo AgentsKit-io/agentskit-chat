@@ -15,10 +15,9 @@ overrides:
   image-size: "npm:image-size-next@1.2.2"
   # GHSA-q2hr-2g5m-vwhr
   brace-expansion: ">=5.0.12 <6"
-  # @opennextjs/cloudflare (devDependency, build-time only) -> @node-minify/core -> glob@10 ->
-  # minimatch@9 needs the CJS default export of brace-expansion 2.x; pinned to the latest 2.x
-  # release (2.1.7).
-  "minimatch@9>brace-expansion": "2.1.7"
+  # @opennextjs/cloudflare (devDependency, build-time only) -> glob@9 -> minimatch@8 needs the
+  # CJS default export of brace-expansion 2.x; pinned to the latest 2.x release (2.1.7).
+  "minimatch@8>brace-expansion": "2.1.7"
   # GHSA-p98j-92pf-mc4p, GHSA-cg2g-xh64-v4q7
   dompurify: "3.4.17"
   # GHSA-j22f-vq7h-c4qm, GHSA-mcm9-63f2-9j32, GHSA-x5rw-q4pp-hg5g,
@@ -43,15 +42,12 @@ overrides:
   '@angular/core': ">=21.2.19 <22"
   '@angular/compiler': ">=21.2.19 <22"
   browserslist: ">=4.28.7 <5"
-  # @vitest/coverage-v8 statement mapper: 1.0.5+ counts statements differently and drops the
-  # angular and ink packages below their coverage floors with unchanged tests; hold at 1.0.4.
-  ast-v8-to-istanbul: "1.0.4"
   # ponytail: pin the doc tooling subtree to the workspace React/Ink/zod; duplicates break Ink tests, fixtures, and the docs bundle budget.
-  '@agentskit/harness>react': "19.3.1"
+  '@agentskit/harness>react': "19.2.7"
   '@agentskit/harness>ink': "7.1.1"
-  '@agentskit/doc-bridge>react': "19.3.1"
-  '@agentskit/doc-bridge>zod': "4.6.7"
-  '@agentskit/harness>zod': "4.6.7"
+  '@agentskit/doc-bridge>react': "19.2.7"
+  '@agentskit/doc-bridge>zod': "4.4.3"
+  '@agentskit/harness>zod': "4.4.3"
 
 patchedDependencies:
   image-size-next@1.2.2: patches/image-size-next@1.2.2.patch
