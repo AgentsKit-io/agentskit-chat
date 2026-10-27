@@ -1,0 +1,87 @@
+{
+  "type": "workflow-run",
+  "schemaVersion": 1,
+  "contentHash": "2a337164de10ba55ce1871498a37d07bcd64dfcdaf50b36fc374c96d14bbedc3",
+  "contentHashAlgo": "sha256-normalized-v1",
+  "project": {
+    "name": "fleet-t-20261025003101-f717e93f",
+    "root": "."
+  },
+  "sourceRevision": "096ef89575e7d86abe8959952a8a2746e0ff25c878002352c1db503d984b00da",
+  "sourceRevisionKind": "content",
+  "configurationHash": "1e1d75a89e0713f8db8485fd172403f212862bf24673d92e7324e197bbc93ae9",
+  "pipelineVersion": "1.5.0",
+  "analyzerVersions": {
+    "repository": "1.3.0",
+    "js-ts": "1.7.0",
+    "markdown": "1.7.0",
+    "graph": "1.0.0",
+    "js-ts:cli": "1.1.0",
+    "js-ts:config-key": "1.2.0",
+    "js-ts:signature": "1.1.0",
+    "workflow": "2.4.2"
+  },
+  "runId": "1792888598584-412174",
+  "state": "analyzed",
+  "steps": [
+    {
+      "name": "collect",
+      "status": "completed",
+      "inputHash": "74199f749d2f93f7aef08ae054c68f87e4f347af72c0264216f8e8b12a784f99",
+      "outputHash": "e35cfc7774a5898d3d559f4934902cd151d5e58de81cec57572231409c6723e7",
+      "artifactRefs": [
+        "artifacts/collect-74199f749d2f93f7aef08ae054c68f87e4f347af72c0264216f8e8b12a784f99.json"
+      ]
+    },
+    {
+      "name": "normalize",
+      "status": "completed",
+      "inputHash": "178f2150da4ff0a95486cac62347c15c21e0bad0661cd6b56e53a6a58c861af0",
+      "outputHash": "e35cfc7774a5898d3d559f4934902cd151d5e58de81cec57572231409c6723e7",
+      "artifactRefs": [
+        "artifacts/normalize-178f2150da4ff0a95486cac62347c15c21e0bad0661cd6b56e53a6a58c861af0.json"
+      ]
+    },
+    {
+      "name": "reconcile",
+      "status": "pending",
+      "inputHash": "38eb12a70d14b7633ad9cbf5e39c4ef367dfddfd6a4a5774e17df09b05065e4d"
+    },
+    {
+      "name": "enrich",
+      "status": "pending",
+      "inputHash": "38eb12a70d14b7633ad9cbf5e39c4ef367dfddfd6a4a5774e17df09b05065e4d"
+    },
+    {
+      "name": "evaluate",
+      "status": "pending",
+      "inputHash": "38eb12a70d14b7633ad9cbf5e39c4ef367dfddfd6a4a5774e17df09b05065e4d"
+    },
+    {
+      "name": "report",
+      "status": "pending",
+      "inputHash": "38eb12a70d14b7633ad9cbf5e39c4ef367dfddfd6a4a5774e17df09b05065e4d"
+    }
+  ],
+  "transitions": [
+    {
+      "from": null,
+      "to": "created",
+      "at": "2026-10-25T00:36:38.584Z"
+    },
+    {
+      "from": "created",
+      "to": "discovering",
+      "at": "2026-10-25T00:36:38.584Z"
+    },
+    {
+      "from": "discovering",
+      "to": "analyzed",
+      "at": "2026-10-25T00:36:38.672Z"
+    }
+  ],
+  "artifactRefs": [
+    ".doc-bridge/workflow",
+    "supersedes:1792888494979-408892"
+  ]
+}

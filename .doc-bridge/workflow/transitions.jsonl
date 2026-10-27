@@ -1,0 +1,10 @@
+{"from":null,"to":"created","at":"2026-10-25T00:34:54.979Z"}
+{"from":"created","to":"discovering","at":"2026-10-25T00:34:54.980Z"}
+{"from":"discovering","to":"analyzed","at":"2026-10-25T00:34:55.073Z"}
+{"from":"analyzed","to":"compared","at":"2026-10-25T00:34:55.347Z"}
+{"from":"compared","to":"proposed","at":"2026-10-25T00:34:55.415Z"}
+{"from":"proposed","to":"delivered","at":"2026-10-25T00:34:55.423Z"}
+{"from":"delivered","to":"stale","at":"2026-10-25T00:36:38.583Z","reason":"Source revision, configuration hash, or tool version changed."}
+{"from":null,"to":"created","at":"2026-10-25T00:36:38.584Z"}
+{"from":"created","to":"discovering","at":"2026-10-25T00:36:38.584Z"}
+{"from":"discovering","to":"analyzed","at":"2026-10-25T00:36:38.672Z"}
