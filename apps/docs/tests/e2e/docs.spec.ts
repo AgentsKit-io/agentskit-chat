@@ -622,6 +622,9 @@ test('publishes public docs surface and machine-readable artifacts', async ({ re
 test('serves the public portal with baseline security headers', async ({ request }) => {
   const response = await request.get('/')
   expect(response.ok()).toBe(true)
+  const csp = response.headers()['content-security-policy'] ?? ''
+  expect(csp).toMatch(/script-src [^;]*https:\/\/static\.cloudflareinsights\.com/)
+  expect(csp).toMatch(/connect-src [^;]*https:\/\/cloudflareinsights\.com/)
   expect(response.headers()).toEqual(expect.objectContaining({
     'content-security-policy': expect.stringContaining("script-src 'self' 'unsafe-inline' https://www.agentskit.io"),
     'permissions-policy': 'camera=(), microphone=(), geolocation=()',
