@@ -56,3 +56,10 @@ patchedDependencies:
 
 onlyBuiltDependencies:
   - node-pty
+
+# node-pty ships prebuilds only for macOS/Windows; on Linux its install script falls back to
+# `node-gyp rebuild`, which pnpm does not put on PATH unless node-pty depends on it.
+packageExtensions:
+  node-pty@1.1.0:
+    dependencies:
+      node-gyp: "^12.0.0"

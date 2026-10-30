@@ -24,6 +24,10 @@ const run = async (command: string, args: readonly string[], cwd: string, env?: 
   }
 }
 
+// pnpm fails the install on unapproved dependency build scripts (esbuild); the fixtures do not need them.
+const installFixture = (root: string) =>
+  run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root, { pnpm_config_strict_dep_builds: 'false' })
+
 beforeAll(async () => {
   await execute('pnpm', ['--filter', '@agentskit/chat-protocol', 'build'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat', 'build'], { cwd: workspace })
@@ -78,7 +82,7 @@ describe('generated projects', () => {
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string> }
     linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
+    await installFixture(root)
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
   }, 120_000)
 
@@ -90,7 +94,7 @@ describe('generated projects', () => {
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; scripts: Record<string, string> }
     linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
+    await installFixture(root)
     await run('pnpm', ['typecheck'], root)
     const result = await run('pnpm', ['test'], root)
     expect(result.stdout).toContain('passed')
