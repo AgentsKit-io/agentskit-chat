@@ -9,7 +9,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 const execute = promisify(execFile)
 const workspace = path.resolve(import.meta.dirname, '../../..')
 const roots: string[] = []
-function linkWorkspaceDependencies(root: string, dependencies: Record<string, string>) {
+// Fixtures install with --ignore-workspace, so pin them to the workspace pnpm like CI does.
+const { packageManager } = JSON.parse(await readFile(path.join(workspace, 'package.json'), 'utf8')) as { packageManager: string }
+function linkWorkspaceDependencies(root: string, manifest: { dependencies: Record<string, string>; packageManager?: string }) {
+  manifest.packageManager = packageManager
+  const { dependencies } = manifest
   for (const name of Object.keys(dependencies)) {
     if (dependencies[name] !== 'workspace:*') continue
     const packageName = name === '@agentskit/chat' ? 'chat' : name.replace('@agentskit/chat-', '')
@@ -76,7 +80,7 @@ describe('generated projects', () => {
     const command = await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', 'react,vue,ink', '--directory', root, '--yes'], workspace)
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string> }
-    linkWorkspaceDependencies(root, manifest.dependencies)
+    linkWorkspaceDependencies(root, manifest)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
     await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
@@ -88,7 +92,7 @@ describe('generated projects', () => {
     expect(JSON.parse(command.stdout)).toMatchObject({ ok: true })
     await run('node', [path.join(workspace, 'packages/cli/dist/bin.js'), 'add', 'component', 'status-card', '--renderer', renderer, '--directory', root, '--yes'], workspace)
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; scripts: Record<string, string> }
-    linkWorkspaceDependencies(root, manifest.dependencies)
+    linkWorkspaceDependencies(root, manifest)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
     await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
     await run('pnpm', ['typecheck'], root)
