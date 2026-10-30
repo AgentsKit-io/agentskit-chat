@@ -78,7 +78,7 @@ describe('generated projects', () => {
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string> }
     linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
+    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root, { pnpm_config_strict_dep_builds: 'false' })
     await run('pnpm', ['exec', 'tsc', '--noEmit'], root)
   }, 120_000)
 
@@ -90,7 +90,7 @@ describe('generated projects', () => {
     const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8')) as { dependencies: Record<string, string>; scripts: Record<string, string> }
     linkWorkspaceDependencies(root, manifest.dependencies)
     await writeFile(path.join(root, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root)
+    await run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root, { pnpm_config_strict_dep_builds: 'false' })
     await run('pnpm', ['typecheck'], root)
     const result = await run('pnpm', ['test'], root)
     expect(result.stdout).toContain('passed')

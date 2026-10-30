@@ -56,3 +56,8 @@ patchedDependencies:
 
 onlyBuiltDependencies:
   - node-pty
+
+packageExtensions:
+  node-pty@1.1.0:
+    dependencies:
+      node-gyp: ^11.0.0
