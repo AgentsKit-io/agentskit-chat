@@ -63,6 +63,7 @@ Published at `0.6.0` with `@agentskit/core ^1.12.3`, `@agentskit/memory ^0.11.0`
 
 - Node.js 22+
 - TypeScript strict mode
+- Experimental: the Vue, Svelte, Solid, Angular, React Native and Ink renderer subpaths. Only `/react` is stable; see [stability](../../docs/releases/stability.md).
 
 ## Contributing
 

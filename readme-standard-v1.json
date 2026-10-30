@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:44f66daefc688afb80f21e9366fa5c62b844e0b717b989fa03750af0671cb0eb"
+        "sourceHash": "sha256:cf005b2ae75c43946901a680cfd46a0c4b5ad825d75a33c56676aeee68e150d5"
       },
       "exceptions": []
     },
