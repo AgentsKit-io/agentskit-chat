@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  seroval: 1.6.8
+  seroval: 1.7.2
   shell-quote: 1.11.0
   fast-uri: 3.1.8
   next: '>=15.5.28 <16'
@@ -6592,6 +6592,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -7335,11 +7336,11 @@ packages:
     resolution: {integrity: sha512-+reiwp/lYxiyctSrdvX7OQ1YLrcbWYgBiZrhSFL+V43b0/DGRLNVSDyZINbQe+tWplPOI2fw2dPrdv6hcc09kQ==}
     engines: {node: '>=10'}
     peerDependencies:
-      seroval: 1.6.8
+      seroval: 1.7.2
 
-  seroval@1.6.8:
-    resolution: {integrity: sha512-HlSgSAkTk4EqHcje1ptJjfZi1YDv5KbhVJ/d3P7T/nAXua2VmDu+AKDX5VTdFfZf48nDkWB2TKYt0DrCSa+3wg==}
-    engines: {node: '>=10'}
+  seroval@1.7.2:
+    resolution: {integrity: sha512-NPOYrDVbvtuTo5m9InqKE7O6wBASON46OabjyqLUGPvoXNDYp0pReuFYkqOQwGsoj1OpZVj6mIdnRRgt5O1/gQ==}
+    engines: {node: '>=20'}
 
   serve-static@1.16.3:
     resolution: {integrity: sha512-x0RTqQel6g5SY7Lg6ZreMmsOzncHFU7nhnRWkKgWuMTu5NN0DR5oruckMqRvacAN9d5w6ARnRBXl9xhDCgfMeA==}
@@ -16042,11 +16043,11 @@ snapshots:
 
   serialize-error@2.1.0: {}
 
-  seroval-plugins@1.6.12(seroval@1.6.8):
+  seroval-plugins@1.6.12(seroval@1.7.2):
     dependencies:
-      seroval: 1.6.8
+      seroval: 1.7.2
 
-  seroval@1.6.8: {}
+  seroval@1.7.2: {}
 
   serve-static@1.16.3:
     dependencies:
@@ -16213,8 +16214,8 @@ snapshots:
   solid-js@1.9.17:
     dependencies:
       csstype: 3.2.3
-      seroval: 1.6.8
-      seroval-plugins: 1.6.12(seroval@1.6.8)
+      seroval: 1.7.2
+      seroval-plugins: 1.6.12(seroval@1.7.2)
 
   solid-refresh@0.6.3(solid-js@1.9.17):
     dependencies:

@@ -3,7 +3,7 @@ packages:
   - "apps/*"
 
 overrides:
-  seroval: "1.6.8"
+  seroval: "1.7.2"
   shell-quote: "1.11.0"
   # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
   # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
