@@ -51,6 +51,14 @@ overrides:
   '@agentskit/doc-bridge>zod': "4.4.3"
   '@agentskit/harness>zod': "4.4.3"
 
+# node-pty ships no linux prebuilds, so its install script falls back to
+# `node-gyp rebuild`. Declare node-gyp as its dependency instead of relying on
+# the one bundled with the package manager (absent from standalone pnpm builds).
+packageExtensions:
+  node-pty@1:
+    dependencies:
+      node-gyp: "^12.4.0"
+
 patchedDependencies:
   image-size-next@1.2.2: patches/image-size-next@1.2.2.patch
 
