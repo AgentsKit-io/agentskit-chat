@@ -1,0 +1,118 @@
+# Rascunho 2026-10-29. Fontes: README, gh releases (v0.6.0 em 10/10), npm, PRs mergeados desde 29/09, issues, busca no Linear (AGE).
+# Nenhum projeto Linear "OpenSource"/"Ecossistema open source" cobre este repo; AGE-2346 está sem projeto.
+product: AgentsKit Chat
+project: AgentsKit Chat
+version_url: null
+repos:
+  - name: AgentsKit-io/agentskit-chat
+features:
+  # estado: publicada — @agentskit/chat 0.6.0 no npm; defineChat + respostas determinísticas antes do backend
+  - key: chat-definido-uma-vez
+    group: produto
+    phase: A
+    name: Definir o chat uma vez e responder fatos exatos sem chamar o modelo
+    description: Descrever comportamento, rotas determinísticas e políticas em uma definição tipada; perguntas exatas são respondidas localmente e só o resto vai ao modelo.
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: Definir uma rota determinística e conferir que a resposta sai sem request ao backend
+    blocked_reason: null
+  # estado: publicada — 7 renderizadores (React, Vue, Svelte, Solid, Angular, React Native, Ink) como subpaths de @agentskit/chat 0.6.0
+  - key: sete-interfaces
+    group: produto
+    phase: A
+    name: Mesma experiência em sete interfaces
+    description: Renderizar o mesmo chat em React, Vue, Svelte, Solid, Angular, React Native e terminal com 12 componentes padrão.
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: Rodar os exemplos react e vue com a mesma definição compartilhada
+    blocked_reason: null
+  # estado: publicada — @agentskit/chat-cli 0.6.0
+  - key: iniciar-projeto-pela-cli
+    group: produto
+    phase: A
+    name: Criar um projeto de chat com um comando
+    description: Gerar um app de chat pronto escolhendo o renderizador.
+    milestone: null
+    tickets: []
+    acceptance: null
+    how_to_test: pnpm dlx @agentskit/chat-cli@0.6.0 init my-chat --renderer react --yes e rodar dev
+    blocked_reason: null
+  # estado: publicada — server com handlers Web-standard, prazo do Ask limitado à geração (#186), modelos ZDR na demo (#187)
+  - key: backend-ask-confiavel
+    group: produto
+    phase: A
+    name: Backend de perguntas hospedado ou próprio
+    description: Expor o backend "Ask" com handlers padrão Web em Node, Workers ou serverless, com prazos e escolha de modelos com retenção zero.
+    milestone: null
+    tickets: ["gh:#186", "gh:#187", "gh:#184"]
+    acceptance: null
+    how_to_test: Subir o server de exemplo e enviar uma pergunta que escala ao Ask
+    blocked_reason: null
+  # estado: publicada — SessionStorage Drizzle/Postgres com CAS (#198, v0.5.0)
+  - key: sessoes-persistentes
+    group: produto
+    phase: A
+    name: Sessões de conversa persistentes e sem conflito
+    description: Guardar sessões no Postgres com controle de concorrência, retomando a conversa em outro dispositivo.
+    milestone: null
+    tickets: ["gh:#198"]
+    acceptance: null
+    how_to_test: Gravar a mesma sessão de duas abas e conferir que não há perda de mensagem
+    blocked_reason: null
+  # estado: publicada — partes referenciadas e uploads (#199, v0.5.0) e entrega ao adaptador (#206, v0.6.0)
+  - key: anexos-imagem-arquivo
+    group: produto
+    phase: A
+    name: Enviar imagens e arquivos no chat
+    description: Usuário final anexa imagem/arquivo e o modelo recebe o conteúdo.
+    milestone: null
+    tickets: ["gh:#199", "gh:#206"]
+    acceptance: null
+    how_to_test: Anexar uma imagem no exemplo React e pedir ao modelo para descrevê-la
+    blocked_reason: null
+  # estado: publicada — matriz de conformidade (12 requisitos), devtools, gate de snapshot de API (#193), pisos de cobertura (#190), Trusted Publishing (#191)
+  - key: conformidade-e-devtools
+    group: confianca
+    phase: A
+    name: Conformidade verificável entre interfaces e devtools
+    description: Conferir que cada renderizador cumpre os mesmos requisitos e inspecionar a conversa com devtools; pacotes publicados com proveniência.
+    milestone: null
+    tickets: ["gh:#193", "gh:#190", "gh:#191"]
+    acceptance: null
+    how_to_test: Abrir docs/conformance/matrix.generated.md e rodar a suíte de conformidade
+    blocked_reason: null
+  # estado: em andamento (release parada) — main já tem eval ^0.7 e 6 changesets pendentes, mas npm 0.6.0 ainda depende de @agentskit/eval ^0.4.17; bloqueia AGE-1913 (override de core no law-os)
+  - key: compativel-com-core-1-15
+    group: prontidao
+    phase: A
+    name: Usar o chat com o AgentsKit core 1.15 sem override
+    description: Instalar @agentskit/chat junto com core 1.15 / eval 0.7 sem conflito de versões.
+    milestone: null
+    tickets: ["gh:#248", "gh:#249", "AGE-2346", "AGE-1913"]
+    acceptance: null
+    how_to_test: npm i @agentskit/chat @agentskit/core@1.15 e conferir ausência de dupla instalação de core/eval
+    blocked_reason: null
+  # estado: não começada — AGE-2353 / AGE-2198 em Backlog
+  - key: monitoramento-de-erros
+    group: confianca
+    phase: B
+    name: Erros do chat reportados no Sentry
+    description: Ver erros do chat e dos apps de exemplo no Sentry.
+    milestone: null
+    tickets: ["AGE-2353", "AGE-2198"]
+    acceptance: null
+    how_to_test: Forçar um erro no exemplo e conferir o evento no Sentry
+    blocked_reason: null
+  # estado: em andamento — PR #234 (TS 7 + Vitest 5); 21 PRs de bot abertos, 14 PRs com check falhando; #233/#236 com loop:blocked
+  - key: dependencias-atuais
+    group: prontidao
+    phase: B
+    name: Dependências atuais (TypeScript 7, Vitest 5)
+    description: Adotar o chat em projetos com toolchain atual sem conflito.
+    milestone: null
+    tickets: ["gh:#234", "gh:#197"]
+    acceptance: null
+    how_to_test: Instalar num projeto TS 7 e rodar tsc
+    blocked_reason: null
