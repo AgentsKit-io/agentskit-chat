@@ -2000,6 +2000,60 @@
               ]
             },
             {
+              "name": "ConfirmUndoCard",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "ConfirmUndoCardLabels",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConfirmUndoCardProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConfirmUndoPhase",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "ConfirmUndoToolCall",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "QuotaBar",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "QuotaBarLabels",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "QuotaBarProps",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "QuotaState",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "StandardComponent",
               "kinds": [
                 "value"
@@ -2009,6 +2063,18 @@
               "name": "StandardComponentProps",
               "kinds": [
                 "type"
+              ]
+            },
+            {
+              "name": "resolveConfirmPhase",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "resolveQuotaState",
+              "kinds": [
+                "value"
               ]
             },
             {

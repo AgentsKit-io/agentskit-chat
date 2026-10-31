@@ -47,7 +47,7 @@
     "release:deprecation:plan": "node scripts/legacy-package-deprecation-plan.mjs",
     "release:deprecation:preflight": "node scripts/legacy-package-deprecation-preflight.mjs",
     "test:release-deprecation": "vitest run scripts/legacy-package-deprecation.test.mjs scripts/legacy-package-deprecation-preflight.test.mjs",
-    "test:release-lib": "vitest run scripts/release-lib.test.mjs",
+    "test:release-lib": "vitest run scripts/release-lib.test.mjs scripts/eval-dependency.test.mjs",
     "test:retrieval-suite": "vitest run scripts/retrieval-suite.test.mjs",
     "postinstall": "node scripts/ensure-node-pty-helper.mjs",
     "test:storage:pg": "vitest run --config tests/storage-pg/vitest.config.mts",
