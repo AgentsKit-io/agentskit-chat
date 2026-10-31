@@ -141,7 +141,7 @@
         ],
         "maturity": [
           "## Maturity and compatibility",
-          "0.6.0"
+          "0.7.0"
         ],
         "compatibility": [
           "Node.js 22",
@@ -183,7 +183,7 @@
         },
         {
           "id": "init-react",
-          "command": "pnpm dlx @agentskit/chat-cli@0.6.0 init my-chat --renderer react --yes",
+          "command": "pnpm dlx @agentskit/chat-cli@0.7.0 init my-chat --renderer react --yes",
           "test": "packages/cli/tests/init.test.ts",
           "testCommand": "pnpm test"
         }
@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-01-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-01-29",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:e8978ce968ecf78a4f247f9d0e2453270bf132f949ab736a9688b2d730096ab1"
+        "sourceHash": "sha256:d2aec11062e8556e0d2026f5ef9f0e9a9d975d4fc86579d88e32383293e62ba4"
       },
       "exceptions": []
     },
@@ -241,7 +241,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`",
+          "`0.7.0`",
           "stability.md"
         ],
         "compatibility": [
@@ -286,8 +286,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-02-27",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-02-28",
         "sources": [
           "packages/chat/README.md",
           "packages/chat/package.json",
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:cf005b2ae75c43946901a680cfd46a0c4b5ad825d75a33c56676aeee68e150d5"
+        "sourceHash": "sha256:d87bfb38c8a478c5b14c5c5a1f913ac750eea618c53463c9cdc5a0c9175516f2"
       },
       "exceptions": []
     },
@@ -320,7 +320,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`",
+          "`0.7.0`",
           "stability.md"
         ],
         "compatibility": [
@@ -364,8 +364,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-02-27",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-02-28",
         "sources": [
           "packages/protocol/README.md",
           "packages/protocol/package.json",
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:e7fa06b6799861f3f20cfb2d92906ccfad2c9c3ab669b90450802ac2f6b31a33"
+        "sourceHash": "sha256:dd0275d8787e1caac582b9f56f30200a63e57849f022d4cf486617270968bfa8"
       },
       "exceptions": []
     },
@@ -398,7 +398,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`",
+          "`0.7.0`",
           "deployment.md"
         ],
         "compatibility": [
@@ -442,8 +442,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-02-27",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-02-28",
         "sources": [
           "packages/server/README.md",
           "packages/server/package.json",
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:72250a52accc9b71089bd7f1af54773bfec464597290c12199fa538c10fa701c"
+        "sourceHash": "sha256:3915a8bea72ab58a7bcf5184b9f937076d0ead1cd99ca0f9ed47bde996829231"
       },
       "exceptions": []
     },
@@ -476,7 +476,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`",
+          "`0.7.0`",
           "angular"
         ],
         "compatibility": [
@@ -520,15 +520,15 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-02-27",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-02-28",
         "sources": [
           "packages/cli/README.md",
           "packages/cli/package.json",
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.mdx"
         ],
-        "sourceHash": "sha256:e99604810e1a54cc0b8c93195e074f3c645a2cc54d3a37abab420bcb0a7a2cab"
+        "sourceHash": "sha256:b2102b44346569cfff2d43a5583e8827e53c88ad297894022466545fa4f70add"
       },
       "exceptions": []
     },
@@ -553,7 +553,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`",
+          "`0.7.0`",
           "React 18+"
         ],
         "compatibility": [
@@ -597,8 +597,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-02-27",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-02-28",
         "sources": [
           "packages/react/README.md",
           "packages/react/package.json",
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:fab82e979c0f1ea669bbe910bc43597450c6fe0e6186c9b852cb98600b4c9a86"
+        "sourceHash": "sha256:448bfcff77fffa4fbb1655cf7d52194b976f874db096fc3673e8ce5b66c1eec6"
       },
       "exceptions": []
     },
@@ -630,7 +630,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Vue 3.4+",
@@ -667,8 +667,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/vue/README.md",
           "packages/vue/package.json",
@@ -676,7 +676,7 @@
           "packages/vue/fixtures/readme-example.ts",
           "docs/getting-started/vue.mdx"
         ],
-        "sourceHash": "sha256:45ce119ad48a897ab25a3ac5b7b8761b623992b558276f2532f55015bf94a78d"
+        "sourceHash": "sha256:978a48f605a0e08b697e0dda205182d57388d5bb172e19ae86989605a16b94a6"
       },
       "exceptions": [
         {
@@ -708,7 +708,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Svelte 5+",
@@ -745,8 +745,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/svelte/README.md",
           "packages/svelte/package.json",
@@ -754,7 +754,7 @@
           "packages/svelte/fixtures/readme-example.ts",
           "docs/getting-started/svelte.mdx"
         ],
-        "sourceHash": "sha256:8610d4b22e287eeb9971868838589d736c7e9072622882ecf109f499308cac31"
+        "sourceHash": "sha256:95d7b76254457990bd658253a870207bdf85c1380b9811063c8899133d70ebf4"
       },
       "exceptions": [
         {
@@ -786,7 +786,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Solid 1.9+",
@@ -823,8 +823,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/solid/README.md",
           "packages/solid/package.json",
@@ -832,7 +832,7 @@
           "packages/solid/fixtures/readme-example.ts",
           "docs/getting-started/solid.mdx"
         ],
-        "sourceHash": "sha256:f8e68d5e35d2a04fbf43d81a41d082c16d69f9ed737604016ec792697de53b7e"
+        "sourceHash": "sha256:a722d9303d52a0a784b18c1f35037f039bfc500132af281bcc17a8eee1d3260e"
       },
       "exceptions": [
         {
@@ -864,7 +864,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Angular 18.1–21",
@@ -901,8 +901,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/angular/README.md",
           "packages/angular/package.json",
@@ -910,7 +910,7 @@
           "packages/angular/fixtures/readme-example.ts",
           "docs/getting-started/angular.mdx"
         ],
-        "sourceHash": "sha256:801855a5e3a38ba36ff006eb7478fea63e249d4df3ed1c52f8da26c98f606fc9"
+        "sourceHash": "sha256:a2e5c4353434fce4cdfb02301bb62e71107ca10a8343bd7090df068f55c8449f"
       },
       "exceptions": [
         {
@@ -942,7 +942,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "React 18+",
@@ -979,8 +979,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/react-native/README.md",
           "packages/react-native/package.json",
@@ -988,7 +988,7 @@
           "packages/react-native/fixtures/readme-example.tsx",
           "docs/getting-started/react-native.mdx"
         ],
-        "sourceHash": "sha256:67c8897b2ec6ce21955c4d011d797c8d6e54bab4e03b23579e45cef03323a580"
+        "sourceHash": "sha256:1774b41a20adf50e0caf8661d842998f2593a4c18f399733602942e82dc74a65"
       },
       "exceptions": [
         {
@@ -1020,7 +1020,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Ink 7.1+",
@@ -1057,8 +1057,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/ink/README.md",
           "packages/ink/package.json",
@@ -1066,7 +1066,7 @@
           "packages/ink/fixtures/readme-example.tsx",
           "docs/getting-started/ink.mdx"
         ],
-        "sourceHash": "sha256:3acee1a14f79ec2c9236f84c8b4ddf25ed240d911cca66fce77fad851bc4ea13"
+        "sourceHash": "sha256:97028270def4b582672eafdbbe318604cd15d34fc4e87a82cb694610ff5c2332"
       },
       "exceptions": [
         {
@@ -1098,7 +1098,7 @@
           "```mermaid"
         ],
         "maturity": [
-          "`0.6.0`"
+          "`0.7.0`"
         ],
         "compatibility": [
           "Node.js 22+",
@@ -1135,8 +1135,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-30",
-        "reviewDueOn": "2027-04-28",
+        "reviewedOn": "2026-10-31",
+        "reviewDueOn": "2027-04-29",
         "sources": [
           "packages/devtools/README.md",
           "packages/devtools/package.json",
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:a80f0351a4af962188695b07d06e69801bdd90b65a23f4faf3fbcf25abb41c9c"
+        "sourceHash": "sha256:71652e61687b4718e29bec6dd01d429baa789a7650353f725d77da74bb1f0093"
       },
       "exceptions": [
         {
