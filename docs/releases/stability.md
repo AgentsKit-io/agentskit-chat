@@ -37,7 +37,7 @@ See [Compatibility](/docs/releases/compatibility) and
 
 ## Packages products consume
 
-Products (expenses, receipts, escolagestao, law-os, MOSS) install two public
+Products built on AgentsKit install two public
 npm packages, both versioned with a changelog and provenance:
 `@agentskit/chat` and `@agentskit/chat-cli`. Everything else is a subpath of
 `@agentskit/chat`:
