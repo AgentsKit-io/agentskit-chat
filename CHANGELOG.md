@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 — 2026-10-30
+
+- Breaking: `createAskAdapter` requires `endpoint`; the retired hosted Ask default is removed.
+- Depends on `@agentskit/eval ^0.7.0` (was `^0.4.17` in the published `0.6.0`), `@agentskit/memory ^0.12.0`, `@agentskit/net ^0.2.3` and `@agentskit/statechart ^0.3.2`; the CLI uses `@agentskit/cross-platform ^0.3.0`. The `@agentskit/core ^1.15.0` peer is unchanged.
+- The Svelte renderer aborts the previous stream once on config replacement with `@agentskit/svelte` 0.6.
+- Versions `@agentskit/chat` and `@agentskit/chat-cli` together at `0.7.0`.
+
 ## 0.6.0 — 2026-10-10
 
 - Adds durable action decisions across requests with an atomic execution claim and stored-result replay.
