@@ -35,7 +35,7 @@
   "dependencies": {
     "@agentskit/chat": "workspace:*",
     "@agentskit/eval": "^0.7.0",
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@agentskit/core": "^1.15.0",
