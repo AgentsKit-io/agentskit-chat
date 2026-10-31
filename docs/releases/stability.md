@@ -35,3 +35,47 @@ introduced in `0.6.0`.
 
 See [Compatibility](/docs/releases/compatibility) and
 [0.7 release notes](./v0.7.0.md) for integration constraints.
+
+## Packages products consume
+
+Products built on AgentsKit install two public
+npm packages, both versioned with a changelog and provenance:
+`@agentskit/chat` and `@agentskit/chat-cli`. Everything else is a subpath of
+`@agentskit/chat`:
+
+| Need | Import |
+| --- | --- |
+| React shell | `@agentskit/chat/react` |
+| Server handler | `@agentskit/chat/server` |
+| Postgres sessions and decisions | `@agentskit/chat/drizzle-pg` |
+| Postgres chat memory (upstream) | `@agentskit/memory/postgres` |
+| Cost and observability (upstream) | `@agentskit/observability` |
+
+The workspace packages (`@agentskit/chat-react`, `-server`, `-protocol`, and
+so on) are private build inputs and are not published.
+
+## Renderer maturity
+
+| Renderer | Status |
+| --- | --- |
+| React (`@agentskit/chat/react`) | Stable; the product default |
+| Ink (`@agentskit/chat/ink`) | Experimental |
+| React Native (`@agentskit/chat/react-native`) | Experimental |
+| Vue (`@agentskit/chat/vue`) | Experimental |
+| Svelte (`@agentskit/chat/svelte`) | Experimental |
+| Solid (`@agentskit/chat/solid`) | Experimental |
+| Angular (`@agentskit/chat/angular`) | Experimental |
+
+Experimental renderers keep the shared protocol and conformance contract, but
+their component API may change in a minor release without the migration-guide
+guarantee above.
+
+## Boundary with `@agentskit/react`
+
+`@agentskit/chat/react` consumes `@agentskit/react`; it does not replace or
+copy it. `@agentskit/react` owns the chat controller, `useChat`, streaming,
+cancellation, and headless components. `@agentskit/chat/react` adds only what
+AgentsKit lacks: semantic theming and native slots, the closed component
+manifest, deterministic routes, protocol envelopes, and policy. Anything
+missing from the controller is fixed upstream first (ADR-0002), never
+reimplemented here.
