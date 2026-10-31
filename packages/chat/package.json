@@ -91,7 +91,7 @@
     "test": "pnpm --filter @agentskit/chat-protocol build && vitest run --config ../../vitest.coverage.ts --coverage"
   },
   "peerDependencies": {
-    "@agentskit/angular": "^0.4.6",
+    "@agentskit/angular": "^0.4.6 || ^0.5.0",
     "@agentskit/core": "^1.15.0",
     "@agentskit/ink": "^0.10.1",
     "@agentskit/react": ">=0.7.1 <1",
