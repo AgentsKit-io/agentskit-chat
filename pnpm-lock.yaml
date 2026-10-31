@@ -36,7 +36,7 @@ overrides:
   '@agentskit/doc-bridge>zod': 4.4.3
   '@agentskit/harness>zod': 4.4.3
 
-packageExtensionsChecksum: sha256-ttO428ObbOpqnd1ngSmoXpKWb61SEezJC5zRxNWrnSk=
+packageExtensionsChecksum: sha256-tHghbvmx1x5LBiu9hi/AiL+zN9hvmebxxaLoIaGnBII=
 
 patchedDependencies:
   image-size-next@1.2.2:

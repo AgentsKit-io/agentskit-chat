@@ -16,18 +16,21 @@ const shellOrigin = (() => {
   try { return new URL(value).origin }
   catch { return 'https://www.agentskit.io' }
 })()
+// Cloudflare Web Analytics beacon, injected at the edge.
+const cloudflareAnalyticsScript = 'https://static.cloudflareinsights.com'
+const cloudflareAnalyticsConnect = 'https://cloudflareinsights.com'
 const developmentScriptSource = process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
 
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
-  `connect-src 'self' ${shellOrigin} https://fonts.googleapis.com https://fonts.gstatic.com` + (askOrigin ? ` ${askOrigin}` : ''),
+  `connect-src 'self' ${shellOrigin} https://fonts.googleapis.com https://fonts.gstatic.com ${cloudflareAnalyticsConnect}` + (askOrigin ? ` ${askOrigin}` : ''),
   `font-src 'self' data: ${shellOrigin} https://fonts.gstatic.com`,
   "form-action 'self'",
   "frame-ancestors 'none'",
   "img-src 'self' data: blob:",
   "object-src 'none'",
-  `script-src 'self' 'unsafe-inline'${developmentScriptSource} ${shellOrigin}`,
+  `script-src 'self' 'unsafe-inline'${developmentScriptSource} ${shellOrigin} ${cloudflareAnalyticsScript}`,
   `style-src 'self' 'unsafe-inline' ${shellOrigin} https://fonts.googleapis.com`,
 ].join('; ')
 
