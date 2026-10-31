@@ -48,7 +48,7 @@ overrides:
   '@agentskit/harness>react': "19.3.1"
   '@agentskit/harness>ink': "7.1.1"
   '@agentskit/doc-bridge>react': "19.3.1"
-  '@agentskit/doc-bridge>zod': "4.4.3"
+  '@agentskit/doc-bridge>zod': "4.6.6"
   '@agentskit/harness>zod': "4.4.3"
 
 patchedDependencies:

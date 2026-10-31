@@ -33,7 +33,7 @@ overrides:
   '@agentskit/harness>react': 19.3.1
   '@agentskit/harness>ink': 7.1.1
   '@agentskit/doc-bridge>react': 19.3.1
-  '@agentskit/doc-bridge>zod': 4.4.3
+  '@agentskit/doc-bridge>zod': 4.6.6
   '@agentskit/harness>zod': 4.4.3
 
 packageExtensionsChecksum: sha256-tHghbvmx1x5LBiu9hi/AiL+zN9hvmebxxaLoIaGnBII=
@@ -3355,6 +3355,7 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -6592,6 +6593,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -8228,6 +8230,9 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
+
   zone.js@0.16.3:
     resolution: {integrity: sha512-ihXL9+vhYyEhXz4TDNpHeAOZN9FVrbog0Il64OIEI28UP/n5AaI6gsccRuOHBfx+206agzyoK527bYIO0Foy6A==}
 
@@ -8288,7 +8293,7 @@ snapshots:
       unified: 11.0.5
       unist-util-visit: 5.2.0
       yaml: 2.9.1
-      zod: 4.4.3
+      zod: 4.6.6
     optionalDependencies:
       '@agentskit/core': 1.15.0
       '@agentskit/memory': 0.12.0(drizzle-orm@0.45.4(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
@@ -17069,6 +17074,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
+
+  zod@4.6.6: {}
 
   zone.js@0.16.3: {}
 
