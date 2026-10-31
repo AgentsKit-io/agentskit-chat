@@ -1,4 +1,5 @@
-import { useState, type ReactElement, type ReactNode } from 'react'
+import { ToolConfirmation } from '@agentskit/react'
+import { useEffect, useRef, type ComponentProps, type ReactElement, type ReactNode } from 'react'
 
 export type QuotaState = 'ok' | 'warning' | 'blocked'
 
@@ -38,7 +39,7 @@ export const resolveQuotaState = (utilization: number, warning: boolean, blockAt
 
 const stateColor: Record<QuotaState, string> = {
   ok: 'var(--ak-color-button, #2563eb)',
-  warning: 'var(--ak-app-color-warning, #d97706)',
+  warning: 'var(--ak-color-text, currentColor)',
   blocked: 'var(--ak-app-color-danger, #dc2626)',
 }
 
@@ -75,61 +76,70 @@ export const QuotaBar = ({ quota, used, limit, warnAt = 0.8, blockAt = 1, labels
 
 export type ConfirmUndoPhase = 'pending' | 'approved' | 'denied'
 
+export type ConfirmUndoToolCall = ComponentProps<typeof ToolConfirmation>['toolCall']
+
 export interface ConfirmUndoCardLabels {
   readonly title?: string
-  readonly approve?: string
-  readonly deny?: string
-  readonly undo?: string
   readonly approved?: string
   readonly denied?: string
+  readonly undo?: string
 }
 
 export interface ConfirmUndoCardProps {
-  /** Tool or action name. */
-  readonly action: string
-  /** Human-readable proposal; a node or a short string. */
+  /** The upstream tool call; the phase is derived from its `status`. */
+  readonly toolCall: ConfirmUndoToolCall
+  /** Human-readable proposal shown above the upstream confirmation controls. */
   readonly description?: ReactNode
-  readonly onApprove: () => void
-  readonly onDeny: () => void
+  readonly onApprove: (toolCallId: string) => void
+  readonly onDeny: (toolCallId: string, reason?: string) => void
   /** When set, an undo button appears after approval. */
-  readonly onUndo?: () => void
+  readonly onUndo?: (toolCallId: string) => void
   readonly labels?: ConfirmUndoCardLabels
   readonly className?: string
 }
 
 const defaultCardLabels = {
   title: 'Confirm action',
-  approve: 'Approve',
-  deny: 'Deny',
-  undo: 'Undo',
   approved: 'Approved',
   denied: 'Denied',
+  undo: 'Undo',
 } as const
 
-export const ConfirmUndoCard = ({ action, description, onApprove, onDeny, onUndo, labels, className }: ConfirmUndoCardProps): ReactElement => {
-  const [phase, setPhase] = useState<ConfirmUndoPhase>('pending')
+/** `requires_confirmation` is pending; a deny is recorded upstream as an error starting with `Permission denied`. */
+export const resolveConfirmPhase = (toolCall: ConfirmUndoToolCall): ConfirmUndoPhase =>
+  toolCall.status === 'requires_confirmation' ? 'pending' : toolCall.status === 'error' && toolCall.error?.startsWith('Permission denied') ? 'denied' : 'approved'
+
+export const ConfirmUndoCard = ({ toolCall, description, onApprove, onDeny, onUndo, labels, className }: ConfirmUndoCardProps): ReactElement => {
   const text = { ...defaultCardLabels, ...labels }
+  const phase = resolveConfirmPhase(toolCall)
+  const section = useRef<HTMLElement>(null)
+  const status = useRef<HTMLDivElement>(null)
+  const previous = useRef(phase)
+  // The clicked control unmounts when the phase changes; keep keyboard focus inside the card.
+  useEffect(() => {
+    if (previous.current === phase) return
+    previous.current = phase
+    if (phase === 'pending') section.current?.querySelector<HTMLElement>('[data-ak-tool-confirmation-approve]')?.focus()
+    else status.current?.focus()
+  }, [phase])
   return (
     <section
+      ref={section}
       className={className}
       role="group"
-      aria-label={`${text.title}: ${action}`}
+      aria-label={`${text.title}: ${toolCall.name}`}
       data-ak-confirm-phase={phase}
       style={{ border: '1px solid var(--ak-color-tool-border, #e5e7eb)', background: 'var(--ak-color-tool-bg, transparent)', color: 'var(--ak-color-text, inherit)', borderRadius: 'var(--ak-radius, 4px)', padding: 'var(--ak-spacing-md, 12px)' }}
     >
       <strong>{text.title}</strong>
-      <div><code>{action}</code></div>
       {description === undefined ? null : <div>{description}</div>}
       {phase === 'pending' ? (
-        <div>
-          <button type="button" onClick={() => { setPhase('approved'); onApprove() }}>{text.approve}</button>
-          <button type="button" onClick={() => { setPhase('denied'); onDeny() }}>{text.deny}</button>
-        </div>
+        <ToolConfirmation toolCall={toolCall} onApprove={onApprove} onDeny={onDeny} />
       ) : (
-        <div role="status">
-          <span>{phase === 'approved' ? text.approved : text.denied}</span>
+        <div ref={status} role="status" tabIndex={-1}>
+          <code>{toolCall.name}</code> <span>{phase === 'approved' ? text.approved : text.denied}</span>
           {phase === 'approved' && onUndo ? (
-            <button type="button" onClick={() => { setPhase('pending'); onUndo() }}>{text.undo}</button>
+            <button type="button" onClick={() => { onUndo(toolCall.id); status.current?.focus() }}>{text.undo}</button>
           ) : null}
         </div>
       )}
