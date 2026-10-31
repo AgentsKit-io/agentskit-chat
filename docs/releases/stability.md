@@ -51,6 +51,10 @@ npm packages, both versioned with a changelog and provenance:
 | Postgres chat memory (upstream) | `@agentskit/memory/postgres` |
 | Cost and observability (upstream) | `@agentskit/observability` |
 
+`@agentskit/memory` and `@agentskit/observability` are separate upstream
+installs (optional peers of `@agentskit/chat`), not part of the two packages
+above; add them only when you use the rows marked upstream.
+
 The workspace packages (`@agentskit/chat-react`, `-server`, `-protocol`, and
 so on) are private build inputs and are not published.
 
