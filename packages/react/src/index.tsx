@@ -329,3 +329,5 @@ export const AgentChat = (props: AgentChatProps): ReactElement => {
 }
 
 export type { ChatDefinition } from '@agentskit/chat'
+export { ConfirmUndoCard, QuotaBar, resolveConfirmPhase, resolveQuotaState } from './usage-components.js'
+export type { ConfirmUndoCardLabels, ConfirmUndoCardProps, ConfirmUndoPhase, ConfirmUndoToolCall, QuotaBarLabels, QuotaBarProps, QuotaState } from './usage-components.js'
