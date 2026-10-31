@@ -7,7 +7,7 @@ overrides:
   shell-quote: "1.11.0"
   # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
   # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
-  fast-uri: "3.1.8"
+  fast-uri: "3.1.9"
   next: ">=15.5.28 <16"
   sharp: ">=0.35.0 <1"
   postcss: ">=8.5.23 <9"
