@@ -11,7 +11,7 @@ overrides:
   next: ">=15.5.28 <16"
   sharp: ">=0.35.0 <1"
   postcss: ">=8.5.23 <9"
-  nanoid: "3.3.18"
+  nanoid: "3.3.20"
   image-size: "npm:image-size-next@1.2.2"
   # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0)
   "glob@>=10.2.0 <10.5.0": "10.5.0"
