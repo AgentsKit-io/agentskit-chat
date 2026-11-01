@@ -32,17 +32,12 @@ const run = async (command: string, args: readonly string[], cwd: string, env?: 
 const installFixture = (root: string) =>
   run('pnpm', ['install', '--lockfile=false', '--ignore-workspace'], root, { pnpm_config_strict_dep_builds: 'false' })
 
+// One topologically sorted pnpm run builds the independent renderer packages concurrently.
+const fixturePackages = ['@agentskit/chat-protocol', '@agentskit/chat', ...['server', 'react', 'react-native', 'ink', 'vue', 'svelte', 'solid', 'angular']
+  .map(name => `@agentskit/chat-${name}`)]
+
 beforeAll(async () => {
-  await execute('pnpm', ['--filter', '@agentskit/chat-protocol', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-server', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-react', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-react-native', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-ink', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-vue', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-svelte', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-solid', 'build'], { cwd: workspace })
-  await execute('pnpm', ['--filter', '@agentskit/chat-angular', 'build'], { cwd: workspace })
+  await execute('pnpm', [...fixturePackages.flatMap(name => ['--filter', name]), 'build'], { cwd: workspace })
   await execute('node', ['scripts/assemble-chat-package.mjs'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-cli', 'build'], { cwd: workspace })
 }, 120_000)
