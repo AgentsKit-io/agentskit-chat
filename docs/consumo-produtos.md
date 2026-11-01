@@ -1,6 +1,6 @@
-# Consumo no Expenses e no Receitas
+# Consumo nos produtos consumidores
 
-Expenses valida primeiro; Receitas fixa as mesmas versões depois. Este guia é para
+Um produto consumidor valida primeiro; os demais fixam as mesmas versões depois. Este guia é para
 a próxima versão, não para chat 0.5.0: core 1.15.0, adapters 0.19.0, memory 0.12.0
 e observability 0.13.0 precisam estar publicados e o chat precisa passar novamente
 pelos gates com o lockfile de registry. Nunca use tarballs locais em produtos.
@@ -19,7 +19,7 @@ consumir o stream**, nunca antes. Credenciais ficam no secret channel do host.
 O host autentica e autoriza a sessão antes de resolver qualquer store. Tenant e
 usuário vêm de Better Auth, nunca do evento. O `db` abaixo é o Drizzle da conexão
 com ciclo de vida gerenciado pelo host; `authenticate`, `authorizeSession`,
-`entitlements`, `pricing` e `expenseTools` são serviços do produto.
+`entitlements`, `pricing` e `domainTools` são serviços do produto.
 
 ```ts
 import { createChatHandler } from '@agentskit/chat/server'
@@ -34,11 +34,11 @@ const handleChat = createChatHandler<Context>({
   resolveDefinition: async (context, sessionId) => {
     await authorizeSession(context!, sessionId)
     return {
-      id: 'expenses',
+      id: 'meu-produto',
       chat: {
         adapter: openRouter({ apiKey: providerKey, model: 'google/gemini-2.5-flash-lite' }),
         memory: postgresChatMemory({ db, tenantId: context!.tenantId, sessionId }),
-        tools: expenseTools,
+        tools: domainTools,
       },
     }
   },
@@ -95,6 +95,6 @@ válida pode sobrescrever o objeto depois da checagem de SHA-256.
 4. Memory/snapshots guardam ref; apenas o adapter recebe URL assinada/data URL.
 
 Antes de liberar IA paga: repetir concorrência de decisão/custo em Neon,
-upload em R2/MinIO, chamada OpenRouter e extração com recibos reais. Confrontar
-ledger com a fatura (limite 5% do PRD), validar isolamento e concluir QA do produto.
+upload em R2/MinIO, chamada OpenRouter e extração com documentos reais. Confrontar
+ledger com a fatura (limite definido no PRD do produto), validar isolamento e concluir QA do produto.
 O guia não substitui esses gates nem instala auth/billing/front.
