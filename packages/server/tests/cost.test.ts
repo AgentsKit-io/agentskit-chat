@@ -125,27 +125,77 @@ describe('turn cost policy (RF-25..RF-29)', () => {
     expect(window.spentUsd).toBeCloseTo(80 * 0.0015 + 20 * 0.002, 9)
   })
 
-  it.each(['cancel', 'timeout'] as const)('RF-28: a dispatched request commits unknown usage on %s', async mode => {
+  const submitSlow = (policy: Partial<TurnCostPolicy>, options: { readonly timeoutMs?: number; readonly usageFirst?: boolean } = {}) => {
     const store = createInMemoryCostStore()
     const abort = new AbortController()
-    const adapter: AdapterFactory = { createSource: () => ({ async *stream() { await new Promise(resolve => setTimeout(resolve, 200)); yield { type: 'done' } }, abort() {} }) }
+    const adapter: AdapterFactory = { createSource: () => ({ async *stream() {
+      if (options.usageFirst) yield { type: 'usage', usage }
+      await new Promise(resolve => setTimeout(resolve, 200))
+      yield { type: 'done' }
+    }, abort() {} }) }
     const handler = createChatHandler({
       resolveDefinition: () => ({ id: 'metered', chat: { adapter } }),
-      timeoutMs: mode === 'timeout' ? 50 : 1000,
+      timeoutMs: options.timeoutMs ?? 1000,
       sessionStorage: () => createStorage(),
-      cost: () => ({ store, tenant: 't', capUsd: 1, reserveUsd: 0.5, priceUsd, model: 'm' }),
+      cost: () => ({ store, tenant: 't', capUsd: 1, reserveUsd: 0.5, priceUsd, model: 'm', ...policy }),
     })
-    const response = await handler(new Request('http://localhost/chat', {
+    const response = handler(new Request('http://localhost/chat', {
       method: 'POST', headers: { 'content-type': 'application/json' }, signal: abort.signal,
       body: JSON.stringify({ protocol: 'agentskit.chat.turn', version: 1, eventId: 'event', sessionId: 'session', turnId: 'turn', sequence: 0,
         emittedAt: '2026-10-09T00:00:00.000Z', event: 'client.turn.submit', payload: { input: 'hello' } }),
     }))
-    expect(await store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0.5 })
-    if (mode === 'cancel') abort.abort()
-    await response.text().catch(() => undefined)
     // Cleanup waits for the adapter to settle before it settles; poll instead of guessing its delay.
-    await expect.poll(async () => (await store.window({ tenant: 't' })).reservedUsd, { timeout: 2000 }).toBe(0)
-    expect(await store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0, spentUsd: 0.5 })
+    const settled = async () => {
+      await expect.poll(async () => (await store.window({ tenant: 't' })).reservedUsd, { timeout: 2000 }).toBe(0)
+      return store.window({ tenant: 't' })
+    }
+    return { store, abort, response, settled }
+  }
+
+  it('RF-28: a dispatched request commits the reservation when it times out without usage', async () => {
+    const turn = submitSlow({}, { timeoutMs: 50 })
+    const response = await turn.response
+    expect(await turn.store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0.5 })
+    await response.text().catch(() => undefined)
+    expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0.5 })
+  })
+
+  it('RF-03: a turn cancelled before any token usage charges its real cost, not the reservation', async () => {
+    const turn = submitSlow({})
+    const response = await turn.response
+    expect(await turn.store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0.5 })
+    turn.abort.abort()
+    await response.text().catch(() => undefined)
+    expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0 })
+    expect(turn.store.ledger()).toEqual([expect.objectContaining({ promptTokens: 0, completionTokens: 0, costUsd: 0 })])
+  })
+
+  it('RF-03: a turn cancelled before any token usage charges the configured minimum', async () => {
+    const turn = submitSlow({ cancelMinimumUsd: 0.01 })
+    const response = await turn.response
+    turn.abort.abort()
+    await response.text().catch(() => undefined)
+    expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0.01 })
+  })
+
+  it('RF-03: a client that stops reading the stream cancels the turn too', async () => {
+    const turn = submitSlow({ cancelMinimumUsd: 0.01 })
+    await (await turn.response).body?.cancel()
+    expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0.01 })
+  })
+
+  it.each([[undefined, 0.0015], [0.001, 0.0015], [0.01, 0.01]] as const)('RF-03: a turn cancelled after usage was reported charges the real cost, floored at the minimum %s', async (cancelMinimumUsd, spentUsd) => {
+    const turn = submitSlow(cancelMinimumUsd === undefined ? {} : { cancelMinimumUsd }, { usageFirst: true })
+    const reader = (await turn.response).body!.pipeThrough(new TextDecoderStream()).getReader()
+    let seen = ''
+    while (!seen.includes('"totalTokens":1500')) {
+      const chunk = await reader.read()
+      if (chunk.done) throw new Error('stream ended before usage was reported')
+      seen += chunk.value
+    }
+    turn.abort.abort()
+    await reader.cancel().catch(() => undefined)
+    expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd })
   })
 
   it('releases a reservation when memory fails before dispatch', async () => {
