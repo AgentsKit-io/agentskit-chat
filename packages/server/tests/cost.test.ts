@@ -128,7 +128,10 @@ describe('turn cost policy (RF-25..RF-29)', () => {
   const submitSlow = (policy: Partial<TurnCostPolicy>, options: { readonly timeoutMs?: number; readonly usageFirst?: boolean } = {}) => {
     const store = createInMemoryCostStore()
     const abort = new AbortController()
+    let markDispatched = (): void => undefined
+    const dispatched = new Promise<void>(resolve => { markDispatched = resolve })
     const adapter: AdapterFactory = { createSource: () => ({ async *stream() {
+      markDispatched()
       if (options.usageFirst) yield { type: 'usage', usage }
       await new Promise(resolve => setTimeout(resolve, 200))
       yield { type: 'done' }
@@ -149,7 +152,7 @@ describe('turn cost policy (RF-25..RF-29)', () => {
       await expect.poll(async () => (await store.window({ tenant: 't' })).reservedUsd, { timeout: 2000 }).toBe(0)
       return store.window({ tenant: 't' })
     }
-    return { store, abort, response, settled }
+    return { store, abort, response, dispatched, settled }
   }
 
   it('RF-28: a dispatched request commits the reservation when it times out without usage', async () => {
@@ -164,6 +167,7 @@ describe('turn cost policy (RF-25..RF-29)', () => {
     const turn = submitSlow({})
     const response = await turn.response
     expect(await turn.store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0.5 })
+    await turn.dispatched
     turn.abort.abort()
     await response.text().catch(() => undefined)
     expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0 })
@@ -173,6 +177,7 @@ describe('turn cost policy (RF-25..RF-29)', () => {
   it('RF-03: a turn cancelled before any token usage charges the configured minimum', async () => {
     const turn = submitSlow({ cancelMinimumUsd: 0.01 })
     const response = await turn.response
+    await turn.dispatched
     turn.abort.abort()
     await response.text().catch(() => undefined)
     expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0.01 })
@@ -180,7 +185,9 @@ describe('turn cost policy (RF-25..RF-29)', () => {
 
   it('RF-03: a client that stops reading the stream cancels the turn too', async () => {
     const turn = submitSlow({ cancelMinimumUsd: 0.01 })
-    await (await turn.response).body?.cancel()
+    const response = await turn.response
+    await turn.dispatched
+    await response.body?.cancel()
     expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd: 0.01 })
   })
 
@@ -196,6 +203,12 @@ describe('turn cost policy (RF-25..RF-29)', () => {
     turn.abort.abort()
     await reader.cancel().catch(() => undefined)
     expect(await turn.settled()).toMatchObject({ reservedUsd: 0, spentUsd })
+  })
+
+  it('refuses a negative cancel minimum before reserving', async () => {
+    const turn = submitSlow({ cancelMinimumUsd: -1 })
+    expect((await turn.response).status).toBe(500)
+    expect(await turn.store.window({ tenant: 't' })).toMatchObject({ reservedUsd: 0, spentUsd: 0 })
   })
 
   it('releases a reservation when memory fails before dispatch', async () => {
