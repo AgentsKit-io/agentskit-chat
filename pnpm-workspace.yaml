@@ -3,18 +3,21 @@ packages:
   - "apps/*"
 
 overrides:
-  seroval: "1.6.8"
+  # GHSA-9wx9-5pv9-3349
+  seroval: "1.6.11"
   shell-quote: "1.11.0"
   # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
   # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
-  fast-uri: "3.1.8"
+  # GHSA-333x-w4r6-6crp
+  fast-uri: "3.1.9"
   next: ">=15.5.28 <16"
   sharp: ">=0.35.0 <1"
   postcss: ">=8.5.23 <9"
   nanoid: "3.3.18"
   image-size: "npm:image-size-next@1.2.2"
-  # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0)
-  "glob@>=10.2.0 <10.5.0": "10.5.0"
+  # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0) and
+  # GHSA-3g3m-2fjr-6pw4 (abort bypass in glob 9.0.0-14.0.1, fixed only in 14.0.2)
+  "glob@>=9 <14.0.2": "14.0.2"
   # GHSA-q2hr-2g5m-vwhr
   brace-expansion: ">=5.0.12 <6"
   # @opennextjs/cloudflare (devDependency, build-time only) -> glob@9 -> minimatch@8 needs the
@@ -48,8 +51,8 @@ overrides:
   '@agentskit/harness>react': "19.3.1"
   '@agentskit/harness>ink': "7.1.1"
   '@agentskit/doc-bridge>react': "19.3.1"
-  '@agentskit/doc-bridge>zod': "4.4.3"
-  '@agentskit/harness>zod': "4.4.3"
+  '@agentskit/doc-bridge>zod': "4.6.7"
+  '@agentskit/harness>zod': "4.6.7"
 
 patchedDependencies:
   image-size-next@1.2.2: patches/image-size-next@1.2.2.patch
