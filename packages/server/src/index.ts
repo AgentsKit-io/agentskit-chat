@@ -13,6 +13,7 @@ import type { UploadPolicy } from './uploads.js'
 import { readBoundedJson } from './internal.js'
 
 export * from './ask-service.js'
+export * from './erasure.js'
 export * from './uploads.js'
 
 export type ChatHandler = (request: Request) => Promise<Response>

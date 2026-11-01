@@ -111,6 +111,25 @@ const handleChat = createChatHandler({
 
 The handler reserves `reserveUsd` before the model runs, commits the real cost with a ledger entry after model dispatch, including failed, timed-out, or cancelled turns. When usage is unknown it charges the reservation; it releases the reservation only if no model call started. A turn that does not fit the cap gets 402 `QUOTA_EXCEEDED` and never reaches the model. A custom `createId` must generate unique IDs on every call; a constant value can reuse a reservation and bypass the quota. The first snapshot carries `quota.utilization` and `quota.warning` (true from 80% by default, `warnAt` to change) for a usage bar.
 
+## Erasing a tenant's data
+
+`eraseTenantChatData` erases all chat data of one tenant in a single call (LGPD data-subject erasure): sessions, decisions, memory, and cost records. Each category runs through an eraser you provide, scoped to the tenant:
+
+```ts
+import { eraseTenantChatData } from '@agentskit/chat/server'
+
+const receipt = await eraseTenantChatData({
+  tenant: 'tenant-123',
+  sessions: tenant => db.deleteWhere('agentskit_chat_sessions', { tenant_id: tenant }),
+  decisions: tenant => db.deleteWhere('agentskit_chat_decisions', { tenant_id: tenant }),
+  memory: tenant => db.deleteWhere('chat_messages', { tenant_id: tenant }),
+  cost: tenant => db.deleteWhere('agentskit_cost_window', { tenant_id: tenant }), // and its reservation and ledger tables
+})
+// receipt.erased → { sessions, decisions, memory, cost } counts
+```
+
+All four erasers are required, so pass `() => 0` for a category you do not store. Each eraser must be idempotent and must delete only that tenant's records. A failure in one category does not stop the others; the call then throws `TenantErasureError` with the `failed` categories, and you can retry it safely. Stop accepting turns for the tenant before you erase (for example, refuse the tenant in `authenticate`). Otherwise a turn already running can write again. See [ADR-0040](https://github.com/AgentsKit-io/agentskit-chat/blob/main/docs/architecture/adrs/0040-tenant-chat-data-erasure.md).
+
 ## Limits and failures
 
 | Default | Value |

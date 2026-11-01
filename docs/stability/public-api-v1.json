@@ -2249,6 +2249,43 @@
               ]
             },
             {
+              "name": "EraseTenantChatDataOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TENANT_CHAT_DATA_CATEGORIES",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "TenantChatDataCategory",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TenantDataEraser",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TenantErasureError",
+              "kinds": [
+                "type",
+                "value"
+              ]
+            },
+            {
+              "name": "TenantErasureReceipt",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "TurnCostPolicy",
               "kinds": [
                 "type"
@@ -2293,6 +2330,12 @@
             },
             {
               "name": "deliverUploadParts",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "eraseTenantChatData",
               "kinds": [
                 "value"
               ]
