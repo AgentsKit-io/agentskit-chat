@@ -60,8 +60,9 @@ Use uma chave estável de quota conforme a unidade cobrada pelo plano (usuário,
 household ou organização). O exemplo cobra por usuário dentro do tenant; não
 aplica simultaneamente dois tetos. `capUsd` vem de entitlements, e `reserveUsd`
 deve cobrir o pior turno permitido. O commit registra gasto real mesmo acima da
-reserva. Agende `expirePostgresCostReservations` com um corte maior que o maior
-turno; o store não tem reaper próprio. Não registre conteúdo nem chaves em logs.
+reserva. Um turno cancelado pelo cliente cobra só o custo real, com piso em
+`cancelMinimumUsd` (padrão 0); um timeout sem uso conhecido cobra a reserva.
+Agende `expirePostgresCostReservations` com um corte maior que o maior turno; o store não tem reaper próprio. Não registre conteúdo nem chaves em logs.
 
 ## Tools e decisões
 
