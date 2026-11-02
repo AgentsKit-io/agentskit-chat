@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "types": ["pg"] },
+  "compilerOptions": { "types": ["pg", "node"] },
   "include": ["*.ts", "*.mts"]
 }
