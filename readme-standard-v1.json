@@ -197,8 +197,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-31",
-        "reviewDueOn": "2027-01-29",
+        "reviewedOn": "2026-11-01",
+        "reviewDueOn": "2027-01-30",
         "sources": [
           "README.md",
           "package.json",
@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:6883e953d60d8931bef49edcf46854e959b5a893431ca1bdda5844674e7f4227"
+        "sourceHash": "sha256:601fccf58792c6b926ab46a8341bb6f8f7cbee307fe07084f77da1cc2d8d3945"
       },
       "exceptions": []
     },
@@ -442,8 +442,8 @@
         }
       ],
       "freshness": {
-        "reviewedOn": "2026-10-31",
-        "reviewDueOn": "2027-02-28",
+        "reviewedOn": "2026-11-01",
+        "reviewDueOn": "2027-03-01",
         "sources": [
           "packages/server/README.md",
           "packages/server/package.json",
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:3915a8bea72ab58a7bcf5184b9f937076d0ead1cd99ca0f9ed47bde996829231"
+        "sourceHash": "sha256:1a59318f873e3627a96ed70138bd3da27aed5a258af0851331c5377b499318ab"
       },
       "exceptions": []
     },

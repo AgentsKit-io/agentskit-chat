@@ -4,6 +4,7 @@ import { expect, it } from 'vitest'
 import { chatDecisionDDL, chatSessionDDL, createDrizzleDecisionStore, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
 import { runSessionStorageContract } from './contract.js'
 import { runDecisionStoreContract } from './decision-contract.js'
+import { runTurnServerContract } from './turn-contract.js'
 
 it('Node pool: Postgres 16 SessionStorage acceptance contract', async () => {
   const pool = new Pool({ host: '127.0.0.1', port: 56439, user: 'chat_test', database: 'chat_test' })
@@ -14,6 +15,15 @@ it('Node pool: Postgres 16 SessionStorage acceptance contract', async () => {
     console.log(JSON.stringify({ runtime: 'node-pool', criteria: results }))
   } finally { await pool.end() }
 }, 120000)
+
+it('Node pool: RF-06 complete metered turn with sessions, decisions, memory and cost in Postgres', async () => {
+  const pool = new Pool({ host: '127.0.0.1', port: 56439, user: 'chat_test', database: 'chat_test' })
+  try {
+    const results = await runTurnServerContract(drizzle(pool))
+    expect(results).toHaveLength(4)
+    console.log(JSON.stringify({ runtime: 'node-pool', criteria: results }))
+  } finally { await pool.end() }
+}, 60000)
 
 it('Node pool: Postgres 16 ToolDecisionStore acceptance contract', async () => {
   const pool = new Pool({ host: '127.0.0.1', port: 56439, user: 'chat_test', database: 'chat_test', max: 20 })
