@@ -1,0 +1,115 @@
+# MVP do agentskit-chat (lista aprovada pelo dono em 01/11/2026): lista curta, só o que os produtos consumidores precisam
+# antes de lançar. Não é a lista da 1.0.
+# Decisão do dono: as bibliotecas de base não ganham lista 1.0 completa; cada uma lista de 5 a 12 itens.
+# Base: o uso real de @agentskit/chat nos produtos consumidores (servidor de turno em Hono, histórico e sessões em
+# Postgres, teto de custo pelo CostStore, protocolo de turno em NDJSON, rodando em Node e em Cloudflare Workers) e o que
+# eles ainda reimplementam por conta própria.
+# Fora da lista (um por linha):
+#   - renderers de outros frameworks (Vue, Svelte, Solid, Angular, Ink, React Native): seguem experimentais;
+#   - devtools e CLI;
+#   - novos tipos de parte (upload, relatórios) além dos que já existem;
+#   - site de docs e benchmark.
+# Aprovação: approval.digest é o digest desta lista (ak-harness mvp digest / mvp_manifest.py digest); mudou a lista, precisa aprovar de novo.
+version: 1
+product: agentskit-chat
+repo: AgentsKit-io/agentskit-chat
+source: uso de @agentskit/chat nos produtos consumidores + decisão do dono (lista curta por biblioteca)
+approval:
+  by: EmersonBraun
+  at: "2026-11-01T02:00:00Z"
+  digest: 45e37470dafb38fc
+requirements:
+- id: RF-01
+  title: Uma única cópia do core na instalação
+  done_when: >-
+    Num projeto limpo, instalar @agentskit/chat junto com @agentskit/react, adapters, memory e observability resolve
+    um único @agentskit/core no lockfile; um teste de instalação no CI prova isso a cada release
+  # já pronto em parte: 0.7.0 publicada depende de @agentskit/eval ^0.7 (core 1.15); falta o teste de instalação no CI
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: [248]
+  prs: []
+- id: RF-02
+  title: Barra de uso e cartão confirmar/desfazer publicados e traduzíveis
+  done_when: >-
+    Uma versão publicada no npm exporta a barra de uso (aviso no limiar configurável, padrão 80%, e esgotado em 100%)
+    e o cartão confirmar/desfazer; todos os textos vêm por props, sem texto fixo em inglês; há teste para cada estado
+  # já no main (PR #261, depois da 0.7.0); falta publicar e o ToolConfirmation aceitar rótulos (agentskit#1933)
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-03
+  title: Teto de custo no servidor de turno, inclusive no cancelamento
+  done_when: >-
+    Com o orçamento esgotado, createChatHandler responde 402 antes de chamar o modelo; cada turno reserva, confirma ou
+    libera o custo; um turno cancelado antes do uso de tokens cobra só o custo real (ou um mínimo configurado), não a
+    reserva inteira. Testes cobrem os quatro casos
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-04
+  title: Cliente pronto do protocolo de turno
+  done_when: >-
+    O pacote exporta um cliente (e um adaptador para useChat) que envia o turno, lê o NDJSON e entrega cada evento já
+    validado, com o histórico mantido pelo servidor; um produto consumidor troca seu leitor próprio por ele sem mudar
+    o comportamento; teste com todos os tipos de evento e com evento inválido
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-05
+  title: Sem duplicação com @agentskit/react
+  done_when: >-
+    Um pacote consome o outro (sem componentes ou hooks repetidos) e a fronteira está documentada; os pacotes que os
+    produtos usam (react, server, protocol, drizzle-pg) estão no npm com versão e changelog
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: [251]
+  prs: []
+- id: RF-06
+  title: Roda em Cloudflare Workers e em Node
+  done_when: >-
+    Um teste de contrato no CI sobe o servidor de turno com sessões, decisões e memória em Postgres em workerd e em
+    Node, e um turno completo (com teto de custo) passa nos dois
+  weight: 2
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-07
+  title: Migrações de Postgres estáveis entre versões
+  done_when: >-
+    As tabelas de sessão e decisão são exportadas para o drizzle-kit e um teste aplica as migrações da versão anterior
+    publicada e depois as da atual, sem SQL manual e sem perder dados
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-08
+  title: Apagar todos os dados de chat de um titular (LGPD)
+  done_when: >-
+    Uma função do pacote server apaga sessões, decisões, memória do chat e lançamentos de custo de um tenant numa
+    chamada; o teste prova que nada do tenant sobra e que outro tenant fica intacto
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
+- id: RF-09
+  title: Main verde e dependências de produção sem alerta de segurança
+  done_when: >-
+    Todos os workflows da main ficam verdes e não há alerta de segurança aberto em dependência de produção (os PRs de
+    segurança do Renovate estão mergeados ou fechados com motivo)
+  weight: 1
+  acceptance: []
+  homolog: []
+  issues: []
+  prs: []
