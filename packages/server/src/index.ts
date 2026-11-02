@@ -55,6 +55,11 @@ export interface TurnCostPolicy {
   readonly model: string
   readonly source?: string
   readonly fallback?: boolean
+  /**
+   * Least charge for a turn the client cancels after dispatch: it pays its real cost, never less than this.
+   * Default 0, so a turn cancelled before any token usage is charged nothing.
+   */
+  readonly cancelMinimumUsd?: number
   /** Utilization at which the first snapshot carries `quota.warning`. Default 0.8. */
   readonly warnAt?: number
 }
@@ -179,18 +184,23 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
       const reservationId = `${submission.sessionId}:${submission.turnId}:${createId()}`
       let quota: { readonly utilization: number; readonly warning: boolean } | undefined
       if (cost) {
+        if (cost.cancelMinimumUsd !== undefined && !(Number.isFinite(cost.cancelMinimumUsd) && cost.cancelMinimumUsd >= 0)) fail(500, 'SERVER_INVALID_CONFIG', 'Chat handler configuration is invalid.')
         const reserved = await withTimeout(() => cost.store.reserve({ tenant: cost.tenant, reservationId, amountUsd: cost.reserveUsd, ...(cost.capUsd === undefined ? {} : { capUsd: cost.capUsd }) }), timeoutMs, signal)
         if (!reserved.ok) return fail(402, 'QUOTA_EXCEEDED', 'The usage limit for this plan has been reached.')
         const utilization = reserved.window.utilization
         if (utilization !== undefined) quota = { utilization, warning: utilization >= (cost.warnAt ?? 0.8) }
       }
       let modelStarted = false
-      /** Dispatched calls are billable even when their usage is unavailable. */
+      let cancelled = false
+      /** Dispatched calls are billable even when their usage is unavailable, unless the client cancelled them. */
       const settleCost = async (state: ChatState | undefined): Promise<void> => {
         if (!cost) return
         if (!modelStarted) { await cost.store.release({ tenant: cost.tenant, reservationId }); return }
         const usage = state?.usage ?? { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
-        const actualUsd = usage.totalTokens > 0 ? cost.priceUsd(usage) : cost.reserveUsd
+        const realUsd = usage.totalTokens > 0 ? cost.priceUsd(usage) : undefined
+        const actualUsd = cancelled || (request.signal.aborted && !deadline.aborted)
+          ? Math.max(realUsd ?? 0, cost.cancelMinimumUsd ?? 0)
+          : realUsd ?? cost.reserveUsd
         await cost.store.commit({ tenant: cost.tenant, reservationId, actualUsd, usage: [{
           model: cost.model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, costUsd: actualUsd,
           ...(cost.source === undefined ? {} : { source: cost.source }), ...(cost.fallback === undefined ? {} : { fallback: cost.fallback }),
@@ -301,7 +311,7 @@ export const createChatHandler = <TContext = undefined>(options: ChatHandlerOpti
             stream.close()
           }
         },
-        async cancel() { await cleanup(true).catch(() => undefined) },
+        async cancel() { cancelled = true; await cleanup(true).catch(() => undefined) },
       })
       const response = new Response(body, { status: 200, headers: { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } })
       cleanupAfterClaim = undefined
