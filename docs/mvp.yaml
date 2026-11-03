@@ -47,11 +47,18 @@ requirements:
     Com o orçamento esgotado, createChatHandler responde 402 antes de chamar o modelo; cada turno reserva, confirma ou
     libera o custo; um turno cancelado antes do uso de tokens cobra só o custo real (ou um mínimo configurado), não a
     reserva inteira. Testes cobrem os quatro casos
+  # já pronto: PR #275 (commit 8e7b5a6)
   weight: 2
-  acceptance: []
+  acceptance:
+  - "packages/server/tests/cost.test.ts > RF-27: warns from 80% of the cap and answers 402 QUOTA_EXCEEDED once the cap cannot fit another turn"
+  - "packages/server/tests/cost.test.ts > RF-29: commits the real usage of a finished turn to the ledger and holds nothing afterwards"
+  - "packages/server/tests/cost.test.ts > releases a reservation when memory fails before dispatch"
+  - "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges its real cost, not the reservation"
+  - "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges the configured minimum"
+  - "packages/server/tests/cost.test.ts > RF-03: a client that stops reading the stream cancels the turn too"
   homolog: []
-  issues: []
-  prs: []
+  issues: [265]
+  prs: [275]
 - id: RF-04
   title: Cliente pronto do protocolo de turno
   done_when: >-
