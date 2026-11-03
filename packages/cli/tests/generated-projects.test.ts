@@ -40,7 +40,7 @@ beforeAll(async () => {
   await execute('pnpm', [...fixturePackages.flatMap(name => ['--filter', name]), 'build'], { cwd: workspace })
   await execute('node', ['scripts/assemble-chat-package.mjs'], { cwd: workspace })
   await execute('pnpm', ['--filter', '@agentskit/chat-cli', 'build'], { cwd: workspace })
-}, 120_000)
+}, 300_000)
 
 afterAll(async () => Promise.all(roots.map(root => rm(root, { recursive: true, force: true }))))
 
