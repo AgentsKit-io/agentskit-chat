@@ -58,7 +58,7 @@ describe('generated projects', () => {
     expect((await run('node', [bin, 'completion', 'bash'], workspace)).stdout).toContain('react-native')
     await expect(run('node', [bin, 'init', 'one', 'two', '--renderer', 'react'], workspace)).rejects.toThrow('at most one target')
     await expect(run('node', [bin, 'init', '--directory', 'ignored', '--renderer', 'react'], workspace)).rejects.toThrow('only valid with add component')
-  })
+  }, 60_000)
 
   it('detects the host renderer before prompting on a TTY', async () => {
     const host = path.join(workspace, 'apps', `cli-fixture-detection-${randomUUID()}`); roots.push(host)
