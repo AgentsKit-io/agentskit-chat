@@ -56,12 +56,21 @@ importers:
       '@agentskit/doc-bridge':
         specifier: ^2.4.2
         version: 2.4.2(@agentskit/core@1.15.0)(@agentskit/memory@0.12.0(drizzle-orm@0.45.4(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1))(@agentskit/rag@0.7.0(@aws-sdk/client-s3@3.984.0))(@types/react@19.3.0)(graphology-types@0.24.8)(react-devtools-core@6.1.5)
+      '@agentskit/memory':
+        specifier: ^0.12.0
+        version: 0.12.0(drizzle-orm@0.45.4(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
+      '@agentskit/observability':
+        specifier: ^0.13.0
+        version: 0.13.0(drizzle-orm@0.45.4(@types/pg@8.23.1)(pg@8.23.1))(pg@8.23.1)
       '@changesets/cli':
         specifier: ^2.31.1
-        version: 2.31.1(@types/node@26.1.1)
+        version: 2.31.1(@types/node@25.9.9)
       '@playwright/test':
         specifier: ^1.64.1
         version: 1.64.1
+      '@types/node':
+        specifier: ^25.9.9
+        version: 25.9.9
       '@types/pg':
         specifier: 8.23.1
         version: 8.23.1
@@ -82,10 +91,10 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@types/node@26.1.1)(@vitest/coverage-v8@4.1.12)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1))
+        version: 4.1.12(@types/node@25.9.9)(@vitest/coverage-v8@4.1.12)(happy-dom@21.0.4)(vite@8.3.5(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1))
       wrangler:
         specifier: 4.152.0
-        version: 4.152.0(@types/node@26.1.1)
+        version: 4.152.0(@types/node@25.9.9)
       zod:
         specifier: ^4.3.6
         version: 4.4.3
@@ -9545,7 +9554,7 @@ snapshots:
     dependencies:
       '@changesets/types': 6.1.0
 
-  '@changesets/cli@2.31.1(@types/node@26.1.1)':
+  '@changesets/cli@2.31.1(@types/node@25.9.9)':
     dependencies:
       '@changesets/apply-release-plan': 7.1.1
       '@changesets/assemble-release-plan': 6.0.10
@@ -9561,7 +9570,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@changesets/write': 0.4.0
-      '@inquirer/external-editor': 1.0.3(@types/node@26.1.1)
+      '@inquirer/external-editor': 1.0.3(@types/node@25.9.9)
       '@manypkg/get-packages': 1.1.3
       ansi-colors: 4.1.3
       enquirer: 2.4.1
@@ -10282,12 +10291,12 @@ snapshots:
   '@img/sharp-win32-x64@0.35.5':
     optional: true
 
-  '@inquirer/external-editor@1.0.3(@types/node@26.1.1)':
+  '@inquirer/external-editor@1.0.3(@types/node@25.9.9)':
     dependencies:
       chardet: 2.2.0
       iconv-lite: 0.7.3
     optionalDependencies:
-      '@types/node': 26.1.1
+      '@types/node': 25.9.9
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -11897,7 +11906,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.2.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.12(@types/node@26.1.1)(@vitest/coverage-v8@4.1.12)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1))
+      vitest: 4.1.12(@types/node@25.9.9)(@vitest/coverage-v8@4.1.12)(happy-dom@21.0.4)(vite@8.3.5(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1))
 
   '@vitest/expect@4.1.12':
     dependencies:
@@ -11923,7 +11932,6 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 8.3.5(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1)
-    optional: true
 
   '@vitest/mocker@4.1.12(vite@8.3.5(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1))':
     dependencies:
@@ -14987,10 +14995,10 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  miniflare@5.20261019.2-beta(@types/node@26.1.1):
+  miniflare@5.20261019.2-beta(@types/node@25.9.9):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
-      sharp: 0.35.5(@types/node@26.1.1)
+      sharp: 0.35.5(@types/node@25.9.9)
       undici: 7.29.1
       workerd: 1.20261019.1
       ws: 8.21.0
@@ -16103,7 +16111,7 @@ snapshots:
       '@img/sharp-win32-x64': 0.35.5
       '@types/node': 22.20.5
 
-  sharp@0.35.5(@types/node@26.1.1):
+  sharp@0.35.5(@types/node@25.9.9):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -16134,7 +16142,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.5
       '@img/sharp-win32-ia32': 0.35.5
       '@img/sharp-win32-x64': 0.35.5
-      '@types/node': 26.1.1
+      '@types/node': 25.9.9
 
   shebang-command@2.0.0:
     dependencies:
@@ -16817,7 +16825,6 @@ snapshots:
       happy-dom: 21.0.4
     transitivePeerDependencies:
       - msw
-    optional: true
 
   vitest@4.1.12(@types/node@26.1.1)(@vitest/coverage-v8@4.1.12)(happy-dom@21.0.4)(vite@8.3.5(@types/node@26.1.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(terser@5.49.0)(yaml@2.9.1)):
     dependencies:
@@ -16933,13 +16940,13 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  wrangler@4.152.0(@types/node@26.1.1):
+  wrangler@4.152.0(@types/node@25.9.9):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261019.1)
       blake3-wasm: 2.1.5
       esbuild: 0.28.2
-      miniflare: 5.20261019.2-beta(@types/node@26.1.1)
+      miniflare: 5.20261019.2-beta(@types/node@25.9.9)
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20261019.1

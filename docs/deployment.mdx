@@ -132,6 +132,12 @@ export default {
 }
 ```
 
+## Postgres state on Node and Workers
+
+The same handler keeps all turn state in PostgreSQL on both runtimes: sessions and decisions from `@agentskit/chat/drizzle-pg`, messages from `postgresChatMemory` (`@agentskit/memory/postgres`), and spend from `postgresCostStore` (`@agentskit/observability/postgres`). Pass `drizzle(pool)` on Node. On Workers, open one `pg` `Client` per request (with `nodejs_compat`) and close it with `ctx.waitUntil(client.end())`.
+
+CI runs the same contract on both runtimes ([`tests/storage-pg/turn-contract.ts`](https://github.com/AgentsKit-io/agentskit-chat/blob/main/tests/storage-pg/turn-contract.ts)). A turn proposes a tool, the tool is approved, the model resumes, and the spend is committed. The next turn, which would pass the cost ceiling, gets `402 QUOTA_EXCEEDED` before any model call.
+
 ## Checklist
 
 1. Shared `defineChat` definition (no secrets in the client)
