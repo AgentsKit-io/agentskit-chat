@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { assertSingleCore, consumerCompanions } from './single-core-lib.mjs'
 import { canonicalHomepage, loadReleaseManifest, releaseRepositoryUrl } from './release-lib.mjs'
 
 const artifactDir = resolve(process.argv[2] ?? 'artifacts')
@@ -92,4 +93,21 @@ try {
   await rm(consumer, { recursive: true, force: true })
 }
 
+const singleCoreConsumer = await mkdtemp(join(tmpdir(), 'agentskit-chat-single-core-'))
+let coreVersion
+try {
+  await writeFile(join(singleCoreConsumer, 'package.json'), JSON.stringify({
+    name: 'agentskit-chat-single-core-consumer',
+    private: true,
+    type: 'module',
+    dependencies: { ...consumerCompanions, '@agentskit/chat': dependencies['@agentskit/chat'] },
+    pnpm: { overrides },
+  }, null, 2))
+  run('pnpm', ['install', '--ignore-scripts'], singleCoreConsumer)
+  coreVersion = assertSingleCore(await readFile(join(singleCoreConsumer, 'pnpm-lock.yaml'), 'utf8'))
+} finally {
+  await rm(singleCoreConsumer, { recursive: true, force: true })
+}
+
+console.log(`single @agentskit/core ${coreVersion} resolved with react, adapters, memory and observability`)
 console.log(`release artifact verification passed for ${expectedVersion}: ${release.packages.length} clean-installable packages`)
