@@ -33,6 +33,8 @@ export interface AskAdapterOptions {
   readonly corpus?: string
   readonly persona?: string
   readonly projectTool?: AskToolProjector
+  /** `server`: the service keeps the history under the session ID, so each turn sends only the latest user message. */
+  readonly history?: 'client' | 'server'
 }
 
 export interface AskMemoryOptions {
@@ -198,7 +200,9 @@ export function createAskAdapter(options: AskAdapterOptions): AskAdapter {
                 protocol: 'agentskit.chat.ask',
                 version: 1,
                 ...(sessionId === 'unscoped' ? {} : { sessionId }),
-                messages: projectAskMessages(request.messages),
+                messages: options.history === 'server' && sessionId !== 'unscoped'
+                  ? projectAskMessages(request.messages).slice(-1)
+                  : projectAskMessages(request.messages),
                 ...(deterministic === undefined ? {} : { deterministic }),
               }),
             })
@@ -282,6 +286,11 @@ export function createAskAdapter(options: AskAdapterOptions): AskAdapter {
     createSource: request => createSourceForSession(request, 'unscoped'),
     createSourceForSession,
   }
+}
+
+/** Adapter for useChat over the turn protocol with server-kept history; render and memory behave like createAskAdapter. */
+export function createTurnAdapter(options: AskAdapterOptions): AskAdapter {
+  return createAskAdapter({ ...options, history: 'server' })
 }
 
 const legacyContent = (record: Record<string, unknown>, projectTool?: AskToolProjector): string | undefined => {
