@@ -7,7 +7,9 @@ pelos gates com o lockfile de registry. Nunca use tarballs locais em produtos.
 
 ## Migrações e conexões
 
-Aplique `chatSessionDDL` e `chatDecisionDDL` de `@agentskit/chat/drizzle-pg`,
+Rode `migrateChatSchema(drizzle(pool))` de `@agentskit/chat/drizzle-pg` num passo
+de deploy em Node (aplica as migrações drizzle-kit do pacote; bancos criados com
+`chatSessionDDL`/`chatDecisionDDL` da 0.7.0 são adotados sem SQL manual) e aplique
 `postgresChatMigrationSql` de `@agentskit/memory/postgres` e
 `postgresCostMigrationSql` de `@agentskit/observability/postgres` uma vez na
 migração do produto. Use `drizzle(pool)` em Node; em Workers abra um `pg.Client`

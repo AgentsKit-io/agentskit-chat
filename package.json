@@ -52,10 +52,12 @@
     "postinstall": "node scripts/ensure-node-pty-helper.mjs",
     "test:storage:pg": "vitest run --config tests/storage-pg/vitest.config.mts",
     "test:runtime:pg": "vitest run --config tests/storage-pg/vitest.config.mts -t RF-06",
+    "test:migrations:pg": "vitest run --config tests/storage-pg/vitest.config.mts -t RF-07",
     "test:storage:pg:types": "tsc --noEmit -p tests/storage-pg/tsconfig.json"
   },
   "devDependencies": {
     "@agentskit/chat": "workspace:*",
+    "@agentskit/chat-previous": "npm:@agentskit/chat@0.7.0",
     "@agentskit/cross-platform": "^0.3.0",
     "@agentskit/doc-bridge": "^2.4.2",
     "@agentskit/memory": "^0.12.0",

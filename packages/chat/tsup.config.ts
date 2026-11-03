@@ -12,6 +12,8 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
-  esbuildOptions: options => { options.minifyWhitespace = true },
+  // import.meta.url in the CJS build of migrateChatSchema.
+  shims: true,
+  esbuildOptions: options => { options.minify = true; options.keepNames = true },
   noExternal: ['@agentskit/chat/protocol'],
 })

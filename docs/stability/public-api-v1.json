@@ -487,6 +487,24 @@
               ]
             },
             {
+              "name": "TurnClient",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnClientOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnSendOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "TurnTrace",
               "kinds": [
                 "type"
@@ -554,6 +572,18 @@
             },
             {
               "name": "createDeterministicAnswerResolver",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTurnAdapter",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTurnClient",
               "kinds": [
                 "value"
               ]
@@ -892,6 +922,12 @@
               ]
             },
             {
+              "name": "chatMigrationsTable",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
               "name": "chatSessionDDL",
               "kinds": [
                 "value"
@@ -911,6 +947,12 @@
             },
             {
               "name": "createDrizzleSessionStorage",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "migrateChatSchema",
               "kinds": [
                 "value"
               ]
