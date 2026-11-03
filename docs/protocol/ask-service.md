@@ -55,3 +55,7 @@ See [ADR-0022](../architecture/adrs/0022-shared-ask-service-integration.md).
 The trusted server vertical, diagnostics, persistence, and privacy-safe metric
 contracts are specified by [ADR-0026](../architecture/adrs/0026-trusted-ask-backend-vertical.md)
 and the [backend guide](../backend.md).
+
+## Turn client
+
+`createTurnClient({ endpoint, sessionId })` sends one turn (only the new user message; the server keeps the history under `sessionId`), reads the NDJSON stream and yields each validated `AskEvent` (`text`, `tool`, `done`, `error`). Invalid records are dropped and the iterator ends after `done` or `error`. `createTurnAdapter(options)` is the useChat adapter with the same server-kept history; it behaves like `createAskAdapter` otherwise.

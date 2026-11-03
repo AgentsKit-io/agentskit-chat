@@ -23,6 +23,7 @@ import { CHOICE_LIST_COMPONENT_KEY, ChoiceListPropsSchema, STANDARD_COMPONENT_KE
 
 export * from './catalog.js'
 export * from './ask.js'
+export * from './turn-client.js'
 export * from './deterministic.js'
 export * from './presentation.js'
 export * from './controlled.js'
