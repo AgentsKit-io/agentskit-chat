@@ -81,18 +81,22 @@ Install `drizzle-orm` and a PostgreSQL driver in the host, then import the optio
 
 ```ts
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { chatSessionDDL, createDrizzleSessionStorage } from '@agentskit/chat/drizzle-pg'
+import { createDrizzleSessionStorage, migrateChatSchema } from '@agentskit/chat/drizzle-pg'
+
+// Deploy step (Node only): applies the drizzle-kit migrations shipped in the package, never per request.
+await migrateChatSchema(drizzle(pool))
 
 // pool is the host-owned pg Pool (Node) or connected request Client (Workers).
-// Apply chatSessionDDL once in a migration, never on every production request.
 const storage = createDrizzleSessionStorage(drizzle(pool), authenticatedTenantId)
 ```
+
+`migrateChatSchema` records applied migrations in `__agentskit_chat_migrations` (`chatMigrationsTable`), apart from your own drizzle-kit journal. It adopts tables created with the 0.7.0 `chatSessionDDL`/`chatDecisionDDL` as they are, so upgrading needs no manual SQL. If you manage migrations with your own drizzle-kit instead, re-export `chatSessionTable` and `chatDecisionTable` from your schema; their constraint names match the tables the DDL creates, so drizzle-kit sees no drift.
 
 The adapter stores application envelopes, not messages. Continue using upstream `ChatMemory` for canonical history; a Drizzle ChatMemory backend is pending upstream. `save` returns false for a lost cursor CAS; persistence on the resumed session converts that into `SessionConflictError`, and the handler preserves HTTP 409 `SESSION_CONFLICT`. Keys and every read/update/delete include the trusted tenant ID. Supply tenant identity from authentication, never from an untrusted event.
 
 On Workers connect a `pg.Client` per request (Hyperdrive connection string in production), and call `client.end()` in `waitUntil` after consuming/closing the chat stream. On Node reuse a `pg.Pool` and close it during server shutdown. The adapter imports no Neon or Cloudflare-specific API. Abort is checked before SQL dispatch; in-flight SQL is not cancelled.
 
-The same subpath provides the durable store for confirmations decided in a later request. Apply `chatDecisionDDL` in a migration and pass the store to the handler's `decisions` option:
+The same subpath provides the durable store for confirmations decided in a later request. `migrateChatSchema` creates its table too; pass the store to the handler's `decisions` option:
 
 ```ts
 import { createDrizzleDecisionStore } from '@agentskit/chat/drizzle-pg'
