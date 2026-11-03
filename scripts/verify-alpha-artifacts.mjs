@@ -37,7 +37,7 @@ if (await readFile(join(artifactDir, 'SHA256SUMS'), 'utf8') !== expectedChecksum
 const consumer = await mkdtemp(join(tmpdir(), 'agentskit-chat-alpha-'))
 await writeFile(join(consumer, 'package.json'), JSON.stringify({
   name: 'agentskit-chat-alpha-consumer', private: true, type: 'module',
-  dependencies: { ...dependencies, '@agentskit/core': '^1.12.2', '@agentskit/react': '^0.7.1', react: '^19.2.7', 'react-dom': '^19.2.7', zod: '^4.3.6' },
+  dependencies: { ...dependencies, '@agentskit/core': '^1.12.2', '@agentskit/react': '^0.7.1', react: '^19.2.7', 'react-dom': '^19.2.7', zod: '^4.6.7' },
   devDependencies: { '@vitejs/plugin-react': '^6.0.3', vite: '^8.1.4' },
   pnpm: { overrides: { '@agentskit/chat': dependencies['@agentskit/chat'] } },
 }, null, 2))

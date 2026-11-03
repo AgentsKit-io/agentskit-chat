@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:1370d4647f44d7612ba815d4c9022ba7d606658f93b40bd40822211f68f34b1a"
+        "sourceHash": "sha256:0be41a33cb6842740a053637f212c4687da64162e81d17253b7a2e3982e0536e"
       },
       "exceptions": []
     },
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:d87bfb38c8a478c5b14c5c5a1f913ac750eea618c53463c9cdc5a0c9175516f2"
+        "sourceHash": "sha256:90825a975844edabb2c6a35163cffffd5745f7b569841c0fcd9c03a7af2b72d0"
       },
       "exceptions": []
     },
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:dd0275d8787e1caac582b9f56f30200a63e57849f022d4cf486617270968bfa8"
+        "sourceHash": "sha256:b0c2e9fdf2eb2e194992f1fe4c0a02ad1abf48935ce707a0ed9bee0384654cb7"
       },
       "exceptions": []
     },
@@ -528,7 +528,7 @@
           "packages/cli/fixtures/readme-example.mjs",
           "docs/cli.mdx"
         ],
-        "sourceHash": "sha256:b2102b44346569cfff2d43a5583e8827e53c88ad297894022466545fa4f70add"
+        "sourceHash": "sha256:f20acefb7681084b7ef00787ccdb253e9984f1cecb56746a5223c350f11c92f5"
       },
       "exceptions": []
     },
@@ -1144,7 +1144,7 @@
           "packages/devtools/fixtures/readme-example.ts",
           "docs/devtools.md"
         ],
-        "sourceHash": "sha256:71652e61687b4718e29bec6dd01d429baa789a7650353f725d77da74bb1f0093"
+        "sourceHash": "sha256:828ea5477c26dd8c44064a7a8a1543db70d725db0e6955e2ab984e099ac70c4b"
       },
       "exceptions": [
         {
