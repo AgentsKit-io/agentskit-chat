@@ -487,6 +487,24 @@
               ]
             },
             {
+              "name": "TurnClient",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnClientOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
+              "name": "TurnSendOptions",
+              "kinds": [
+                "type"
+              ]
+            },
+            {
               "name": "TurnTrace",
               "kinds": [
                 "type"
@@ -554,6 +572,18 @@
             },
             {
               "name": "createDeterministicAnswerResolver",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTurnAdapter",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "createTurnClient",
               "kinds": [
                 "value"
               ]
