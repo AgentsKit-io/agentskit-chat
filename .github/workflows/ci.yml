@@ -150,3 +150,5 @@ jobs:
       - run: pnpm --filter @agentskit/chat build
       - run: pnpm test:storage:pg:types
       - run: pnpm test:runtime:pg
+      # RF-07: the previous published schema, then the current drizzle-kit migrations, without data loss.
+      - run: pnpm test:migrations:pg

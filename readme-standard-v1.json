@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:0be41a33cb6842740a053637f212c4687da64162e81d17253b7a2e3982e0536e"
+        "sourceHash": "sha256:1a320ac5f67f6aef386cebc903567aafda2d39dd6b4b12bcfc2faa05a2552136"
       },
       "exceptions": []
     },
@@ -295,7 +295,7 @@
           "packages/chat/fixtures/readme-example.ts",
           "docs/components/catalog.generated.md"
         ],
-        "sourceHash": "sha256:90825a975844edabb2c6a35163cffffd5745f7b569841c0fcd9c03a7af2b72d0"
+        "sourceHash": "sha256:cf79bc1e30daedc7892321e4b37bcee4ff8f568bd035412e56978d55b8252b35"
       },
       "exceptions": []
     },

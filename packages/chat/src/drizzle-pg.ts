@@ -1,5 +1,5 @@
 import { and, eq, sql } from 'drizzle-orm'
-import { integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
+import { check, integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { deserializeMessages, serializeMessages } from '@agentskit/core'
 import type { MemoryRecord, ToolCall, ToolDecisionRecord, ToolDecisionStore } from '@agentskit/core'
@@ -7,20 +7,40 @@ import { SessionSnapshotSchema } from '@agentskit/chat-protocol'
 import type { SessionSnapshot } from '@agentskit/chat-protocol'
 import type { SessionStorage } from './index.js'
 
-/** Application envelopes only; canonical messages belong to upstream ChatMemory. */
+/**
+ * Application envelopes only; canonical messages belong to upstream ChatMemory.
+ * Constraint names match what Postgres gives the 0.7.0 DDL, so drizzle-kit sees no drift on existing tables.
+ * Schema changes ship as drizzle-kit migrations in the package `drizzle/` folder (see `migrateChatSchema`).
+ */
 export const chatSessionTable = pgTable('agentskit_chat_sessions', {
   tenantId: text('tenant_id').notNull(),
   sessionId: text('session_id').notNull(),
   cursor: integer('cursor').notNull(),
   snapshot: jsonb('snapshot').$type<SessionSnapshot>().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-}, table => [primaryKey({ columns: [table.tenantId, table.sessionId] })])
+}, table => [
+  primaryKey({ name: 'agentskit_chat_sessions_pkey', columns: [table.tenantId, table.sessionId] }),
+  check('agentskit_chat_sessions_cursor_check', sql`${table.cursor} >= 0`),
+])
 
 export const chatSessionDDL = `CREATE TABLE IF NOT EXISTS agentskit_chat_sessions (
   tenant_id text NOT NULL, session_id text NOT NULL, cursor integer NOT NULL CHECK (cursor >= 0),
   snapshot jsonb NOT NULL, updated_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (tenant_id, session_id)
 )`
+
+/** Bookkeeping table of the shipped migrations, kept apart from the application's own drizzle-kit journal. */
+export const chatMigrationsTable = '__agentskit_chat_migrations'
+
+/**
+ * Applies the drizzle-kit migrations shipped in this package's `drizzle/` folder (Node only: it reads files).
+ * Safe on databases created with the 0.7.0 `chatSessionDDL`/`chatDecisionDDL`: the baseline adopts them as they are.
+ * Run it from a Node deploy step; Workers then use the migrated database.
+ */
+export const migrateChatSchema = async (db: NodePgDatabase): Promise<void> => {
+  const [{ fileURLToPath }, { migrate }] = await Promise.all([import('node:url'), import('drizzle-orm/node-postgres/migrator')])
+  await migrate(db, { migrationsFolder: fileURLToPath(new URL('../drizzle', import.meta.url)), migrationsTable: chatMigrationsTable })
+}
 
 /** Pass drizzle(pool) on Node or drizzle(client) for the lifetime of a Worker request. */
 export const createDrizzleSessionStorage = (db: NodePgDatabase, tenantId: string): SessionStorage => {
@@ -67,7 +87,11 @@ export const chatDecisionTable = pgTable('agentskit_chat_decisions', {
   reason: text('reason'),
   record: jsonb('record').$type<StoredDecision>().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-}, table => [primaryKey({ columns: [table.tenantId, table.sessionId, table.toolCallId] })])
+}, table => [
+  primaryKey({ name: 'agentskit_chat_decisions_pkey', columns: [table.tenantId, table.sessionId, table.toolCallId] }),
+  check('agentskit_chat_decisions_status_check', sql`${table.status} IN ('pending', 'claimed', 'complete', 'failed', 'denied')`),
+  check('agentskit_chat_decisions_decision_check', sql`${table.decision} IN ('approve', 'deny')`),
+])
 
 export const chatDecisionDDL = `CREATE TABLE IF NOT EXISTS agentskit_chat_decisions (
   tenant_id text NOT NULL, session_id text NOT NULL, tool_call_id text NOT NULL,
