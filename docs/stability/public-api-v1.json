@@ -892,6 +892,12 @@
               ]
             },
             {
+              "name": "chatMigrationsTable",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
               "name": "chatSessionDDL",
               "kinds": [
                 "value"
@@ -911,6 +917,12 @@
             },
             {
               "name": "createDrizzleSessionStorage",
+              "kinds": [
+                "value"
+              ]
+            },
+            {
+              "name": "migrateChatSchema",
               "kinds": [
                 "value"
               ]
