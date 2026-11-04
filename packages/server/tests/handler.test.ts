@@ -431,13 +431,16 @@ describe('Web-standard chat handler', () => {
       const cancelled = await fetch(`http://127.0.0.1:${address.port}/chat`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...submission(), eventId: 'submit-2', turnId: 'turn-2' }), signal: cancellation.signal })
       await cancelled.body!.getReader().read()
       cancellation.abort()
-      await new Promise(resolve => setTimeout(resolve, 60))
+      // The disconnect crosses the socket and the bridge asynchronously; poll instead of guessing a delay.
+      await vi.waitFor(() => expect(aborted).toHaveBeenCalled(), { timeout: 5000, interval: 10 })
       expect(aborted).toHaveBeenCalledOnce()
+      // Abort is synchronous, but the turn is released only after the source settles and memory is saved.
+      await vi.waitFor(async () => expect((await storage.load('session') as SessionSnapshot | undefined)?.activeTurn).toBeUndefined(), { timeout: 5000, interval: 10 })
       const resumed = await fetch(`http://127.0.0.1:${address.port}/chat`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...submission(), eventId: 'submit-3', turnId: 'turn-3' }) })
       expect(resumed.status).toBe(200)
       await resumed.body?.cancel()
     } finally {
       await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
     }
-  })
+  }, 20_000) // Real sockets: allow for a loaded CI host.
 })
