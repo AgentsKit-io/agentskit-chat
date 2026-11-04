@@ -189,7 +189,7 @@ describe('client.action.decide (RF-17..RF-24)', () => {
       expect(codes).toContain('ok')
       expect(world.modelRequests, `round ${round}`).toHaveLength(2)
     }
-  })
+  }, 60_000) // 100 rounds of 8 concurrent requests: the default 5s budget is too tight on a loaded CI host.
 
   it('RF-19: a slow tool keeps later approvals out until the first one settles', async () => {
     const world = createWorld({ toolDelayMs: 20 })

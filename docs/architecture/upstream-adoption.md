@@ -357,3 +357,7 @@ Re-inspected the published `@agentskit/core` 1.15.0 controller `persistPending`:
 The Postgres race contract also exposed a retry between decision settlement and final model/memory persistence. The handler checks the current session lease before replay, returning the existing 409 while that turn remains active; it does not resume or execute the action again.
 
 The parts follow-up continues to reuse core 1.15 `AdapterFactory`, `Message`, `ContentPart` and `controller.send`; it changes only the application byte budget and decorator targets. Frozen object and class adapters keep their original receivers. No upstream gap or new dependency is introduced.
+
+## Tenant chat data erasure (RF-08)
+
+[ADR-0041](./adrs/0041-tenant-chat-data-erasure.md). Inspected: `@agentskit/core` 1.15 `ChatMemory` (`clear` per instance) and `ToolDecisionStore` (no delete), `@agentskit/observability` 0.13 `CostStore`, `createInMemoryCostStore` and `postgresCostStore` (no delete), and `@agentskit/net` `withTimeout`. Reused exports: `withTimeout`; `createInMemoryCostStore`, `createInMemoryMemory` and `createChatController` through the handler in tests. Local application behavior: one call that runs a tenant-scoped eraser per category, validates the tenant ID, applies deadlines, aggregates failures, and returns a receipt. No storage is implemented here. Upstream gap: the ports have no tenant-scoped erase. Tenant erase methods on `ToolDecisionStore`, `ChatMemory` and `CostStore` are follow-up work for AgentsKit-io/agentskit, and the eraser contract stays the same once they ship.
