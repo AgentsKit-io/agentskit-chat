@@ -1,4 +1,4 @@
-# ADR-0040: Tenant chat data erasure
+# ADR-0041: Tenant chat data erasure
 
 Status: Proposed, 2026-11-01.
 
