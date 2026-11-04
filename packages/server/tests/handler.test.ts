@@ -376,7 +376,10 @@ describe('Web-standard chat handler', () => {
     let finished = false
     const aborted = vi.fn()
     const storage = createStorage()
-    const streaming: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'text', content: 'first' }; await new Promise(resolve => setTimeout(resolve, 30)); finished = true; yield { type: 'done' } }, abort: aborted }) }
+    let hold = false
+    let release: () => void = () => undefined
+    // When `hold` is set the source stays open until aborted, so a slow disconnect on a loaded host cannot race a natural finish.
+    const streaming: AdapterFactory = { createSource: () => ({ async *stream() { yield { type: 'text', content: 'first' }; await (hold ? new Promise<void>(resolve => { release = resolve }) : new Promise(resolve => setTimeout(resolve, 30))); finished = true; yield { type: 'done' } }, abort: () => { aborted(); release() } }) }
     const handler = createChatHandler({ resolveDefinition: () => ({ id: 'chat', chat: { adapter: streaming } }), sessionStorage: () => storage, createId: () => 'http-event' })
     const server = createServer(async (incoming, outgoing) => {
       const disconnected = new AbortController()
@@ -427,6 +430,7 @@ describe('Web-standard chat handler', () => {
       expect(text.trim().split('\n').some(line => decodeTurnEvent(line).ok)).toBe(true)
 
       finished = false
+      hold = true
       const cancellation = new AbortController()
       const cancelled = await fetch(`http://127.0.0.1:${address.port}/chat`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...submission(), eventId: 'submit-2', turnId: 'turn-2' }), signal: cancellation.signal })
       await cancelled.body!.getReader().read()
