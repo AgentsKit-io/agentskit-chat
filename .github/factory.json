@@ -1,0 +1,4 @@
+{
+  "install": "pnpm install --frozen-lockfile",
+  "verify": "pnpm lint && pnpm test:conformance"
+}
