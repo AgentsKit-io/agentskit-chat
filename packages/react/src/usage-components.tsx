@@ -1,15 +1,16 @@
-import { ToolConfirmation } from '@agentskit/react'
+import type { ToolConfirmation } from '@agentskit/react'
 import { useEffect, useRef, type ComponentProps, type ReactElement, type ReactNode } from 'react'
 
 export type QuotaState = 'ok' | 'warning' | 'blocked'
 
+/** Every text is supplied by the caller; the component ships no fixed-language copy. */
 export interface QuotaBarLabels {
-  readonly title?: string
-  readonly ok?: string
-  readonly warning?: string
-  readonly blocked?: string
+  readonly title: string
+  readonly ok: string
+  readonly warning: string
+  readonly blocked: string
   /** Receives the rounded percentage (0-100+). */
-  readonly valueText?: (percent: number) => string
+  readonly valueText: (percent: number) => string
 }
 
 export interface QuotaBarProps {
@@ -22,17 +23,9 @@ export interface QuotaBarProps {
   readonly warnAt?: number
   /** Utilization at which the bar is blocked. Default 1. */
   readonly blockAt?: number
-  readonly labels?: QuotaBarLabels
+  readonly labels: QuotaBarLabels
   readonly className?: string
 }
-
-const defaultLabels = {
-  title: 'Usage',
-  ok: 'Within limit',
-  warning: 'Approaching limit',
-  blocked: 'Limit reached',
-  valueText: (percent: number) => `${percent}% used`,
-} as const
 
 export const resolveQuotaState = (utilization: number, warning: boolean, blockAt = 1): QuotaState =>
   utilization >= blockAt ? 'blocked' : warning ? 'warning' : 'ok'
@@ -47,7 +40,7 @@ export const QuotaBar = ({ quota, used, limit, warnAt = 0.8, blockAt = 1, labels
   const utilization = quota?.utilization ?? (used !== undefined && limit !== undefined && limit > 0 ? used / limit : undefined)
   if (utilization === undefined) return null
   const state = resolveQuotaState(utilization, quota?.warning ?? utilization >= warnAt, blockAt)
-  const text = { ...defaultLabels, ...labels }
+  const text = labels
   const percent = Math.round(utilization * 100)
   const clamped = Math.min(100, Math.max(0, percent))
   return (
@@ -78,39 +71,35 @@ export type ConfirmUndoPhase = 'pending' | 'approved' | 'denied'
 
 export type ConfirmUndoToolCall = ComponentProps<typeof ToolConfirmation>['toolCall']
 
+/** Every text is supplied by the caller; the component ships no fixed-language copy. */
 export interface ConfirmUndoCardLabels {
-  readonly title?: string
-  readonly approved?: string
-  readonly denied?: string
-  readonly undo?: string
+  readonly title: string
+  readonly approve: string
+  readonly deny: string
+  readonly approved: string
+  readonly denied: string
+  readonly undo: string
 }
 
 export interface ConfirmUndoCardProps {
   /** The upstream tool call; the phase is derived from its `status`. */
   readonly toolCall: ConfirmUndoToolCall
-  /** Human-readable proposal shown above the upstream confirmation controls. */
+  /** Human-readable proposal shown above the approve/deny controls. */
   readonly description?: ReactNode
   readonly onApprove: (toolCallId: string) => void
   readonly onDeny: (toolCallId: string, reason?: string) => void
   /** When set, an undo button appears after approval. */
   readonly onUndo?: (toolCallId: string) => void
-  readonly labels?: ConfirmUndoCardLabels
+  readonly labels: ConfirmUndoCardLabels
   readonly className?: string
 }
-
-const defaultCardLabels = {
-  title: 'Confirm action',
-  approved: 'Approved',
-  denied: 'Denied',
-  undo: 'Undo',
-} as const
 
 /** `requires_confirmation` is pending; a deny is recorded upstream as an error starting with `Permission denied`. */
 export const resolveConfirmPhase = (toolCall: ConfirmUndoToolCall): ConfirmUndoPhase =>
   toolCall.status === 'requires_confirmation' ? 'pending' : toolCall.status === 'error' && toolCall.error?.startsWith('Permission denied') ? 'denied' : 'approved'
 
 export const ConfirmUndoCard = ({ toolCall, description, onApprove, onDeny, onUndo, labels, className }: ConfirmUndoCardProps): ReactElement => {
-  const text = { ...defaultCardLabels, ...labels }
+  const text = labels
   const phase = resolveConfirmPhase(toolCall)
   const section = useRef<HTMLElement>(null)
   const status = useRef<HTMLDivElement>(null)
@@ -134,7 +123,10 @@ export const ConfirmUndoCard = ({ toolCall, description, onApprove, onDeny, onUn
       <strong>{text.title}</strong>
       {description === undefined ? null : <div>{description}</div>}
       {phase === 'pending' ? (
-        <ToolConfirmation toolCall={toolCall} onApprove={onApprove} onDeny={onDeny} />
+        <div>
+          <button type="button" data-ak-tool-confirmation-approve onClick={() => onApprove(toolCall.id)}>{text.approve}</button>
+          <button type="button" data-ak-tool-confirmation-deny onClick={() => onDeny(toolCall.id)}>{text.deny}</button>
+        </div>
       ) : (
         <div ref={status} role="status" tabIndex={-1}>
           <code>{toolCall.name}</code> <span>{phase === 'approved' ? text.approved : text.denied}</span>
