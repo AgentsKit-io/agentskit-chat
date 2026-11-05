@@ -1,0 +1,7 @@
+title = "agentskit-chat gitleaks config"
+
+[extend]
+useDefault = true
+
+# Allowlist only test fixtures, each entry with a reason. Currently empty:
+# add a [[allowlists]] block with a `description` explaining the fixture.
