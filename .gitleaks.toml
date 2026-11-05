@@ -5,3 +5,11 @@ useDefault = true
 
 # Allowlist only test fixtures, each entry with a reason. Currently empty:
 # add a [[allowlists]] block with a `description` explaining the fixture.
+
+[[allowlists]]
+description = "Evidence file lists SHA-256 digests of log files (api*.log), not secrets"
+paths = ['''docs/evidence/trilha-04-2026-10-10\.json''']
+
+[[allowlists]]
+description = "Prose in a report mentioning the word API near a long sentence; not a credential"
+paths = ['''docs/ch-d-parts-upload-report\.md''']
