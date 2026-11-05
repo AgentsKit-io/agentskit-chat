@@ -1,0 +1,20 @@
+title = "agentskit-chat gitleaks config"
+
+[extend]
+useDefault = true
+
+# Allowlist only known false positives, each entry narrowed by path AND a
+# pattern on the exact match, with a `description` giving the reason.
+
+[[allowlists]]
+description = "Evidence file lists 64-hex SHA-256 digests of api*.log files (logsSHA256), not secrets"
+condition = "AND"
+paths = ['''docs/evidence/trilha-04-2026-10-10\.json''']
+regexes = ['''^[0-9a-f]{64}$''']
+
+[[allowlists]]
+description = "Report table row (RF-11 / C6) where the word API precedes prose; not a credential"
+condition = "AND"
+paths = ['''docs/ch-d-parts-upload-report\.md''']
+regexTarget = "line"
+regexes = ['''^\| RF-11 / C6: reference delivery to controller/adapter \|''']
