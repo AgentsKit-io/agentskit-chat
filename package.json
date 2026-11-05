@@ -4,7 +4,7 @@
   "private": true,
   "description": "Cross-framework application framework for interactive agent experiences, built on AgentsKit.",
   "license": "MIT",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.34.9",
   "scripts": {
     "build": "pnpm --filter './packages/**' -r --if-present build && node scripts/assemble-chat-package.mjs && pnpm --filter './apps/**' -r --if-present build",
     "dev": "pnpm --filter @agentskit/chat-example-react dev",
