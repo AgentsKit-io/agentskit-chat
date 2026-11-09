@@ -27,8 +27,10 @@ requirements:
   # já pronto em parte: 0.7.0 publicada depende de @agentskit/eval ^0.7 (core 1.15); falta o teste de instalação no CI
   weight: 2
   acceptance:
-    - test: scripts/single-core.test.mjs
-    - run: node scripts/verify-release-artifacts.mjs
+    - "scripts/single-core.test.mjs > RF-01 single @agentskit/core > accepts one copy and ignores similarly named packages"
+    - "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects two copies"
+    - "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects a lockfile without core"
+    - "ci: node scripts/pack-release.mjs (invokes verify-release-artifacts.mjs in the quality job)"
   homolog: []
   issues: [248]
   prs: []
