@@ -56,6 +56,7 @@ requirements:
   - test: "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges its real cost, not the reservation"
   - test: "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges the configured minimum"
   - test: "packages/server/tests/cost.test.ts > RF-03: a client that stops reading the stream cancels the turn too"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42688890329"
   homolog: []
   issues: [265]
   prs: [275]
