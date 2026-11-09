@@ -54,12 +54,13 @@ requirements:
   # já pronto: PR #275 (commit 8e7b5a6)
   weight: 2
   acceptance:
-  - "packages/server/tests/cost.test.ts > RF-27: warns from 80% of the cap and answers 402 QUOTA_EXCEEDED once the cap cannot fit another turn"
-  - "packages/server/tests/cost.test.ts > RF-29: commits the real usage of a finished turn to the ledger and holds nothing afterwards"
-  - "packages/server/tests/cost.test.ts > releases a reservation when memory fails before dispatch"
-  - "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges its real cost, not the reservation"
-  - "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges the configured minimum"
-  - "packages/server/tests/cost.test.ts > RF-03: a client that stops reading the stream cancels the turn too"
+  - test: "packages/server/tests/cost.test.ts > RF-27: warns from 80% of the cap and answers 402 QUOTA_EXCEEDED once the cap cannot fit another turn"
+  - test: "packages/server/tests/cost.test.ts > RF-29: commits the real usage of a finished turn to the ledger and holds nothing afterwards"
+  - test: "packages/server/tests/cost.test.ts > releases a reservation when memory fails before dispatch"
+  - test: "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges its real cost, not the reservation"
+  - test: "packages/server/tests/cost.test.ts > RF-03: a turn cancelled before any token usage charges the configured minimum"
+  - test: "packages/server/tests/cost.test.ts > RF-03: a client that stops reading the stream cancels the turn too"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42688890329"
   homolog: []
   issues: [265]
   prs: [275]
