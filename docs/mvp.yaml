@@ -67,10 +67,13 @@ requirements:
     o comportamento; teste com todos os tipos de evento e com evento inválido
   weight: 1
   acceptance:
-    - test: packages/chat/tests/turn-client.test.ts
+  - "packages/chat/tests/turn-client.test.ts > turn client > sends only the new turn and yields every event type, validated"
+  - "packages/chat/tests/turn-client.test.ts > turn client > yields error events and stops"
+  - "packages/chat/tests/turn-client.test.ts > turn client > drops invalid events and rejects failed responses"
+  - "packages/chat/tests/turn-client.test.ts > turn adapter > sends only the latest user message when the server owns history"
   homolog: []
-  issues: []
-  prs: []
+  issues: [266]
+  prs: [276]
 - id: RF-05
   title: Sem duplicação com @agentskit/react
   done_when: >-
