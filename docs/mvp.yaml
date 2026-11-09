@@ -66,7 +66,8 @@ requirements:
     validado, com o histórico mantido pelo servidor; um produto consumidor troca seu leitor próprio por ele sem mudar
     o comportamento; teste com todos os tipos de evento e com evento inválido
   weight: 1
-  acceptance: []
+  acceptance:
+    - test: packages/chat/tests/turn-client.test.ts
   homolog: []
   issues: []
   prs: []
