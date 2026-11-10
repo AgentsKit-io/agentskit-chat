@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-react",
-  "version": "0.2.5",
+  "version": "0.7.0",
   "description": "React application shell for AgentsKit Chat.",
   "license": "MIT",
   "repository": {
@@ -48,6 +48,8 @@
     "react-dom": "^19.3.1",
     "tsup": "^8.5.1"
   },
-  "publishConfig": {},
-  "private": true
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }

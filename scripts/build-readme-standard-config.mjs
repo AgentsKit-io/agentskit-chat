@@ -200,6 +200,32 @@ const surfaces = [
     },
     exceptions: [],
   },
+  {
+    id: 'package-drizzle-pg',
+    path: 'packages/drizzle-pg/README.md',
+    profileId: 'major-package',
+    dimensions: {
+      promise: ['Postgres/Drizzle storage'],
+      proof: ['## Verified proof', 'tests/exports.test.ts'],
+      examples: ['## Quick start', '<!-- readme-example:drizzle-pg -->'],
+      visuals: ['docs/assets/agentschat-architecture.svg', '```mermaid'],
+      maturity: ['`0.7.0`', 'drizzle-orm'],
+      compatibility: ['Node.js 22+', '`drizzle-orm` ^0.45.3'],
+      contribution: ['## Contributing', 'CONTRIBUTING.md'],
+      metadata: ['**Tags:**', '`agentskit-chat`'],
+      ecosystem: ['## AgentsKit ecosystem', 'AgentsKit-io/agentskit'],
+    },
+    visuals: [architectureVisual],
+    commands: [{ id: 'install-drizzle-pg', command: 'npm install @agentskit/chat @agentskit/chat-drizzle-pg drizzle-orm', ...commandTest('packages/drizzle-pg/tests/exports.test.ts') }],
+    examples: [{ id: 'drizzle-pg', fixture: 'packages/drizzle-pg/fixtures/readme-example.ts', ...exampleTest }],
+    freshness: {
+      reviewedOn: '2026-11-10',
+      reviewDueOn: '2027-03-10',
+      sources: ['packages/drizzle-pg/README.md', 'packages/drizzle-pg/package.json', 'packages/drizzle-pg/tsconfig.json', 'packages/drizzle-pg/fixtures/readme-example.ts', 'docs/deployment.mdx'],
+      sourceHash: 'sha256:placeholder',
+    },
+    exceptions: [],
+  },
 ]
 
 const concisePackages = [

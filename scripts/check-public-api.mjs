@@ -36,6 +36,10 @@ const sourceEntries = {
     './angular': '../angular/src/index.ts',
   },
   '@agentskit/chat-cli': { '.': '../cli/src/index.ts' },
+  '@agentskit/chat-drizzle-pg': { '.': '../drizzle-pg/src/index.ts' },
+  '@agentskit/chat-protocol': { '.': '../protocol/src/index.ts', './fixtures': '../protocol/src/fixtures.ts' },
+  '@agentskit/chat-react': { '.': '../react/src/index.tsx' },
+  '@agentskit/chat-server': { '.': '../server/src/index.ts' },
 }
 
 function exportTargets(entry) {

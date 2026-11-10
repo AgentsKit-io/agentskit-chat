@@ -564,6 +564,18 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.31)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)
 
+  packages/drizzle-pg:
+    devDependencies:
+      '@agentskit/chat':
+        specifier: workspace:*
+        version: link:../chat
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@types/pg@8.23.1)(pg@8.23.1)
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.31)(tsx@4.23.15)(typescript@6.0.3)(yaml@2.9.1)
+
   packages/ink:
     dependencies:
       '@agentskit/chat':

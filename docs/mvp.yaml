@@ -86,7 +86,10 @@ requirements:
     Um pacote consome o outro (sem componentes ou hooks repetidos) e a fronteira está documentada; os pacotes que os
     produtos usam (react, server, protocol, drizzle-pg) estão no npm com versão e changelog
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/react/tests/upstream-boundary.test.ts"
+  - run: "test -f docs/architecture/react-boundary.md"
+  - run: "for p in react server protocol drizzle-pg; do npm view @agentskit/chat-$p version; done"
   homolog: []
   issues: [251]
   prs: []

@@ -32,6 +32,10 @@ describe('release package metadata', () => {
     expect(result.release.packages.map(item => item.name)).toEqual([
       '@agentskit/chat',
       '@agentskit/chat-cli',
+      '@agentskit/chat-react',
+      '@agentskit/chat-server',
+      '@agentskit/chat-protocol',
+      '@agentskit/chat-drizzle-pg',
     ])
     for (const item of result.release.packages) {
       const manifest = JSON.parse(readFileSync(new URL(`../packages/${item.directory}/package.json`, import.meta.url), 'utf8'))
