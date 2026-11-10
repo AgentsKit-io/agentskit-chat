@@ -74,6 +74,7 @@ try {
     pnpm: { overrides },
   }, null, 2))
 
+  await writeFile(join(consumer, 'pnpm-workspace.yaml'), JSON.stringify({ overrides }, null, 2))
   run('pnpm', ['install', '--ignore-scripts'], consumer)
   run('node', ['--input-type=module', '-e', [
     "const protocol=await import('@agentskit/chat/protocol')",
@@ -103,6 +104,7 @@ try {
     dependencies: { ...consumerCompanions, '@agentskit/chat': dependencies['@agentskit/chat'] },
     pnpm: { overrides },
   }, null, 2))
+  await writeFile(join(singleCoreConsumer, 'pnpm-workspace.yaml'), JSON.stringify({ overrides }, null, 2))
   run('pnpm', ['install', '--ignore-scripts'], singleCoreConsumer)
   coreVersion = assertSingleCore(await readFile(join(singleCoreConsumer, 'pnpm-lock.yaml'), 'utf8'))
 } finally {

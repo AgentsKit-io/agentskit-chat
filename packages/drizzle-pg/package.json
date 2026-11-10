@@ -40,5 +40,8 @@
     "drizzle-orm": "0.45.4",
     "tsup": "^8.5.1"
   },
-  "publishConfig": {}
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }

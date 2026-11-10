@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:3980e4f6b9ef386bbca94d107c46f20f08fe1ee7827ea5385e6c3c6fdf497c5a"
+        "sourceHash": "sha256:44c8f3af9cad20cceb65f9799cd8bbad0b863d0f9c6a6f6064d6eebb13b34a86"
       },
       "exceptions": []
     },
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:0424b27c037803753b370edcfc8639a9b70abf3d19304011cedbe8d3980fc9ac"
+        "sourceHash": "sha256:cf4fc8b57e8f9f9cd70a755d7f9b5d6b6c8f7e4ef2d8fec31c9291473f06ec0e"
       },
       "exceptions": []
     },
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:0810a801d36779653ae87900cea687672c372a40953e5fe85edd09e69b35dd0c"
+        "sourceHash": "sha256:f2f1200d1b51e7094e934af551f725e34930a21c3e8c8a9da3d67033feb0bd7e"
       },
       "exceptions": []
     },
