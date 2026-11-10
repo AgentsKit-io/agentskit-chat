@@ -101,10 +101,15 @@ requirements:
     As tabelas de sessão e decisão são exportadas para o drizzle-kit e um teste aplica as migrações da versão anterior
     publicada e depois as da atual, sem SQL manual e sem perder dados
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/chat/tests/drizzle-migrations.test.ts > RF-07 shipped drizzle-kit migrations > match the exported session and decision tables, so drizzle-kit generate has nothing new to write"
+  - test: "packages/chat/tests/drizzle-migrations.test.ts > RF-07 shipped drizzle-kit migrations > keep the baseline adoptable by databases created with the 0.7.0 DDL"
+  - test: "tests/storage-pg/migration.test.ts > RF-07: previous published schema, then the current drizzle-kit migrations, without manual SQL or data loss"
+  - run: "pnpm test:migrations:pg"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42735155175"
   homolog: []
-  issues: []
-  prs: []
+  issues: [269]
+  prs: [284]
 - id: RF-08
   title: Apagar todos os dados de chat de um titular (LGPD)
   done_when: >-
