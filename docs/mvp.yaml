@@ -26,7 +26,11 @@ requirements:
     um único @agentskit/core no lockfile; um teste de instalação no CI prova isso a cada release
   # já pronto em parte: 0.7.0 publicada depende de @agentskit/eval ^0.7 (core 1.15); falta o teste de instalação no CI
   weight: 2
-  acceptance: []
+  acceptance:
+  - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > accepts one copy and ignores similarly named packages"
+  - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects two copies"
+  - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects a lockfile without core"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42695439075"
   homolog: []
   issues: [248]
   prs: []
