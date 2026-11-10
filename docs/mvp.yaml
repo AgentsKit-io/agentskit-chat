@@ -120,10 +120,12 @@ requirements:
   done_when: >-
     Uma função do pacote server apaga sessões, decisões, memória do chat e lançamentos de custo de um tenant numa
     chamada; o teste prova que nada do tenant sobra e que outro tenant fica intacto
+  # já pronto: PR #278 (commit 96b342e)
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/server/tests/erasure.test.ts > eraseTenantChatData (RF-08) > erases sessions, decisions, memory, and cost of one tenant in one call and leaves another tenant intact"
   homolog: []
-  issues: []
+  issues: [270]
   prs: []
 - id: RF-09
   title: Main verde e dependências de produção sem alerta de segurança
