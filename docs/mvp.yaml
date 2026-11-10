@@ -84,6 +84,7 @@ requirements:
   acceptance:
   - test: "packages/react/tests/upstream-boundary.test.ts"
   - run: "test -f docs/architecture/react-boundary.md"
+  - run: "for p in react server protocol drizzle-pg; do npm view @agentskit/chat-$p version; done"
   homolog: []
   issues: [251]
   prs: []

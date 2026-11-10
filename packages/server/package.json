@@ -1,6 +1,5 @@
 {
   "name": "@agentskit/chat-server",
-  "private": true,
   "version": "0.2.5",
   "description": "Web-standard server handler for AgentsKit Chat applications.",
   "license": "MIT",
