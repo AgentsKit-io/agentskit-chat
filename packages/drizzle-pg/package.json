@@ -1,6 +1,6 @@
 {
   "name": "@agentskit/chat-drizzle-pg",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "description": "Postgres/Drizzle session and decision storage for AgentsKit Chat.",
   "license": "MIT",
   "repository": {
@@ -28,7 +28,8 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "pnpm --filter @agentskit/chat-protocol build && pnpm --filter @agentskit/chat build && vitest run"
   },
   "peerDependencies": {
     "@agentskit/chat": "^0.7.0",

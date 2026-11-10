@@ -9,6 +9,22 @@
     {
       "name": "@agentskit/chat-cli",
       "directory": "cli"
+    },
+    {
+      "name": "@agentskit/chat-react",
+      "directory": "react"
+    },
+    {
+      "name": "@agentskit/chat-server",
+      "directory": "server"
+    },
+    {
+      "name": "@agentskit/chat-protocol",
+      "directory": "protocol"
+    },
+    {
+      "name": "@agentskit/chat-drizzle-pg",
+      "directory": "drizzle-pg"
     }
   ],
   "renderers": [

@@ -216,7 +216,7 @@
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:f0aa757b5744d6127cabdf51d6812d00c1acf024c68865b1af6b1721ddbb9983"
+        "sourceHash": "sha256:46285cee1e87e1a5be24cd8469e37910b7bc04cef29cdd82a25229e979dd5c37"
       },
       "exceptions": []
     },
@@ -373,7 +373,7 @@
           "packages/protocol/fixtures/readme-example.ts",
           "docs/protocol/v1.md"
         ],
-        "sourceHash": "sha256:28e01570e2713cd79b2545fe85494268531c42a07ba10201b63bb804b41e9898"
+        "sourceHash": "sha256:3980e4f6b9ef386bbca94d107c46f20f08fe1ee7827ea5385e6c3c6fdf497c5a"
       },
       "exceptions": []
     },
@@ -451,7 +451,7 @@
           "packages/server/fixtures/readme-example.ts",
           "docs/deployment.mdx"
         ],
-        "sourceHash": "sha256:7c2a48b7baa75c92591f3976d1c00ed374592eddf83ff2944a9f4fbb55a3b5ab"
+        "sourceHash": "sha256:0424b27c037803753b370edcfc8639a9b70abf3d19304011cedbe8d3980fc9ac"
       },
       "exceptions": []
     },
@@ -606,7 +606,7 @@
           "packages/react/fixtures/readme-example.tsx",
           "docs/getting-started/react.mdx"
         ],
-        "sourceHash": "sha256:43a872437a6833ba5b612324b7de776dcabddf28612ff570be3b4324a665ad0d"
+        "sourceHash": "sha256:0810a801d36779653ae87900cea687672c372a40953e5fe85edd09e69b35dd0c"
       },
       "exceptions": []
     },
