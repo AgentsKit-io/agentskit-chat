@@ -71,10 +71,15 @@ requirements:
     validado, com o histórico mantido pelo servidor; um produto consumidor troca seu leitor próprio por ele sem mudar
     o comportamento; teste com todos os tipos de evento e com evento inválido
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/chat/tests/turn-client.test.ts > turn client > sends only the new turn and yields every event type, validated"
+  - test: "packages/chat/tests/turn-client.test.ts > turn client > yields error events and stops"
+  - test: "packages/chat/tests/turn-client.test.ts > turn client > drops invalid events and rejects failed responses"
+  - test: "packages/chat/tests/turn-client.test.ts > turn adapter > sends only the latest user message when the server owns history"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42695439075"
   homolog: []
-  issues: []
-  prs: []
+  issues: [266]
+  prs: [276]
 - id: RF-05
   title: Sem duplicação com @agentskit/react
   done_when: >-
