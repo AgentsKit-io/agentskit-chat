@@ -98,11 +98,15 @@ requirements:
   done_when: >-
     Um teste de contrato no CI sobe o servidor de turno com sessões, decisões e memória em Postgres em workerd e em
     Node, e um turno completo (com teto de custo) passa nos dois
+  # já pronto: PR #279 (commit 0f959c4); job runtime-contract do CI
   weight: 2
-  acceptance: []
+  acceptance:
+  - test: "tests/storage-pg/node.test.ts > Node pool: RF-06 complete metered turn with sessions, decisions, memory and cost in Postgres"
+  - test: "tests/storage-pg/workerd.test.ts > workerd request client: RF-06 complete metered turn with sessions, decisions, memory and cost in Postgres"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42735155175/job/129562472263"
   homolog: []
-  issues: []
-  prs: []
+  issues: [268]
+  prs: [279]
 - id: RF-07
   title: Migrações de Postgres estáveis entre versões
   done_when: >-
