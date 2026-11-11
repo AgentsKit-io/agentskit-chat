@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, realpathSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -37,5 +37,20 @@ describe('ensureNodePty', () => {
 
   it('reports missing when the rebuild does not help', () => {
     expect(ensureNodePty(makeRoot(), () => {})).toBe('missing')
+  })
+
+  it('resolves the symlinked package to its real store directory', () => {
+    const root = mkdtempSync(join(tmpdir(), 'pty-'))
+    dirs.push(root)
+    const store = join(root, '.store', 'node-pty')
+    mkdirSync(join(store, 'build', 'Release'), { recursive: true })
+    mkdirSync(join(root, 'node_modules'), { recursive: true })
+    symlinkSync(store, join(root, 'node_modules', 'node-pty'), 'dir')
+    const rebuild = vi.fn((_root, ptyRoot) => {
+      expect(ptyRoot).toBe(realpathSync(store))
+      writeFileSync(join(ptyRoot, 'build', 'Release', 'pty.node'), '')
+    })
+    expect(ensureNodePty(root, rebuild)).toBe('rebuilt')
+    expect(rebuild).toHaveBeenCalledOnce()
   })
 })
