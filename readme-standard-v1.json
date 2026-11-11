@@ -213,10 +213,13 @@
           "docs/releases/stability.md",
           "docs/releases/compatibility.md",
           ".github/workflows/ci.yml",
+          ".github/workflows/ci-standard.yml",
+          "scripts/ci/check.sh",
+          "scripts/ci/build.sh",
           ".github/workflows/release.yml",
           ".github/workflows/release-alpha.yml"
         ],
-        "sourceHash": "sha256:9453a58de5cb78118cac4acfdca4305726ab8a2947f82691c409e99fdaa1a7a7"
+        "sourceHash": "sha256:130fa14f727f35e93a33b145b4424606474232847a3483cc2b296b6da98f0433"
       },
       "exceptions": []
     },
