@@ -41,9 +41,12 @@ requirements:
     e o cartão confirmar/desfazer; todos os textos vêm por props, sem texto fixo em inglês; há teste para cada estado
   # já no main (PR #261, depois da 0.7.0); falta publicar e o ToolConfirmation aceitar rótulos (agentskit#1933)
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/react/tests/usage-components.test.tsx > renders ok, warning and blocked states from a snapshot quota"
+  - test: "packages/react/tests/usage-components.test.tsx > uses 80% as the default warning threshold and 100% as exhausted"
+  - test: "packages/react/tests/usage-components.test.tsx > renders approve/deny/undo only from labels"
   homolog: []
-  issues: []
+  issues: [264]
   prs: []
 - id: RF-03
   title: Teto de custo no servidor de turno, inclusive no cancelamento
