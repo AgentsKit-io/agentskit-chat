@@ -82,13 +82,15 @@ jobs:
           restore-keys: playwright-${{ runner.os }}-
       - name: Install Playwright Chromium (retry on mirror outages)
         run: |
-          for attempt in 1 2 3; do
+          for attempt in 1 2; do
             timeout 120 sudo apt-get update || true
-            timeout 600 pnpm exec playwright install --with-deps chromium && exit 0
-            echo "playwright install failed (attempt $attempt); retrying"
+            timeout 300 pnpm exec playwright install --with-deps chromium && exit 0
+            echo "playwright install --with-deps failed (attempt $attempt); retrying"
             sleep 15
           done
-          exit 1
+          # The apt mirror is unreachable: install the browser alone; the runner image ships most system libraries.
+          echo "falling back to playwright install without system packages"
+          timeout 300 pnpm exec playwright install chromium
       - name: Save Playwright browsers (main only)
         if: github.event_name == 'push' && steps.playwright-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809
