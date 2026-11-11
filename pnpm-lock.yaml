@@ -24,7 +24,7 @@ overrides:
   esbuild: '>=0.28.1 <1'
   js-yaml@<4: 3.15.2
   js-yaml@>=4 <5: 4.3.2
-  '@xmldom/xmldom@<0.9': 0.8.15
+  '@xmldom/xmldom@<0.9': 0.9.12
   '@xmldom/xmldom@>=0.9 <1': 0.9.12
   '@angular/common': '>=21.2.25 <22'
   '@angular/core': '>=21.2.25 <22'
@@ -4070,10 +4070,6 @@ packages:
 
   '@vue/shared@3.5.44':
     resolution: {integrity: sha512-H82XLH0DjmSOdbEwO15x3QTo1f5PWEtv237eLpYKc0mqLu+B8hnq16lFWmuBmNurkeiG3wr+oM1FhOll/YVFRg==}
-
-  '@xmldom/xmldom@0.8.15':
-    resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
-    engines: {node: '>=10.0.0'}
 
   '@xmldom/xmldom@0.9.12':
     resolution: {integrity: sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==}
@@ -10189,7 +10185,7 @@ snapshots:
 
   '@expo/plist@0.8.1':
     dependencies:
-      '@xmldom/xmldom': 0.8.15
+      '@xmldom/xmldom': 0.9.12
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
 
@@ -12148,8 +12144,6 @@ snapshots:
   '@vue/shared@3.5.42': {}
 
   '@vue/shared@3.5.44': {}
-
-  '@xmldom/xmldom@0.8.15': {}
 
   '@xmldom/xmldom@0.9.12': {}
 
