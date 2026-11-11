@@ -1,4 +1,4 @@
-import { chmodSync, existsSync, readdirSync } from 'node:fs'
+import { chmodSync, existsSync, readdirSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
@@ -13,8 +13,10 @@ export function hasNodePtyNative(ptyRoot) {
 }
 
 export function ensureNodePty(root, rebuild = defaultRebuild) {
-  const ptyRoot = join(root, 'node_modules', 'node-pty')
-  if (!existsSync(ptyRoot)) return 'absent'
+  const link = join(root, 'node_modules', 'node-pty')
+  if (!existsSync(link)) return 'absent'
+  // the tests load the module through the real pnpm store path, so check and build that directory
+  const ptyRoot = realpathSync(link)
   const prebuildRoot = join(ptyRoot, 'prebuilds')
   if (existsSync(prebuildRoot)) {
     for (const platform of readdirSync(prebuildRoot)) {
@@ -25,15 +27,22 @@ export function ensureNodePty(root, rebuild = defaultRebuild) {
   if (hasNodePtyNative(ptyRoot)) return 'ready'
   // pnpm can restore node-pty from its store without the compiled pty.node (a cache restored
   // without side effects skips the install script); the pty tests then fail on load.
-  rebuild(root)
+  rebuild(root, ptyRoot)
   return hasNodePtyNative(ptyRoot) ? 'rebuilt' : 'missing'
 }
 
-function defaultRebuild(root) {
+function defaultRebuild(root, ptyRoot) {
   spawnSync('pnpm', ['rebuild', 'node-pty'], { cwd: root, stdio: 'inherit' })
+  if (hasNodePtyNative(ptyRoot)) return
+  // last resort: compile in the package directory itself (node-gyp comes from the packageExtensions entry)
+  spawnSync('pnpm', ['exec', 'node-gyp', 'rebuild'], { cwd: ptyRoot, stdio: 'inherit' })
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const state = ensureNodePty(process.cwd())
-  if (state === 'missing') console.warn('node-pty native module is missing; pty tests will fail')
+  console.log(`node-pty native module: ${state}`)
+  if (state === 'missing') {
+    console.warn('node-pty native module is missing; pty tests will fail')
+    if (process.argv.includes('--strict')) process.exitCode = 1
+  }
 }
