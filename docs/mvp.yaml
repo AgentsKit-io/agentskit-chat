@@ -129,7 +129,7 @@ requirements:
   - test: "packages/server/tests/erasure.test.ts > eraseTenantChatData (RF-08) > erases sessions, decisions, memory, and cost of one tenant in one call and leaves another tenant intact"
   homolog: []
   issues: [270]
-  prs: []
+  prs: [278]
 - id: RF-09
   title: Main verde e dependências de produção sem alerta de segurança
   done_when: >-
