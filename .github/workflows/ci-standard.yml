@@ -24,7 +24,4 @@ jobs:
       test-command: pnpm test
       affected-test-command: bash scripts/ci/test-affected.sh
       build-command: bash scripts/ci/build.sh
-      light-paths: |
-        docs/*
-        *.md
       job-timeout-minutes: 30
