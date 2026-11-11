@@ -1,30 +1,30 @@
 name: CI standard
 
+# This repository's settings for the organization's reusable CI pipeline
+# (AgentsKit-io/.github, docs/ci.md). Called by ci.yml.
+
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
+    outputs:
+      mode:
+        description: Pipeline mode (draft, light, pr, full, seed or skip).
+        value: ${{ jobs.standard.outputs.mode }}
 
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+permissions: {}
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          persist-credentials: false
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
-        with:
-          version: 10.33.0
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: 22
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm test:conformance
+  standard:
+    uses: AgentsKit-io/.github/.github/workflows/ci.yml@c624db48051670469618d9c74854f3a1affc0138
+    permissions:
+      actions: write
+      contents: read
+    with:
+      installer: auto
+      typecheck-command: bash scripts/ci/check.sh
+      test-command: pnpm test
+      affected-test-command: bash scripts/ci/test-affected.sh
+      build-command: bash scripts/ci/build.sh
+      light-paths: |
+        docs/*
+        *.md
+      job-timeout-minutes: 30

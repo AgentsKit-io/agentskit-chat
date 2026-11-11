@@ -1,5 +1,6 @@
 import { basename } from 'node:path'
 import { defineConfig } from 'vitest/config'
+import { ciBudget } from './vitest.budget'
 
 type CoverageFloor = { statements: number; branches: number; functions: number; lines: number }
 
@@ -32,4 +33,4 @@ const coverage = {
 
 export { coverage }
 
-export default defineConfig({ root: process.cwd(), test: { coverage } })
+export default defineConfig({ root: process.cwd(), test: { coverage, ...ciBudget() } })
