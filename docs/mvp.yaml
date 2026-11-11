@@ -24,7 +24,7 @@ requirements:
   done_when: >-
     Num projeto limpo, instalar @agentskit/chat junto com @agentskit/react, adapters, memory e observability resolve
     um único @agentskit/core no lockfile; um teste de instalação no CI prova isso a cada release
-  # já pronto em parte: 0.7.0 publicada depende de @agentskit/eval ^0.7 (core 1.15); falta o teste de instalação no CI
+  # entregue no PR #285: teste de instalação de core único roda no CI e no release
   weight: 2
   acceptance:
   - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > accepts one copy and ignores similarly named packages"
@@ -32,8 +32,8 @@ requirements:
   - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects a lockfile without core"
   - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42695439075"
   homolog: []
-  issues: [248]
-  prs: []
+  issues: [248, 263]
+  prs: [285]
 - id: RF-02
   title: Barra de uso e cartão confirmar/desfazer publicados e traduzíveis
   done_when: >-
