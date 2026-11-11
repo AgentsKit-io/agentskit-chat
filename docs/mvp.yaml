@@ -24,7 +24,7 @@ requirements:
   done_when: >-
     Num projeto limpo, instalar @agentskit/chat junto com @agentskit/react, adapters, memory e observability resolve
     um único @agentskit/core no lockfile; um teste de instalação no CI prova isso a cada release
-  # já pronto em parte: 0.7.0 publicada depende de @agentskit/eval ^0.7 (core 1.15); falta o teste de instalação no CI
+  # entregue no PR #285: teste de instalação de core único roda no CI e no release
   weight: 2
   acceptance:
   - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > accepts one copy and ignores similarly named packages"
@@ -32,8 +32,8 @@ requirements:
   - test: "scripts/single-core.test.mjs > RF-01 single @agentskit/core > rejects a lockfile without core"
   - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42695439075"
   homolog: []
-  issues: [248]
-  prs: []
+  issues: [248, 263]
+  prs: [285]
 - id: RF-02
   title: Barra de uso e cartão confirmar/desfazer publicados e traduzíveis
   done_when: >-
@@ -41,9 +41,12 @@ requirements:
     e o cartão confirmar/desfazer; todos os textos vêm por props, sem texto fixo em inglês; há teste para cada estado
   # já no main (PR #261, depois da 0.7.0); falta publicar e o ToolConfirmation aceitar rótulos (agentskit#1933)
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/react/tests/usage-components.test.tsx > renders ok, warning and blocked states from a snapshot quota"
+  - test: "packages/react/tests/usage-components.test.tsx > uses 80% as the default warning threshold and 100% as exhausted"
+  - test: "packages/react/tests/usage-components.test.tsx > renders approve/deny/undo only from labels"
   homolog: []
-  issues: []
+  issues: [264]
   prs: []
 - id: RF-03
   title: Teto de custo no servidor de turno, inclusive no cancelamento
@@ -110,19 +113,26 @@ requirements:
     As tabelas de sessão e decisão são exportadas para o drizzle-kit e um teste aplica as migrações da versão anterior
     publicada e depois as da atual, sem SQL manual e sem perder dados
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/chat/tests/drizzle-migrations.test.ts > RF-07 shipped drizzle-kit migrations > match the exported session and decision tables, so drizzle-kit generate has nothing new to write"
+  - test: "packages/chat/tests/drizzle-migrations.test.ts > RF-07 shipped drizzle-kit migrations > keep the baseline adoptable by databases created with the 0.7.0 DDL"
+  - test: "tests/storage-pg/migration.test.ts > RF-07: previous published schema, then the current drizzle-kit migrations, without manual SQL or data loss"
+  - run: "pnpm test:migrations:pg"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42735155175"
   homolog: []
-  issues: []
-  prs: []
+  issues: [269]
+  prs: [284]
 - id: RF-08
   title: Apagar todos os dados de chat de um titular (LGPD)
   done_when: >-
     Uma função do pacote server apaga sessões, decisões, memória do chat e lançamentos de custo de um tenant numa
     chamada; o teste prova que nada do tenant sobra e que outro tenant fica intacto
+  # já pronto: PR #278 (commit 96b342e)
   weight: 1
-  acceptance: []
+  acceptance:
+  - test: "packages/server/tests/erasure.test.ts > eraseTenantChatData (RF-08) > erases sessions, decisions, memory, and cost of one tenant in one call and leaves another tenant intact"
   homolog: []
-  issues: []
+  issues: [270]
   prs: []
 - id: RF-09
   title: Main verde e dependências de produção sem alerta de segurança

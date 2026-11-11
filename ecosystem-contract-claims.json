@@ -159,7 +159,7 @@
       "claims": [
         {
           "id": "public-packages",
-          "value": 2,
+          "value": 5,
           "noun": "public npm packages",
           "evidence": {
             "type": "repository-derivation",
