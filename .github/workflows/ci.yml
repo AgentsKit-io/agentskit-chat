@@ -80,7 +80,15 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: playwright-${{ runner.os }}-
-      - run: pnpm exec playwright install --with-deps chromium
+      - name: Install Playwright Chromium (retry on mirror outages)
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update || true
+            pnpm exec playwright install --with-deps chromium && exit 0
+            echo "playwright install failed (attempt $attempt); retrying"
+            sleep 15
+          done
+          exit 1
       - name: Save Playwright browsers (main only)
         if: github.event_name == 'push' && steps.playwright-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809
