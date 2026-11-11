@@ -83,8 +83,8 @@ jobs:
       - name: Install Playwright Chromium (retry on mirror outages)
         run: |
           for attempt in 1 2 3; do
-            sudo apt-get update || true
-            pnpm exec playwright install --with-deps chromium && exit 0
+            timeout 120 sudo apt-get update || true
+            timeout 600 pnpm exec playwright install --with-deps chromium && exit 0
             echo "playwright install failed (attempt $attempt); retrying"
             sleep 15
           done
