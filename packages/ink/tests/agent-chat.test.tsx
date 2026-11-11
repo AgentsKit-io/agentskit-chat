@@ -42,8 +42,12 @@ describe('Ink application shell', () => {
     const manifest = defineComponentManifest(StandardComponentCatalog)
     const frame = standardComponentFrameFixtures.find(item => item.componentKey === 'progress')!
     const view = render(<AgentChat definition={{ id: 'display-only', components: manifest, chat: { adapter, initialMessages: [buildMessage({ role: 'assistant', content: JSON.stringify(frame) })] } }} />)
-    view.stdin.write('n'); view.stdin.write('e'); view.stdin.write('x'); view.stdin.write('t')
-    await vi.waitFor(() => expect(view.lastFrame()).toContain('❯ t'), { timeout: 2_000 })
+    await vi.waitFor(() => expect(view.lastFrame()).toContain('Type a message'), { timeout: 5_000 })
+    for (const key of ['n', 'e', 'x', 't']) {
+      view.stdin.write(key)
+      await new Promise(resolve => setTimeout(resolve, 20))
+    }
+    await vi.waitFor(() => expect(view.lastFrame()).toContain('next'), { timeout: 5_000 })
     view.unmount()
   })
   it('maps semantic tokens to Ink capabilities and accepts a terminal slot', () => {
