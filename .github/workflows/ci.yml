@@ -134,6 +134,9 @@ jobs:
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      # The root postinstall runs before node-pty is linked and a store restored without side effects
+      # skips its build, so compile pty.node here when it is missing.
+      - run: node scripts/ensure-node-pty-helper.mjs
       - run: pnpm build
       - run: pnpm test:pty
       - run: pnpm test:expo
