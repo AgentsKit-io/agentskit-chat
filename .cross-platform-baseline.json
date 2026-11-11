@@ -36,6 +36,9 @@
     "scripts/docs-visual-check.mjs": {
       "child-process-import": 1
     },
+    "scripts/ensure-node-pty-helper.mjs": {
+      "child-process-import": 1
+    },
     "scripts/observability-check.mjs": {
       "child-process-import": 1,
       "split-newline": 1

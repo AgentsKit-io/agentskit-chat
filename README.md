@@ -29,7 +29,7 @@ Repository claims are derived from canonical evidence and checked in CI:
 
 | Surface | Current proof |
 |---|---:|
-| Public npm packages | 2 |
+| Public npm packages | 5 |
 | Native renderers | 7 |
 | Standard components | 12 |
 | Conformance requirements | 12 |
