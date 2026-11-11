@@ -1,6 +1,5 @@
 {
   "name": "@agentskit/chat-server",
-  "private": true,
   "version": "0.2.5",
   "description": "Web-standard server handler for AgentsKit Chat applications.",
   "license": "MIT",
@@ -47,7 +46,10 @@
     "tsup": "^8.5.1",
     "@agentskit/observability": "^0.13.0"
   },
-  "publishConfig": {},
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "peerDependenciesMeta": {
     "@agentskit/observability": {
       "optional": true
