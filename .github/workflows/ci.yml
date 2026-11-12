@@ -2,92 +2,50 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
+  schedule:
+    - cron: '41 3 * * *'
+  workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
-  # Supersede in-flight runs for the same PR; pushes to main always finish.
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Supersede in-flight runs for the same PR; pushes to main and scheduled runs always finish.
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  pipeline:
+    uses: ./.github/workflows/ci-standard.yml
+    permissions:
+      actions: write
+      contents: read
+
+  # Keeps the required check name `quality`: green only when every pipeline stage passed.
   quality:
-    runs-on: ubuntu-latest
+    needs: pipeline
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions: {}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
-        with:
-          version: 10.33.0
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: 22
-      - name: Resolve pnpm store path
-        id: pnpm-store
-        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-      - name: Restore pnpm store (pull requests only read; main seeds)
-        id: pnpm-cache
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809
-        with:
-          path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: pnpm-store-${{ runner.os }}-
-      - run: pnpm install --frozen-lockfile
-      - name: Save pnpm store (main only)
-        if: github.event_name == 'push' && steps.pnpm-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809
-        with:
-          path: ${{ steps.pnpm-store.outputs.path }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm lint
-      - run: pnpm test:conformance
-      - name: Verify Changesets against main
+      - name: Pipeline result
+        env:
+          RESULT: ${{ needs.pipeline.result }}
+          MODE: ${{ needs.pipeline.outputs.mode }}
         run: |
-          git fetch origin main:refs/remotes/origin/main
-          if [ "$(git branch --show-current)" != "main" ]; then git branch --force main origin/main; fi
-          pnpm exec changeset status
-      - name: Run tests and package coverage floors
-        run: pnpm test
-      - run: pnpm build
-      - run: pnpm check:public-api
-      - run: pnpm conformance:gate
-      - run: pnpm bundle:budget
-      # Generate ignored artifacts; this proves determinism, not committed-index freshness.
-      - name: Build deterministic repository index
-        run: |
-          pnpm docs:bridge:index
-          first_index=$(mktemp)
-          trap 'rm -f "$first_index"' EXIT
-          cp .doc-bridge/index.json "$first_index"
-          pnpm docs:bridge:index
-          cmp "$first_index" .doc-bridge/index.json
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs'
-          import { execFileSync } from 'node:child_process'
-          const tracked = new Set(execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0'))
-          const index = JSON.parse(readFileSync('.doc-bridge/index.json', 'utf8'))
-          const untracked = index.knowledge.filter(entry => !tracked.has(entry.path))
-          if (untracked.length) throw new Error(`Index includes untracked inputs: ${untracked.map(entry => entry.path).join(', ')}`)
-          NODE
-      - run: pnpm docs:bridge:gate
-      - run: pnpm docs:bridge:conformance
-      - run: pnpm docs:bridge:doctor
-      - run: pnpm exec vitest run scripts/doc-bridge-index.test.mjs --maxWorkers=2
-      - run: pnpm ecosystem:claims:check
-      - run: pnpm ecosystem:adoption:check
-      - run: pnpm check:readme-standard
-      - run: pnpm test:readme-standard
-      - run: node scripts/release-gate.mjs
-      - run: node scripts/pack-release.mjs
+          echo "pipeline: $RESULT (mode: ${MODE:-unknown})"
+          test "$RESULT" = success
 
   browser-e2e:
-    if: github.actor != 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    needs: pipeline
+    if: github.actor != 'dependabot[bot]' && contains(fromJSON('["pr","full"]'), needs.pipeline.outputs.mode)
+    timeout-minutes: 30
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -122,7 +80,17 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: playwright-${{ runner.os }}-
-      - run: pnpm exec playwright install --with-deps chromium
+      - name: Install Playwright Chromium (retry on mirror outages)
+        run: |
+          for attempt in 1 2; do
+            timeout 120 sudo apt-get update || true
+            timeout 300 pnpm exec playwright install --with-deps chromium && exit 0
+            echo "playwright install --with-deps failed (attempt $attempt); retrying"
+            sleep 15
+          done
+          # The apt mirror is unreachable: install the browser alone; the runner image ships most system libraries.
+          echo "falling back to playwright install without system packages"
+          timeout 300 pnpm exec playwright install chromium
       - name: Save Playwright browsers (main only)
         if: github.event_name == 'push' && steps.playwright-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809
@@ -143,7 +111,12 @@ jobs:
           retention-days: 7
 
   ink-pty:
-    runs-on: ubuntu-latest
+    needs: pipeline
+    if: contains(fromJSON('["pr","full"]'), needs.pipeline.outputs.mode)
+    timeout-minutes: 30
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -171,13 +144,19 @@ jobs:
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      # The root postinstall runs before node-pty is linked and a store restored without side effects
+      # skips its build, so compile pty.node here when it is missing.
+      - run: node scripts/ensure-node-pty-helper.mjs --strict
       - run: pnpm build
       - run: pnpm test:pty
       - run: pnpm test:expo
 
   runtime-contract:
+    needs: pipeline
+    if: contains(fromJSON('["pr","full"]'), needs.pipeline.outputs.mode)
+    timeout-minutes: 30
     # RF-06: the same metered turn, with sessions, decisions, memory and cost in Postgres, on Node and on workerd.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:16
@@ -192,6 +171,8 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:

@@ -1,5 +1,6 @@
 import solidPlugin from 'vite-plugin-solid'
 import { defineConfig } from 'vitest/config'
+import { ciBudget } from '../../vitest.budget'
 import { coverage } from '../../vitest.coverage'
 
-export default defineConfig({ test: { environment: 'happy-dom', coverage }, plugins: [solidPlugin()] })
+export default defineConfig({ test: { environment: 'happy-dom', coverage, ...ciBudget() }, plugins: [solidPlugin()] })

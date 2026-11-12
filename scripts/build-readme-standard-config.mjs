@@ -65,7 +65,7 @@ const surfaces = [
     freshness: {
       reviewedOn: '2026-07-14',
       reviewDueOn: '2026-10-12',
-      sources: ['README.md', 'package.json', 'tsconfig.base.json', 'release/manifest.json', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'scripts/compute-readme-claims.mjs', 'scripts/gen-ecosystem-claims.mjs', 'scripts/lib/readme-claims.mjs', 'docs/releases/stability.md', 'docs/releases/compatibility.md', '.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/release-alpha.yml'],
+      sources: ['README.md', 'package.json', 'tsconfig.base.json', 'release/manifest.json', 'ecosystem-claims.json', 'examples/verify-readme.mjs', 'examples/init-react.sh', 'scripts/compute-readme-claims.mjs', 'scripts/gen-ecosystem-claims.mjs', 'scripts/lib/readme-claims.mjs', 'docs/releases/stability.md', 'docs/releases/compatibility.md', '.github/workflows/ci.yml', '.github/workflows/ci-standard.yml', 'scripts/ci/check.sh', 'scripts/ci/build.sh', '.github/workflows/release.yml', '.github/workflows/release-alpha.yml'],
       sourceHash: 'sha256:placeholder',
     },
     exceptions: [],
