@@ -136,7 +136,10 @@ requirements:
     Todos os workflows da main ficam verdes e não há alerta de segurança aberto em dependência de produção (os PRs de
     segurança do Renovate estão mergeados ou fechados com motivo)
   weight: 1
-  acceptance: []
+  acceptance:
+  - run: "pnpm audit --prod"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42727651129"
+  - ci: "https://github.com/AgentsKit-io/agentskit-chat/actions/runs/42704469358"
   homolog: []
   issues: []
   prs: []
