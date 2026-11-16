@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
+import { ciBudget } from '../../vitest.budget'
 
 const source = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
@@ -13,5 +14,5 @@ export default defineConfig({
       { find: '@agentskit/chat-protocol', replacement: source('../../packages/protocol/src/index.ts') },
     ],
   },
-  test: { exclude: ['tests/e2e/**', 'node_modules/**'] },
+  test: { ...ciBudget(['tests/e2e/**', 'node_modules/**']) },
 })
