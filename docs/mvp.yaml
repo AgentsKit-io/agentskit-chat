@@ -89,10 +89,11 @@ requirements:
     Um pacote consome o outro (sem componentes ou hooks repetidos) e a fronteira está documentada; os pacotes que os
     produtos usam (react, server, protocol, drizzle-pg) estão no npm com versão e changelog
   weight: 1
-  acceptance: []
+  acceptance:
+    - test: packages/react/tests/upstream-boundary.test.ts
   homolog: []
   issues: [251]
-  prs: []
+  prs: [274]
 - id: RF-06
   title: Roda em Cloudflare Workers e em Node
   done_when: >-
