@@ -17,7 +17,7 @@ overrides:
   image-size: "npm:image-size-next@1.2.2"
   # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0) and
   # GHSA-3g3m-2fjr-6pw4 (abort bypass in glob 9.0.0-14.0.1, fixed only in 14.0.2)
-  "glob@>=9 <14.0.2": "14.0.2"
+  "glob@>=9 <14.0.2": "14.0.6"
   # GHSA-q2hr-2g5m-vwhr
   brace-expansion: ">=5.0.12 <6"
   # @opennextjs/cloudflare (devDependency, build-time only) -> glob@9 -> minimatch@8 needs the
