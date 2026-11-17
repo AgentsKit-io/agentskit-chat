@@ -1,4 +1,14 @@
 {
   "install": "pnpm install --frozen-lockfile",
-  "verify": "pnpm lint && pnpm test:conformance"
+  "verify": "pnpm lint && pnpm test:conformance",
+  "deliver": {
+    "homolog": {
+      "applicable": false,
+      "reason": "Library published to npm; there is no homolog environment or URL to deploy to."
+    },
+    "parity": {
+      "buildCommand": "pnpm build",
+      "ci": ".github/workflows/ci-standard.yml"
+    }
+  }
 }
