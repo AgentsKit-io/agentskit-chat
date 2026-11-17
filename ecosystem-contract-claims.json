@@ -236,7 +236,7 @@
         },
         {
           "id": "agent-handoffs",
-          "value": 28,
+          "value": 32,
           "noun": "agent handoffs",
           "evidence": {
             "type": "repository-derivation",
