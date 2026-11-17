@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Pre-push (mandatory, versioned via husky): format check and typecheck. Do not use --no-verify.
+pnpm lint:biome && pnpm lint
