@@ -7,7 +7,7 @@
       "reason": "Library published to npm; there is no homolog environment or URL to deploy to."
     },
     "parity": {
-      "buildCommand": "pnpm build",
+      "buildCommand": "bash scripts/ci/build.sh",
       "ci": ".github/workflows/ci-standard.yml"
     }
   }
