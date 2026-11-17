@@ -307,6 +307,42 @@
             "pnpm --filter @agentskit/chat-example-shared test",
             "pnpm test:e2e"
           ]
+        },
+        "tooling": {
+          "path": "scripts",
+          "purpose": "Repository gates, generators, CI helpers, and their colocated tests",
+          "agentDoc": "docs/for-agents/tooling.md",
+          "humanDoc": "releases/release-process",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        },
+        "tests": {
+          "path": "tests",
+          "purpose": "Cross-package end-to-end, protocol conformance, and Postgres storage suites",
+          "agentDoc": "docs/for-agents/tooling.md",
+          "humanDoc": "releases/release-process",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        },
+        "conformance": {
+          "path": "conformance",
+          "purpose": "Component, event, and platform conformance manifest checked by the conformance gate",
+          "agentDoc": "docs/for-agents/tooling.md",
+          "humanDoc": "releases/release-process",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
+        },
+        "examples": {
+          "path": "examples",
+          "purpose": "Install and README verification scripts for the public examples",
+          "agentDoc": "docs/for-agents/tooling.md",
+          "humanDoc": "releases/release-process",
+          "checks": [
+            "pnpm docs:bridge:gate"
+          ]
         }
       }
     }
