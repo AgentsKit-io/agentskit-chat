@@ -21,3 +21,7 @@ Every implementation issue is a thin, demoable vertical slice and includes:
 - upstream-adoption evidence and linked AgentsKit source changes where required.
 
 Horizontal foundation work is allowed only when it produces a verifiable contract, fixture, gate, or developer-facing outcome.
+
+## Edit roots
+
+Edit roots: `.github` (issue structure, Definition of Done, automation) and `docs/releases` (immutable public prerelease artifacts).

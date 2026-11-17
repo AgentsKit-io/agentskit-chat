@@ -21,6 +21,8 @@ Use this index with `ak-docs query` to locate the owning documentation before ch
 - [React Native package](./packages/react-native.md): native mobile shell over `@agentskit/react-native`.
 - [Ink package](./packages/ink.md): native terminal shell and semantic text fallback.
 - [CLI package](./packages/cli.md): safe project detection and application scaffolding.
+- [Server package](./packages/server.md): Web-standard chat and Ask handlers with streaming and recovery.
+- [Devtools package](./packages/devtools.md): replayable traces and renderer parity.
 - [React example](./apps/example-react.md): deterministic executable proof.
 - [Vue example](./apps/example-vue.md): DOM parity host over the shared definition.
 - [Svelte example](./apps/example-svelte.md): Svelte 5 DOM parity host over the shared definition.

@@ -139,3 +139,7 @@ Before adding a primitive, inspect AgentsKit source and public exports. Reuse or
 ## Repository-level tests
 
 The repository-level `tests` directory holds cross-package evidence: `tests/turn-protocol-conformance.ts` is the shared protocol conformance runner imported by the renderer conformance tests, `tests/conformance-gate.test.ts` covers the conformance gate, `tests/e2e` holds the Playwright quickstart and example specs, and `tests/storage-pg` holds the Postgres session-storage contract.
+
+## Edit roots
+
+Edit roots: `docs/architecture` (system boundaries and ADRs) and `docs/dogfood` (external host migrations and parity evidence).

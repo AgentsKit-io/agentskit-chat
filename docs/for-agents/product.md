@@ -16,3 +16,7 @@ Use this ownership area for user stories, scope, release outcomes, positioning, 
 pnpm docs:bridge:index
 pnpm docs:bridge:gate
 ```
+
+## Edit roots
+
+Edit root: `docs/product`.
