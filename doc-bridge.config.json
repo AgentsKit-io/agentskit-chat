@@ -7,21 +7,14 @@
     "agent": {
       "root": "docs/for-agents",
       "index": "docs/for-agents/index.md",
-      "include": [
-        "**/*.md"
-      ],
-      "exclude": [
-        "**/node_modules/**"
-      ]
+      "include": ["**/*.md"],
+      "exclude": ["**/node_modules/**"]
     },
     "human": {
       "plugin": "plain-markdown",
       "options": {
         "contentDir": "docs",
-        "include": [
-          "**/*.md",
-          "**/*.mdx"
-        ],
+        "include": ["**/*.md", "**/*.mdx"],
         "urlPrefix": null
       }
     }
@@ -34,39 +27,28 @@
           "purpose": "Product requirements, user stories, scope, and release outcomes",
           "agentDoc": "docs/for-agents/product.md",
           "humanDoc": "product/PRD",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "architecture": {
           "path": "docs/architecture",
           "purpose": "System boundaries, protocols, modules, ADRs, and cross-framework invariants",
           "agentDoc": "docs/for-agents/architecture.md",
           "humanDoc": "architecture/overview",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "governance": {
           "path": ".github",
           "purpose": "Issue structure, Definition of Done, contribution workflow, and project automation",
           "agentDoc": "docs/for-agents/governance.md",
           "humanDoc": "governance/issues",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "alpha-release": {
           "path": "docs/releases",
           "purpose": "Immutable public prerelease artifacts for external dogfood hosts",
           "agentDoc": "docs/for-agents/governance.md",
           "humanDoc": "releases/alpha-dogfood",
-          "checks": [
-            "pnpm lint",
-            "pnpm test",
-            "pnpm build",
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm lint", "pnpm test", "pnpm build", "pnpm docs:bridge:gate"]
         },
         "release": {
           "path": "release",
@@ -88,12 +70,7 @@
           "purpose": "External live-host migrations, ownership corrections, parity, and no-reimplementation evidence",
           "agentDoc": "docs/for-agents/architecture.md",
           "humanDoc": "dogfood/registry-playbook",
-          "checks": [
-            "pnpm lint",
-            "pnpm test",
-            "pnpm build",
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm lint", "pnpm test", "pnpm build", "pnpm docs:bridge:gate"]
         },
         "docs-app": {
           "path": "apps/docs",
@@ -113,40 +90,28 @@
           "purpose": "Framework-neutral chat application definitions composed around AgentsKit ChatConfig",
           "agentDoc": "docs/for-agents/packages/chat.md",
           "humanDoc": "getting-started/react",
-          "checks": [
-            "pnpm --filter @agentskit/chat lint",
-            "pnpm --filter @agentskit/chat test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat lint", "pnpm --filter @agentskit/chat test"]
         },
         "protocol": {
           "path": "packages/protocol",
           "purpose": "Versioned turn events, runtime schemas, typed diagnostics, compatibility, and shared fixtures",
           "agentDoc": "docs/for-agents/packages/protocol.md",
           "humanDoc": "protocol/v1",
-          "checks": [
-            "pnpm --filter @agentskit/chat-protocol lint",
-            "pnpm --filter @agentskit/chat-protocol test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-protocol lint", "pnpm --filter @agentskit/chat-protocol test"]
         },
         "react": {
           "path": "packages/react",
           "purpose": "React application shell consuming @agentskit/react directly",
           "agentDoc": "docs/for-agents/packages/react.md",
           "humanDoc": "getting-started/react",
-          "checks": [
-            "pnpm --filter @agentskit/chat-react lint",
-            "pnpm --filter @agentskit/chat-react test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-react lint", "pnpm --filter @agentskit/chat-react test"]
         },
         "vue": {
           "path": "packages/vue",
           "purpose": "Vue application shell consuming @agentskit/vue directly",
           "agentDoc": "docs/for-agents/packages/vue.md",
           "humanDoc": "getting-started/vue",
-          "checks": [
-            "pnpm --filter @agentskit/chat-vue lint",
-            "pnpm --filter @agentskit/chat-vue test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-vue lint", "pnpm --filter @agentskit/chat-vue test"]
         },
         "svelte": {
           "path": "packages/svelte",
@@ -184,108 +149,77 @@
           "purpose": "Ink application shell consuming @agentskit/ink directly with semantic text fallback",
           "agentDoc": "docs/for-agents/packages/ink.md",
           "humanDoc": "getting-started/ink",
-          "checks": [
-            "pnpm --filter @agentskit/chat-ink lint",
-            "pnpm --filter @agentskit/chat-ink test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-ink lint", "pnpm --filter @agentskit/chat-ink test"]
         },
         "cli": {
           "path": "packages/cli",
           "purpose": "Safe seven-renderer application and semantic-component scaffolding",
           "agentDoc": "docs/for-agents/packages/cli.md",
           "humanDoc": "cli",
-          "checks": [
-            "pnpm --filter @agentskit/chat-cli lint",
-            "pnpm --filter @agentskit/chat-cli test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-cli lint", "pnpm --filter @agentskit/chat-cli test"]
         },
         "devtools": {
           "path": "packages/devtools",
           "purpose": "Replayable application traces and semantic renderer parity composed with AgentsKit eval",
           "agentDoc": "docs/for-agents/packages/devtools.md",
           "humanDoc": "devtools",
-          "checks": [
-            "pnpm --filter @agentskit/chat-devtools lint",
-            "pnpm --filter @agentskit/chat-devtools test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-devtools lint", "pnpm --filter @agentskit/chat-devtools test"]
         },
         "server": {
           "path": "packages/server",
           "purpose": "Web-standard chat and Ask HTTP handlers with authentication, streaming, persistence, and recovery contracts",
           "agentDoc": "docs/for-agents/packages/server.md",
           "humanDoc": "server",
-          "checks": [
-            "pnpm --filter @agentskit/chat-server lint",
-            "pnpm --filter @agentskit/chat-server test"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-server lint", "pnpm --filter @agentskit/chat-server test"]
         },
         "example-react": {
           "path": "apps/example-react",
           "purpose": "React surface of support, onboarding, and protected operations references",
           "agentDoc": "docs/for-agents/apps/example-react.md",
           "humanDoc": "examples/support-reference",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-react build",
-            "pnpm test:e2e --project=react"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-react build", "pnpm test:e2e --project=react"]
         },
         "example-vue": {
           "path": "apps/example-vue",
           "purpose": "Vue surface of shared support, onboarding, operations, and RAG references",
           "agentDoc": "docs/for-agents/apps/example-vue.md",
           "humanDoc": "examples/dom-renderer-parity",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-vue build",
-            "pnpm test:e2e --project=vue"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-vue build", "pnpm test:e2e --project=vue"]
         },
         "example-svelte": {
           "path": "apps/example-svelte",
           "purpose": "Svelte 5 surface of shared support, onboarding, operations, and RAG references",
           "agentDoc": "docs/for-agents/apps/example-svelte.md",
           "humanDoc": "examples/dom-renderer-parity",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-svelte build"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-svelte build"]
         },
         "example-solid": {
           "path": "apps/example-solid",
           "purpose": "Solid surface of shared support, onboarding, operations, and RAG references",
           "agentDoc": "docs/for-agents/apps/example-solid.md",
           "humanDoc": "examples/dom-renderer-parity",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-solid build"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-solid build"]
         },
         "example-shared": {
           "path": "apps/example-shared",
           "purpose": "Framework-neutral support, onboarding, and protected operations domains with injected host seams",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
           "humanDoc": "examples/support-reference",
-          "checks": [
-            "pnpm lint",
-            "pnpm test"
-          ]
+          "checks": ["pnpm lint", "pnpm test"]
         },
         "example-react-native": {
           "path": "apps/example-react-native",
           "purpose": "Expo proof of support, onboarding, and protected operations parity",
           "agentDoc": "docs/for-agents/apps/example-react-native.md",
           "humanDoc": "examples/support-reference",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-react-native build",
-            "pnpm test:e2e --project=react-native"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-react-native build", "pnpm test:e2e --project=react-native"]
         },
         "example-ink": {
           "path": "apps/example-ink",
           "purpose": "Executable PTY proof of support, onboarding, and protected operations parity",
           "agentDoc": "docs/for-agents/apps/example-ink.md",
           "humanDoc": "examples/support-reference",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-ink build",
-            "pnpm test:pty"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-ink build", "pnpm test:pty"]
         },
 
         "operations-reference": {
@@ -293,56 +227,42 @@
           "purpose": "Policy-protected operations domain, audit trace, and deployment recipe",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
           "humanDoc": "examples/operations-reference",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-shared test",
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-shared test", "pnpm docs:bridge:gate"]
         },
         "rag-reference": {
           "path": "apps/example-shared",
           "purpose": "Provider-agnostic cited RAG application and SourceList projection recipe",
           "agentDoc": "docs/for-agents/apps/example-shared.md",
           "humanDoc": "examples/rag-reference",
-          "checks": [
-            "pnpm --filter @agentskit/chat-example-shared test",
-            "pnpm test:e2e"
-          ]
+          "checks": ["pnpm --filter @agentskit/chat-example-shared test", "pnpm test:e2e"]
         },
         "tooling": {
           "path": "scripts",
           "purpose": "Repository gates, generators, CI helpers, and their colocated tests",
           "agentDoc": "docs/for-agents/tooling.md",
           "humanDoc": "releases/release-process",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "tests": {
           "path": "tests",
           "purpose": "Cross-package end-to-end, protocol conformance, and Postgres storage suites",
           "agentDoc": "docs/for-agents/tooling.md",
           "humanDoc": "releases/release-process",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "conformance": {
           "path": "conformance",
           "purpose": "Component, event, and platform conformance manifest checked by the conformance gate",
           "agentDoc": "docs/for-agents/tooling.md",
           "humanDoc": "releases/release-process",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         },
         "examples": {
           "path": "examples",
           "purpose": "Install and README verification scripts for the public examples",
           "agentDoc": "docs/for-agents/tooling.md",
           "humanDoc": "releases/release-process",
-          "checks": [
-            "pnpm docs:bridge:gate"
-          ]
+          "checks": ["pnpm docs:bridge:gate"]
         }
       }
     }
@@ -361,12 +281,8 @@
   },
   "gates": {
     "preset": "standard",
-    "include": [
-      "documentation-standard-v1"
-    ],
-    "exclude": [
-      "okf-type"
-    ]
+    "include": ["documentation-standard-v1"],
+    "exclude": ["okf-type"]
   },
   "reconciliation": {
     "scope": "package",
@@ -374,27 +290,22 @@
     "requiredRelationTargets": "internal"
   },
   "safety": {
-    "exclude": ["**/.changeset/**", "**/.impeccable.md", "apps/example-react-native/.expo/**", "**/.source/**", "apps/docs/test-results/**"]
+    "exclude": [
+      "**/.changeset/**",
+      "**/.impeccable.md",
+      "apps/example-react-native/.expo/**",
+      "**/.source/**",
+      "apps/docs/test-results/**"
+    ]
   },
   "conformance": {
     "documentationStandardV1": {
-      "rawSources": [
-        "README.md",
-        "docs/index.mdx",
-        "docs/for-agents/index.md"
-      ],
-      "contributionPaths": [
-        "CONTRIBUTING.md"
-      ],
+      "rawSources": ["README.md", "docs/index.mdx", "docs/for-agents/index.md"],
+      "contributionPaths": ["CONTRIBUTING.md"],
       "metadata": [
         {
           "path": "apps/docs/app/layout.tsx",
-          "contains": [
-            "export const metadata",
-            "title:",
-            "description:",
-            "openGraph:"
-          ]
+          "contains": ["export const metadata", "title:", "description:", "openGraph:"]
         }
       ],
       "links": [
@@ -434,15 +345,10 @@
           "doc": "docs/getting-started/react.mdx",
           "test": "tests/e2e/chat-conformance.ts",
           "command": "pnpm test:e2e --project=react",
-          "testContains": [
-            "streams a deterministic answer",
-            "AgentsKit received: hello"
-          ]
+          "testContains": ["streams a deterministic answer", "AgentsKit received: hello"]
         }
       ],
-      "visuals": [
-        "docs/assets/agentschat-architecture.svg"
-      ],
+      "visuals": ["docs/assets/agentschat-architecture.svg"],
       "diagrams": [
         {
           "path": "docs/protocol/deterministic-answers.md",
