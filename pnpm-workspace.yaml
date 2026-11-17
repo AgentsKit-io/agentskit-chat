@@ -5,7 +5,7 @@ packages:
 overrides:
   # GHSA-9wx9-5pv9-3349
   seroval: "1.6.11"
-  shell-quote: "1.11.0"
+  shell-quote: "1.12.0"
   # GHSA-jqff-g426-hqxp, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
   # GHSA-5jgf-p345-68v8, GHSA-qw65-cvwx-89v3, GHSA-hrr3-gc8f-f4qj
   # GHSA-333x-w4r6-6crp
@@ -13,7 +13,7 @@ overrides:
   next: ">=15.5.28 <16"
   sharp: ">=0.35.0 <1"
   postcss: ">=8.5.23 <9"
-  nanoid: "3.3.18"
+  nanoid: "3.3.20"
   image-size: "npm:image-size-next@1.2.2"
   # GHSA-5j98-mcp5-4vw2 (glob CLI command injection, fixed in 10.5.0) and
   # GHSA-3g3m-2fjr-6pw4 (abort bypass in glob 9.0.0-14.0.1, fixed only in 14.0.2)
@@ -43,6 +43,23 @@ overrides:
   # GHSA-6h8r-xr42-gp59, GHSA-6gmq-8vp8-gcm6
   '@xmldom/xmldom@<0.9': "0.8.15"
   '@xmldom/xmldom@>=0.9 <1': "0.9.12"
+  # RF-09 (#271): production advisories reported by `pnpm audit --prod`.
+  # GHSA-7wch-p9px-956x, GHSA-jc66-7q78-782g, GHSA-8hrf-8g6f-7xwp, GHSA-hqq3-7jhf-c5jx,
+  # GHSA-5x38-2vff-x55p, GHSA-6wvx-3r32-xmcg, GHSA-525v-9gp9-w22h, GHSA-5cwg-6vw7-rj6p,
+  # GHSA-4642-5mcj-2rqw, GHSA-h6cr-wjv9-3cpp, GHSA-4487-j8r4-4g2f
+  node-forge: ">=1.4.3 <2"
+  # GHSA-238p-pmpm-9mq7
+  katex: ">=0.18.2 <1"
+  # GHSA-mrhx-c7xc-m3w5 (fumadocs-mdx 11 and @expo/cli still ask for zod 3)
+  'fumadocs-mdx>zod': "4.6.7"
+  '@expo/cli>zod': "4.6.7"
+  # GHSA-g3hv-75wg-m249
+  'minimatch@>=7 <11.0.1': "11.0.5"
+  # GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472, GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26,
+  # GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm, GHSA-9fm3-97px-rjf6, GHSA-55wc-3pg8-jfw6
+  'undici@>=7 <7.30.1': "7.30.2"
+  # GHSA-6pq8-jhm2-2vcw
+  qs: ">=6.16.1 <7"
   '@angular/common': ">=21.2.25 <22"
   '@angular/core': ">=21.2.25 <22"
   '@angular/compiler': ">=21.2.25 <22"
