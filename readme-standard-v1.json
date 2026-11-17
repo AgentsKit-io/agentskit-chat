@@ -123,44 +123,15 @@
       "path": "README.md",
       "profileId": "top-level-repository",
       "dimensions": {
-        "promise": [
-          "<code>top-level-repository</code>",
-          "<strong>One agent experience. Every interface.</strong>"
-        ],
-        "proof": [
-          "## Verified proof",
-          "ecosystem-claims.json"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:init-react -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "## Maturity and compatibility",
-          "0.7.0"
-        ],
-        "compatibility": [
-          "Node.js 22",
-          "TypeScript"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md",
-          "LICENSE"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "registry.agentskit.io",
-          "playbook.agentskit.io"
-        ]
+        "promise": ["<code>top-level-repository</code>", "<strong>One agent experience. Every interface.</strong>"],
+        "proof": ["## Verified proof", "ecosystem-claims.json"],
+        "examples": ["## Quick start", "<!-- readme-example:init-react -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["## Maturity and compatibility", "0.7.0"],
+        "compatibility": ["Node.js 22", "TypeScript"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md", "LICENSE"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "registry.agentskit.io", "playbook.agentskit.io"]
       },
       "visuals": [
         {
@@ -228,42 +199,15 @@
       "path": "packages/chat/README.md",
       "profileId": "major-package",
       "dimensions": {
-        "promise": [
-          "Framework-neutral application definitions"
-        ],
-        "proof": [
-          "## Verified proof",
-          "catalog.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:define-chat -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`",
-          "stability.md"
-        ],
-        "compatibility": [
-          "Node.js 22+",
-          "TypeScript strict mode"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit",
-          "registry.agentskit.io"
-        ]
+        "promise": ["Framework-neutral application definitions"],
+        "proof": ["## Verified proof", "catalog.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:define-chat -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["`0.7.0`", "stability.md"],
+        "compatibility": ["Node.js 22+", "TypeScript strict mode"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit", "registry.agentskit.io"]
       },
       "visuals": [
         {
@@ -307,41 +251,15 @@
       "path": "packages/protocol/README.md",
       "profileId": "major-package",
       "dimensions": {
-        "promise": [
-          "Framework-neutral v1 turn events"
-        ],
-        "proof": [
-          "## Verified proof",
-          "v1.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:decode-turn -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`",
-          "stability.md"
-        ],
-        "compatibility": [
-          "Node.js 22+",
-          "TypeScript strict mode"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Framework-neutral v1 turn events"],
+        "proof": ["## Verified proof", "v1.md"],
+        "examples": ["## Quick start", "<!-- readme-example:decode-turn -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["`0.7.0`", "stability.md"],
+        "compatibility": ["Node.js 22+", "TypeScript strict mode"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [
         {
@@ -385,41 +303,15 @@
       "path": "packages/server/README.md",
       "profileId": "major-package",
       "dimensions": {
-        "promise": [
-          "Web-standard request handlers"
-        ],
-        "proof": [
-          "## Verified proof",
-          "ADR-0012"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:chat-handler -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`",
-          "deployment.md"
-        ],
-        "compatibility": [
-          "Node.js 22+",
-          "Web-standard `Request` / `Response`"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Web-standard request handlers"],
+        "proof": ["## Verified proof", "ADR-0012"],
+        "examples": ["## Quick start", "<!-- readme-example:chat-handler -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["`0.7.0`", "deployment.md"],
+        "compatibility": ["Node.js 22+", "Web-standard `Request` / `Response`"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [
         {
@@ -463,41 +355,15 @@
       "path": "packages/cli/README.md",
       "profileId": "major-package",
       "dimensions": {
-        "promise": [
-          "Framework-aware scaffolding"
-        ],
-        "proof": [
-          "## Verified proof",
-          "ADR-0014"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:renderers -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`",
-          "angular"
-        ],
-        "compatibility": [
-          "Node.js 22+",
-          "Never merges"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Framework-aware scaffolding"],
+        "proof": ["## Verified proof", "ADR-0014"],
+        "examples": ["## Quick start", "<!-- readme-example:renderers -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["`0.7.0`", "angular"],
+        "compatibility": ["Node.js 22+", "Never merges"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [
         {
@@ -540,41 +406,15 @@
       "path": "packages/react/README.md",
       "profileId": "major-package",
       "dimensions": {
-        "promise": [
-          "Accessible React application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "dom-renderer-parity.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:agent-chat -->"
-        ],
-        "visuals": [
-          "docs/assets/agentschat-architecture.svg",
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`",
-          "React 18+"
-        ],
-        "compatibility": [
-          "React 18+",
-          "TypeScript strict mode"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Accessible React application shell"],
+        "proof": ["## Verified proof", "dom-renderer-parity.md"],
+        "examples": ["## Quick start", "<!-- readme-example:agent-chat -->"],
+        "visuals": ["docs/assets/agentschat-architecture.svg", "```mermaid"],
+        "maturity": ["`0.7.0`", "React 18+"],
+        "compatibility": ["React 18+", "TypeScript strict mode"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [
         {
@@ -618,39 +458,15 @@
       "path": "packages/vue/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Native Vue 3 application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-vue -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Vue 3.4+",
-          "TypeScript strict mode"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Native Vue 3 application shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-vue -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Vue 3.4+", "TypeScript strict mode"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -696,39 +512,15 @@
       "path": "packages/svelte/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Svelte 5 application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-svelte -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Svelte 5+",
-          "SSR evidence in CI"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Svelte 5 application shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-svelte -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Svelte 5+", "SSR evidence in CI"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -774,39 +566,15 @@
       "path": "packages/solid/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Solid application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-solid -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Solid 1.9+",
-          "TypeScript strict mode"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Solid application shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-solid -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Solid 1.9+", "TypeScript strict mode"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -852,39 +620,15 @@
       "path": "packages/angular/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Native Angular application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-angular -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Angular 18.1–21",
-          "Partial-Ivy AOT package test in CI"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Native Angular application shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-angular -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Angular 18.1–21", "Partial-Ivy AOT package test in CI"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -930,39 +674,15 @@
       "path": "packages/react-native/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "React Native application shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-react-native -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "React 18+",
-          "Native accessibility roles in CI"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["React Native application shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-react-native -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["React 18+", "Native accessibility roles in CI"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -1008,39 +728,15 @@
       "path": "packages/ink/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Opinionated Ink shell"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-ink -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Ink 7.1+",
-          "Terminal keyboard flow and graceful process exit verified"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Opinionated Ink shell"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-ink -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Ink 7.1+", "Terminal keyboard flow and graceful process exit verified"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
@@ -1086,39 +782,15 @@
       "path": "packages/devtools/README.md",
       "profileId": "concise-package",
       "dimensions": {
-        "promise": [
-          "Application trace capture"
-        ],
-        "proof": [
-          "## Verified proof",
-          "matrix.generated.md"
-        ],
-        "examples": [
-          "## Quick start",
-          "<!-- readme-example:import-devtools -->"
-        ],
-        "visuals": [
-          "```mermaid"
-        ],
-        "maturity": [
-          "`0.7.0`"
-        ],
-        "compatibility": [
-          "Node.js 22+",
-          "Composes upstream replay"
-        ],
-        "contribution": [
-          "## Contributing",
-          "CONTRIBUTING.md"
-        ],
-        "metadata": [
-          "**Tags:**",
-          "`agentskit-chat`"
-        ],
-        "ecosystem": [
-          "## AgentsKit ecosystem",
-          "AgentsKit-io/agentskit"
-        ]
+        "promise": ["Application trace capture"],
+        "proof": ["## Verified proof", "matrix.generated.md"],
+        "examples": ["## Quick start", "<!-- readme-example:import-devtools -->"],
+        "visuals": ["```mermaid"],
+        "maturity": ["`0.7.0`"],
+        "compatibility": ["Node.js 22+", "Composes upstream replay"],
+        "contribution": ["## Contributing", "CONTRIBUTING.md"],
+        "metadata": ["**Tags:**", "`agentskit-chat`"],
+        "ecosystem": ["## AgentsKit ecosystem", "AgentsKit-io/agentskit"]
       },
       "visuals": [],
       "commands": [
