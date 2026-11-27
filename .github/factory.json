@@ -9,6 +9,10 @@
     "parity": {
       "buildCommand": "bash scripts/ci/build.sh",
       "ci": ".github/workflows/ci-standard.yml"
+    },
+    "production": {
+      "applicable": false,
+      "reason": "Library published to npm by the release workflow; there is no production service or URL to deploy to."
     }
   }
 }

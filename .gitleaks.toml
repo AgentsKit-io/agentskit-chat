@@ -18,3 +18,10 @@ condition = "AND"
 paths = ['''docs/ch-d-parts-upload-report\.md''']
 regexTarget = "line"
 regexes = ['''^\| RF-11 / C6: reference delivery to controller/adapter \|''']
+
+[[allowlists]]
+description = "Generated doc-bridge index embeds the same RF-11 / C6 report prose; the word API in prose is not a credential"
+condition = "AND"
+paths = ['''\.doc-bridge/index\.json''']
+regexTarget = "line"
+regexes = ['''"body": "CH-D — reference parts and uploads''']
