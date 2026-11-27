@@ -159,7 +159,7 @@ jobs:
     runs-on: ubuntu-24.04
     services:
       postgres:
-        image: postgres:16
+        image: postgres:16@sha256:ce81150802644ddfac1db4da9e63be6f2a3818aa6ee98a7a28838aeea65dc37a
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_USER: chat_test
